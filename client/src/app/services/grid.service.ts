@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
-
-// TODO : Avoir un fichier séparé pour les constantes et ne pas les répéter!
-export const DEFAULT_WIDTH = 500;
-export const DEFAULT_HEIGHT = 500;
+import * as Constants from '../constants';
 
 
 @Injectable({
@@ -11,21 +8,16 @@ export const DEFAULT_HEIGHT = 500;
 })
 export class GridService {
     gridContext: CanvasRenderingContext2D;
-    private canvasSize: Vec2 = { x: DEFAULT_WIDTH, y: DEFAULT_HEIGHT };
+    private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
 
     // TODO : pas de valeurs magiques!! Faudrait avoir une meilleure manière de le faire
     /* eslint-disable @typescript-eslint/no-magic-numbers */
     drawGrid() {
-        let caseSize = 30;
-        let leftSpace = 30;
-        let upperSpace = 30;
-        let NUMBEROFCASE = 15;
-        
-
-        for (let i = 0; i < NUMBEROFCASE; i++) {
+        //Place numbers at the top
+        for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
             this.gridContext.beginPath();
-            this.gridContext.moveTo(caseSize * i + caseSize / 2 + leftSpace, 0);
-            this.gridContext.lineTo(caseSize * i + caseSize / 2 + leftSpace, caseSize);
+            this.gridContext.moveTo(Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE, 0);
+            this.gridContext.lineTo(Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE, Constants.CASESIZE);
             this.gridContext.globalAlpha = 0;
             this.gridContext.stroke();
 
@@ -33,15 +25,18 @@ export class GridService {
             this.gridContext.textAlign = 'center';
             this.gridContext.font = '15px serif';
 
-            this.gridContext.fillText((i + 1).toString(), caseSize * i + caseSize / 2 + leftSpace, upperSpace - caseSize / 2);
+            this.gridContext.fillText(
+                (i + 1).toString(),
+                Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE,
+                Constants.UPPERSPACE - Constants.CASESIZE / 2,
+            );
         }
 
         //place letters to the left side of the this.gridContext
-        let sideLetters: String[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'];
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
             this.gridContext.beginPath();
-            this.gridContext.moveTo(0, caseSize * i + caseSize / 2 + upperSpace);
-            this.gridContext.lineTo(caseSize, caseSize * i + caseSize / 2 + upperSpace);
+            this.gridContext.moveTo(0, Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE);
+            this.gridContext.lineTo(Constants.CASESIZE, Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE);
             this.gridContext.globalAlpha = 0;
             this.gridContext.stroke();
 
@@ -49,15 +44,17 @@ export class GridService {
             this.gridContext.textBaseline = 'middle';
             this.gridContext.font = '15px serif';
 
-            this.gridContext.fillText(sideLetters[i].toString(), leftSpace - caseSize / 2, caseSize * i + caseSize / 2 + upperSpace);
+            this.gridContext.fillText(
+                Constants.SIDElETTERS[i].toString(),
+                Constants.LEFTSPACE - Constants.CASESIZE / 2,
+                Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE,
+            );
         }
-        // to write the text on the this.gridContext
-        let arrText = ['mot compte double', 'mot compte tripple', 'lettre compte tripple', 'lettre compte double'];
-
+       
         //create this.gridContext
-        for (let i = 0; i < 15; i++) {
-            for (let j = 0; j < 15; j++) {
-                //letiable forthe text
+        for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
+            for (let j = 0; j < Constants.NUMBEROFCASE; j++) {
+                //for the case style
                 let textChoice = -1;
                 // word x2 (pink)
                 if ((i + j == 14 || i == j) && [0, 5, 6, 8, 9, 14].indexOf(i) == -1) {
@@ -89,78 +86,64 @@ export class GridService {
                 } else {
                     this.gridContext.fillStyle = 'grey';
                 }
-                this.gridContext.fillRect(caseSize * i + leftSpace, caseSize * j + upperSpace, caseSize, caseSize);
+                this.gridContext.fillRect(
+                    Constants.CASESIZE * i + Constants.LEFTSPACE,
+                    Constants.CASESIZE * j + Constants.UPPERSPACE,
+                    Constants.CASESIZE,
+                    Constants.CASESIZE,
+                );
 
-                this.gridContext.strokeRect(caseSize * i + leftSpace, caseSize * j + upperSpace, caseSize, caseSize);
+                this.gridContext.strokeRect(
+                    Constants.CASESIZE * i + Constants.LEFTSPACE,
+                    Constants.CASESIZE * j + Constants.UPPERSPACE,
+                    Constants.CASESIZE,
+                    Constants.CASESIZE,
+                );
                 //to write the text
                 if (textChoice != -1) {
                     this.gridContext.fillStyle = 'black';
                     this.gridContext.fillText(
-                        arrText[textChoice],
-                        caseSize * i + caseSize / 2 + leftSpace,
-                        caseSize * j + caseSize / 2 + upperSpace,
-                        caseSize,
+                        Constants.TEXTONTILES[textChoice],
+                        Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE,
+                        Constants.CASESIZE * j + Constants.CASESIZE / 2 + Constants.UPPERSPACE,
+                        Constants.CASESIZE,
                     );
                 }
                 //star
                 else if (i == 7 && j == 7) {
-                    this.drawStar(caseSize, leftSpace, upperSpace);
+                    this.drawStar();
                 }
             }
         }
 
-        //Ancien code
-        /*
-        this.gridContext.beginPath();
-        this.gridContext.strokeStyle = 'black';
-        this.gridContext.lineWidth = 3;
-
-        this.gridContext.moveTo((this.width * 3) / 10, (this.height * 4) / 10);
-        this.gridContext.lineTo((this.width * 7) / 10, (this.height * 4) / 10);
-
-        this.gridContext.moveTo((this.width * 3) / 10, (this.height * 6) / 10);
-        this.gridContext.lineTo((this.width * 7) / 10, (this.height * 6) / 10);
-
-        this.gridContext.moveTo((this.width * 4) / 10, (this.height * 3) / 10);
-        this.gridContext.lineTo((this.width * 4) / 10, (this.height * 7) / 10);
-
-        this.gridContext.moveTo((this.width * 6) / 10, (this.height * 3) / 10);
-        this.gridContext.lineTo((this.width * 6) / 10, (this.height * 7) / 10);
-
-        this.gridContext.stroke();
-        */
+        
     }
 
-    //créer par moi
-    drawStar(caseSize: number, leftSpace: number, upperSpace: number) {
+    drawStar() {
         let middleCase = 15 / 2;
-        let cx = caseSize * middleCase + leftSpace;
-        let cy = caseSize * middleCase + upperSpace;
-        let outerRadius = (caseSize * 7) / 16;
-        let innerRadius = caseSize / 4;
+        let cx = Constants.CASESIZE * middleCase + Constants.LEFTSPACE;
+        let cy = Constants.CASESIZE * middleCase + Constants.UPPERSPACE;
         let rot = (Math.PI / 2) * 3;
         let x = cx;
         let y = cy;
-        let spikes = 5;
-        let step = Math.PI / spikes;
 
         this.gridContext.strokeStyle = 'black';
 
         this.gridContext.beginPath();
-        this.gridContext.moveTo(cx, cy - outerRadius);
-        for (let i = 0; i < spikes; i++) {
-            x = cx + Math.cos(rot) * outerRadius;
-            y = cy + Math.sin(rot) * outerRadius;
+        this.gridContext.moveTo(cx, cy - Constants.OUTERRADIUS);
+        for (let i = 0; i < Constants.SPIKES; i++) {
+            x = cx + Math.cos(rot) * Constants.OUTERRADIUS;
+            y = cy + Math.sin(rot) * Constants.OUTERRADIUS;
             this.gridContext.lineTo(x, y);
-            rot += step;
+            rot += Constants.STEP;
 
-            x = cx + Math.cos(rot) * innerRadius;
-            y = cy + Math.sin(rot) * innerRadius;
+            x = cx + Math.cos(rot) * Constants.INNERRADIUS;
+            y = cy + Math.sin(rot) * Constants.INNERRADIUS;
             this.gridContext.lineTo(x, y);
-            rot += step;
+            rot += Constants.STEP;
         }
 
-        this.gridContext.lineTo(cx, cy - outerRadius);
+        this.gridContext.lineTo(cx, cy - Constants.OUTERRADIUS);
         this.gridContext.closePath();
         this.gridContext.lineWidth = 5;
 
@@ -178,6 +161,7 @@ export class GridService {
             this.gridContext.fillText(word[i], startPosition.x + step * i, startPosition.y);
         }
     }
+    
 
     get width(): number {
         return this.canvasSize.x;
