@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
+// eslint-disable-next-line no-restricted-imports
 import * as Constants from '../constants';
-
 
 @Injectable({
     providedIn: 'root',
@@ -13,74 +13,36 @@ export class GridService {
     // TODO : pas de valeurs magiques!! Faudrait avoir une meilleure manière de le faire
     /* eslint-disable @typescript-eslint/no-magic-numbers */
     drawGrid() {
-        //Place numbers at the top
-        for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
-            this.gridContext.beginPath();
-            this.gridContext.moveTo(Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE, 0);
-            this.gridContext.lineTo(Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE, Constants.CASESIZE);
-            this.gridContext.globalAlpha = 0;
-            this.gridContext.stroke();
+        // Place numbers at the top
+        this.placeNumberTop();
 
-            this.gridContext.globalAlpha = 1;
-            this.gridContext.textAlign = 'center';
-            this.gridContext.font = '15px serif';
+        // place letters to the left side of the this.gridContext
+        this.placeLetterSide();
 
-            this.gridContext.fillText(
-                (i + 1).toString(),
-                Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE,
-                Constants.UPPERSPACE - Constants.CASESIZE / 2,
-            );
-        }
-
-        //place letters to the left side of the this.gridContext
-        for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
-            this.gridContext.beginPath();
-            this.gridContext.moveTo(0, Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE);
-            this.gridContext.lineTo(Constants.CASESIZE, Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE);
-            this.gridContext.globalAlpha = 0;
-            this.gridContext.stroke();
-
-            this.gridContext.globalAlpha = 1;
-            this.gridContext.textBaseline = 'middle';
-            this.gridContext.font = '15px serif';
-
-            this.gridContext.fillText(
-                Constants.SIDElETTERS[i].toString(),
-                Constants.LEFTSPACE - Constants.CASESIZE / 2,
-                Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE,
-            );
-        }
-       
-        //create this.gridContext
+        // create this.gridContext
         for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
             for (let j = 0; j < Constants.NUMBEROFCASE; j++) {
-                //for the case style
+                // for the case style
                 let textChoice = -1;
                 // word x2 (pink)
-                if ((i + j == 14 || i == j) && [0, 5, 6, 8, 9, 14].indexOf(i) == -1) {
+                if ((i + j === 14 || i === j) && [0, 5, 6, 8, 9, 14].indexOf(i) === -1) {
                     this.gridContext.fillStyle = 'pink';
-                    if (i != 7 && j != 7) {
+                    if (i !== 7 && j !== 7) {
                         textChoice = 0;
                     }
                 }
-                //word x3 (red)
-                else if (((i == 0 || i == 14) && [0, 7, 14].indexOf(j) != -1) || (i == 7 && (j == 0 || j == 14))) {
+                // word x3 (red)
+                else if (this.isRedCase(i, j)) {
                     this.gridContext.fillStyle = 'red';
                     textChoice = 1;
                 }
                 // Letter x3 (dark blue)
-                else if (((i == 5 || i == 9) && [1, 5, 9, 13].indexOf(j) != -1) || ((i == 1 || i == 13) && (j == 5 || j == 9))) {
+                else if (this.isDarkBlueCase(i, j)) {
                     this.gridContext.fillStyle = 'darkblue';
                     textChoice = 2;
                 }
                 // Letter x2 (Light blue)
-                else if (
-                    ((i == 0 || i == 14) && (j == 3 || j == 11)) ||
-                    ((i == 2 || i == 12) && (j == 6 || j == 8)) ||
-                    ((i == 3 || i == 11) && [0, 7, 14].indexOf(j) != -1) ||
-                    ((i == 6 || i == 8) && [2, 6, 8, 12].indexOf(j) != -1) ||
-                    (i == 7 && (j == 3 || j == 11))
-                ) {
+                else if (this.isLightBlueCaseColumnNearCenter(i, j) || this.isLightBlueCaseColumnFar(i, j)) {
                     this.gridContext.fillStyle = '#add8e6';
                     textChoice = 3;
                 } else {
@@ -99,8 +61,8 @@ export class GridService {
                     Constants.CASESIZE,
                     Constants.CASESIZE,
                 );
-                //to write the text
-                if (textChoice != -1) {
+                // to write the text
+                if (textChoice !== -1) {
                     this.gridContext.fillStyle = 'black';
                     this.gridContext.fillText(
                         Constants.TEXTONTILES[textChoice],
@@ -109,41 +71,95 @@ export class GridService {
                         Constants.CASESIZE,
                     );
                 }
-                //star
-                else if (i == 7 && j == 7) {
+                // star
+                else if (i === 7 && j === 7) {
                     this.drawStar();
                 }
             }
         }
+    }
 
-        
+    isRedCase(col: number, row: number): boolean {
+        return ((col === 0 || col === 14) && [0, 7, 14].indexOf(row) !== -1) || (col === 7 && (row === 0 || row === 14));
+    }
+
+    isDarkBlueCase(col: number, row: number): boolean {
+        return ((col === 5 || col === 9) && [1, 5, 9, 13].indexOf(row) !== -1) || ((col === 1 || col === 13) && (row === 5 || row === 9));
+    }
+    // add to break this color in two to respect complexity of function
+    isLightBlueCaseColumnNearCenter(col: number, row: number): boolean {
+        return ((col === 6 || col === 8) && [2, 6, 8, 12].indexOf(row) !== -1) || (col === 7 && (row === 3 || row === 11));
+    }
+    // add to break this color in two to respect complexity of function
+    isLightBlueCaseColumnFar(col: number, row: number): boolean {
+        return (
+            ((col === 0 || col === 14) && (row === 3 || row === 11)) ||
+            ((col === 2 || col === 12) && (row === 6 || row === 8)) ||
+            ((col === 3 || col === 11) && [0, 7, 14].indexOf(row) !== -1)
+        );
+    }
+    placeNumberTop() {
+        for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
+            this.gridContext.beginPath();
+            this.gridContext.moveTo(Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE, 0);
+            this.gridContext.lineTo(Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE, Constants.CASESIZE);
+            this.gridContext.globalAlpha = 0;
+            this.gridContext.stroke();
+
+            this.gridContext.globalAlpha = 1;
+            this.gridContext.textAlign = 'center';
+            this.gridContext.font = '15px serif';
+
+            this.gridContext.fillText(
+                (i + 1).toString(),
+                Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE,
+                Constants.UPPERSPACE - Constants.CASESIZE / 2,
+            );
+        }
+    }
+
+    placeLetterSide() {
+        for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
+            this.gridContext.beginPath();
+            this.gridContext.moveTo(0, Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE);
+            this.gridContext.lineTo(Constants.CASESIZE, Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE);
+            this.gridContext.globalAlpha = 0;
+            this.gridContext.stroke();
+
+            this.gridContext.globalAlpha = 1;
+            this.gridContext.textBaseline = 'middle';
+            this.gridContext.font = '15px serif';
+
+            this.gridContext.fillText(
+                Constants.SIDELETTERS[i].toString(),
+                Constants.LEFTSPACE - Constants.CASESIZE / 2,
+                Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE,
+            );
+        }
     }
 
     drawStar() {
-        let middleCase = 15 / 2;
-        let cx = Constants.CASESIZE * middleCase + Constants.LEFTSPACE;
-        let cy = Constants.CASESIZE * middleCase + Constants.UPPERSPACE;
         let rot = (Math.PI / 2) * 3;
-        let x = cx;
-        let y = cy;
+        let x = Constants.CENTERSTARHORIZONTALY;
+        let y = Constants.CENTERSTARVERTICALY;
 
         this.gridContext.strokeStyle = 'black';
 
         this.gridContext.beginPath();
-        this.gridContext.moveTo(cx, cy - Constants.OUTERRADIUS);
+        this.gridContext.moveTo(Constants.CENTERSTARHORIZONTALY, Constants.CENTERSTARVERTICALY - Constants.OUTERRADIUS);
         for (let i = 0; i < Constants.SPIKES; i++) {
-            x = cx + Math.cos(rot) * Constants.OUTERRADIUS;
-            y = cy + Math.sin(rot) * Constants.OUTERRADIUS;
+            x = Constants.CENTERSTARHORIZONTALY + Math.cos(rot) * Constants.OUTERRADIUS;
+            y = Constants.CENTERSTARVERTICALY + Math.sin(rot) * Constants.OUTERRADIUS;
             this.gridContext.lineTo(x, y);
             rot += Constants.STEP;
 
-            x = cx + Math.cos(rot) * Constants.INNERRADIUS;
-            y = cy + Math.sin(rot) * Constants.INNERRADIUS;
+            x = Constants.CENTERSTARHORIZONTALY + Math.cos(rot) * Constants.INNERRADIUS;
+            y = Constants.CENTERSTARVERTICALY + Math.sin(rot) * Constants.INNERRADIUS;
             this.gridContext.lineTo(x, y);
             rot += Constants.STEP;
         }
 
-        this.gridContext.lineTo(cx, cy - Constants.OUTERRADIUS);
+        this.gridContext.lineTo(Constants.CENTERSTARHORIZONTALY, Constants.CENTERSTARVERTICALY - Constants.OUTERRADIUS);
         this.gridContext.closePath();
         this.gridContext.lineWidth = 5;
 
@@ -161,7 +177,6 @@ export class GridService {
             this.gridContext.fillText(word[i], startPosition.x + step * i, startPosition.y);
         }
     }
-    
 
     get width(): number {
         return this.canvasSize.x;
