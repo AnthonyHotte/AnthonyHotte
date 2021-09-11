@@ -56,13 +56,14 @@ describe('GridService', () => {
         expect(afterSize).toBeGreaterThan(beforeSize);
     });
 
-    it(' drawGrid should call moveTo and lineTo 4 times', () => {
-        const expectedCallTimes = 4;
+    it(' drawGrid should call moveTo 31 times and lineTo 41 times', () => {
+        const expectedCallMoveToTimes = 31;
+        const expectedCallLineToTimes = 41;
         const moveToSpy = spyOn(service.gridContext, 'moveTo').and.callThrough();
         const lineToSpy = spyOn(service.gridContext, 'lineTo').and.callThrough();
         service.drawGrid();
-        expect(moveToSpy).toHaveBeenCalledTimes(expectedCallTimes);
-        expect(lineToSpy).toHaveBeenCalledTimes(expectedCallTimes);
+        expect(moveToSpy).toHaveBeenCalledTimes(expectedCallMoveToTimes);
+        expect(lineToSpy).toHaveBeenCalledTimes(expectedCallLineToTimes);
     });
 
     it(' drawGrid should color pixels on the canvas', () => {

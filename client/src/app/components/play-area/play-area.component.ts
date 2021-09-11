@@ -37,7 +37,8 @@ export class PlayAreaComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.gridService.gridContext = this.gridCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.gridService.drawGrid();
-        this.gridService.drawWord('Scrabble');
+        // the line was put in comment so that we can remember how to use drawWord but it's useless
+        // this.gridService.drawWord('Scrabble');
         this.gridCanvas.nativeElement.focus();
     }
 
