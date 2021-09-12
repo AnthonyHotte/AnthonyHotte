@@ -1,7 +1,13 @@
-<form #myInput="ngForm">
-    <div id="visualBox">
 
-    </div>
-    <p> {{array[array.length - 1]}} </p>
-    <textarea ngModel name="commandsAndMessages">Zone de texte</textarea>
+<div class = "DisplayZone">
+    <div *ngIf="alertMessage === ''; then DisplayCommands; else DisplayAlertMessage"></div>
+
+    <ng-template #DisplayCommands><p class = "PlayerMessage" > {{array[array.length - 1]}} </p></ng-template>
+
+    <ng-template #DisplayAlertMessage><p class = "AlertMessage" >{{alertMessage}}</p></ng-template>
+</div>
+
+
+<form #myInput="ngForm"> 
+    <input ngModel name="commandsAndMessages">
 </form>
