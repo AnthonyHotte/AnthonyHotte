@@ -1,48 +1,56 @@
 <!-- Sources : https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ (en IEEE plus tard)
 https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%20let%20a%20user%20select%20only%20one,group%20can%20be%20selected%20at%20the%20same%20time.-->
-<div class="container justified">
-    <h1 class="header-item">Bienvenue dans le mode solo!</h1>
-<div class="justified">
-<body ng-app="app" style="text-align:Center">
-<article class="forecast">
-    <h2>Entrez votre identifiant. Les règles à suivre:</h2>
-    <article class="day-forecast">
-        <h3> <strong>1 -</strong> Ne pas entrer de vulgarités</h3>
-        <h3><strong>2 -</strong> Ne pas entrer le même nom que celui de votre adversaire (ce dernier sera changé)</h3>
-        <h3><strong>3 -</strong> Ne pas entrer un nom vide</h3>
-        <h3><strong>4 -</strong> Sélectionner les options de la partie</h3>
-        <h3><strong>5 -</strong> S'amuser!</h3>
-    </article>
-<div>
-    <fieldset>
-        <p><label> {{"Validité du nom: " + afficherValiditeEnCaracter() }}</label></p>
-        <label> Nom du joueur : </label>
-        <input [(ngModel)] ="nom" type="string">
-        <p> {{"Votre nom: " + nom}} </p>
-        <p> {{"Nom de l'adversaire: " + nomAdversaire}} </p>
-        <button class="button" (click)="verifierNoms()">Validation de l'identifiant</button>
-    </fieldset>
-  </div>
-  <div>
-    <fieldset>
-        <legend>Choisissez votre difficulté</legend>
-    
-        <input type="radio" id="facile" name="difficulte">
-        <label for="facile">Débutant</label><br/>
-    
-        <input type="radio" id="difficile" name="difficulte">
-        <label for="difficile">Expert</label><br/>
-    </fieldset>
-</div>
-<div>
-    <fieldset>
-        <legend>Choisissez le temps par tour de jeu</legend>
-        <form oninput= "setTempsDeJeu(Math.max(parseInt(barre.value),parseInt(inc.value)))">
-            <input type="range" id="barre" name="bar" step="30" min = "30" max = "300" value = "30"/> ou
-            <input type="number" id="increment" name="inc" step="30" min = "30" max = "300" value = "30"/> =
-            <output name="temps" for={{getTempsDeJeu()}}>30</output> secondes par tour de jeu
-          </form>
-    </fieldset>
-</div>
-    <p><button class="button" routerLink="/game">Démarrer la partie!</button></p>
-    <button class="button" routerLink="/selection">Revenir en arrière</button>
+<body ng-app="app" style="text-align: Center">
+    <div class="container justified">
+        <h1 class="header-item">Bienvenue dans le mode solo!</h1>
+        <div class="justified">
+            <article class="forecast">
+                <h2>Entrez votre identifiant. Les règles à suivre:</h2>
+                <article class="day-forecast">
+                    <h3><strong>1 -</strong> Ne pas entrer de vulgarités</h3>
+                    <h3><strong>2 -</strong> Ne pas entrer le même nom que celui de votre adversaire (ce dernier sera changé)</h3>
+                    <h3><strong>3 -</strong> Ne pas entrer un nom vide</h3>
+                    <h3><strong>4 -</strong> Ne pas entrer un nom de plus de 17 caractères</h3>
+                    <h3><strong>5 -</strong> Sélectionner les options de la partie</h3>
+                    <h3><strong>6 -</strong> S'amuser!</h3>
+                </article>
+                <div>
+                    <fieldset>
+                        <p>
+                            <label> {{ 'Validité du nom: ' + afficherValiditeEnCaracter() }}</label>
+                        </p>
+                        <label> Nom du joueur : </label>
+                        <input [(ngModel)]="nomTemporaire" type="string" />
+                        <p>{{ 'Votre nom: ' + nom }}</p>
+                        <p>{{ "Nom de l'adversaire: " + nomAdversaire }}</p>
+                        <button class="button" (click)="setNom()">Validation de l'identifiant</button>
+                    </fieldset>
+                </div>
+                <div>
+                    <fieldset>
+                        <legend>Choisissez votre difficulté</legend>
+
+                        <input type="radio" id="facile" name="difficulte" (click)="setDifficulte(true)" />
+                        <label for="facile">Débutant</label><br />
+
+                        <input type="radio" id="difficile" name="difficulte" (click)="setDifficulte(false)" />
+                        <label for="difficile">Expert</label><br />
+                        <p>Difficulté: {{ getDifficulte() }}</p>
+                    </fieldset>
+                </div>
+                <div>
+                    <fieldset>
+                        <legend>Choisissez le temps par tour de jeu</legend>
+                        <form oninput="tempsDeJeu = Math.max(parseInt(barre.value),parseInt(increment.value))">
+                            <input [(ngModel)]="tempsDeJeu" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" /> ou
+                            <input [(ngModel)]="tempsDeJeu" type="number" id="increment" name="inc" step="30" min="30" max="300" value="60" /> =
+                            <output name="temps" for="tempsDeJeu">{{ getTempsDeJeu() }}</output> secondes par tour de jeu
+                        </form>
+                    </fieldset>
+                </div>
+                <p><button *ngIf="nomEstValide" routerLink="/game">Démarrer la partie!</button></p>
+                <button class="button" routerLink="/selection">Revenir en arrière</button>
+            </article>
+        </div>
+    </div>
+</body>
