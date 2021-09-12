@@ -1,0 +1,16 @@
+<div class="container justified">
+    <h1 class="header-item">Bienvenue dans le mode solo!</h1>
+    <div class="justified">
+<div>
+    <textarea autosize class="reglements">Entrez votre identifiant. Les règles à suivre : 1 - Ne pas entrer de vulgarités, 2 - Ne pas entrer le même nom que celui de votre adversaire, 3 - Ne pas entrer un nom vide, 4 - Sélectionner les options de la partie, 5 - S'amuser! </textarea>
+</div>
+<label> {{"Validité du nom: " + afficherValiditeEnCaracter() }}</label>
+<div>
+    <label> Nom du joueur : </label>
+    <input [(ngModel)] ="nom" type="string">
+    <p> {{"Votre nom: " + nom}} </p>
+    <p> {{"Nom de l'adversaire: " + nomAdversaire}} </p>
+    <button class="button" (click)="verifierNoms()">Validation de l'identifiant</button>
+
+  </div>
+  <button class="button" routerLink="/selection">Revenir en arrière</button>

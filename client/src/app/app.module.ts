@@ -13,6 +13,8 @@ import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { HighestScoresComponent } from './pages/highest-scores/highest-scores.component';
+import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-game-initiator.component';
+import { AutosizeModule } from 'ngx-autosize';
 
 /**
  * Main module that is used in main.ts.
@@ -30,8 +32,9 @@ import { HighestScoresComponent } from './pages/highest-scores/highest-scores.co
         SidebarComponent,
         HighestScoresComponent,
         GameSelectionPageComponent,
+        SoloGameInitiatorComponent,
     ],
-    imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
+    imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, AutosizeModule],
     providers: [],
     bootstrap: [AppComponent],
 })
