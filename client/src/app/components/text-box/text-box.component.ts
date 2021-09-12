@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { TextBoxService } from '@app/services/text-box.service';
 
 @Component({
     selector: 'app-text-box',
@@ -10,28 +11,19 @@ export class TextBoxComponent implements OnInit {
     buttonCode: number;
     word = '';
     array: string[] = [];
+    alertMessage = '';
 
-    constructor() {}
+    constructor(private mytextBoxService: TextBoxService) {}
 
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         this.buttonPressed = event.key;
         this.buttonCode = event.keyCode;
-        this.wordBuild();
+        this.mytextBoxService.inputChecking(this.buttonCode, this.buttonPressed);
+        this.word = this.mytextBoxService.word;
+        this.array = this.mytextBoxService.array;
+        this.alertMessage = this.mytextBoxService.alertMessage;
     }
 
-    wordBuild() {
-        if (this.buttonCode !== 13) {
-            this.word += this.buttonPressed;
-        } else {
-            this.addWord(this.word);
-        }
-    }
-
-    wordVerification(myWord: string) {}
-
-    addWord(myWord: string) {
-        this.array.push(myWord);
-    }
     ngOnInit(): void {}
 }
