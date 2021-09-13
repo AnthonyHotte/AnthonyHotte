@@ -1,0 +1,17 @@
+.DisplayZone{
+    height: 300px;
+    border-color: black;
+    border-width: 10px;
+    width: 300px;
+    border-style:double;
+    margin-bottom: 10px;
+    overflow: scroll;
+}
+
+.PlayerMessage{
+    color: aqua;
+}
+
+.AlertMessage{
+    color:red;
+}
