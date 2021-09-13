@@ -17,3 +17,8 @@ export const SPIKES = 5;
 export const STEP = Math.PI / SPIKES;
 export const CENTERSTARHORIZONTALY = CASESIZE * MIDDLECASE + LEFTSPACE;
 export const CENTERSTARVERTICALY = CASESIZE * MIDDLECASE + UPPERSPACE;
+// useful for solo game mode
+export const VALEUR_TEMPS_DEFAULT = 60;
+export const LONGUEURNOMMAX = 17;
+export const VERIFICATION_PRESENCE = -1;
+export const LENGTHWORDVALIDATION = 3;

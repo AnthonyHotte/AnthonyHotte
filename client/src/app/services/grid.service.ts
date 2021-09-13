@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
 // eslint-disable-next-line no-restricted-imports
 import * as Constants from '../constants';
+// eslint-disable-next-line no-restricted-imports
+import { isRedCase, isDarkBlueCase, isLightBlueCase, isPinkCase } from '../tile-type-usefull-function';
 
 @Injectable({
     providedIn: 'root',
@@ -20,44 +22,45 @@ export class GridService {
         this.placeLetterSide();
 
         // create this.gridContext
-        for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
-            for (let j = 0; j < Constants.NUMBEROFCASE; j++) {
+        for (let i = 1; i <= Constants.NUMBEROFCASE; i++) {
+            for (let j = 1; j <= Constants.NUMBEROFCASE; j++) {
                 // for the case style
                 let textChoice = -1;
                 // word x2 (pink)
-                if ((i + j === 14 || i === j) && [0, 5, 6, 8, 9, 14].indexOf(i) === -1) {
+                if (isPinkCase(i, j)) {
                     this.gridContext.fillStyle = 'pink';
-                    if (i !== 7 && j !== 7) {
+                    if (i !== 8 && j !== 8) {
                         textChoice = 0;
                     }
                 }
                 // word x3 (red)
-                else if (this.isRedCase(i, j)) {
+                else if (isRedCase(i, j)) {
                     this.gridContext.fillStyle = 'red';
                     textChoice = 1;
                 }
                 // Letter x3 (dark blue)
-                else if (this.isDarkBlueCase(i, j)) {
+                else if (isDarkBlueCase(i, j)) {
                     this.gridContext.fillStyle = 'darkblue';
                     textChoice = 2;
                 }
                 // Letter x2 (Light blue)
-                else if (this.isLightBlueCaseColumnNearCenter(i, j) || this.isLightBlueCaseColumnFar(i, j)) {
+                else if (isLightBlueCase(i, j)) {
                     this.gridContext.fillStyle = '#add8e6';
                     textChoice = 3;
                 } else {
                     this.gridContext.fillStyle = 'grey';
                 }
+
                 this.gridContext.fillRect(
-                    Constants.CASESIZE * i + Constants.LEFTSPACE,
-                    Constants.CASESIZE * j + Constants.UPPERSPACE,
+                    Constants.CASESIZE * (i - 1) + Constants.LEFTSPACE,
+                    Constants.CASESIZE * (j - 1) + Constants.UPPERSPACE,
                     Constants.CASESIZE,
                     Constants.CASESIZE,
                 );
 
                 this.gridContext.strokeRect(
-                    Constants.CASESIZE * i + Constants.LEFTSPACE,
-                    Constants.CASESIZE * j + Constants.UPPERSPACE,
+                    Constants.CASESIZE * (i - 1) + Constants.LEFTSPACE,
+                    Constants.CASESIZE * (j - 1) + Constants.UPPERSPACE,
                     Constants.CASESIZE,
                     Constants.CASESIZE,
                 );
@@ -66,38 +69,19 @@ export class GridService {
                     this.gridContext.fillStyle = 'black';
                     this.gridContext.fillText(
                         Constants.TEXTONTILES[textChoice],
-                        Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE,
-                        Constants.CASESIZE * j + Constants.CASESIZE / 2 + Constants.UPPERSPACE,
+                        Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.LEFTSPACE,
+                        Constants.CASESIZE * (j - 1) + Constants.CASESIZE / 2 + Constants.UPPERSPACE,
                         Constants.CASESIZE,
                     );
                 }
                 // star
-                else if (i === 7 && j === 7) {
+                else if (i === 8 && j === 8) {
                     this.drawStar();
                 }
             }
         }
     }
 
-    isRedCase(col: number, row: number): boolean {
-        return ((col === 0 || col === 14) && [0, 7, 14].indexOf(row) !== -1) || (col === 7 && (row === 0 || row === 14));
-    }
-
-    isDarkBlueCase(col: number, row: number): boolean {
-        return ((col === 5 || col === 9) && [1, 5, 9, 13].indexOf(row) !== -1) || ((col === 1 || col === 13) && (row === 5 || row === 9));
-    }
-    // add to break this color in two to respect complexity of function
-    isLightBlueCaseColumnNearCenter(col: number, row: number): boolean {
-        return ((col === 6 || col === 8) && [2, 6, 8, 12].indexOf(row) !== -1) || (col === 7 && (row === 3 || row === 11));
-    }
-    // add to break this color in two to respect complexity of function
-    isLightBlueCaseColumnFar(col: number, row: number): boolean {
-        return (
-            ((col === 0 || col === 14) && (row === 3 || row === 11)) ||
-            ((col === 2 || col === 12) && (row === 6 || row === 8)) ||
-            ((col === 3 || col === 11) && [0, 7, 14].indexOf(row) !== -1)
-        );
-    }
     placeNumberTop() {
         for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
             this.gridContext.beginPath();
