@@ -21,6 +21,7 @@ export class SoloGameInitiatorComponent implements OnInit {
 
     ngOnInit(): void {
         this.assignerNomAdversaire();
+        this.inscription = this.informations.messageCourant.subscribe(message => this.message = message);
     }
 
     assignerNomAdversaire() {
@@ -76,12 +77,13 @@ export class SoloGameInitiatorComponent implements OnInit {
         this.verifierNoms();
         if (this.nomEstValide) {
             this.nom = this.nomTemporaire;
+            this.informations.changerMessage([this.nom, this.nomAdversaire, this.difficulteFacile.toString(), this.tempsDeJeu.toString()]);
             return this.nom;
         } else {
             return 'Ce nom est invalide! Recommencez...';
         }
     }
-    afficherValiditeEnCaracter() {
+    afficherValiditeEnCaracteres() {
         if (this.nomEstValide) {
             return 'valide';
         } else return 'invalide';
@@ -91,12 +93,16 @@ export class SoloGameInitiatorComponent implements OnInit {
     }
     getDifficulte() {
         if (this.difficulteFacile === true) {
-            return 'Facile';
+            return 'Débutant';
         } else {
             return 'Expert';
         }
     }
     getTempsDeJeu() {
         return this.tempsDeJeu;
+    }
+
+    ngOnDestroy(){
+        this.inscription.unsubscribe();
     }
 }
