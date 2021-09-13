@@ -4,9 +4,11 @@
 
     <ng-template #DisplayCommands><p class = "PlayerMessage" > {{array[array.length - 1]}} </p></ng-template>
 
-    <ng-template #DisplayAlertMessage><p class = "AlertMessage" >{{alertMessage}}</p></ng-template>
 </div>
 
+<div class = "DisplayError">
+    <ng-template #DisplayAlertMessage><p class = "AlertMessage" >{{alertMessage}}</p></ng-template>
+</div>
 
 <form #myInput="ngForm"> 
     <input ngModel name="commandsAndMessages">
