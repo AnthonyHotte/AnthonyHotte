@@ -21,14 +21,22 @@ export class SidebarRightComponent implements OnInit {
 
     ngOnInit(): void {
       this.inscription = this.informationsJeuSolo.messageCourant.subscribe(message => this.message = message);
-      this.setAttribut();
+      this.setAttribute();
     }
 
-    setAttribut(){
+    setAttribute(){
       this.nomJoueur = this.message[0];
       this.nomAdversaire = this.message[1];
       this.difficulteFacile = this.message[2] === 'true';
       this.temps = parseInt(this.message[3]);
+    }
+
+    difficultyInCharacters(){
+      if(this.difficulteFacile === true){
+        return "Débutant";
+      } else {
+        return "Expert";
+      }
     }
 
     ngOnDestroy(){
