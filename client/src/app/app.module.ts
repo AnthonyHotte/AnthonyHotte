@@ -11,7 +11,12 @@ import { AppComponent } from '@app/pages/app/app.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
-import { TextBoxRefactoredComponent } from './components/text-box-refactored/text-box-refactored.component';
+import { AutosizeModule } from 'ngx-autosize';
+import { SidebarRightComponent } from './components/sidebar-right/sidebar-right.component';
+import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
+import { HighestScoresComponent } from './pages/highest-scores/highest-scores.component';
+import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-game-initiator.component';
+import { SoloModeInformationsService } from './services/solo-mode-informations.service';
 
 /**
  * Main module that is used in main.ts.
@@ -27,10 +32,14 @@ import { TextBoxRefactoredComponent } from './components/text-box-refactored/tex
         MaterialPageComponent,
         PlayAreaComponent,
         SidebarComponent,
-        TextBoxRefactoredComponent,
+
+        HighestScoresComponent,
+        GameSelectionPageComponent,
+        SoloGameInitiatorComponent,
+        SidebarRightComponent,
     ],
-    imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, FormsModule],
-    providers: [],
+    imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, AutosizeModule],
+    providers: [SoloModeInformationsService],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
