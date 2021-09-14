@@ -65,10 +65,12 @@ export class LetterService {
                 }
             }
             if (checkLowerHalf) {
-                for (let j = 0; j <= i; j++) {
-                    if (buttonPressed.toLowerCase() === this.letters[j].letter.toLowerCase()) {
-                        this.indexSelected = j;
-                        break;
+                for (let j = 0; j < i; j++) {
+                    if (typeof this.letters[j].letter !== 'undefined') {
+                        if (buttonPressed.toLowerCase() === this.letters[j].letter.toLowerCase()) {
+                            this.indexSelected = j;
+                            break;
+                        }
                     }
                 }
             }
