@@ -1,45 +1,52 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
 import { SoloModeInformationsService } from '@app/services/solo-mode-informations.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-sidebar-right',
-  templateUrl: './sidebar-right.component.html',
-  styleUrls: ['./sidebar-right.component.scss']
+    selector: 'app-sidebar-right',
+    templateUrl: './sidebar-right.component.html',
+    styleUrls: ['./sidebar-right.component.scss'],
 })
-
-export class SidebarRightComponent implements OnInit {
-
-    private inscription: Subscription;
-    nomJoueur: string = '';
-    nomAdversaire: string = '';
+export class SidebarRightComponent implements OnInit, OnDestroy {
+    nomJoueur: string[] = ['', ''];
+    // nomAdversaire: string = '';
     difficulteFacile: boolean;
     temps: number;
-    message: string[]; 
+    message: string[];
+    turn: number;
+    private inscription: Subscription;
 
-    constructor(private informationsJeuSolo: SoloModeInformationsService) {}
+    constructor(private informationsJeuSolo: SoloModeInformationsService, private gestionTimerTour: GestionTimerTourService) {}
 
     ngOnInit(): void {
-      this.inscription = this.informationsJeuSolo.messageCourant.subscribe(message => this.message = message);
-      this.setAttribute();
+        this.inscription = this.informationsJeuSolo.messageCourant.subscribe((message) => (this.message = message));
+        this.setAttribute();
     }
 
-    setAttribute(){
-      this.nomJoueur = this.message[0];
-      this.nomAdversaire = this.message[1];
-      this.difficulteFacile = this.message[2] === 'true';
-      this.temps = parseInt(this.message[3]);
+    setAttribute() {
+        this.nomJoueur[0] = this.message[0];
+        this.nomJoueur[1] = this.message[1];
+        this.difficulteFacile = this.message[2] === 'true';
+        this.temps = parseInt(this.message[3], 10);
+        this.gestionTimerTour.initiateGame();
+        this.turn = this.gestionTimerTour.turn;
     }
 
-    difficultyInCharacters(){
-      if(this.difficulteFacile === true){
-        return "Débutant";
-      } else {
-        return "Expert";
-      }
+    difficultyInCharacters() {
+        if (this.difficulteFacile === true) {
+            return 'Débutant';
+        } else {
+            return 'Expert';
+        }
     }
 
-    ngOnDestroy(){
-      this.inscription.unsubscribe();
+    endTurn() {
+        this.gestionTimerTour.endTurn();
+        this.turn = this.gestionTimerTour.turn;
+    }
+
+    ngOnDestroy() {
+        this.inscription.unsubscribe();
     }
 }
