@@ -17,6 +17,8 @@ import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-gam
 import { AutosizeModule } from 'ngx-autosize';
 import { SidebarRightComponent } from './components/sidebar-right/sidebar-right.component';
 import { SoloModeInformationsService } from './services/solo-mode-informations.service';
+import { CountdownModule } from '@ciri/ngx-countdown';
+import { LettersComponent } from '@app/components/letters/letters.component';
 
 /**
  * Main module that is used in main.ts.
@@ -36,8 +38,18 @@ import { SoloModeInformationsService } from './services/solo-mode-informations.s
         GameSelectionPageComponent,
         SoloGameInitiatorComponent,
         SidebarRightComponent,
+        LettersComponent,
     ],
-    imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, AutosizeModule],
+    imports: [
+        AppMaterialModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        AutosizeModule,
+        CountdownModule,
+    ],
     providers: [SoloModeInformationsService],
     bootstrap: [AppComponent],
 })
