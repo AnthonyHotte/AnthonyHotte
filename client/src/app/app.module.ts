@@ -11,6 +11,13 @@ import { AppComponent } from '@app/pages/app/app.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
+import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
+import { HighestScoresComponent } from './pages/highest-scores/highest-scores.component';
+import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-game-initiator.component';
+import { AutosizeModule } from 'ngx-autosize';
+import { SidebarRightComponent } from './components/sidebar-right/sidebar-right.component';
+import { SoloModeInformationsService } from './services/solo-mode-informations.service';
+import { CountdownModule } from '@ciri/ngx-countdown';
 import { LettersComponent } from '@app/components/letters/letters.component';
 
 /**
@@ -20,9 +27,30 @@ import { LettersComponent } from '@app/components/letters/letters.component';
  * Otherwise Angular Cli will not know in which module to put new component
  */
 @NgModule({
-    declarations: [AppComponent, GamePageComponent, MainPageComponent, MaterialPageComponent, PlayAreaComponent, SidebarComponent, LettersComponent],
-    imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule],
-    providers: [],
+    declarations: [
+        AppComponent,
+        GamePageComponent,
+        MainPageComponent,
+        MaterialPageComponent,
+        PlayAreaComponent,
+        SidebarComponent,
+        HighestScoresComponent,
+        GameSelectionPageComponent,
+        SoloGameInitiatorComponent,
+        SidebarRightComponent,
+        LettersComponent,
+    ],
+    imports: [
+        AppMaterialModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        AutosizeModule,
+        CountdownModule,
+    ],
+    providers: [SoloModeInformationsService],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

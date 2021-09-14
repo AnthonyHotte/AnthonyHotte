@@ -1,0 +1,45 @@
+<div class="container">
+    <body ng-app="app" style="text-align: Center">
+        <fieldset>
+            <h1>Informations sur la partie en cours</h1>
+            <p>Mode: Jouer Solo (TODO)</p>
+            <p>
+                <label>Votre nom: {{ nomJoueur[0] }}</label>
+            </p>
+            <p>
+                <label> Nom de votre adversaire: {{ nomJoueur[1] }}</label>
+            </p>
+            <p>
+                <label>Temps par tours: {{ temps }} secondes.</label>
+            </p>
+            <p>
+                <label>Difficulté du joueur virtuel: {{ difficultyInCharacters() }}.</label>
+            </p>
+        </fieldset>
+        <fieldset>
+            <h1>Score</h1>
+            <table>
+                <tr>
+                    <th>
+                        <h2>{{ nomJoueur[0] }}</h2>
+                    </th>
+                    <th>
+                        <h2>{{ nomJoueur[1] }}</h2>
+                    </th>
+                </tr>
+                <tr>
+                    <td><h2>TODO</h2></td>
+                    <td><h2>TODO</h2></td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset>
+            <h1>C'est le tour de {{ nomJoueur[turn] }}</h1>
+            <h2>Temps restant au tour:</h2>
+            <div class="Counter"><ngx-countdown #counter [time]="temps * 1000" format="ss" [autoStart]="true"></ngx-countdown>s</div>
+            <br />
+            <button (click)="counter.start()">Reprendre</button>&nbsp; <button (click)="counter.pause()">pause</button>&nbsp;
+            <button (click)="counter.reset()" (click)="endTurn()">Fin du tour</button>
+        </fieldset>
+    </body>
+</div>
