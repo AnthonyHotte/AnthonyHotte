@@ -16,7 +16,6 @@ import { HighestScoresComponent } from './pages/highest-scores/highest-scores.co
 import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-game-initiator.component';
 import { AutosizeModule } from 'ngx-autosize';
 import { SidebarRightComponent } from './components/sidebar-right/sidebar-right.component';
-import { SoloModeInformationsService } from './services/solo-mode-informations.service';
 import { CountdownModule } from '@ciri/ngx-countdown';
 import { LettersComponent } from '@app/components/letters/letters.component';
 
@@ -50,7 +49,7 @@ import { LettersComponent } from '@app/components/letters/letters.component';
         AutosizeModule,
         CountdownModule,
     ],
-    providers: [SoloModeInformationsService],
+    providers: [],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

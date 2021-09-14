@@ -1,26 +1,22 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
-import { SoloModeInformationsService } from '@app/services/solo-mode-informations.service';
-import { Subscription } from 'rxjs';
+import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 
 @Component({
     selector: 'app-sidebar-right',
     templateUrl: './sidebar-right.component.html',
     styleUrls: ['./sidebar-right.component.scss'],
 })
-export class SidebarRightComponent implements OnInit, OnDestroy {
+export class SidebarRightComponent {
+    message: string[] = [];
     nomJoueur: string[] = ['', ''];
-    // nomAdversaire: string = '';
+
     difficulteFacile: boolean;
     temps: number;
-    message: string[];
     turn: number;
-    private inscription: Subscription;
 
-    constructor(private informationsJeuSolo: SoloModeInformationsService, private gestionTimerTour: GestionTimerTourService) {}
-
-    ngOnInit(): void {
-        this.inscription = this.informationsJeuSolo.messageCourant.subscribe((message) => (this.message = message));
+    constructor(private informationsJeuSolo: SoloGameInformationService, private gestionTimerTour: GestionTimerTourService) {
+        this.message = this.informationsJeuSolo.message;
         this.setAttribute();
     }
 
@@ -32,7 +28,6 @@ export class SidebarRightComponent implements OnInit, OnDestroy {
         this.gestionTimerTour.initiateGame();
         this.turn = this.gestionTimerTour.turn;
     }
-
     difficultyInCharacters() {
         if (this.difficulteFacile === true) {
             return 'Débutant';
@@ -44,9 +39,5 @@ export class SidebarRightComponent implements OnInit, OnDestroy {
     endTurn() {
         this.gestionTimerTour.endTurn();
         this.turn = this.gestionTimerTour.turn;
-    }
-
-    ngOnDestroy() {
-        this.inscription.unsubscribe();
     }
 }
