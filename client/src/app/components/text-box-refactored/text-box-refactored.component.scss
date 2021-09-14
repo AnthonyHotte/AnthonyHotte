@@ -1,17 +1,25 @@
 .DisplayZone{
-    height: 300px;
+    height: 500px;
     border-color: black;
     border-width: 10px;
     width: 300px;
-    border-style:double;
+    border-style:groove;
     margin-bottom: 10px;
     overflow: scroll;
 }
 
 .PlayerMessage{
-    color: aqua;
+    color:blue;
 }
 
 .AlertMessage{
     color:red;
+}
+
+.ButtonMessage{
+    display: inline-flex;
+}
+
+.ButtonCommande{
+    display: inline-flex;
 }

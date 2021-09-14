@@ -9,12 +9,9 @@ import { TextBox } from '../../classes/textBox';
 export class TextBoxRefactoredComponent implements OnInit {
     constructor() {}
 
-    input = new TextBox('');
+    input = new TextBox();
     ngOnInit(): void {}
 
-    // sendInformation(event: MouseEvent) {
-    //     this.input.send();
-    // }
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         if (event.keyCode === 13) {

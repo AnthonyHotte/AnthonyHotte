@@ -3,9 +3,7 @@ export class TextBox {
     inputs: string[] = [];
     character = false;
 
-    constructor(myInput: string) {
-        this.word = myInput;
-    }
+    constructor() {}
     send() {
         this.inputVerification();
 
@@ -14,7 +12,7 @@ export class TextBox {
         }
     }
     inputVerification() {
-        if (this.word.length > 512) {
+        if (this.word.length > 5) {
             this.character = true;
         } else {
             this.character = false;
