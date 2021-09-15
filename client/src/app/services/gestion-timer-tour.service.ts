@@ -8,7 +8,7 @@ export class GestionTimerTourService {
     constructor() {}
 
     initiateGame() {
-        this.turn = 0;
+        this.turn = Math.floor(Math.random()*2);
     }
     endTurn() {
         if (this.turn === 0) {
