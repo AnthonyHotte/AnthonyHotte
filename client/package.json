@@ -24,6 +24,7 @@
     "@angular/platform-browser": "12.1.5",
     "@angular/platform-browser-dynamic": "12.1.5",
     "@angular/router": "12.1.5",
+    "@ciri/ngx-countdown": "^1.0.0",
     "@progress/kendo-angular-common": "^2.0.1",
     "@progress/kendo-angular-label": "^3.1.0",
     "@progress/kendo-licensing": "^1.2.0",

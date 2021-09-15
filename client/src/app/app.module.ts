@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LettersComponent } from '@app/components/letters/letters.component';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
 import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
 import { AppRoutingModule } from '@app/modules/app-routing.module';
@@ -11,13 +12,13 @@ import { AppComponent } from '@app/pages/app/app.component';
 import { GamePageComponent } from '@app/pages/game-page/game-page.component';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
+import { CountdownModule } from '@ciri/ngx-countdown';
 import { AutosizeModule } from 'ngx-autosize';
 import { SidebarRightComponent } from './components/sidebar-right/sidebar-right.component';
 import { TextBoxRefactoredComponent } from './components/text-box-refactored/text-box-refactored.component';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { HighestScoresComponent } from './pages/highest-scores/highest-scores.component';
 import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-game-initiator.component';
-import { SoloModeInformationsService } from './services/solo-mode-informations.service';
 
 /**
  * Main module that is used in main.ts.
@@ -38,9 +39,19 @@ import { SoloModeInformationsService } from './services/solo-mode-informations.s
         SoloGameInitiatorComponent,
         SidebarRightComponent,
         TextBoxRefactoredComponent,
+        LettersComponent,
     ],
-    imports: [AppMaterialModule, AppRoutingModule, BrowserAnimationsModule, BrowserModule, FormsModule, HttpClientModule, AutosizeModule],
-    providers: [SoloModeInformationsService],
+    imports: [
+        AppMaterialModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        AutosizeModule,
+        CountdownModule,
+    ],
+    providers: [],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

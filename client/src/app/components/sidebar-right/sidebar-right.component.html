@@ -1,62 +1,45 @@
 <div class="container">
     <body ng-app="app" style="text-align: Center">
-    <fieldset>
-    <h1>Informations sur la partie en cours</h1>
-    <p>Mode: Jouer Solo (TODO)</p>
-    <p> <label>Votre nom: {{ nomJoueur }}</label> </p>
-    <p> <label> Nom de votre adversaire: {{ nomAdversaire }}</label> </p>
-    <p>
-        <label>Temps par tours: {{ temps }} secondes.</label>
-    </p>
-    <p>
-        <label>Difficulté du joueur virtuel: {{difficultyInCharacters()}}.</label>
-    </p>
-    </fieldset>
-    <fieldset>
-    <h1>Score</h1>
-    <table>
-        <tr>
-          <th><h2>{{nomJoueur}}</h2></th>
-          <th><h2>{{nomAdversaire}}</h2></th>
-        </tr>
-        <tr>
-          <td><h2>TODO</h2></td>
-          <td><h2>TODO</h2></td>
-        </tr>
-      </table>
-    </fieldset>
-    <fieldset>
-        <h1>Timer(temps restant à votre tours)</h1>
-        TODO-Afficher temps/afficher tours de l'adversaire sinon
-        <script>
-            var countDownDate = new Date("Jan 5, 2022 15:37:25").getTime();
-
-// Update the count down every 1 second
-var x = setInterval(function() {
-
-  // Get today's date and time
-  var now = new Date().getTime();
-
-  // Find the distance between now and the count down date
-  var distance = countDownDate - now;
-
-  // Time calculations for days, hours, minutes and seconds
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-  // Display the result in the element with id="demo"
-  document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-  + minutes + "m " + seconds + "s ";
-
-  // If the count down is finished, write some text
-  if (distance < 0) {
-    clearInterval(x);
-    document.getElementById("demo").innerHTML = "EXPIRED";
-  }
-}, 1000);
-        </script>
-    </fieldset>
+        <fieldset>
+            <h1>Informations sur la partie en cours</h1>
+            <p>Mode: Jouer Solo (TODO)</p>
+            <p>
+                <label>Votre nom: {{ nomJoueur[0] }}</label>
+            </p>
+            <p>
+                <label> Nom de votre adversaire: {{ nomJoueur[1] }}</label>
+            </p>
+            <p>
+                <label>Temps par tours: {{ temps }} secondes.</label>
+            </p>
+            <p>
+                <label>Difficulté du joueur virtuel: {{ difficultyInCharacters() }}.</label>
+            </p>
+        </fieldset>
+        <fieldset>
+            <h1>Score</h1>
+            <table>
+                <tr>
+                    <th>
+                        <h2>{{ nomJoueur[0] }}</h2>
+                    </th>
+                    <th>
+                        <h2>{{ nomJoueur[1] }}</h2>
+                    </th>
+                </tr>
+                <tr>
+                    <td><h2>TODO</h2></td>
+                    <td><h2>TODO</h2></td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset>
+            <h1>C'est le tour de {{ nomJoueur[turn] }}</h1>
+            <h2>Temps restant au tour:</h2>
+            <div class="Counter"><ngx-countdown #counter [time]="temps * 1000" format="ss" [autoStart]="true"></ngx-countdown>s</div>
+            <br />
+            <button (click)="counter.start()">Reprendre</button>&nbsp; <button (click)="counter.pause()">pause</button>&nbsp;
+            <button (click)="counter.reset()" (click)="endTurn()">Fin du tour</button>
+        </fieldset>
     </body>
 </div>

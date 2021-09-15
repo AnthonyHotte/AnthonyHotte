@@ -44,11 +44,11 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         <form oninput="tempsDeJeu = Math.max(parseInt(barre.value),parseInt(increment.value))">
                             <input [(ngModel)]="tempsDeJeu" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" /> ou
                             <input [(ngModel)]="tempsDeJeu" type="number" id="increment" name="inc" step="30" min="30" max="300" value="60" /> =
-                            <output name="temps" for="tempsDeJeu">{{ getTempsDeJeu() }}</output> secondes par tour de jeu
+                            <output name="temps" for="tempsDeJeu">{{ tempsDeJeu }}</output> secondes par tour de jeu
                         </form>
                     </fieldset>
                 </div>
-                <p><button *ngIf="nomEstValide" routerLink="/game">Démarrer la partie!</button></p>
+                <p><button *ngIf="nomEstValide" (click)="setNom()" (click)="sendMessage()" routerLink="/game">Démarrer la partie!</button></p>
                 <button class="button" routerLink="/selection">Revenir en arrière</button>
             </article>
         </div>
