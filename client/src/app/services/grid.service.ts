@@ -190,16 +190,19 @@ export class GridService {
         // eslint-disable-next-line max-len
         const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
         const y: number = Math.floor(y1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
-        // TODO check if the letter can be added by the player
+        this.gridContext.strokeRect(x - 12.5, y - 12.5, 23.5, 23.5);
         this.gridContext.fillStyle = 'white';
-        this.gridContext.fillRect(
-            Constants.CASESIZE * (Math.floor(x1 / Constants.CASESIZE) - 1) + Constants.LEFTSPACE,
-            Constants.CASESIZE * (Math.floor(y1 / Constants.CASESIZE) - 1) + Constants.UPPERSPACE,
-            Constants.CASESIZE,
-            Constants.CASESIZE,
-        );
+        this.gridContext.fillRect(x - 12, y - 12, 23, 23);
         this.gridContext.fillStyle = 'black';
         this.gridContext.font = '20px system-ui';
+        this.gridContext.fillText(word, x, y);
+    }
+    drawLetterValue(word: string, x1: number, y1: number) {
+        // eslint-disable-next-line max-len
+        const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + (Constants.CASESIZE * 3) / 4;
+        const y: number = Math.floor(y1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 4;
+        this.gridContext.fillStyle = 'black';
+        this.gridContext.font = '10px system-ui';
         this.gridContext.fillText(word, x, y);
     }
 }
