@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { LettersComponent } from '@app/components/letters/letters.component';
 
-import { SoloGameInitiatorComponent } from './solo-game-initiator.component';
-
-describe('SoloGameInitiatorComponent', () => {
-    let component: SoloGameInitiatorComponent;
-    let fixture: ComponentFixture<SoloGameInitiatorComponent>;
+describe('LettersComponent', () => {
+    let component: LettersComponent;
+    let fixture: ComponentFixture<LettersComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SoloGameInitiatorComponent],
+            declarations: [LettersComponent],
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(SoloGameInitiatorComponent);
+        fixture = TestBed.createComponent(LettersComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

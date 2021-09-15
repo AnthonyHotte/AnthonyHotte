@@ -1,0 +1,5 @@
+<table>
+    <tr>
+        <td class="letter" *ngFor="let letter of letters; let indexOfElem = index" [ngStyle]="{'border-color': (indexOfElem === getIndexSelected()) ? 'red' : 'black'} " >{{letter.letter}}<sub>{{letter.point}}</sub></td>
+    </tr>
+<table>
