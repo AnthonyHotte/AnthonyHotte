@@ -10,6 +10,7 @@ export class TextBoxRefactoredComponent implements OnInit {
     constructor() {}
 
     input = new TextBox();
+
     ngOnInit(): void {}
 
     @HostListener('keydown', ['$event'])
@@ -17,5 +18,13 @@ export class TextBoxRefactoredComponent implements OnInit {
         if (event.keyCode === 13) {
             this.input.send();
         }
+    }
+
+    activateCommand() {
+        this.input.activateCommandButton();
+    }
+
+    activateMessage() {
+        this.input.activateMessageButton();
     }
 }
