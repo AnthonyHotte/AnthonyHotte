@@ -22,3 +22,4 @@ export const VALEUR_TEMPS_DEFAULT = 60;
 export const LONGUEURNOMMAX = 17;
 export const VERIFICATION_PRESENCE = -1;
 export const LENGTHWORDVALIDATION = 3;
+export const MAX_CHARACTERS = 512;
