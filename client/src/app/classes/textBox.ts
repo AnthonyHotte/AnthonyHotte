@@ -1,7 +1,10 @@
+import { MAX_CHARACTERS } from '@app/constants';
 export class TextBox {
     word: string = '';
     inputs: string[] = [];
     character = false;
+    buttonMessageState: string = 'ButtonMessageActivated';
+    buttonCommandState: string = 'ButtonCommandReleased';
 
     constructor() {}
     send() {
@@ -12,10 +15,18 @@ export class TextBox {
         }
     }
     inputVerification() {
-        if (this.word.length > 5) {
+        if (this.word.length > MAX_CHARACTERS) {
             this.character = true;
         } else {
             this.character = false;
         }
+    }
+    activateCommandButton() {
+        this.buttonCommandState = 'ButtonCommandActivated';
+        this.buttonMessageState = 'ButtonMessageReleased';
+    }
+    activateMessageButton() {
+        this.buttonCommandState = 'ButtonCommandReleased';
+        this.buttonMessageState = 'ButtonMessageActivated';
     }
 }
