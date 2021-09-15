@@ -55,19 +55,27 @@ export class LetterService {
         return this.lettersForPlayer;
     }
 
+    swapLetters(index1: number, index2: number): void {
+        const tempLetter: Letter = this.lettersForPlayer[index1];
+        this.lettersForPlayer[index1] = this.lettersForPlayer[index2];
+        this.lettersForPlayer[index2] = tempLetter;
+    }
+
     setIndexSelected(buttonPressed: string): void {
         if (buttonPressed === 'ArrowRight' && typeof this.indexSelected !== 'undefined') {
-            this.buttonPressed = 'ArrowRight';
             if (this.indexSelected === this.lettersForPlayer.length - 1) {
+                this.swapLetters(this.indexSelected, 0);
                 this.indexSelected = 0;
             } else {
+                this.swapLetters(this.indexSelected, this.indexSelected + 1);
                 this.indexSelected++;
             }
         } else if (buttonPressed === 'ArrowLeft' && typeof this.indexSelected !== 'undefined') {
-            this.buttonPressed = 'ArrowLeft';
             if (this.indexSelected === 0) {
+                this.swapLetters(this.lettersForPlayer.length - 1, 0);
                 this.indexSelected = this.lettersForPlayer.length - 1;
             } else {
+                this.swapLetters(this.indexSelected, this.indexSelected - 1);
                 this.indexSelected--;
             }
         } else {
