@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { ENTER_ASCII } from '@app/constants';
 import { TextBox } from '../../classes/textBox';
 
 @Component({
@@ -7,6 +8,11 @@ import { TextBox } from '../../classes/textBox';
     styleUrls: ['./text-box-refactored.component.scss'],
 })
 export class TextBoxRefactoredComponent implements OnInit {
+    word = '';
+    array: string[] = [];
+    buttonCommandState: string = 'ButtonCommandReleased';
+    buttonMessageState: string = 'ButtonMessageActivated';
+
     constructor() {}
 
     input = new TextBox();
@@ -15,8 +21,12 @@ export class TextBoxRefactoredComponent implements OnInit {
 
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
-        if (event.keyCode === 13) {
-            this.input.send();
+        if (event.keyCode === ENTER_ASCII) {
+            this.input.send(this.word);
+            this.word = this.input.getWord();
+            this.array = this.input.getArray();
+            this.buttonCommandState = this.input.getButtonCommandState();
+            this.buttonMessageState = this.input.getButtonMessageState();
         }
     }
 

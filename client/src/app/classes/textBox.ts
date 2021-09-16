@@ -7,20 +7,37 @@ export class TextBox {
     buttonCommandState: string = 'ButtonCommandReleased';
 
     constructor() {}
-    send() {
-        this.inputVerification();
+    send(myWord: string) {
+        this.inputVerification(myWord);
 
         if (this.character === false) {
-            this.inputs.push(this.word);
+            this.inputs.push(myWord);
         }
     }
-    inputVerification() {
-        if (this.word.length > MAX_CHARACTERS) {
+    inputVerification(myWord: string) {
+        if (myWord.length > MAX_CHARACTERS) {
             this.character = true;
         } else {
             this.character = false;
         }
     }
+
+    getWord() {
+        return this.word;
+    }
+
+    getArray() {
+        return this.inputs;
+    }
+
+    getButtonMessageState() {
+        return this.buttonMessageState;
+    }
+
+    getButtonCommandState() {
+        return this.buttonCommandState;
+    }
+
     activateCommandButton() {
         this.buttonCommandState = 'ButtonCommandActivated';
         this.buttonMessageState = 'ButtonMessageReleased';
