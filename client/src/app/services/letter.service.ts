@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Letter } from '@app/letter';
 import { LETTERS } from '@app/all-letters';
+import { Letter } from '@app/letter';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -17,11 +17,13 @@ export class LetterService {
     currentLetterNumberForPlayer: number = 0;
     currentLetterNumberForOpponent: number = 0;
     currentMessage: Observable<string>;
+    letterIsSelected: boolean;
     private messageSource = new BehaviorSubject('default message');
 
     constructor() {
         this.maxLettersInHand = 7;
         this.currentMessage = this.messageSource.asObservable();
+        this.letterIsSelected = false;
         LETTERS.forEach((letter) => {
             for (let i = 0; i < letter.quantity; i++) {
                 this.allLetters.push(letter);
@@ -63,50 +65,73 @@ export class LetterService {
         this.lettersForPlayer[index2] = tempLetter;
     }
 
-    setIndexSelected(buttonPressed: string): void {
-        if (buttonPressed === 'ArrowRight' && typeof this.indexSelected !== 'undefined') {
-            if (this.indexSelected === this.lettersForPlayer.length - 1) {
-                this.swapLetters(this.indexSelected, 0);
-                this.indexSelected = 0;
-            } else {
-                this.swapLetters(this.indexSelected, this.indexSelected + 1);
-                this.indexSelected++;
-            }
-        } else if (buttonPressed === 'ArrowLeft' && typeof this.indexSelected !== 'undefined') {
-            if (this.indexSelected === 0) {
-                this.swapLetters(this.lettersForPlayer.length - 1, 0);
-                this.indexSelected = this.lettersForPlayer.length - 1;
-            } else {
-                this.swapLetters(this.indexSelected, this.indexSelected - 1);
-                this.indexSelected--;
-            }
+    moveLetterRight() {
+        if (this.indexSelected === this.lettersForPlayer.length - 1) {
+            this.swapLetters(this.indexSelected, 0);
+            this.indexSelected = 0;
         } else {
-            let i = 0;
-            let checkLowerHalf = true;
-            if (this.buttonPressed.toLowerCase() === buttonPressed.toLowerCase()) {
-                if (this.indexSelected === this.lettersForPlayer.length - 1) {
-                    i = 0;
-                } else {
-                    i = this.indexSelected + 1;
-                }
+            this.swapLetters(this.indexSelected, this.indexSelected + 1);
+            this.indexSelected++;
+        }
+    }
+
+    moveLetterLeft() {
+        if (this.indexSelected === 0) {
+            this.swapLetters(this.lettersForPlayer.length - 1, 0);
+            this.indexSelected = this.lettersForPlayer.length - 1;
+        } else {
+            this.swapLetters(this.indexSelected, this.indexSelected - 1);
+            this.indexSelected--;
+        }
+    }
+
+    selectIndex(buttonPressed: string): boolean {
+        let i = 0;
+        let checkLowerHalf = true;
+        let letterIsThere = false;
+        if (this.buttonPressed.toLowerCase() === buttonPressed.toLowerCase()) {
+            if (this.indexSelected === this.lettersForPlayer.length - 1) {
+                i = 0;
+            } else {
+                i = this.indexSelected + 1;
             }
-            for (i; i < this.lettersForPlayer.length; i++) {
-                if (buttonPressed.toLowerCase() === this.lettersForPlayer[i].letter.toLowerCase()) {
-                    this.indexSelected = i;
-                    this.buttonPressed = buttonPressed;
-                    checkLowerHalf = false;
-                    break;
-                }
+        }
+        for (i; i < this.lettersForPlayer.length; i++) {
+            if (buttonPressed.toLowerCase() === this.lettersForPlayer[i].letter.toLowerCase()) {
+                this.indexSelected = i;
+                this.buttonPressed = buttonPressed;
+                letterIsThere = true;
+                this.letterIsSelected = true;
+                checkLowerHalf = false;
+                break;
             }
-            if (checkLowerHalf) {
-                for (let j = 0; j < i; j++) {
-                    if (typeof this.lettersForPlayer[j].letter !== 'undefined') {
-                        if (buttonPressed.toLowerCase() === this.lettersForPlayer[j].letter.toLowerCase()) {
-                            this.indexSelected = j;
-                            break;
-                        }
+        }
+        if (checkLowerHalf) {
+            for (let j = 0; j < i; j++) {
+                if (typeof this.lettersForPlayer[j].letter !== 'undefined') {
+                    if (buttonPressed.toLowerCase() === this.lettersForPlayer[j].letter.toLowerCase()) {
+                        this.indexSelected = j;
+                        letterIsThere = true;
+                        this.letterIsSelected = true;
+                        break;
                     }
                 }
+            }
+        }
+        return letterIsThere;
+    }
+
+    setIndexSelected(buttonPressed: string): void {
+        if (buttonPressed === 'ArrowRight' && typeof this.indexSelected !== 'undefined' && this.letterIsSelected) {
+            this.moveLetterRight();
+        } else if (buttonPressed === 'ArrowLeft' && typeof this.indexSelected !== 'undefined' && this.letterIsSelected) {
+            this.moveLetterLeft();
+        } else {
+            const playerHasLetter = this.selectIndex(buttonPressed);
+            if (!playerHasLetter) {
+                this.buttonPressed = '';
+                this.letterIsSelected = false;
+                this.indexSelected = -1;
             }
         }
     }
