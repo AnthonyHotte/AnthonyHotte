@@ -27,7 +27,7 @@ export class SoloGameInitiatorComponent {
         this.nomAdversaire = '';
         this.idNomAdversaire = 0;
         this.nomEstValide = true;
-        this.listeDesInsultes = this.usefullFunction.fileReaderFunction('../../../assets/insulte.txt');
+        this.listeDesInsultes = this.usefullFunction.fileReaderFunction('../../assets/insulte.txt');
         this.tempsDeJeu = VALEUR_TEMPS_DEFAULT;
         this.difficulteFacile = true;
     }
