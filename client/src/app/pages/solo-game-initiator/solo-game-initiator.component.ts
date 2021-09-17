@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { UsefullFunctionService } from '@app/services/usefull-function.service';
 // LENGTHWORDVALIDATION
-import { VALEUR_TEMPS_DEFAULT, LONGUEURNOMMAX, VERIFICATION_PRESENCE } from '@app/constants';
+import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT, VERIFICATION_PRESENCE } from '@app/constants';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
+import { UsefullFunctionService } from '@app/services/usefull-function.service';
 @Component({
     selector: 'app-solo-game-initiator',
     templateUrl: './solo-game-initiator.component.html',
