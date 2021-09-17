@@ -16,6 +16,7 @@ export class SoloOpponentService {
     numberOfLetters: number = 0;
     private messageSource = new BehaviorSubject('default message');
     currentMessage = this.messageSource.asObservable();
+    score: number = 0;
 
     constructor(private letters: LetterService) {
         this.subscription = this.letters.currentMessage.subscribe((message) => (this.message = message));
@@ -31,5 +32,14 @@ export class SoloOpponentService {
 
     changeTurn(message: string) {
       this.messageSource.next(message)
+    }
+
+    reset(){
+      this.letters.addLettersForOpponent(this.letters.MAXLETTERSINHAND);
+      this.numberOfLetters = parseInt(this.message);
+    }
+
+    getScore(){
+      return this.score;
     }
 }

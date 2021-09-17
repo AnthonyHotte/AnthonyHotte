@@ -28,8 +28,8 @@
                     </th>
                 </tr>
                 <tr>
-                    <td><h2>TODO</h2></td>
-                    <td><h2>TODO</h2></td>
+                    <td><h2>{{getScorePlayer()}}</h2></td>
+                    <td><h2>{{getScoreOpponent()}}</h2></td>
                 </tr>
             </table>
         </fieldset>
@@ -40,6 +40,16 @@
             <br />
             <button (click)="counter.start()">Reprendre</button>&nbsp; <button (click)="counter.pause()">pause</button>&nbsp;
             <button (click)="counter.reset()" (click)="endTurn()">Fin du tour</button>
+        </fieldset>
+        <fieldset>
+            <label> Nombre de lettres dans la réserve: {{getNumberRemainingLetters()}} </label>
+        </fieldset>
+        <fieldset *ngIf="getNumberOfLettersForPlayer() < 7 || getNumberOfLettersForOpponent() < 7">
+            <p><label *ngIf="getNumberOfLettersForPlayer() < 7"> Nombre de lettres sur le chevalet pour le joueur: {{getNumberOfLettersForPlayer()}} </label></p>
+            <label *ngIf="getNumberOfLettersForOpponent() < 7"> Nombre de lettres sur le chevalet pour l'adversaire: {{getNumberOfLettersForOpponent()}} </label>
+        </fieldset>
+        <fieldset>
+            <button routerLink="/home">Abandonner la partie courante</button>
         </fieldset>
     </body>
 </div>

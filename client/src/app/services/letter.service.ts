@@ -47,7 +47,7 @@ export class LetterService {
                 this.lettersForOpponent.push(this.allLetters[index]);
                 this.allLetters.splice(index, 1);
             }
-            this.sendNumberOfLettersForOpponent(this.currentLetterNumberForPlayer.toString());
+            this.sendNumberOfLettersForOpponent(this.currentLetterNumberForOpponent.toString());
         } 
     }
 
@@ -115,5 +115,25 @@ export class LetterService {
 
     sendNumberOfLettersForOpponent(message: string) {
         this.messageSource.next(message);
+    }
+
+    reset(){
+    this.allLetters = []; // array containing all the letters available to be picked (the bank of letters)
+    this.lettersForPlayer= []; // array containing the "hand" of the player, the letters he possesses
+    this.lettersForOpponent = []; // array containing the "hand" of the opponent, the letters he possesses
+    this.buttonPressed = ''; // the last button that was pressed by the user.
+    this.indexSelected = 0; // the index of the letter that is currently selected in his hand
+    this.MAXLETTERSINHAND = 7; // constant that is supposed to be in the constant file
+    this.currentLetterNumberForPlayer = 0;
+    this.currentLetterNumberForOpponent = 0;
+        LETTERS.forEach((letter) => {
+            for (let i = 0; i < letter.quantity; i++) {
+                this.allLetters.push(letter);
+            }
+        });
+    }
+
+    sendLettersInSackNumber(){
+        this.messageSource.next(this.allLetters.length.toString());
     }
 }
