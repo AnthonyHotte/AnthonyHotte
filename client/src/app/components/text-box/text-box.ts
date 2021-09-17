@@ -15,7 +15,7 @@ export class TextBoxComponent {
     input: TextBox;
 
     constructor() {
-        this.word = ' ';
+        this.word = '';
         this.array = [];
         this.buttonCommandState = 'ButtonCommandReleased';
         this.buttonMessageState = 'ButtonMessageActivated';
