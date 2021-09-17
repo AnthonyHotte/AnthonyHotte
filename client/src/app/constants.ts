@@ -22,5 +22,15 @@ export const VALEUR_TEMPS_DEFAULT = 60;
 export const LONGUEURNOMMAX = 17;
 export const VERIFICATION_PRESENCE = -1;
 export const LENGTHWORDVALIDATION = 3;
+
+
+// usefull for usefull function
+export const PINKCOLCASE = [1, 6, 7, 9, 10, 15];
+export const REDROWCASE = [1, 8, 15];
+export const LIGHTBLUENEARCENTERROWCASE = [3, 7, 9, 13];
+export const DARKBLUEROWCASE = [2, 6, 10, 14];
+export const NUMBEROFCASEPLUSONE = 16;
+
 export const MAX_CHARACTERS = 512;
 export const ENTER_ASCII = 69;
+
