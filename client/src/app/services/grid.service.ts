@@ -8,7 +8,7 @@ import { isRedCase, isDarkBlueCase, isLightBlueCase, isPinkCase } from '@app/til
 })
 export class GridService {
     gridContext: CanvasRenderingContext2D;
-    private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
+    private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_WIDTH };
 
     drawGrid() {
         // Place numbers at the top
@@ -25,7 +25,7 @@ export class GridService {
                 // word x2 (pink)
                 if (isPinkCase(i, j)) {
                     this.gridContext.fillStyle = 'pink';
-                    if (i !== Constants.MIDDLECASENUMBER && j !== Constants.MIDDLECASENUMBER) {
+                    if (i !== Constants.CENTERCASE && j !== Constants.CENTERCASE) {
                         textChoice = 0;
                     }
                 }
@@ -48,15 +48,15 @@ export class GridService {
                 }
 
                 this.gridContext.fillRect(
-                    Constants.CASESIZE * (i - 1) + Constants.LEFTSPACE,
-                    Constants.CASESIZE * (j - 1) + Constants.UPPERSPACE,
+                    Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
+                    Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
                     Constants.CASESIZE,
                     Constants.CASESIZE,
                 );
 
                 this.gridContext.strokeRect(
-                    Constants.CASESIZE * (i - 1) + Constants.LEFTSPACE,
-                    Constants.CASESIZE * (j - 1) + Constants.UPPERSPACE,
+                    Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
+                    Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
                     Constants.CASESIZE,
                     Constants.CASESIZE,
                 );
@@ -65,13 +65,13 @@ export class GridService {
                     this.gridContext.fillStyle = 'black';
                     this.gridContext.fillText(
                         Constants.TEXTONTILES[textChoice],
-                        Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.LEFTSPACE,
-                        Constants.CASESIZE * (j - 1) + Constants.CASESIZE / 2 + Constants.UPPERSPACE,
+                        Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
+                        Constants.CASESIZE * (j - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
                         Constants.CASESIZE,
                     );
                 }
                 // star
-                else if (i === Constants.MIDDLECASENUMBER && j === Constants.MIDDLECASENUMBER) {
+                else if (i === Constants.CENTERCASE && j === Constants.CENTERCASE) {
                     this.drawStar();
                 }
             }
@@ -81,8 +81,8 @@ export class GridService {
     placeNumberTop() {
         for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
             this.gridContext.beginPath();
-            this.gridContext.moveTo(Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE, 0);
-            this.gridContext.lineTo(Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE, Constants.CASESIZE);
+            this.gridContext.moveTo(Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.SIDESPACE, 0);
+            this.gridContext.lineTo(Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.SIDESPACE, Constants.CASESIZE);
             this.gridContext.globalAlpha = 0;
             this.gridContext.stroke();
 
@@ -92,8 +92,8 @@ export class GridService {
 
             this.gridContext.fillText(
                 (i + 1).toString(),
-                Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.LEFTSPACE,
-                Constants.UPPERSPACE - Constants.CASESIZE / 2,
+                Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.SIDESPACE,
+                Constants.SIDESPACE - Constants.CASESIZE / 2,
             );
         }
     }
@@ -101,8 +101,8 @@ export class GridService {
     placeLetterSide() {
         for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
             this.gridContext.beginPath();
-            this.gridContext.moveTo(0, Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE);
-            this.gridContext.lineTo(Constants.CASESIZE, Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE);
+            this.gridContext.moveTo(0, Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.SIDESPACE);
+            this.gridContext.lineTo(Constants.CASESIZE, Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.SIDESPACE);
             this.gridContext.globalAlpha = 0;
             this.gridContext.stroke();
 
@@ -112,8 +112,8 @@ export class GridService {
 
             this.gridContext.fillText(
                 Constants.SIDELETTERS[i].toString(),
-                Constants.LEFTSPACE - Constants.CASESIZE / 2,
-                Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.UPPERSPACE,
+                Constants.SIDESPACE - Constants.CASESIZE / 2,
+                Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.SIDESPACE,
             );
         }
     }
