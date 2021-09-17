@@ -8,11 +8,11 @@ export class Commands {
     chooseCommands(command: string) {
         switch (command) {
             case '!debug':
-                debugCommand();
+                this.activateDebugCommand();
         }
     }
 
-    debugCommand() {
+    activateDebugCommand() {
         this.debugCommand = true;
         return this.debugCommand;
     }

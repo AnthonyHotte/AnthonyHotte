@@ -32,6 +32,7 @@ export class TextBoxComponent {
             this.array = this.input.getArray();
             this.buttonCommandState = this.input.getButtonCommandState();
             this.buttonMessageState = this.input.getButtonMessageState();
+            this.debugCommand = this.input.getDebugCommand();
         }
     }
 

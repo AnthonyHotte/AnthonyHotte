@@ -61,8 +61,12 @@ export class TextBox {
     isCommand(myWord: string) {
         switch (myWord) {
             case '!debug':
-                this.debugCommand = this.command.debugCommand();
+                this.debugCommand = this.command.activateDebugCommand();
                 break;
         }
+    }
+
+    getDebugCommand() {
+        return this.debugCommand;
     }
 }
