@@ -3,11 +3,12 @@
 </div>
 <div class="DisplayZone">
 
-    <div >
+    <div *ngIf="this.buttonMessageState === 'ButtonMessageActivated'">
         <p class="PlayerMessage" *ngFor="let word of this.array">Utilisateur : {{word}}</p>
     </div>
-    <div *ngIf="">
-        <p class="PlayerMessage" *ngFor="let word of this.array">Utilisateur : {{word}}</p>
+    <div *ngIf="this.debugCommand && this.buttonCommandState === 'ButtonCommandActivated'">
+        <p class="PlayerMessage" *ngFor="let word of this.array">Utilisateurs : {{word}}</p>
+        <p class="PlayerMessage" *ngFor="let word of this.array">Vous etes en mode debug</p>
     </div>
 </div>
 <div *ngIf="input.character">
