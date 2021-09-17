@@ -1,0 +1,53 @@
+.textBox{
+    height: 20px;
+    border-color: black;
+    border-width: 2px;
+    width: 400px;
+    border-style:ridge;
+    margin-bottom: 10px;
+    margin-bottom: 0px;
+    background-color: black;
+    color: white;
+    padding-bottom: 10px;
+}
+
+.title{
+    text-align: center;
+}
+.DisplayZone{
+    height: 400px;
+    border-color: black;
+    border-width: 2px;
+    width: 400px;
+    border-style:groove;
+    margin-bottom: 10px;
+    overflow: scroll;
+}
+
+.PlayerMessage{
+    color:blue;
+}
+
+.AlertMessage{
+    color:red;
+}
+
+.ButtonCommandActivated{
+    background-color: black;
+    color: white;
+}
+
+.ButtonMessageReleased{
+    background-color: white;
+    color: black;
+}
+
+.ButtonMessageActivated{
+    background-color: black;
+    color: white;
+}
+
+.ButtonCommandReleased{
+    background-color:white;
+    color:black;
+}
