@@ -149,7 +149,7 @@ export class LetterService {
         this.lettersForPlayer = []; // array containing the "hand" of the player, the letters he possesses
         this.lettersForOpponent = []; // array containing the "hand" of the opponent, the letters he possesses
         this.buttonPressed = ''; // the last button that was pressed by the user.
-        this.indexSelected = 0; // the index of the letter that is currently selected in his hand
+        this.indexSelected = -1; // the index of the letter that is currently selected in his hand
         this.maxLettersInHand = 7; // constant that is supposed to be in the constant file
         this.currentLetterNumberForPlayer = 0;
         this.currentLetterNumberForOpponent = 0;
