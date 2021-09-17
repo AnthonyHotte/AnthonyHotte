@@ -13,6 +13,7 @@ export class TextBoxComponent {
     buttonCommandState: string;
     buttonMessageState: string;
     input: TextBox;
+    debugCommand: boolean;
 
     constructor() {
         this.word = '';
@@ -20,6 +21,7 @@ export class TextBoxComponent {
         this.buttonCommandState = 'ButtonCommandReleased';
         this.buttonMessageState = 'ButtonMessageActivated';
         this.input = new TextBox();
+        this.debugCommand = false;
     }
 
     @HostListener('keydown', ['$event'])

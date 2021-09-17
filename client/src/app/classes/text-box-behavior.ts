@@ -1,16 +1,27 @@
 import { MAX_CHARACTERS } from '@app/constants';
+import { Commands } from './commands';
 export class TextBox {
-    word: string = '';
-    inputs: string[] = [];
-    character = false;
-    buttonMessageState: string = 'ButtonMessageActivated';
-    buttonCommandState: string = 'ButtonCommandReleased';
+    word: string;
+    inputs: string[];
+    character: boolean;
+    buttonMessageState: string;
+    buttonCommandState: string;
+    debugCommand: boolean;
+    command: Commands;
 
-    constructor() {}
+    constructor() {
+        this.word = '';
+        this.inputs = [];
+        this.character = false;
+        this.buttonMessageState = 'ButtonMessageActivated';
+        this.buttonCommandState = 'ButtonCommandReleased';
+        this.debugCommand = false;
+        this.command = new Commands();
+    }
     send(myWord: string) {
         this.inputVerification(myWord);
-
         if (this.character === false) {
+            this.isCommand(myWord);
             this.inputs.push(myWord);
         }
     }
@@ -45,5 +56,13 @@ export class TextBox {
     activateMessageButton() {
         this.buttonCommandState = 'ButtonCommandReleased';
         this.buttonMessageState = 'ButtonMessageActivated';
+    }
+
+    isCommand(myWord: string) {
+        switch (myWord) {
+            case '!debug':
+                this.debugCommand = this.command.debugCommand();
+                break;
+        }
     }
 }
