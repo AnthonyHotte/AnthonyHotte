@@ -6,7 +6,6 @@ export class TextBox {
     buttonMessageState: string = 'ButtonMessageActivated';
     buttonCommandState: string = 'ButtonCommandReleased';
 
-    constructor() {}
     send(myWord: string) {
         this.inputVerification(myWord);
 
