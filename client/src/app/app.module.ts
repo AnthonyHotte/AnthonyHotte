@@ -15,7 +15,7 @@ import { MaterialPageComponent } from '@app/pages/material-page/material-page.co
 import { CountdownModule } from '@ciri/ngx-countdown';
 import { AutosizeModule } from 'ngx-autosize';
 import { SidebarRightComponent } from './components/sidebar-right/sidebar-right.component';
-import { TextBoxRefactoredComponent } from './components/text-box-refactored/text-box-refactored.component';
+import { TextBoxComponent } from './components/text-box/text-box';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { HighestScoresComponent } from './pages/highest-scores/highest-scores.component';
 import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-game-initiator.component';
@@ -38,7 +38,7 @@ import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-gam
         GameSelectionPageComponent,
         SoloGameInitiatorComponent,
         SidebarRightComponent,
-        TextBoxRefactoredComponent,
+        TextBoxComponent,
         LettersComponent,
     ],
     imports: [

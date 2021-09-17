@@ -1,4 +1,4 @@
-import { TextBox } from './textBox';
+import { TextBox } from './text-box-behavior';
 
 describe('TextBox', () => {
     it('should create an instance', () => {
