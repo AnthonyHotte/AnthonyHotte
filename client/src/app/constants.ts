@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 // useful constants for the board
-export const CASESIZE = 30;
 export const LEFTSPACE = 30;
 export const UPPERSPACE = 30;
 export const NUMBEROFCASE = 15;
 export const DEFAULT_WIDTH = 500;
 export const DEFAULT_HEIGHT = 500;
+export const CASESIZE = 30;
+export const MIDDLECASENUMBER = 8;
+export const NOTEXT = -1;
 export const SIDELETTERS: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'];
 // to write on the Tiles
 export const TEXTONTILES = ['mot compte double', 'mot compte tripple', 'lettre compte tripple', 'lettre compte double'];

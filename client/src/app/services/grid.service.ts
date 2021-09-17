@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
-// eslint-disable-next-line no-restricted-imports
-import * as Constants from '../constants';
-// eslint-disable-next-line no-restricted-imports
-import { isRedCase, isDarkBlueCase, isLightBlueCase, isPinkCase } from '../tile-type-usefull-function';
+import * as Constants from '@app/constants';
+import { isRedCase, isDarkBlueCase, isLightBlueCase, isPinkCase } from '@app/tile-type-usefull-function';
 
 @Injectable({
     providedIn: 'root',
@@ -12,8 +10,6 @@ export class GridService {
     gridContext: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_HEIGHT };
 
-    // TODO : pas de valeurs magiques!! Faudrait avoir une meilleure manière de le faire
-    /* eslint-disable @typescript-eslint/no-magic-numbers */
     drawGrid() {
         // Place numbers at the top
         this.placeNumberTop();
@@ -29,7 +25,7 @@ export class GridService {
                 // word x2 (pink)
                 if (isPinkCase(i, j)) {
                     this.gridContext.fillStyle = 'pink';
-                    if (i !== 8 && j !== 8) {
+                    if (i !== Constants.MIDDLECASENUMBER && j !== Constants.MIDDLECASENUMBER) {
                         textChoice = 0;
                     }
                 }
@@ -65,7 +61,7 @@ export class GridService {
                     Constants.CASESIZE,
                 );
                 // to write the text
-                if (textChoice !== -1) {
+                if (textChoice !== Constants.NOTEXT) {
                     this.gridContext.fillStyle = 'black';
                     this.gridContext.fillText(
                         Constants.TEXTONTILES[textChoice],
@@ -75,7 +71,7 @@ export class GridService {
                     );
                 }
                 // star
-                else if (i === 8 && j === 8) {
+                else if (i === Constants.MIDDLECASENUMBER && j === Constants.MIDDLECASENUMBER) {
                     this.drawStar();
                 }
             }
