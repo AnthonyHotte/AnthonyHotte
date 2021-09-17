@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
+import { Letter } from '@app/letter';
 // eslint-disable-next-line no-restricted-imports
 import * as Constants from '../constants';
 // eslint-disable-next-line no-restricted-imports
-import { isRedCase, isDarkBlueCase, isLightBlueCase, isPinkCase } from '../tile-type-usefull-function';
+import { isDarkBlueCase, isLightBlueCase, isPinkCase, isRedCase } from '../tile-type-usefull-function';
 
 @Injectable({
     providedIn: 'root',
@@ -169,7 +170,7 @@ export class GridService {
     get height(): number {
         return this.canvasSize.y;
     }
-
+    // usefull for future mouse input
     drawLetter(word: string, x1: number, y1: number) {
         // eslint-disable-next-line max-len
         const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
@@ -181,12 +182,44 @@ export class GridService {
         this.gridContext.font = '20px system-ui';
         this.gridContext.fillText(word, x, y);
     }
-    drawLetterValue(word: string, x1: number, y1: number) {
+    drawLetterwithposition(word: Letter, x1: number, y1: number) {
+        // const x: number = x1.charCodeAt(0) - Constants.SIDELETTERS_TO_ASCII * Constants.CASESIZE + Constants.CASESIZE / 2;
+        // const y: number = Number(x1.charCodeAt(0)) * Constants.CASESIZE + Constants.CASESIZE / 2;
+        const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE / 2;
+        const y: number = y1 * Constants.CASESIZE * Constants.CASESIZE + Constants.CASESIZE / 2;
+        this.gridContext.strokeRect(x - 12.5, y - 12.5, 23.5, 23.5);
+        this.gridContext.fillStyle = 'white';
+        this.gridContext.fillRect(x - 12, y - 12, 23, 23);
+        this.gridContext.fillStyle = 'black';
+        this.gridContext.font = '20px system-ui';
+        this.gridContext.fillText(word.letter, x, y);
+        this.drawLetterValue(word, x, y);
+        // this.drawLetterValue('2', x, y);
+    }
+    // TODO to be removed, added for testing purpose;
+    drawLetterwithpositionstring(word: string, x1: number, y1: number) {
+        // const x: number = x1.charCodeAt(0) - Constants.SIDELETTERS_TO_ASCII * Constants.CASESIZE + Constants.CASESIZE / 2;
+        // const y: number = Number(x1.charCodeAt(0)) * Constants.CASESIZE + Constants.CASESIZE / 2;
+        const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE / 2;
+        const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE + Constants.CASESIZE / 2;
+        this.gridContext.strokeRect(x - 12.5, y - 12.5, 23.5, 23.5);
+        this.gridContext.fillStyle = 'white';
+        this.gridContext.fillRect(x - 12, y - 12, 23, 23);
+        this.gridContext.fillStyle = 'black';
+        this.gridContext.font = '20px system-ui';
+        this.gridContext.fillText(word, x, y);
+        // this.drawLetterValue(word, x, y);
+        // this.drawLetterValue('2', x, y);
+    }
+    drawLetterValue(word: Letter, x1: number, y1: number) {
+        // drawLetterValue(word: string, x1: number, y1: number) {
         // eslint-disable-next-line max-len
-        const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + (Constants.CASESIZE * 3) / 4;
-        const y: number = Math.floor(y1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 4;
+        // const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + (Constants.CASESIZE * 3) / 4; // useful for future mouse input
+        // const y: number = Math.floor(y1 / Constants.CASESIZE) * Constants.CASESIZE + (Constants.CASESIZE * 3) / 4;
+        const x: number = x1 * Constants.CASESIZE + (Constants.CASESIZE * 3) / 4;
+        const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE / 4;
         this.gridContext.fillStyle = 'black';
         this.gridContext.font = '10px system-ui';
-        this.gridContext.fillText(word, x, y);
+        this.gridContext.fillText(word.letter, x, y);
     }
 }
