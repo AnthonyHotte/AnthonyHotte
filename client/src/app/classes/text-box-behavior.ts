@@ -61,6 +61,7 @@ export class TextBox {
     isCommand(myWord: string) {
         switch (myWord) {
             case '!debug':
+                this.inputs.push('Vous etes en mode debug');
                 this.debugCommand = this.command.activateDebugCommand();
                 break;
         }
