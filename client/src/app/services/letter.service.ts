@@ -1,25 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Letter } from '@app/letter';
 import { LETTERS } from '@app/all-letters';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class LetterService {
-    private messageSource = new BehaviorSubject('default message');
-    currentMessage = this.messageSource.asObservable();
     message: string[] = [];
     allLetters: Letter[] = []; // array containing all the letters available to be picked (the bank of letters)
     lettersForPlayer: Letter[] = []; // array containing the "hand" of the player, the letters he possesses
     lettersForOpponent: Letter[] = []; // array containing the "hand" of the opponent, the letters he possesses
     buttonPressed: string = ''; // the last button that was pressed by the user.
     indexSelected: number; // the index of the letter that is currently selected in his hand
-    MAXLETTERSINHAND: number = 7; // constant that is supposed to be in the constant file
+    maxLettersInHand: number; // constant that is supposed to be in the constant file
     currentLetterNumberForPlayer: number = 0;
     currentLetterNumberForOpponent: number = 0;
+    currentMessage: Observable<string>;
+    private messageSource = new BehaviorSubject('default message');
 
     constructor() {
+        this.maxLettersInHand = 7;
+        this.currentMessage = this.messageSource.asObservable();
         LETTERS.forEach((letter) => {
             for (let i = 0; i < letter.quantity; i++) {
                 this.allLetters.push(letter);
@@ -28,7 +30,7 @@ export class LetterService {
     }
 
     addLettersForPlayer(amount: number): void {
-        if(this.currentLetterNumberForPlayer + amount <= this.MAXLETTERSINHAND) {
+        if (this.currentLetterNumberForPlayer + amount <= this.maxLettersInHand) {
             this.currentLetterNumberForPlayer += amount;
             for (let i = 0; i < amount; i++) {
                 const index: number = Math.floor(Math.random() * this.allLetters.length);
@@ -36,11 +38,11 @@ export class LetterService {
                 this.allLetters.splice(index, 1);
             }
             this.sendNumberOfLettersForPlayer(this.currentLetterNumberForPlayer.toString());
-        }        
+        }
     }
 
     addLettersForOpponent(amount: number): void {
-        if(this.currentLetterNumberForOpponent + amount <= this.MAXLETTERSINHAND) {
+        if (this.currentLetterNumberForOpponent + amount <= this.maxLettersInHand) {
             this.currentLetterNumberForOpponent += amount;
             for (let i = 0; i < amount; i++) {
                 const index: number = Math.floor(Math.random() * this.allLetters.length);
@@ -48,7 +50,7 @@ export class LetterService {
                 this.allLetters.splice(index, 1);
             }
             this.sendNumberOfLettersForOpponent(this.currentLetterNumberForOpponent.toString());
-        } 
+        }
     }
 
     getLetters(): Letter[] {
@@ -117,15 +119,15 @@ export class LetterService {
         this.messageSource.next(message);
     }
 
-    reset(){
-    this.allLetters = []; // array containing all the letters available to be picked (the bank of letters)
-    this.lettersForPlayer= []; // array containing the "hand" of the player, the letters he possesses
-    this.lettersForOpponent = []; // array containing the "hand" of the opponent, the letters he possesses
-    this.buttonPressed = ''; // the last button that was pressed by the user.
-    this.indexSelected = 0; // the index of the letter that is currently selected in his hand
-    this.MAXLETTERSINHAND = 7; // constant that is supposed to be in the constant file
-    this.currentLetterNumberForPlayer = 0;
-    this.currentLetterNumberForOpponent = 0;
+    reset() {
+        this.allLetters = []; // array containing all the letters available to be picked (the bank of letters)
+        this.lettersForPlayer = []; // array containing the "hand" of the player, the letters he possesses
+        this.lettersForOpponent = []; // array containing the "hand" of the opponent, the letters he possesses
+        this.buttonPressed = ''; // the last button that was pressed by the user.
+        this.indexSelected = 0; // the index of the letter that is currently selected in his hand
+        this.maxLettersInHand = 7; // constant that is supposed to be in the constant file
+        this.currentLetterNumberForPlayer = 0;
+        this.currentLetterNumberForOpponent = 0;
         LETTERS.forEach((letter) => {
             for (let i = 0; i < letter.quantity; i++) {
                 this.allLetters.push(letter);
@@ -133,7 +135,7 @@ export class LetterService {
         });
     }
 
-    sendLettersInSackNumber(){
+    sendLettersInSackNumber() {
         this.messageSource.next(this.allLetters.length.toString());
     }
 }

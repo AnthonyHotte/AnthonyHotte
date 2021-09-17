@@ -1,6 +1,6 @@
-//https://fireship.io/lessons/sharing-data-between-angular-components-four-methods/
+// https://fireship.io/lessons/sharing-data-between-angular-components-four-methods/
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { LetterService } from './letter.service';
 
 @Injectable({
@@ -12,31 +12,34 @@ export class SoloPlayerService {
     myTurn: boolean;
     valueToEndGame: number;
     maximumAllowedSkippedTurns: number = 3;
-    private messageSource = new BehaviorSubject('default message');
-    currentMessage = this.messageSource.asObservable();
+    currentMessage: Observable<string>;
     numberOfLetters: number = 0;
     score: number = 0;
+    private messageSource = new BehaviorSubject('default message');
 
     constructor(private letters: LetterService) {
+        this.currentMessage = this.messageSource.asObservable();
         this.subscription = this.letters.currentMessage.subscribe((message) => (this.message = message));
     }
 
     play() {
-      this.myTurn = parseInt(this.message) === 0;
-      if (this.myTurn === true) {
-      }
+        this.myTurn = parseInt(this.message, 10) === 0;
+        if (this.myTurn === true) {
+            return 'ToDO';
+        }
+        return 'ToDO';
     }
 
     changeTurn(message: string) {
-      this.messageSource.next(message)
+        this.messageSource.next(message);
     }
 
-    reset(){
-      this.letters.addLettersForPlayer(this.letters.MAXLETTERSINHAND);
-      this.numberOfLetters = parseInt(this.message);
+    reset() {
+        this.letters.addLettersForPlayer(this.letters.maxLettersInHand);
+        this.numberOfLetters = parseInt(this.message, 10);
     }
 
-    getScore(){
-      return this.score;
+    getScore() {
+        return this.score;
     }
 }

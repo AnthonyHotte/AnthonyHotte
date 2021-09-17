@@ -1,45 +1,47 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { LetterService } from './letter.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
-
 export class SoloOpponentService {
-
     message: string;
     subscription: Subscription;
     myTurn: boolean;
     valueToEndGame: number;
     maximumAllowedSkippedTurns: number = 3;
     numberOfLetters: number = 0;
-    private messageSource = new BehaviorSubject('default message');
-    currentMessage = this.messageSource.asObservable();
     score: number = 0;
+    currentMessage: Observable<string>;
+    private messageSource = new BehaviorSubject('default message');
 
     constructor(private letters: LetterService) {
         this.subscription = this.letters.currentMessage.subscribe((message) => (this.message = message));
-        this.letters.addLettersForOpponent(this.letters.MAXLETTERSINHAND);
-        this.numberOfLetters = parseInt(this.message);
+        this.currentMessage = this.messageSource.asObservable();
+        this.letters.addLettersForOpponent(this.letters.maxLettersInHand);
+        this.numberOfLetters = parseInt(this.message, 10);
     }
 
     play() {
-      this.myTurn = parseInt(this.message) === 1;
-      if (this.myTurn === true) {
-      }
+        this.myTurn = parseInt(this.message, 10) === 1;
+        if (this.myTurn === true) {
+            return 'ToDo';
+        }
+
+        return 'ToDO';
     }
 
     changeTurn(message: string) {
-      this.messageSource.next(message)
+        this.messageSource.next(message);
     }
 
-    reset(){
-      this.letters.addLettersForOpponent(this.letters.MAXLETTERSINHAND);
-      this.numberOfLetters = parseInt(this.message);
+    reset() {
+        this.letters.addLettersForOpponent(this.letters.maxLettersInHand);
+        this.numberOfLetters = parseInt(this.message, 10);
     }
 
-    getScore(){
-      return this.score;
+    getScore() {
+        return this.score;
     }
 }

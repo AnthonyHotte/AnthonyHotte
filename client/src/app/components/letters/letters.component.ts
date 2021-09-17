@@ -15,17 +15,20 @@ export class LettersComponent implements OnInit {
     subscription: Subscription;
     letters: Letter[] = []; // the hand of the user
     buttonPressed: string = ''; // the key that is being pressed by the user.
-    MAXLETTERSINHAND: number = this.letterService.MAXLETTERSINHAND; // constant that is supposed to be in the constant file
-    currentLetterNumber: number = this.letterService.currentLetterNumberForPlayer;
+    maxLettersInHand: number;
+    currentLetterNumber: number;
 
-    constructor(private letterService: LetterService, private soloPlayer : SoloPlayerService, private soloOpponent : SoloOpponentService) {}
+    constructor(private letterService: LetterService, private soloPlayer: SoloPlayerService, private soloOpponent: SoloOpponentService) {
+        this.maxLettersInHand = this.letterService.maxLettersInHand; // constant that is supposed to be in the constant file
+        this.currentLetterNumber = this.letterService.currentLetterNumberForPlayer;
+    }
 
     getNewLetters(amount: number): void {
-        if(this.currentLetterNumber <= this.MAXLETTERSINHAND){
+        if (this.currentLetterNumber + amount <= this.maxLettersInHand) {
             this.soloPlayer.reset();
             this.soloOpponent.reset();
             this.letters = this.letterService.getLetters();
-            this.currentLetterNumber = parseInt(this.message);
+            this.currentLetterNumber = parseInt(this.message, 10);
         }
     }
 
@@ -35,7 +38,7 @@ export class LettersComponent implements OnInit {
 
     ngOnInit(): void {
         this.letterService.reset();
-        this.getNewLetters(this.MAXLETTERSINHAND);
-        this.subscription = this.letterService.currentMessage.subscribe(message => this.message = message);
+        this.getNewLetters(this.maxLettersInHand);
+        this.subscription = this.letterService.currentMessage.subscribe((message) => (this.message = message));
     }
 }
