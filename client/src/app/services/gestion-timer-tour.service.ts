@@ -5,10 +5,13 @@ import { Injectable } from '@angular/core';
 })
 export class GestionTimerTourService {
     turn: number = 0;
-    constructor() {}
+
+    constructor() {
+        this.initiateGame();
+    }
 
     initiateGame() {
-        this.turn = Math.floor(Math.random()*2);
+        this.turn = Math.floor(Math.random() * 2);
     }
     endTurn() {
         if (this.turn === 0) {

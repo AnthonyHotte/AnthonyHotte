@@ -1,4 +1,3 @@
-// Find a better way to take off magic numbers...
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 // word x 3
 export const isRedCase = (col: number, row: number): boolean => {

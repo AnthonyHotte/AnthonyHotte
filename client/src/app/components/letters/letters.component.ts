@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { LetterService } from '@app/services/letter.service';
 import { Letter } from '@app/letter';
 import { Subscription } from 'rxjs';
+import { SoloPlayerService } from '@app/services/solo-player.service';
+import { SoloOpponentService } from '@app/services/solo-opponent.service';
 
 @Component({
     selector: 'app-letters',
@@ -13,16 +15,20 @@ export class LettersComponent implements OnInit {
     subscription: Subscription;
     letters: Letter[] = []; // the hand of the user
     buttonPressed: string = ''; // the key that is being pressed by the user.
-    MAXLETTERSINHAND: number = this.letterService.MAXLETTERSINHAND; // constant that is supposed to be in the constant file
-    currentLetterNumber: number = this.letterService.currentLetterNumberForPlayer;
+    maxLettersInHand: number;
+    currentLetterNumber: number;
 
-    constructor(private letterService: LetterService) {}
+    constructor(private letterService: LetterService, private soloPlayer: SoloPlayerService, private soloOpponent: SoloOpponentService) {
+        this.maxLettersInHand = this.letterService.maxLettersInHand; // constant that is supposed to be in the constant file
+        this.currentLetterNumber = this.letterService.currentLetterNumberForPlayer;
+    }
 
     getNewLetters(amount: number): void {
-        if(this.currentLetterNumber <= this.MAXLETTERSINHAND){
-            this.letterService.addLettersForPlayer(amount);
+        if (this.currentLetterNumber + amount <= this.maxLettersInHand) {
+            this.soloPlayer.reset();
+            this.soloOpponent.reset();
             this.letters = this.letterService.getLetters();
-            this.currentLetterNumber = parseInt(this.message);
+            this.currentLetterNumber = parseInt(this.message, 10);
         }
     }
 
@@ -31,11 +37,8 @@ export class LettersComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getNewLetters(this.MAXLETTERSINHAND);
-        this.subscription = this.letterService.currentMessage.subscribe(message => this.message = message);
-    }
-
-    getLetters(){
-        this.letterService.allLetters.length;
+        this.letterService.reset();
+        this.getNewLetters(this.maxLettersInHand);
+        this.subscription = this.letterService.currentMessage.subscribe((message) => (this.message = message));
     }
 }

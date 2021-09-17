@@ -1,19 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { TextBoxComponent } from './text-box';
 
-import { SidebarRightComponent } from './sidebar-right.component';
-
-describe('SidebarRightComponent', () => {
-    let component: SidebarRightComponent;
-    let fixture: ComponentFixture<SidebarRightComponent>;
+describe('TextBoxComponent', () => {
+    let component: TextBoxComponent;
+    let fixture: ComponentFixture<TextBoxComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SidebarRightComponent],
+            declarations: [TextBoxComponent],
+            imports: [FormsModule],
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(SidebarRightComponent);
+        fixture = TestBed.createComponent(TextBoxComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
