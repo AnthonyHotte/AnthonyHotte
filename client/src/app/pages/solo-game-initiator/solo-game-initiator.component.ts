@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-// eslint-disable-next-line no-restricted-imports
-import { fileReaderFunction } from '../../useful-function';
-// eslint-disable-next-line no-restricted-imports
-import { VALEUR_TEMPS_DEFAULT, LONGUEURNOMMAX, VERIFICATION_PRESENCE, LENGTHWORDVALIDATION } from '../../constants';
+import { UsefullFunctionService } from '@app/services/usefull-function.service';
+// LENGTHWORDVALIDATION
+import { VALEUR_TEMPS_DEFAULT, LONGUEURNOMMAX, VERIFICATION_PRESENCE } from '@app/constants';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 @Component({
     selector: 'app-solo-game-initiator',
@@ -12,15 +11,26 @@ import { SoloGameInformationService } from '@app/services/solo-game-information.
 export class SoloGameInitiatorComponent {
     message: string[] = [];
 
-    nomTemporaire: string = 'Joueur';
-    nom: string = 'Joueur';
+    nomTemporaire: string;
+    nom: string;
     nomAdversaire: string;
     idNomAdversaire: number;
-    nomEstValide: boolean = true;
-    listeDesInsultes = fileReaderFunction('../../../assets/insulte.txt');
-    tempsDeJeu: number = VALEUR_TEMPS_DEFAULT;
+    nomEstValide: boolean;
+    listeDesInsultes: string;
+    tempsDeJeu: number;
     difficulteFacile: boolean = true;
-    constructor(private informations: SoloGameInformationService) {}
+    constructor(private informations: SoloGameInformationService, private usefullFunction: UsefullFunctionService) {
+        this.message = [];
+
+        this.nomTemporaire = 'Joueur';
+        this.nom = 'Joueur';
+        this.nomAdversaire = '';
+        this.idNomAdversaire = 0;
+        this.nomEstValide = true;
+        this.listeDesInsultes = this.usefullFunction.fileReaderFunction('../../../assets/insulte.txt');
+        this.tempsDeJeu = VALEUR_TEMPS_DEFAULT;
+        this.difficulteFacile = true;
+    }
 
     sendMessage(): void {
         // send message to subscribers via observable subject
@@ -45,7 +55,7 @@ export class SoloGameInitiatorComponent {
     }
 
     verifierNoms() {
-        let placeInName = 0;
+        // let placeInName = 0;
         const temp: string = this.nomTemporaire.split(' ').join('').toLocaleLowerCase();
         this.assignerNomAdversaire();
         if (this.nomTemporaire.split(' ').join('').toLocaleLowerCase() === this.nomAdversaire.split(' ').join('').toLocaleLowerCase()) {
@@ -64,15 +74,23 @@ export class SoloGameInitiatorComponent {
         } else if (this.nomTemporaire.length > LONGUEURNOMMAX) {
             this.nomEstValide = false;
         } else if (
+            this.listeDesInsultes.search(temp.substring(0, 3)) !== VERIFICATION_PRESENCE &&
+            this.listeDesInsultes.search(temp.substring(4, 7)) !== VERIFICATION_PRESENCE &&
+            this.listeDesInsultes.search(temp.substring(8, 10)) !== VERIFICATION_PRESENCE &&
+            this.listeDesInsultes.search(temp.substring(11, 13)) !== VERIFICATION_PRESENCE &&
+            this.listeDesInsultes.search(temp.substring(14, 16)) !== VERIFICATION_PRESENCE
+
+            /*
             this.listeDesInsultes.search(temp.substring(placeInName++, LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE &&
-            this.listeDesInsultes.search(temp.substring(LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE &&
             this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
                 VERIFICATION_PRESENCE &&
             this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
                 VERIFICATION_PRESENCE &&
             this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
                 VERIFICATION_PRESENCE &&
-            this.listeDesInsultes.search(temp.substring(placeInName * LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE
+            this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
+                VERIFICATION_PRESENCE &&
+            this.listeDesInsultes.search(temp.substring(placeInName * LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE*/
         ) {
             this.nomEstValide = false;
         } else {

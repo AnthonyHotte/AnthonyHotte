@@ -10,8 +10,8 @@ import { SoloOpponentService } from '@app/services/solo-opponent.service';
     templateUrl: './sidebar-right.component.html',
     styleUrls: ['./sidebar-right.component.scss'],
 })
-export class SidebarRightComponent implements OnInit{
-    messagePlayer: string; 
+export class SidebarRightComponent implements OnInit {
+    messagePlayer: string;
     opponentMessage: string;
     subscriptionPlayer: Subscription;
     subscriptionOpponent: Subscription;
@@ -22,15 +22,20 @@ export class SidebarRightComponent implements OnInit{
     temps: number;
     turn: number;
 
-    constructor(private informationsJeuSolo: SoloGameInformationService, private gestionTimerTour: GestionTimerTourService, private soloPlayer: SoloPlayerService, private soloOpponent: SoloOpponentService) {
+    constructor(
+        private informationsJeuSolo: SoloGameInformationService,
+        private gestionTimerTour: GestionTimerTourService,
+        private soloPlayer: SoloPlayerService,
+        private soloOpponent: SoloOpponentService,
+    ) {
         this.message = this.informationsJeuSolo.message;
         this.setAttribute();
     }
 
     ngOnInit() {
-        this.subscriptionPlayer = this.soloPlayer.currentMessage.subscribe(messagePlayer => this.messagePlayer = messagePlayer);
-        this.subscriptionOpponent = this.soloOpponent.currentMessage.subscribe(opponentMessage => this.opponentMessage = opponentMessage);
-      }
+        this.subscriptionPlayer = this.soloPlayer.currentMessage.subscribe((messagePlayer) => (this.messagePlayer = messagePlayer));
+        this.subscriptionOpponent = this.soloOpponent.currentMessage.subscribe((opponentMessage) => (this.opponentMessage = opponentMessage));
+    }
 
     setAttribute() {
         this.nomJoueur[0] = this.message[0];
@@ -51,12 +56,10 @@ export class SidebarRightComponent implements OnInit{
     endTurn() {
         this.gestionTimerTour.endTurn();
         this.turn = this.gestionTimerTour.turn;
-        if(this.turn === 0) {
+        if (this.turn === 0) {
             this.soloPlayer.changeTurn(this.turn.toString());
-        }
-        else {
+        } else {
             this.soloOpponent.changeTurn(this.turn.toString());
         }
     }
-
 }
