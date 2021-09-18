@@ -42,4 +42,8 @@ export class SoloPlayerService {
     getScore() {
         return this.score;
     }
+
+    incrementPassedTurns() {
+        this.valueToEndGame++;
+    }
 }

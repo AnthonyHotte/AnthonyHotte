@@ -36,10 +36,10 @@
         <fieldset>
             <h1>C'est le tour de {{ playerName[turn] }}</h1>
             <h2>Temps restant au tour:</h2>
-            <div class="Counter"><ngx-countdown #counter [time]="time * 1000" format="ss" [autoStart]="true"></ngx-countdown>s</div>
+            <div class="Counter"><ngx-countdown #counter [time]="time * 1000" format="ss" [autoStart]="true" (finish) = "endTurn()" (finish) = "counter.start()"></ngx-countdown>s</div>
             <br />
-            <button (click)="counter.start()">Reprendre</button>&nbsp; <button (click)="counter.pause()">pause</button>&nbsp;
-            <button (click)="counter.reset()" (click)="endTurn()">Fin du tour</button>
+            <button *ngIf="turn === 1" (click)="counter.start()">Reprendre</button>&nbsp; <button *ngIf="turn === 1" (click)="counter.pause()">Pause</button>&nbsp;
+            <button *ngIf="turn === 0" (click)="counter.reset()" (click)="skipTurn()" >Passer son tour</button>
         </fieldset>
         <fieldset>
             <label> Nombre de lettres dans la réserve: {{getNumberRemainingLetters()}} </label>
