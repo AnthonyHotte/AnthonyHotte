@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
-import { SoloGameInformationService } from '@app/services/solo-game-information.service';
-import { Subscription } from 'rxjs';
-import { SoloPlayerService } from '@app/services/solo-player.service';
-import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { LetterService } from '@app/services/letter.service';
+import { SoloGameInformationService } from '@app/services/solo-game-information.service';
+import { SoloOpponentService } from '@app/services/solo-opponent.service';
+import { SoloPlayerService } from '@app/services/solo-player.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-sidebar-right',
@@ -21,6 +22,8 @@ export class SidebarRightComponent implements OnInit {
     message: string[] = [];
     playerName: string[] = ['', ''];
 
+    numberOfSkippedTurns: number = 0;
+
     easyDifficultyIsTrue: boolean;
     time: number;
     turn: number;
@@ -31,6 +34,7 @@ export class SidebarRightComponent implements OnInit {
         private soloPlayer: SoloPlayerService,
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
+        private link: Router,
     ) {
         this.message = this.soloGameInformation.message;
         this.setAttribute();
@@ -70,6 +74,18 @@ export class SidebarRightComponent implements OnInit {
         }
     }
 
+    skipTurn() {
+        if (this.numberOfSkippedTurns < 2) {
+            this.turnTimeController.endTurn();
+            this.turn = this.turnTimeController.turn;
+            this.soloPlayer.changeTurn(this.turn.toString());
+            this.soloPlayer.incrementPassedTurns();
+            this.numberOfSkippedTurns++;
+        } else {
+            this.finishCurrentGame();
+        }
+    }
+
     getNumberRemainingLetters() {
         this.letterService.sendLettersInSackNumber();
         return this.messageLetterService;
@@ -89,5 +105,9 @@ export class SidebarRightComponent implements OnInit {
 
     getScoreOpponent() {
         return this.soloOpponent.getScore();
+    }
+
+    finishCurrentGame() {
+        this.link.navigate(['home']);
     }
 }
