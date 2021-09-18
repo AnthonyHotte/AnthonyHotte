@@ -20,11 +20,7 @@ export class LettersComponent implements OnInit {
     currentLetterNumber: number;
     letterSize: number;
 
-    constructor(private letterService: LetterService, private soloPlayer: SoloPlayerService, private soloOpponent: SoloOpponentService) {
-        this.maxLettersInHand = this.letterService.maxLettersInHand; // constant that is supposed to be in the constant file
-        this.currentLetterNumber = this.letterService.currentLetterNumberForPlayer;
-        this.letterSize = Constants.CASESIZE;
-    }
+    constructor(private letterService: LetterService, private soloPlayer: SoloPlayerService, private soloOpponent: SoloOpponentService) {}
 
     getNewLetters(amount: number): void {
         if (this.currentLetterNumber + amount <= this.maxLettersInHand) {
@@ -41,7 +37,19 @@ export class LettersComponent implements OnInit {
 
     ngOnInit(): void {
         this.letterService.reset();
+        this.maxLettersInHand = this.letterService.maxLettersInHand; // constant that is supposed to be in the constant file
+        this.currentLetterNumber = this.letterService.currentLetterNumberForPlayer;
+        this.letterSize = Constants.CASESIZE;
         this.getNewLetters(this.maxLettersInHand);
         this.subscription = this.letterService.currentMessage.subscribe((message) => (this.message = message));
+    }
+
+    onRightClick(letter: string) {
+        this.letterService.setIndexSelected(letter);
+        if (this.letterService.selectedLettersForExchangePlayer.has(this.letterService.indexSelected)) {
+            this.letterService.selectedLettersForExchangePlayer.delete(this.letterService.indexSelected);
+        } else {
+            this.letterService.selectedLettersForExchangePlayer.add(this.letterService.indexSelected);
+        }
     }
 }

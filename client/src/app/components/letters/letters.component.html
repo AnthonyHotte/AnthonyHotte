@@ -1,16 +1,19 @@
+
 <table>
     <tr>
         <td
             class="letter"
             *ngFor="let letter of letters; let indexOfElem = index"
-            [ngStyle]="{
-                'text-align': 'center',
+              [ngStyle]="{
+                  'text-align': 'center',
                 'width.px': letterSize,
-                'height.px': letterSize,
-                'border-color': indexOfElem === getIndexSelected() ? 'red' : 'black'
-            }"
-        >
-            {{ letter.letter }}<sub>{{ letter.point }}</sub>
+               'height.px': letterSize,
+              'border-color': indexOfElem === getIndexSelected() ? 'red' : 'black'
+               }"
+            >
+                <div (contextmenu)="onRightClick(letter.letter)">
+                {{ letter.letter }}<sub>{{ letter.point }}</sub>
+                </div>
         </td>
     </tr>
     <table></table>
