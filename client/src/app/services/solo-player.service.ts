@@ -47,7 +47,7 @@ export class SoloPlayerService {
         this.valueToEndGame++;
     }
 
-    exchangeLetters(){
+    exchangeLetters() {
         this.letters.exchangeLettersForPlayer();
     }
 }
