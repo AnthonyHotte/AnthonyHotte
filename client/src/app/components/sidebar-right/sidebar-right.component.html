@@ -49,6 +49,11 @@
             <label *ngIf="getNumberOfLettersForOpponent() < 7"> Nombre de lettres sur le chevalet pour l'adversaire: {{getNumberOfLettersForOpponent()}} </label>
         </fieldset>
         <fieldset>
+            <h2 *ngIf="turn === 0">Échangeur de lettres:</h2>
+            <p><label *ngIf="turn === 0">{{this.showLettersToBeExchanged()}}</label></p>
+            <button *ngIf="turn === 0" (click)="exchangeLetters()">Échanger des lettres</button>
+        </fieldset>
+        <fieldset>
             <button routerLink="/home">Abandonner la partie courante</button>
         </fieldset>
     </body>

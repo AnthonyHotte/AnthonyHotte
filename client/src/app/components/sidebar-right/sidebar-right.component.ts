@@ -55,6 +55,9 @@ export class SidebarRightComponent implements OnInit {
         this.time = parseInt(this.message[3], 10);
         this.turnTimeController.initiateGame();
         this.turn = this.turnTimeController.turn;
+        this.letterService.reset();
+        this.soloPlayer.reset();
+        this.soloOpponent.reset();
     }
     difficultyInCharacters() {
         if (this.easyDifficultyIsTrue === true) {
@@ -109,5 +112,21 @@ export class SidebarRightComponent implements OnInit {
 
     finishCurrentGame() {
         this.link.navigate(['home']);
+    }
+
+    exchangeLetters() {
+        this.soloPlayer.exchangeLetters();
+        this.endTurn();
+    }
+
+    showLettersToBeExchanged() {
+        let letters = 'Aucune lettre';
+        if (this.letterService.selectedLettersForExchangePlayer.size !== 0) {
+            letters = '';
+        }
+        for (const item of this.letterService.getLettersForExchange()) {
+            letters += item + ' ';
+        }
+        return letters;
     }
 }

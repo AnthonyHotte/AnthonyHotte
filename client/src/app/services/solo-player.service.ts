@@ -46,4 +46,8 @@ export class SoloPlayerService {
     incrementPassedTurns() {
         this.valueToEndGame++;
     }
+
+    exchangeLetters(){
+        this.letters.exchangeLettersForPlayer();
+    }
 }
