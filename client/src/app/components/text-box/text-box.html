@@ -2,8 +2,9 @@
     <h1 class="title">Boite de communication</h1>
 </div>
 <div class="DisplayZone">
-    <div *ngIf="this.buttonMessageState === 'ButtonMessageActivated'">
-        <p class="PlayerMessage" *ngFor="let word of this.array">Utilisateur : {{word}}</p>
+
+    <div >
+        <p class="PlayerMessage" *ngFor="let word of this.array">Utilisateur : {{word}} {{this.getText()}}</p>
     </div>
     <div *ngIf="this.debugCommand && this.buttonCommandState === 'ButtonCommandActivated'">
         <p class="PlayerMessage" *ngFor="let word of this.array">Utilisateurs : {{word}}</p>
@@ -13,8 +14,8 @@
 <div *ngIf="input.character">
     <p class="AlertMessage"> Votre commande ou message est trop longue</p>
 </div>
-<form #myInput="ngForm">
-    <input type="text" autocomplete="off" ngModel name="commandsAndMessages" [(ngModel)]="this.word">
+<form #myInput="ngForm" >
+    <input type="text" autocomplete="off" ngModel name="commandsAndMessages" [(ngModel)]="this.word" (keyup.enter)="this.verifyCommand(this.array[this.array.length - 1])">
     <button [class]="this.input.buttonMessageState" (click)="activateMessage()">Message</button>
     <button [class]="this.input.buttonCommandState" (click)="activateCommand()">Commande</button>
 </form>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-// LENGTHWORDVALIDATION
-import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT, VERIFICATION_PRESENCE } from '@app/constants';
+import { UsefullFunctionService } from '@app/services/usefull-function.service';
+import { VALEUR_TEMPS_DEFAULT, LONGUEURNOMMAX, VERIFICATION_PRESENCE, LENGTHWORDVALIDATION } from '@app/constants';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { UsefullFunctionService } from '@app/services/usefull-function.service';
 @Component({
@@ -58,7 +58,7 @@ export class SoloGameInitiatorComponent {
     }
 
     verifierNoms() {
-        // let placeInName = 0;
+        let placeInName = 0;
         const temp: string = this.nomTemporaire.split(' ').join('').toLocaleLowerCase();
         this.assignerNomAdversaire();
         if (this.nomTemporaire.split(' ').join('').toLocaleLowerCase() === this.nomAdversaire.split(' ').join('').toLocaleLowerCase()) {
@@ -77,23 +77,16 @@ export class SoloGameInitiatorComponent {
         } else if (this.nomTemporaire.length > LONGUEURNOMMAX) {
             this.nomEstValide = false;
         } else if (
-            this.listeDesInsultes.search(temp.substring(0, 3)) !== VERIFICATION_PRESENCE &&
-            this.listeDesInsultes.search(temp.substring(4, 7)) !== VERIFICATION_PRESENCE &&
-            this.listeDesInsultes.search(temp.substring(8, 10)) !== VERIFICATION_PRESENCE &&
-            this.listeDesInsultes.search(temp.substring(11, 13)) !== VERIFICATION_PRESENCE &&
-            this.listeDesInsultes.search(temp.substring(14, 16)) !== VERIFICATION_PRESENCE
-
-            /*
-            this.listeDesInsultes.search(temp.substring(placeInName++, LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE &&
+            this.listeDesInsultes.search(temp.substring(placeInName++, LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE ||
             this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE &&
+                VERIFICATION_PRESENCE ||
             this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE &&
+                VERIFICATION_PRESENCE ||
             this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE &&
+                VERIFICATION_PRESENCE ||
             this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE &&
-            this.listeDesInsultes.search(temp.substring(placeInName * LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE*/
+                VERIFICATION_PRESENCE ||
+            this.listeDesInsultes.search(temp.substring(placeInName * LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE
         ) {
             this.nomEstValide = false;
         } else {
