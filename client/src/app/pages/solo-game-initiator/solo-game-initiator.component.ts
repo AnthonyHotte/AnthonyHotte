@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UsefullFunctionService } from '@app/services/usefull-function.service';
 import { VALEUR_TEMPS_DEFAULT, LONGUEURNOMMAX, VERIFICATION_PRESENCE, LENGTHWORDVALIDATION } from '@app/constants';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
+
 @Component({
     selector: 'app-solo-game-initiator',
     templateUrl: './solo-game-initiator.component.html',
@@ -18,7 +19,10 @@ export class SoloGameInitiatorComponent {
     listeDesInsultes: string;
     tempsDeJeu: number;
     difficulteFacile: boolean = true;
-    constructor(private informations: SoloGameInformationService, private usefullFunction: UsefullFunctionService) {
+    constructor(
+        private informations: SoloGameInformationService,
+        private usefullFunction: UsefullFunctionService, // private toTextBox: CommunicationTextBoxSoloGameInitiatorService,
+    ) {
         this.message = [];
 
         this.nomTemporaire = 'Joueur';

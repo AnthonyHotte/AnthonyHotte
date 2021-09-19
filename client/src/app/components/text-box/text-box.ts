@@ -27,6 +27,8 @@ export class TextBoxComponent implements OnInit {
     buttonCommandState: string;
     buttonMessageState: string;
     input: TextBox;
+
+    debugCommand: boolean;
     turn: number;
     text: string;
     valueToEndGame: number;
@@ -43,6 +45,7 @@ export class TextBoxComponent implements OnInit {
         this.buttonCommandState = 'ButtonCommandReleased';
         this.buttonMessageState = 'ButtonMessageActivated';
         this.input = new TextBox();
+        this.debugCommand = false;
     }
 
     @HostListener('keydown', ['$event'])
@@ -53,6 +56,7 @@ export class TextBoxComponent implements OnInit {
             this.array = this.input.getArray();
             this.buttonCommandState = this.input.getButtonCommandState();
             this.buttonMessageState = this.input.getButtonMessageState();
+            this.debugCommand = this.input.getDebugCommand();
         }
     }
 
