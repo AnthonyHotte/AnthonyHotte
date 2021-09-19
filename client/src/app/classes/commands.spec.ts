@@ -1,7 +1,6 @@
-import { Debug } from './commands';
-
-describe('Debug', () => {
+import { Commands } from './commands';
+describe('Commands', () => {
     it('should create an instance', () => {
-        expect(new Debug()).toBeTruthy();
+        expect(new Commands()).toBeTruthy();
     });
 });
