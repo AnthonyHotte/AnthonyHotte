@@ -16,9 +16,11 @@ export class SidebarRightComponent implements OnInit {
     messagePlayer: string;
     opponentMessage: string;
     messageLetterService: string;
+    messageTimeManager: string;
     subscriptionPlayer: Subscription;
     subscriptionOpponent: Subscription;
     subscriptionLetterService: Subscription;
+    subscriptionTimeManager: Subscription;
     message: string[] = [];
     playerName: string[] = ['', ''];
 
@@ -27,6 +29,8 @@ export class SidebarRightComponent implements OnInit {
     easyDifficultyIsTrue: boolean;
     time: number;
     turn: number;
+
+    changedTurns: boolean = false;
 
     constructor(
         private soloGameInformation: SoloGameInformationService,
@@ -45,6 +49,9 @@ export class SidebarRightComponent implements OnInit {
         this.subscriptionOpponent = this.soloOpponent.currentMessage.subscribe((opponentMessage) => (this.opponentMessage = opponentMessage));
         this.subscriptionLetterService = this.letterService.currentMessage.subscribe(
             (messageLetterService) => (this.messageLetterService = messageLetterService),
+        );
+        this.subscriptionTimeManager = this.turnTimeController.currentMessage.subscribe(
+            (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
         );
     }
 
@@ -69,21 +76,23 @@ export class SidebarRightComponent implements OnInit {
 
     endTurn() {
         this.turnTimeController.endTurn();
-        this.turn = this.turnTimeController.turn;
+        this.turn = parseInt(this.messageTimeManager, 10);
         if (this.turn === 0) {
             this.soloPlayer.changeTurn(this.turn.toString());
         } else {
             this.soloOpponent.changeTurn(this.turn.toString());
         }
+        this.changedTurns = true;
     }
 
     skipTurn() {
-        if (this.numberOfSkippedTurns < 2) {
+        if (this.soloPlayer.valueToEndGame < 2) {
             this.turnTimeController.endTurn();
-            this.turn = this.turnTimeController.turn;
+            this.turn = parseInt(this.messageTimeManager, 10);
             this.soloPlayer.changeTurn(this.turn.toString());
             this.soloPlayer.incrementPassedTurns();
-            this.numberOfSkippedTurns++;
+            this.numberOfSkippedTurns = this.soloPlayer.valueToEndGame;
+            this.changedTurns = true;
         } else {
             this.finishCurrentGame();
         }
@@ -128,5 +137,21 @@ export class SidebarRightComponent implements OnInit {
             letters += item + ' ';
         }
         return letters;
+    }
+
+    getPlayerName() {
+        if (this.turn !== this.turnTimeController.turn) {
+            this.changedTurns = true;
+            this.turn = this.turnTimeController.turn;
+        }
+        return this.playerName[this.turn];
+    }
+
+    verifyChangedTurns() {
+        if (this.changedTurns === true) {
+            this.time = parseInt(this.message[3], 10);
+        }
+        this.changedTurns = false;
+        return this.time;
     }
 }
