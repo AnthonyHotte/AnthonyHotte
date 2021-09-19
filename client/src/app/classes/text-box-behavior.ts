@@ -64,6 +64,8 @@ export class TextBox {
                 this.inputs.push('Vous etes en mode debug');
                 this.debugCommand = this.command.activateDebugCommand();
                 break;
+            // case //condition pour appeler la methode:
+            // this.command.activatePlayerCommand();
         }
     }
 
