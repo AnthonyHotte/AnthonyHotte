@@ -99,7 +99,7 @@ export class TextBoxComponent implements OnInit {
             } else {
                 this.text = 'Erreur de syntaxe...';
             }
-        } else if (this.buttonCommandState === 'ButtonCommandActivated' && this.turn !== 0) {
+        } else if (this.buttonCommandState === 'ButtonCommandActivated' && this.turn !== 0 && word !== '!debug') {
             this.text = 'Commande impossible a réaliser...';
         }
     }
@@ -157,7 +157,7 @@ export class TextBoxComponent implements OnInit {
     }
 
     getText() {
-        if (this.buttonCommandState === 'ButtonCommandActivated') {
+        if (this.buttonCommandState === 'ButtonCommandActivated' && !this.debugCommand) {
             const temp = this.text.toString();
             return temp.toString();
         }
