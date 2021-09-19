@@ -35,27 +35,42 @@ export class SoloOpponentService {
     }
 
     play() {
-        this.myTurn = parseInt(this.message, 10) === 1;
+        this.myTurn = parseInt(this.messageTimeManager, 10) === 1;
         if (this.myTurn === true) {
-            const probabilityOfAction = this.calculateProbability();
+            const HUNDRED = 100;
+            const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             const TEN = 10;
             const TWENTY = 20;
-            if (probabilityOfAction <= TEN) {
-                this.incrementPassedTurns();
-                this.myTurn = false;
-                const turn = 0;
-                this.changeTurn(turn.toString());
-                this.messageSoloPlayer.next(this.valueToEndGame.toString());
-            } else if (probabilityOfAction <= TWENTY) {
+            if (PROBABILITY_OF_ACTION <= TEN) {
+                // skip turn
+                this.skipTurn();
+            } else if (PROBABILITY_OF_ACTION <= TWENTY) {
+                // trade letters
+                const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.numberOfLetters);
+                if (NUMBER_OF_LETTERS_TO_TRADE <= this.letters.allLetters.length) {
+                    this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
+                } else {
+                    this.skipTurn();
+                }
             } else {
+                // play a word
+                const PROBABILITY_OF_POINTS = this.calculateProbability(HUNDRED);
+                const FORTY = 40;
+                const SEVENTY = 70;
+                if (PROBABILITY_OF_POINTS <= FORTY) {
+                    this.findLessThanEqualToSixPointWord();
+                } else if (PROBABILITY_OF_POINTS <= SEVENTY) {
+                    this.findAWordForSevenToTwelvePoints();
+                } else {
+                    this.findAWordForThirteenToEighteenPoints();
+                }
             }
         }
 
         return 'ToDO';
     }
 
-    calculateProbability() {
-        const percentage = 100;
+    calculateProbability(percentage: number) {
         return Math.floor(Math.random() * percentage);
     }
 
@@ -86,5 +101,39 @@ export class SoloOpponentService {
 
     sendNumberOfSkippedTurn() {
         this.messageSource.next(this.valueToEndGame.toString());
+    }
+
+    skipTurn() {
+        this.incrementPassedTurns();
+        this.myTurn = false;
+        const turn = 0;
+        this.changeTurn(turn.toString());
+        this.messageSoloPlayer.next(this.valueToEndGame.toString());
+        this.timeManager.endTurn();
+    }
+
+    exchangeLetters(numberOfLettersToTrade: number) {
+        let i = 0;
+        while (i < numberOfLettersToTrade) {
+            const INDEX_OF_LETTER_TO_TRADE = this.calculateProbability(this.numberOfLetters);
+            if (!this.letters.selectedLettersForExchangeOpponent.has(i)) {
+                this.letters.selectedLettersForExchangeOpponent.add(INDEX_OF_LETTER_TO_TRADE);
+                i++;
+            }
+        }
+        this.letters.exchangeLettersForOpponent();
+        this.timeManager.endTurn();
+    }
+
+    findLessThanEqualToSixPointWord(){
+
+    }
+
+    findAWordForSevenToTwelvePoints(){
+
+    }
+
+    findAWordForThirteenToEighteenPoints(){
+
     }
 }

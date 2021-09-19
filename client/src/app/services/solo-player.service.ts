@@ -37,7 +37,7 @@ export class SoloPlayerService {
     }
 
     play() {
-        this.myTurn = parseInt(this.message, 10) === 0;
+        this.myTurn = parseInt(this.messageTimeManager, 10) === 0;
         if (this.myTurn === true) {
             return 'ToDo';
         }
@@ -60,6 +60,7 @@ export class SoloPlayerService {
     }
 
     incrementPassedTurns() {
+        this.valueToEndGame = parseInt(this.messageSoloOpponent, 10);
         if (this.lastTurnWasASkip) {
             this.valueToEndGame++;
         } else {
