@@ -2,24 +2,30 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { LetterService } from './letter.service';
+import { GestionTimerTourService } from './gestion-timer-tour.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SoloPlayerService {
     message: string;
+    messageTimeManager: string;
     subscription: Subscription;
+    subscriptionTimeManager: Subscription;
     myTurn: boolean;
-    valueToEndGame: number;
+    valueToEndGame: number = 0;
     maximumAllowedSkippedTurns: number = 3;
     currentMessage: Observable<string>;
     numberOfLetters: number = 0;
     score: number = 0;
     private messageSource = new BehaviorSubject('default message');
 
-    constructor(private letters: LetterService) {
+    constructor(private letters: LetterService, private timeManager: GestionTimerTourService) {
         this.currentMessage = this.messageSource.asObservable();
         this.subscription = this.letters.currentMessage.subscribe((message) => (this.message = message));
+        this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
+            (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
+        );
     }
 
     play() {
@@ -32,11 +38,13 @@ export class SoloPlayerService {
 
     changeTurn(message: string) {
         this.messageSource.next(message);
+        this.myTurn = parseInt(this.message, 10) === 0;
     }
 
     reset() {
         this.letters.addLettersForPlayer(this.letters.maxLettersInHand);
         this.numberOfLetters = parseInt(this.message, 10);
+        this.valueToEndGame = 0;
     }
 
     getScore() {
@@ -45,9 +53,15 @@ export class SoloPlayerService {
 
     incrementPassedTurns() {
         this.valueToEndGame++;
+        this.myTurn = false;
+        this.changeTurn(this.myTurn.toString());
     }
 
     exchangeLetters() {
         this.letters.exchangeLettersForPlayer();
+    }
+
+    sendNumberOfSkippedTurn() {
+        this.messageSource.next(this.valueToEndGame.toString());
     }
 }
