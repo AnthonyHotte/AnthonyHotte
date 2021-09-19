@@ -7,8 +7,6 @@ import { LetterService } from '@app/services/letter.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { Subscription } from 'rxjs';
 
-
-
 @Component({
     selector: 'app-text-box',
     templateUrl: './text-box.html',

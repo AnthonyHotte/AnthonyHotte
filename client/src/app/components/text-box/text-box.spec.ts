@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TextBoxComponent } from './text-box';
 
 describe('TextBoxComponent', () => {
@@ -9,7 +10,7 @@ describe('TextBoxComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [TextBoxComponent],
-            imports: [FormsModule],
+            imports: [FormsModule, RouterTestingModule],
         }).compileComponents();
     });
 
