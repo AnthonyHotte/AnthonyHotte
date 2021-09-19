@@ -2,13 +2,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { LetterService } from './letter.service';
+import { SoloOpponentService } from './solo-opponent.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SoloPlayerService {
     message: string;
+    messageSoloOpponent: string;
     subscription: Subscription;
+    subscriptionSoloOpponent: Subscription;
     myTurn: boolean;
     valueToEndGame: number;
     maximumAllowedSkippedTurns: number = 3;
@@ -17,15 +20,18 @@ export class SoloPlayerService {
     score: number = 0;
     private messageSource = new BehaviorSubject('default message');
 
-    constructor(private letters: LetterService) {
+    constructor(private letters: LetterService, private soloOpponent: SoloOpponentService) {
         this.currentMessage = this.messageSource.asObservable();
         this.subscription = this.letters.currentMessage.subscribe((message) => (this.message = message));
+        this.subscriptionSoloOpponent = this.soloOpponent.currentMessageSoloPlayer.subscribe(
+            (messageSoloOpponent) => (this.messageSoloOpponent = messageSoloOpponent),
+        );
     }
 
     play() {
         this.myTurn = parseInt(this.message, 10) === 0;
         if (this.myTurn === true) {
-            return 'ToDO';
+            return 'ToDo';
         }
         return 'ToDO';
     }
@@ -37,6 +43,7 @@ export class SoloPlayerService {
     reset() {
         this.letters.addLettersForPlayer(this.letters.maxLettersInHand);
         this.numberOfLetters = parseInt(this.message, 10);
+        this.valueToEndGame = 0;
     }
 
     getScore() {
