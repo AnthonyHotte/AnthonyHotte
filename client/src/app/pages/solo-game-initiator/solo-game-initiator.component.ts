@@ -19,7 +19,10 @@ export class SoloGameInitiatorComponent {
     listeDesInsultes: string;
     tempsDeJeu: number;
     difficulteFacile: boolean = true;
-    constructor(private informations: SoloGameInformationService, private usefullFunction: UsefullFunctionService) {
+    constructor(
+        private informations: SoloGameInformationService,
+        private usefullFunction: UsefullFunctionService, // private toTextBox: CommunicationTextBoxSoloGameInitiatorService,
+    ) {
         this.message = [];
 
         this.nomTemporaire = 'Joueur';
