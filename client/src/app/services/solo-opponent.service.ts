@@ -13,10 +13,11 @@ export class SoloOpponentService {
     subscriptionTimeManager: Subscription;
     myTurn: boolean;
     valueToEndGame: number = 0;
-    maximumAllowedSkippedTurns: number = 3;
+    maximumAllowedSkippedTurns: number;
     numberOfLetters: number = 0;
     score: number = 0;
     currentMessage: Observable<string>;
+    lastTurnWasASkip: boolean = false;
     private messageSource = new BehaviorSubject('default message');
 
     constructor(private letters: LetterService, private timeManager: GestionTimerTourService) {
@@ -27,6 +28,7 @@ export class SoloOpponentService {
         this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
             (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
         );
+        this.maximumAllowedSkippedTurns = 5;
     }
 
     play() {
@@ -39,7 +41,11 @@ export class SoloOpponentService {
     }
 
     incrementPassedTurns() {
-        this.valueToEndGame++;
+        if (this.lastTurnWasASkip) {
+            this.valueToEndGame++;
+        } else {
+            this.valueToEndGame = 1;
+        }
         this.myTurn = false;
         this.changeTurn(this.myTurn.toString());
     }
