@@ -35,6 +35,9 @@ export class TextBoxComponent implements OnInit {
     text: string;
     valueToEndGame: number;
 
+    playerName: string;
+    oponentName: string;
+
     constructor(
         private soloPlayer: SoloPlayerService,
         private letterService: LetterService,
