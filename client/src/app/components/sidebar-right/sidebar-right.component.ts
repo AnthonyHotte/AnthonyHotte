@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
-import { SoloGameInformationService } from '@app/services/solo-game-information.service';
-import { Subscription } from 'rxjs';
-import { SoloPlayerService } from '@app/services/solo-player.service';
-import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { LetterService } from '@app/services/letter.service';
+import { SoloGameInformationService } from '@app/services/solo-game-information.service';
+import { SoloOpponentService } from '@app/services/solo-opponent.service';
+import { SoloPlayerService } from '@app/services/solo-player.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-sidebar-right',
@@ -15,15 +16,21 @@ export class SidebarRightComponent implements OnInit {
     messagePlayer: string;
     opponentMessage: string;
     messageLetterService: string;
+    messageTimeManager: string;
     subscriptionPlayer: Subscription;
     subscriptionOpponent: Subscription;
     subscriptionLetterService: Subscription;
+    subscriptionTimeManager: Subscription;
     message: string[] = [];
     playerName: string[] = ['', ''];
+
+    numberOfSkippedTurns: number = 0;
 
     easyDifficultyIsTrue: boolean;
     time: number;
     turn: number;
+
+    changedTurns: boolean = false;
 
     constructor(
         private soloGameInformation: SoloGameInformationService,
@@ -31,6 +38,7 @@ export class SidebarRightComponent implements OnInit {
         private soloPlayer: SoloPlayerService,
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
+        private link: Router,
     ) {
         this.message = this.soloGameInformation.message;
         this.setAttribute();
@@ -42,6 +50,9 @@ export class SidebarRightComponent implements OnInit {
         this.subscriptionLetterService = this.letterService.currentMessage.subscribe(
             (messageLetterService) => (this.messageLetterService = messageLetterService),
         );
+        this.subscriptionTimeManager = this.turnTimeController.currentMessage.subscribe(
+            (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
+        );
     }
 
     setAttribute() {
@@ -51,6 +62,9 @@ export class SidebarRightComponent implements OnInit {
         this.time = parseInt(this.message[3], 10);
         this.turnTimeController.initiateGame();
         this.turn = this.turnTimeController.turn;
+        this.letterService.reset();
+        this.soloPlayer.reset();
+        this.soloOpponent.reset();
     }
     difficultyInCharacters() {
         if (this.easyDifficultyIsTrue === true) {
@@ -62,11 +76,25 @@ export class SidebarRightComponent implements OnInit {
 
     endTurn() {
         this.turnTimeController.endTurn();
-        this.turn = this.turnTimeController.turn;
+        this.turn = parseInt(this.messageTimeManager, 10);
         if (this.turn === 0) {
             this.soloPlayer.changeTurn(this.turn.toString());
         } else {
             this.soloOpponent.changeTurn(this.turn.toString());
+        }
+        this.changedTurns = true;
+    }
+
+    skipTurn() {
+        if (this.soloPlayer.valueToEndGame < 2) {
+            this.turnTimeController.endTurn();
+            this.turn = parseInt(this.messageTimeManager, 10);
+            this.soloPlayer.changeTurn(this.turn.toString());
+            this.soloPlayer.incrementPassedTurns();
+            this.numberOfSkippedTurns = this.soloPlayer.valueToEndGame;
+            this.changedTurns = true;
+        } else {
+            this.finishCurrentGame();
         }
     }
 
@@ -89,5 +117,41 @@ export class SidebarRightComponent implements OnInit {
 
     getScoreOpponent() {
         return this.soloOpponent.getScore();
+    }
+
+    finishCurrentGame() {
+        this.link.navigate(['home']);
+    }
+
+    exchangeLetters() {
+        this.soloPlayer.exchangeLetters();
+        this.endTurn();
+    }
+
+    showLettersToBeExchanged() {
+        let letters = 'Aucune lettre';
+        if (this.letterService.selectedLettersForExchangePlayer.size !== 0) {
+            letters = '';
+        }
+        for (const item of this.letterService.getLettersForExchange()) {
+            letters += item + ' ';
+        }
+        return letters;
+    }
+
+    getPlayerName() {
+        if (this.turn !== this.turnTimeController.turn) {
+            this.changedTurns = true;
+            this.turn = this.turnTimeController.turn;
+        }
+        return this.playerName[this.turn];
+    }
+
+    verifyChangedTurns() {
+        if (this.changedTurns === true) {
+            this.time = parseInt(this.message[3], 10);
+        }
+        this.changedTurns = false;
+        return this.time;
     }
 }

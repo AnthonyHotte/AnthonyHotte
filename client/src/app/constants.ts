@@ -26,7 +26,16 @@ export const VERIFICATION_PRESENCE = -1;
 export const LENGTHWORDVALIDATION = 3;
 export const PLACERCOMMANDFIRSTARGUMENTVALIDLENGTH = 3;
 export const PLACERCOMMANDFIRSTARGUMENTVALIDLENGTH2 = 4;
+export const PLACERCOMMANDLENGTH = 6;
 export const ASCIICODEOFLOWERA = 97;
 export const ASCIICODEOFLOWERZ = 122;
+
+// usefull for usefull function
+export const PINKCOLCASE = [1, 6, 7, 9, 10, 15];
+export const REDROWCASE = [1, 8, 15];
+export const LIGHTBLUENEARCENTERROWCASE = [3, 7, 9, 13];
+export const DARKBLUEROWCASE = [2, 6, 10, 14];
+export const NUMBEROFCASEPLUSONE = 16;
+
 export const MAX_CHARACTERS = 512;
 export const ENTER_ASCII = 69;
