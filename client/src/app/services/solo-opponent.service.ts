@@ -16,11 +16,13 @@ export class SoloOpponentService {
     valueToEndGame: number = 0;
     maximumAllowedSkippedTurns: number;
     numberOfLetters: number = 0;
+    messageTextBox: Observable<string[]>;
     score: number = 0;
     currentMessage: Observable<string>;
     lastTurnWasASkip: boolean = false;
     private messageSource = new BehaviorSubject('default message');
-    private messageSoloPlayer = new BehaviorSubject('default message');
+    private messageSoloPlayer = new BehaviorSubject('trading with solo player');
+    private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
 
     constructor(private letters: LetterService, private timeManager: GestionTimerTourService) {
         this.subscription = this.letters.currentMessage.subscribe((message) => (this.message = message));
@@ -31,6 +33,7 @@ export class SoloOpponentService {
         this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
             (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
         );
+        this.messageTextBox = this.sourceMessageTextBox.asObservable();
         this.maximumAllowedSkippedTurns = 5;
     }
 
@@ -121,19 +124,24 @@ export class SoloOpponentService {
                 i++;
             }
         }
+        this.sendTradedLettersInformation(numberOfLettersToTrade);
         this.letters.exchangeLettersForOpponent();
         this.timeManager.endTurn();
     }
 
-    findLessThanEqualToSixPointWord(){
-
+    findLessThanEqualToSixPointWord() {
+        return 'ToDo';
     }
 
-    findAWordForSevenToTwelvePoints(){
-
+    findAWordForSevenToTwelvePoints() {
+        return 'ToDo';
     }
 
-    findAWordForThirteenToEighteenPoints(){
+    findAWordForThirteenToEighteenPoints() {
+        return 'ToDO';
+    }
 
+    sendTradedLettersInformation(numberOfLettersToTrade: number) {
+        this.sourceMessageTextBox.next(['!échanger', numberOfLettersToTrade.toString()]);
     }
 }

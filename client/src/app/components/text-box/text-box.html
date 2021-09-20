@@ -7,7 +7,10 @@
         <p class="PlayerMessage" *ngFor="let word of this.array">Utilisateur : {{word}} {{this.getText()}}</p>
     </div>
     <div *ngIf="this.debugCommand && this.buttonCommandState === 'ButtonCommandActivated'">
-        <p class="PlayerMessage" *ngFor="let word of this.array">Vous etes en mode debug</p>
+        <p class="PlayerMessage" *ngFor="let word of this.array">Vous êtes en mode debug</p>
+    </div>
+    <div>
+        <p class="OpponentMessage" *ngFor="let word of this.messageSoloInfo">Opponent: </p>
     </div>
 </div>
 <div *ngIf="input.character">
