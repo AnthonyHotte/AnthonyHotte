@@ -21,7 +21,7 @@ export class LettersComponent implements OnInit {
     letterSize: number;
 
     constructor(private letterService: LetterService, private soloPlayer: SoloPlayerService, private soloOpponent: SoloOpponentService) {}
-
+    // call only at the beginning
     getNewLetters(amount: number): void {
         if (this.currentLetterNumber + amount <= this.maxLettersInHand) {
             this.soloPlayer.reset();
