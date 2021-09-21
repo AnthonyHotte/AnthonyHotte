@@ -29,3 +29,6 @@ export const REDROWCASE = [1, 8, 15];
 export const LIGHTBLUENEARCENTERROWCASE = [3, 7, 9, 13];
 export const DARKBLUEROWCASE = [2, 6, 10, 14];
 export const NUMBEROFCASEPLUSONE = 16;
+
+export const MAX_CHARACTERS = 512;
+export const ENTER_ASCII = 69;

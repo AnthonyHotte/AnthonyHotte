@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SoloGameInitiatorComponent } from './solo-game-initiator.component';
 
 describe('SoloGameInitiatorComponent', () => {
@@ -17,7 +16,6 @@ describe('SoloGameInitiatorComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
-
     it('should create', () => {
         expect(component).toBeTruthy();
     });
