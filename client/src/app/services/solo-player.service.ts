@@ -19,7 +19,7 @@ export class SoloPlayerService {
     numberOfLetters: number = 0;
     score: number = 0;
     lastTurnWasASkip: boolean = false;
-    private messageSource = new BehaviorSubject('default message');
+    messageSource = new BehaviorSubject('default message');
 
     constructor(private letters: LetterService, private timeManager: GestionTimerTourService) {
         this.currentMessage = this.messageSource.asObservable();
@@ -37,10 +37,10 @@ export class SoloPlayerService {
         }
         return 'ToDO';
     }
-
+    // message is a string 0 or 1, we pass the number of the turn of the person who just finish playing (if next turn is my turn then we pass 1)
     changeTurn(message: string) {
         this.messageSource.next(message);
-        this.myTurn = parseInt(this.message, 10) === 0;
+        this.myTurn = parseInt(message, 10) === 1;
     }
 
     reset() {
@@ -54,12 +54,18 @@ export class SoloPlayerService {
     }
 
     incrementPassedTurns() {
+        /*
+        pourquoi??
         if (this.lastTurnWasASkip) {
             this.valueToEndGame++;
         } else {
             this.valueToEndGame = 1;
         }
+        */
+        // I replace the comment above with this line because this.valueToEndGame=0 if it passes in the else statement
+        this.valueToEndGame++;
         this.myTurn = false;
+        // we finish our turn so we need to pass 0
         this.changeTurn(this.myTurn.toString());
     }
 
