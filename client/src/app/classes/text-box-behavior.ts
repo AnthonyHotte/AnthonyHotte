@@ -1,5 +1,10 @@
 import { MAX_CHARACTERS } from '@app/constants';
 import { Commands } from './commands';
+import { Injectable } from '@angular/core';
+
+@Injectable({
+    providedIn: 'root',
+})
 export class TextBox {
     word: string;
     inputs: string[];

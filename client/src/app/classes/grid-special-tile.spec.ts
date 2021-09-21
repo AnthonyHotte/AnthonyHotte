@@ -38,15 +38,43 @@ describe('TileMap', () => {
         expect(map.tileMap.get('TripleLetter')?.length).toEqual(correctTripleLetterSize);
     });
     it('isDoubleWord should return true for position (2,2)', () => {
-        expect(map.isDoubleWordTile(2, 2)).toBe(true);
+        const positionX = 2;
+        const positionY = 2;
+        expect(map.isDoubleWordTile(positionX, positionY)).toBe(true);
     });
     it('isDoubleWord should return false for position (2,3)', () => {
-        expect(map.isDoubleWordTile(2, 3)).toBe(false);
+        const positionX = 2;
+        const positionY = 3;
+        expect(map.isDoubleWordTile(positionX, positionY)).toBe(false);
     });
     it('isTripleWord should return false for position (2,3)', () => {
-        expect(map.isTripleWordTile(2, 3)).toBe(false);
+        const positionX = 2;
+        const positionY = 3;
+        expect(map.isTripleWordTile(positionX, positionY)).toBe(false);
     });
     it('isTripleWord should return true for position (1,1)', () => {
-        expect(map.isTripleWordTile(1, 1)).toBe(true);
+        const positionX = 1;
+        const positionY = 1;
+        expect(map.isTripleWordTile(positionX, positionY)).toBe(true);
+    });
+    it('isTripleLetter should return false for position (1,1)', () => {
+        const positionX = 1;
+        const positionY = 1;
+        expect(map.isTripleLetterTile(positionX, positionY)).toBe(false);
+    });
+    it('isTripleLetter should return true for position (2,6)', () => {
+        const positionX = 14;
+        const positionY = 10;
+        expect(map.isTripleLetterTile(positionX, positionY)).toBe(true);
+    });
+    it('isDoubleLetter should return false for position (1,1)', () => {
+        const positionX = 1;
+        const positionY = 1;
+        expect(map.isDoubleLetterTile(positionX, positionY)).toBe(false);
+    });
+    it('isDoubleLetter should return true for position (1,4)', () => {
+        const positionX = 1;
+        const positionY = 4;
+        expect(map.isDoubleLetterTile(positionX, positionY)).toBe(true);
     });
 });
