@@ -1,0 +1,52 @@
+import { TileMap } from './grid-special-tile';
+import { TestBed } from '@angular/core/testing';
+
+describe('TileMap', () => {
+    let map: TileMap;
+
+    beforeEach(() => {
+        map = TestBed.inject(TileMap);
+    });
+
+    it('should create an instance', () => {
+        expect(map).toBeTruthy();
+    });
+
+    it('should create an instance of the right size', () => {
+        const correctMapSize = 4;
+        map = new TileMap();
+        expect(map.tileMap.size).toEqual(correctMapSize);
+    });
+
+    it('should create an instance with de double word array of the right size', () => {
+        const correctDoubleWordSize = 17;
+        expect(map.tileMap.get('DoubleWord')?.length).toEqual(correctDoubleWordSize);
+    });
+
+    it('should create an instance with the triple word array of the right size', () => {
+        const correctTripleWordSize = 8;
+        expect(map.tileMap.get('TripleWord')?.length).toEqual(correctTripleWordSize);
+    });
+
+    it('should create an instance with the double letter array of the right size', () => {
+        const correctDoubleLetterSize = 24;
+        expect(map.tileMap.get('DoubleLetter')?.length).toEqual(correctDoubleLetterSize);
+    });
+
+    it('should create an instance with the triple letter array of the right size', () => {
+        const correctTripleLetterSize = 12;
+        expect(map.tileMap.get('TripleLetter')?.length).toEqual(correctTripleLetterSize);
+    });
+    it('isDoubleWord should return true for position (2,2)', () => {
+        expect(map.isDoubleWordTile(2, 2)).toBe(true);
+    });
+    it('isDoubleWord should return false for position (2,3)', () => {
+        expect(map.isDoubleWordTile(2, 3)).toBe(false);
+    });
+    it('isTripleWord should return false for position (2,3)', () => {
+        expect(map.isTripleWordTile(2, 3)).toBe(false);
+    });
+    it('isTripleWord should return true for position (1,1)', () => {
+        expect(map.isTripleWordTile(1, 1)).toBe(true);
+    });
+});
