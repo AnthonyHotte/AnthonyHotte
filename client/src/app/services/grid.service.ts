@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
 import * as Constants from '@app/constants';
-import { TileMap } from '@app/grid-special-tile';
+import { TileMap } from '@app/classes/grid-special-tile';
 
 @Injectable({
     providedIn: 'root',
