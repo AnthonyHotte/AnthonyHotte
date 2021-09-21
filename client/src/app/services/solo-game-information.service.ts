@@ -6,7 +6,7 @@ import { Observable, Subject } from 'rxjs';
 })
 export class SoloGameInformationService {
     message: string[] = [];
-    private subject = new Subject<string[]>();
+    subject = new Subject<string[]>();
 
     sendMessage(message: string[]) {
         this.subject.next(message);
