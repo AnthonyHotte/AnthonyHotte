@@ -102,14 +102,14 @@ describe('GridService', () => {
     it(' drawStar should call stroke, moveTo, lineTo, fillText 15 times', () => {
         const expectedCallLineToTimes = 11;
         const expectedCallMoveToTimes = 1;
-        //const strokeSpy = spyOn(service.gridContext, 'stroke').and.callThrough();
+        // const strokeSpy = spyOn(service.gridContext, 'stroke').and.callThrough();
         const moveToSpy = spyOn(service.gridContext, 'moveTo').and.callThrough();
         const lineToSpy = spyOn(service.gridContext, 'lineTo').and.callThrough();
-        //const fillTextSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
+        // const fillTextSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
         service.placeNumberTop();
-        //expect(strokeSpy).toHaveBeenCalledTimes(expectedCallTimes);
+        // expect(strokeSpy).toHaveBeenCalledTimes(expectedCallTimes);
         expect(moveToSpy).toHaveBeenCalledTimes(expectedCallMoveToTimes);
         expect(lineToSpy).toHaveBeenCalledTimes(expectedCallLineToTimes);
-        //expect(fillTextSpy).toHaveBeenCalledTimes(expectedCallTimes);
+        // expect(fillTextSpy).toHaveBeenCalledTimes(expectedCallTimes);
     });
 });
