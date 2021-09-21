@@ -99,17 +99,19 @@ describe('GridService', () => {
         const afterSize = imageData.filter((x) => x !== 0).length;
         expect(afterSize).toBeGreaterThan(beforeSize);
     });
-    it(' drawStar should call stroke, moveTo, lineTo, fillText 15 times', () => {
+    it(' drawStar should call stroke, moveTo, lineTo, fill 1, 1, 11, 1  times', () => {
         const expectedCallLineToTimes = 11;
         const expectedCallMoveToTimes = 1;
-        // const strokeSpy = spyOn(service.gridContext, 'stroke').and.callThrough();
+        const expectedCallStrokeTimes = 1;
+        const expectedCallFillTimes = 1;
+        const strokeSpy = spyOn(service.gridContext, 'stroke').and.callThrough();
         const moveToSpy = spyOn(service.gridContext, 'moveTo').and.callThrough();
         const lineToSpy = spyOn(service.gridContext, 'lineTo').and.callThrough();
-        // const fillTextSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
-        service.placeNumberTop();
-        // expect(strokeSpy).toHaveBeenCalledTimes(expectedCallTimes);
+        const fillSpy = spyOn(service.gridContext, 'fill').and.callThrough();
+        service.drawStar();
+        expect(strokeSpy).toHaveBeenCalledTimes(expectedCallStrokeTimes);
         expect(moveToSpy).toHaveBeenCalledTimes(expectedCallMoveToTimes);
         expect(lineToSpy).toHaveBeenCalledTimes(expectedCallLineToTimes);
-        // expect(fillTextSpy).toHaveBeenCalledTimes(expectedCallTimes);
+        expect(fillSpy).toHaveBeenCalledTimes(expectedCallFillTimes);
     });
 });

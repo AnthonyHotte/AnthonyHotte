@@ -9,7 +9,6 @@ import { TileMap } from '@app/classes/grid-special-tile';
 export class GridService {
     gridContext: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_WIDTH };
-    private tileMap: TileMap = new TileMap();
 
     drawGrid() {
         // Place numbers at the top
@@ -24,24 +23,24 @@ export class GridService {
                 // for the case style
                 let textChoice = -1;
                 // word x2 (pink)
-                if (this.tileMap.isDoubleWordTile(i, j)) {
+                if (TileMap.gridMap.isDoubleWordTile(i, j)) {
                     this.gridContext.fillStyle = 'pink';
                     if (i !== Constants.CENTERCASE && j !== Constants.CENTERCASE) {
                         textChoice = 0;
                     }
                 }
                 // word x3 (red)
-                else if (this.tileMap.isTripleWordTile(i, j)) {
+                else if (TileMap.gridMap.isTripleWordTile(i, j)) {
                     this.gridContext.fillStyle = 'red';
                     textChoice = 1;
                 }
                 // Letter x3 (dark blue)
-                else if (this.tileMap.isTripleLetterTile(i, j)) {
+                else if (TileMap.gridMap.isTripleLetterTile(i, j)) {
                     this.gridContext.fillStyle = 'darkblue';
                     textChoice = 2;
                 }
                 // Letter x2 (Light blue)
-                else if (this.tileMap.isDoubleLetterTile(i, j)) {
+                else if (TileMap.gridMap.isDoubleLetterTile(i, j)) {
                     this.gridContext.fillStyle = '#add8e6';
                     textChoice = 3;
                 } else {

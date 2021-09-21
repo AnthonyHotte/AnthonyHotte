@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
+import { Injectable } from '@angular/core';
 import { Position } from '@app/position-tile-interface';
 
+@Injectable({
+    providedIn: 'root',
+})
 export class TileMap {
+    static gridMap = new TileMap();
     tileMap: Map<string, Position[]>;
     constructor() {
         this.tileMap = new Map<string, Position[]>();
