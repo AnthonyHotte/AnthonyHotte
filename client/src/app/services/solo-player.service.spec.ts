@@ -46,16 +46,16 @@ describe('SoloPlayerService', () => {
     });
     it('incrementPassedTurns should call changeTurn', () => {
         const incrementPassedTurnSpy = spyOn(service, 'changeTurn');
-        service.incrementPassedTurns();
+        service.incrementPassedTurns(1, true);
         expect(incrementPassedTurnSpy).toHaveBeenCalledWith(service.myTurn.toString());
     });
     it('incrementPassedTurns should have myturn = false', () => {
-        service.incrementPassedTurns();
+        service.incrementPassedTurns(1, true);
         expect(service.myTurn).toBe(false);
     });
     it('incrementPassedTurns should have valueToEndGame = 2', () => {
         service.valueToEndGame = 1;
-        service.incrementPassedTurns();
+        service.incrementPassedTurns(1, true);
         expect(service.valueToEndGame).toEqual(2);
     });
     it('getScore should return score = 8', () => {
