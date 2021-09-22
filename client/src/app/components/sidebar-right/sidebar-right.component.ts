@@ -86,11 +86,11 @@ export class SidebarRightComponent implements OnInit {
     }
 
     skipTurn() {
-        if (this.soloPlayer.valueToEndGame < 2) {
+        this.soloPlayer.incrementPassedTurns(this.soloOpponent.valueToEndGame, this.soloOpponent.lastTurnWasASkip);
+        if (this.soloPlayer.valueToEndGame < this.soloPlayer.maximumAllowedSkippedTurns) {
             this.turnTimeController.endTurn();
             this.turn = parseInt(this.messageTimeManager, 10);
             this.soloPlayer.changeTurn(this.turn.toString());
-            this.soloPlayer.incrementPassedTurns();
             this.numberOfSkippedTurns = this.soloPlayer.valueToEndGame;
             this.changedTurns = true;
         } else {
