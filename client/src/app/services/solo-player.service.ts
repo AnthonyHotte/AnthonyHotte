@@ -20,7 +20,7 @@ export class SoloPlayerService {
     numberOfLetters: number = 0;
     score: number = 0;
     lastTurnWasASkip: boolean = false;
-    private messageSource = new BehaviorSubject('default message');
+    messageSource = new BehaviorSubject('default message');
     private messageToSoloOpponent = new BehaviorSubject(['turn', 'last turn was a skip']);
 
     constructor(private letters: LetterService, private timeManager: GestionTimerTourService) {
@@ -33,6 +33,8 @@ export class SoloPlayerService {
         this.maximumAllowedSkippedTurns = 6;
     }
 
+    // function never used...
+    /*
     play() {
         this.myTurn = parseInt(this.messageTimeManager, 10) === 0;
         if (this.myTurn === true) {
@@ -40,10 +42,11 @@ export class SoloPlayerService {
         }
         return 'ToDO';
     }
-
+    */
+    // message is a string 0 or 1, we pass the number of the turn of the person who just finish playing (if next turn is my turn then we pass 1)
     changeTurn(message: string) {
         this.messageSource.next(message);
-        this.myTurn = parseInt(this.message, 10) === 0;
+        this.myTurn = parseInt(message, 10) === 1;
     }
 
     reset() {
@@ -56,9 +59,10 @@ export class SoloPlayerService {
         return this.score;
     }
 
-    incrementPassedTurns(valueOfSkippedTurn: number, lastTurnSkipped: boolean) {
+    incrementPassedTurns(numberOfSkippedTurns: number, lastTurnSkipped: boolean) {
+        this.valueToEndGame = numberOfSkippedTurns;
         this.lastTurnWasASkip = lastTurnSkipped;
-        this.valueToEndGame = valueOfSkippedTurn;
+        // pour compter jusqu'a 6 de la part des deux joueurs.
         if (this.lastTurnWasASkip) {
             this.valueToEndGame++;
         } else {
