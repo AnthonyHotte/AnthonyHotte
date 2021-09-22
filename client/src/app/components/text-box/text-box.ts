@@ -112,11 +112,8 @@ export class TextBoxComponent implements OnInit {
     }
 
     verifyCommandPasser() {
+        this.soloPlayer.incrementPassedTurns(this.soloOpponent.valueToEndGame, this.soloOpponent.lastTurnWasASkip);
         if (this.valueToEndGame < this.soloPlayer.maximumAllowedSkippedTurns) {
-            this.soloPlayer.incrementPassedTurns();
-            this.soloOpponent.incrementPassedTurns();
-            this.soloOpponent.lastTurnWasASkip = true;
-            this.soloPlayer.lastTurnWasASkip = true;
             this.endTurn();
             this.text = 'Tour passé avec succès.';
         } else {
