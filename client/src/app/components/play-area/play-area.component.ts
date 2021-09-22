@@ -55,7 +55,7 @@ export class PlayAreaComponent implements AfterViewInit {
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
             this.mousePosition = { x: event.offsetX, y: event.offsetY };
-            this.gridService.drawLetter(this.buttonPressed, this.mousePosition.x, this.mousePosition.y);
+            //    this.gridService.drawLetter(this.buttonPressed, this.mousePosition.x, this.mousePosition.y);
             // this.gridService.drawLetterValue('2', this.mousePosition.x, this.mousePosition.y);
         }
     }
