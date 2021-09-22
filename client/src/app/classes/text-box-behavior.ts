@@ -1,22 +1,30 @@
+import { Injectable } from '@angular/core';
 import { MAX_CHARACTERS } from '@app/constants';
+import { PlaceLettersService } from '@app/services/place-letters.service';
+// eslint-disable-next-line no-restricted-imports
+import * as Constants from '../constants';
 import { Commands } from './commands';
+@Injectable({
+    providedIn: 'root',
+})
 export class TextBox {
-    word: string;
-    inputs: string[];
-    character: boolean;
-    buttonMessageState: string;
-    buttonCommandState: string;
-    debugCommand: boolean;
-    command: Commands;
-
-    constructor() {
-        this.word = '';
-        this.inputs = [];
-        this.character = false;
-        this.buttonMessageState = 'ButtonMessageActivated';
-        this.buttonCommandState = 'ButtonCommandReleased';
-        this.debugCommand = false;
-        this.command = new Commands();
+    word: string = '';
+    inputs: string[] = [];
+    character: boolean = false;
+    buttonMessageState: string = 'ButtonMessageActivated';
+    buttonCommandState: string = 'ButtonCommandReleased';
+    debugCommand: boolean = false;
+    command: Commands = new Commands();
+    returnMessage: string;
+    // injector = Injector.create([{ provide: PlaceLettersService }]);
+    constructor(private readonly placeLettersService: PlaceLettersService) {
+        // this.word = '';
+        // this.inputs = [];
+        // this.character = false;
+        // this.buttonMessageState = 'ButtonMessageActivated';
+        // this.buttonCommandState = 'ButtonCommandReleased';
+        // this.debugCommand = false;
+        // this.command = new Commands();
     }
     send(myWord: string) {
         this.inputVerification(myWord);
@@ -59,13 +67,13 @@ export class TextBox {
     }
 
     isCommand(myWord: string) {
-        switch (myWord) {
-            case '!debug':
-                this.inputs.push('Vous etes en mode debug');
-                this.debugCommand = this.command.activateDebugCommand();
-                break;
-            // case //condition pour appeler la methode:
-            // this.command.activatePlayerCommand();
+        // const test: PlaceLettersService;
+        // switch (myWord) {
+        // case '!debug':
+        if (myWord.substring(0, Constants.PLACERCOMMANDLENGTH) === '!debug') {
+            this.debugCommand = this.command.activateDebugCommand();
+        } else if (myWord.substring(0, Constants.PLACERCOMMANDLENGTH) === '!placer') {
+            this.returnMessage = this.placeLettersService.placeWord(myWord.substring(Constants.PLACERCOMMANDLENGTH + 1, myWord.length));
         }
     }
 

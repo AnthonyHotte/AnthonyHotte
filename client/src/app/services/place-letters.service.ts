@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
+import * as Constants from '@app/constants';
 import { GridService } from '@app/services/grid.service';
-// eslint-disable-next-line no-restricted-imports
-import * as Constants from '../constants';
 
 @Injectable({
     providedIn: 'root',
