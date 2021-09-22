@@ -19,6 +19,7 @@ export class LetterService {
     currentMessage: Observable<string>;
     letterIsSelected: boolean;
     selectedLettersForExchangePlayer: Set<number> = new Set<number>();
+    selectedLettersForExchangeOpponent: Set<number> = new Set<number>();
     private messageSource = new BehaviorSubject('default message');
 
     constructor() {
@@ -182,5 +183,17 @@ export class LetterService {
             this.lettersForPlayer.push(this.allLetters[index]);
             this.allLetters.splice(index, 1);
         }
+        this.selectedLettersForExchangePlayer.clear();
+    }
+
+    exchangeLettersForOpponent() {
+        for (const item of this.selectedLettersForExchangeOpponent.values()) {
+            this.allLetters.push(this.lettersForOpponent[item]);
+            const index: number = Math.floor(Math.random() * this.allLetters.length);
+            this.lettersForOpponent.splice(item, 1);
+            this.lettersForOpponent.push(this.allLetters[index]);
+            this.allLetters.splice(index, 1);
+        }
+        this.selectedLettersForExchangeOpponent.clear();
     }
 }

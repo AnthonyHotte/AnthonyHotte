@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class GestionTimerTourService {
     turn: number = 0;
     currentMessage: Observable<string>;
-    private messageSource = new BehaviorSubject('default message');
+    messageSource = new BehaviorSubject('default message');
 
     constructor() {
         this.initiateGame();
