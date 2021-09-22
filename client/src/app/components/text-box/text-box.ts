@@ -6,6 +6,7 @@ import { GestionTimerTourService } from '@app/services/gestion-timer-tour.servic
 import { LetterService } from '@app/services/letter.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
+import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -17,7 +18,8 @@ export class TextBoxComponent implements OnInit {
     messagePlayer: string;
     messageLetterService: string;
     messageTimeManager: string;
-    messageSoloOpponent: string;
+    messageSoloOpponent: string[];
+    messageSoloInfo: string[];
     subscriptionPlayer: Subscription;
     subscriptionLetterService: Subscription;
     subscriptionTimeManager: Subscription;
@@ -33,11 +35,15 @@ export class TextBoxComponent implements OnInit {
     text: string;
     valueToEndGame: number;
 
+    playerName: string;
+    oponentName: string;
+
     constructor(
         private soloPlayer: SoloPlayerService,
         private letterService: LetterService,
         private timeManager: GestionTimerTourService,
         private soloOpponent: SoloOpponentService,
+        private soloGameInformation: SoloGameInformationService,
         private link: Router,
     ) {
         this.word = '';
@@ -46,6 +52,7 @@ export class TextBoxComponent implements OnInit {
         this.buttonMessageState = 'ButtonMessageActivated';
         this.input = new TextBox();
         this.debugCommand = false;
+        this.messageSoloInfo = this.soloGameInformation.message;
     }
 
     @HostListener('keydown', ['$event'])
@@ -68,7 +75,7 @@ export class TextBoxComponent implements OnInit {
         this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
             (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
         );
-        this.subscriptionSoloOpponent = this.soloOpponent.currentMessage.subscribe(
+        this.subscriptionSoloOpponent = this.soloOpponent.messageTextBox.subscribe(
             (messageSoloOpponent) => (this.messageSoloOpponent = messageSoloOpponent),
         );
         this.turn = this.timeManager.turn;
@@ -99,17 +106,14 @@ export class TextBoxComponent implements OnInit {
             } else {
                 this.text = 'Erreur de syntaxe...';
             }
-        } else if (this.buttonCommandState === 'ButtonCommandActivated' && this.turn !== 0) {
+        } else if (this.buttonCommandState === 'ButtonCommandActivated' && this.turn !== 0 && word !== '!debug') {
             this.text = 'Commande impossible a réaliser...';
         }
     }
 
     verifyCommandPasser() {
+        this.soloPlayer.incrementPassedTurns(this.soloOpponent.valueToEndGame, this.soloOpponent.lastTurnWasASkip);
         if (this.valueToEndGame < this.soloPlayer.maximumAllowedSkippedTurns) {
-            this.soloPlayer.incrementPassedTurns();
-            this.soloOpponent.incrementPassedTurns();
-            this.soloOpponent.lastTurnWasASkip = true;
-            this.soloPlayer.lastTurnWasASkip = true;
             this.endTurn();
             this.text = 'Tour passé avec succès.';
         } else {
@@ -157,7 +161,7 @@ export class TextBoxComponent implements OnInit {
     }
 
     getText() {
-        if (this.buttonCommandState === 'ButtonCommandActivated') {
+        if (this.buttonCommandState === 'ButtonCommandActivated' && !this.debugCommand) {
             const temp = this.text.toString();
             return temp.toString();
         }
