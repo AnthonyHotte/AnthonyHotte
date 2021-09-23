@@ -5,6 +5,7 @@ describe('TextBox', () => {
     let textBox: TextBox;
 
     beforeEach(() => {
+        TestBed.configureTestingModule({});
         textBox = TestBed.inject(TextBox);
     });
 

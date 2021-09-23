@@ -5,6 +5,7 @@ import * as Constants from '@app/constants';
 import { ENTER_ASCII } from '@app/constants';
 import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
 import { LetterService } from '@app/services/letter.service';
+import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
@@ -47,13 +48,14 @@ export class TextBoxComponent implements OnInit {
         private soloOpponent: SoloOpponentService,
         private soloGameInformation: SoloGameInformationService,
         private link: Router,
-        public input: TextBox,
+        private placeLetter: PlaceLettersService,
     ) {
         this.word = '';
         this.array = [];
         this.buttonCommandState = 'ButtonCommandReleased';
         this.buttonMessageState = 'ButtonMessageActivated';
-        // this.input = new TextBox();
+        // why?
+        this.input = new TextBox(this.placeLetter);
         this.debugCommand = false;
         this.messageSoloInfo = this.soloGameInformation.message;
         this.input.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));

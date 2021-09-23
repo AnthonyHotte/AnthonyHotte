@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { MAX_CHARACTERS } from '@app/constants';
+import { MAX_CHARACTERS, PLACERCOMMANDLENGTH } from '@app/constants';
 import { PlaceLettersService } from '@app/services/place-letters.service';
-// eslint-disable-next-line no-restricted-imports
-import * as Constants from '../constants';
+import { BehaviorSubject, Observable } from 'rxjs';
+
 @Injectable({
     providedIn: 'root',
 })
@@ -13,17 +13,21 @@ export class TextBox {
     buttonMessageState: string = 'ButtonMessageActivated';
     buttonCommandState: string = 'ButtonCommandReleased';
     debugCommand: boolean = false;
-    // command: Commands = new Commands();
     returnMessage: string;
+    currentMessage: Observable<string>;
+    // why?
     // injector = Injector.create([{ provide: PlaceLettersService }]);
+    commandSuccessful: boolean = true;
+    sourceMessage = new BehaviorSubject('command is successful');
     constructor(private readonly placeLettersService: PlaceLettersService) {
-        // this.word = '';
-        // this.inputs = [];
-        // this.character = false;
-        // this.buttonMessageState = 'ButtonMessageActivated';
-        // this.buttonCommandState = 'ButtonCommandReleased';
-        // this.debugCommand = false;
-        // this.command = new Commands();
+        this.word = '';
+        this.inputs = [];
+        this.character = false;
+        this.buttonMessageState = 'ButtonMessageActivated';
+        this.buttonCommandState = 'ButtonCommandReleased';
+        this.debugCommand = false;
+        this.currentMessage = this.sourceMessage.asObservable();
+        this.sendExecutedCommand();
     }
     send(myWord: string) {
         this.inputVerification(myWord);
@@ -69,13 +73,16 @@ export class TextBox {
         // const test: PlaceLettersService;
         // switch (myWord) {
         // case '!debug':
-        if (myWord.substring(0, Constants.PLACERCOMMANDLENGTH) === '!debug') {
+        if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!debug') {
             this.debugCommand = true;
-        } else if (myWord.substring(0, Constants.PLACERCOMMANDLENGTH) === '!placer') {
-            this.returnMessage = this.placeLettersService.placeWord(myWord.substring(Constants.PLACERCOMMANDLENGTH + 1, myWord.length));
+        } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
+            this.returnMessage = this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
         }
     }
     getDebugCommand() {
         return this.debugCommand;
+    }
+    sendExecutedCommand() {
+        this.sourceMessage.next(this.commandSuccessful.toString());
     }
 }
