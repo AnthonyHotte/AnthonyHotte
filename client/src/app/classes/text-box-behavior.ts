@@ -3,7 +3,6 @@ import { MAX_CHARACTERS } from '@app/constants';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 // eslint-disable-next-line no-restricted-imports
 import * as Constants from '../constants';
-import { Commands } from './commands';
 @Injectable({
     providedIn: 'root',
 })
@@ -14,7 +13,7 @@ export class TextBox {
     buttonMessageState: string = 'ButtonMessageActivated';
     buttonCommandState: string = 'ButtonCommandReleased';
     debugCommand: boolean = false;
-    command: Commands = new Commands();
+    // command: Commands = new Commands();
     returnMessage: string;
     // injector = Injector.create([{ provide: PlaceLettersService }]);
     constructor(private readonly placeLettersService: PlaceLettersService) {
@@ -71,7 +70,7 @@ export class TextBox {
         // switch (myWord) {
         // case '!debug':
         if (myWord.substring(0, Constants.PLACERCOMMANDLENGTH) === '!debug') {
-            this.debugCommand = this.command.activateDebugCommand();
+            this.debugCommand = true;
         } else if (myWord.substring(0, Constants.PLACERCOMMANDLENGTH) === '!placer') {
             this.returnMessage = this.placeLettersService.placeWord(myWord.substring(Constants.PLACERCOMMANDLENGTH + 1, myWord.length));
         }
