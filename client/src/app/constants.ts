@@ -1,11 +1,13 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
 // useful constants for the board
+const FOUR = 4;
+const SIXTEEN = 16;
+const SEVEN = 7;
 export const SIDESPACE = 30;
 export const NUMBEROFCASE = 15;
 export const DEFAULT_WIDTH = 500;
 export const CASESIZE = (DEFAULT_WIDTH - SIDESPACE) / NUMBEROFCASE;
-export const TILESIZE = (CASESIZE * 3) / 4;
-export const TILESPACE = CASESIZE / 16;
+export const TILESIZE = (CASESIZE * 3) / FOUR;
+export const TILESPACE = CASESIZE / SIXTEEN;
 export const NOTEXT = -1;
 export const CENTERCASE = 8;
 export const SIDELETTERS: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'];
@@ -15,8 +17,8 @@ export const SIDELETTERS_TO_ASCII = 97;
 export const TEXTONTILES = ['mot compte double', 'mot compte tripple', 'lettre compte tripple', 'lettre compte double'];
 // useful constants to draw the star in the middle of the board
 export const MIDDLECASENUMBER = NUMBEROFCASE / 2;
-export const OUTERRADIUS = CASESIZE * (7 / 16);
-export const INNERRADIUS = CASESIZE / 4;
+export const OUTERRADIUS = CASESIZE * (SEVEN / SIXTEEN);
+export const INNERRADIUS = CASESIZE / FOUR;
 export const SPIKES = 5;
 export const STEP = Math.PI / SPIKES;
 export const CENTERSTARHORIZONTALY = CASESIZE * MIDDLECASENUMBER + SIDESPACE;
