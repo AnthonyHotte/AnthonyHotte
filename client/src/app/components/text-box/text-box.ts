@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TextBox } from '@app/classes/text-box-behavior';
+import * as Constants from '@app/constants';
 import { ENTER_ASCII } from '@app/constants';
 import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
 import { LetterService } from '@app/services/letter.service';
@@ -8,7 +9,6 @@ import { SoloGameInformationService } from '@app/services/solo-game-information.
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { Subscription } from 'rxjs';
-
 @Component({
     selector: 'app-text-box',
     templateUrl: './text-box.html',
@@ -47,12 +47,13 @@ export class TextBoxComponent implements OnInit {
         private soloOpponent: SoloOpponentService,
         private soloGameInformation: SoloGameInformationService,
         private link: Router,
+        public input: TextBox,
     ) {
         this.word = '';
         this.array = [];
         this.buttonCommandState = 'ButtonCommandReleased';
         this.buttonMessageState = 'ButtonMessageActivated';
-        this.input = new TextBox();
+        // this.input = new TextBox();
         this.debugCommand = false;
         this.messageSoloInfo = this.soloGameInformation.message;
         this.input.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
@@ -108,6 +109,8 @@ export class TextBoxComponent implements OnInit {
                 this.verifyCommandPasser();
             } else if (word.search(exchange) !== NOT_PRESENT) {
                 this.verifyCommandEchanger(word);
+            } else if (word.substring(0, Constants.PLACERCOMMANDLENGTH) === '!placer') {
+                this.text = this.input.returnMessage;
             } else {
                 this.text = 'Erreur de syntaxe...';
             }

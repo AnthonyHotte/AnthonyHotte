@@ -1,32 +1,29 @@
-import { MAX_CHARACTERS } from '@app/constants';
-import { Commands } from './commands';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-
+import { MAX_CHARACTERS } from '@app/constants';
+import { PlaceLettersService } from '@app/services/place-letters.service';
+// eslint-disable-next-line no-restricted-imports
+import * as Constants from '../constants';
 @Injectable({
     providedIn: 'root',
 })
 export class TextBox {
-    word: string;
-    inputs: string[];
-    character: boolean;
-    buttonMessageState: string;
-    buttonCommandState: string;
-    debugCommand: boolean;
-    command: Commands;
-    commandSuccessful: boolean = false;
-    currentMessage: Observable<string>;
-    messageSource = new BehaviorSubject('message for executed command');
-
-    constructor() {
-        this.word = '';
-        this.inputs = [];
-        this.character = false;
-        this.buttonMessageState = 'ButtonMessageActivated';
-        this.buttonCommandState = 'ButtonCommandReleased';
-        this.debugCommand = false;
-        this.command = new Commands();
-        this.currentMessage = this.messageSource.asObservable();
+    word: string = '';
+    inputs: string[] = [];
+    character: boolean = false;
+    buttonMessageState: string = 'ButtonMessageActivated';
+    buttonCommandState: string = 'ButtonCommandReleased';
+    debugCommand: boolean = false;
+    // command: Commands = new Commands();
+    returnMessage: string;
+    // injector = Injector.create([{ provide: PlaceLettersService }]);
+    constructor(private readonly placeLettersService: PlaceLettersService) {
+        // this.word = '';
+        // this.inputs = [];
+        // this.character = false;
+        // this.buttonMessageState = 'ButtonMessageActivated';
+        // this.buttonCommandState = 'ButtonCommandReleased';
+        // this.debugCommand = false;
+        // this.command = new Commands();
     }
     send(myWord: string) {
         this.inputVerification(myWord);
@@ -69,22 +66,16 @@ export class TextBox {
     }
 
     isCommand(myWord: string) {
-        switch (myWord) {
-            case '!debug':
-                this.inputs.push('Vous etes en mode debug');
-                this.debugCommand = this.command.activateDebugCommand();
-                break;
-            // case //condition pour appeler la methode:
-            // this.command.activatePlayerCommand();
+        // const test: PlaceLettersService;
+        // switch (myWord) {
+        // case '!debug':
+        if (myWord.substring(0, Constants.PLACERCOMMANDLENGTH) === '!debug') {
+            this.debugCommand = true;
+        } else if (myWord.substring(0, Constants.PLACERCOMMANDLENGTH) === '!placer') {
+            this.returnMessage = this.placeLettersService.placeWord(myWord.substring(Constants.PLACERCOMMANDLENGTH + 1, myWord.length));
         }
     }
-
     getDebugCommand() {
         return this.debugCommand;
-    }
-
-    sendExecutedCommand() {
-        this.messageSource.next(this.commandSuccessful.toString());
-        this.commandSuccessful = false;
     }
 }

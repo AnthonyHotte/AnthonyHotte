@@ -39,8 +39,7 @@ export class PlayAreaComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.gridService.gridContext = this.gridCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
         this.gridService.drawGrid();
-        // the line was put in comment so that we can remember how to use drawWord but it's useless
-        // this.gridService.drawWord('Scrabble');
+        this.gridService.drawWord('Scrabble');
         this.gridCanvas.nativeElement.focus();
     }
 
@@ -56,6 +55,8 @@ export class PlayAreaComponent implements AfterViewInit {
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
             this.mousePosition = { x: event.offsetX, y: event.offsetY };
+            //    this.gridService.drawLetter(this.buttonPressed, this.mousePosition.x, this.mousePosition.y);
+            // this.gridService.drawLetterValue('2', this.mousePosition.x, this.mousePosition.y);
         }
     }
 }
