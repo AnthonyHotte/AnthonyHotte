@@ -13,9 +13,11 @@ describe('Commands', () => {
         commands.activateDebugCommand();
         expect(commands.debugCommand).toBe(true);
     });
+    /*
     it('should create an instance', () => {
         const activateDebugCommandSpy = spyOn(commands, 'activateDebugCommand').and.callThrough();
         commands.chooseCommands('!debug');
         expect(activateDebugCommandSpy).toHaveBeenCalled();
     });
+    */
 });
