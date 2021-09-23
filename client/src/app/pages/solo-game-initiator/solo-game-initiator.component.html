@@ -20,7 +20,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                             <label> {{ 'Validité du nom: ' + afficherValiditeEnCaracteres() }}</label>
                         </p>
                         <label> Nom du joueur : </label>
-                        <input [(ngModel)]="nomTemporaire" type="string" />
+                        <input [(ngModel)]="nom" type="string" />
                         <p>{{ 'Votre nom: ' + nom }}</p>
                         <p>{{ "Nom de l'adversaire: " + nomAdversaire }}</p>
                         <button class="button" (click)="setNom()">Validation de l'identifiant</button>

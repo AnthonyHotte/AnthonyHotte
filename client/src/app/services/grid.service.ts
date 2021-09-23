@@ -149,6 +149,7 @@ export class GridService {
         this.gridContext.lineWidth = 1;
     }
 
+    //  not used yet, Julien do you need it in the future?
     drawWord(word: string) {
         const startPosition: Vec2 = { x: 175, y: 100 };
         const step = 20;

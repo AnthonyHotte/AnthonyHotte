@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { UsefullFunctionService } from '@app/services/usefull-function.service';
-import { VALEUR_TEMPS_DEFAULT, LONGUEURNOMMAX, VERIFICATION_PRESENCE, LENGTHWORDVALIDATION } from '@app/constants';
+import { VALEUR_TEMPS_DEFAULT, LONGUEURNOMMAX, VERIFICATION_PRESENCE } from '@app/constants';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
+// LENGTHWORDVALIDATION
 
 @Component({
     selector: 'app-solo-game-initiator',
@@ -11,7 +12,7 @@ import { SoloGameInformationService } from '@app/services/solo-game-information.
 export class SoloGameInitiatorComponent {
     message: string[] = [];
 
-    nomTemporaire: string;
+    // nomTemporaire: string;
     nom: string;
     nomAdversaire: string;
     idNomAdversaire: number;
@@ -25,12 +26,12 @@ export class SoloGameInitiatorComponent {
     ) {
         this.message = [];
 
-        this.nomTemporaire = 'Joueur';
+        // this.nomTemporaire = 'Joueur';
         this.nom = 'Joueur';
         this.nomAdversaire = '';
         this.idNomAdversaire = 0;
         this.nomEstValide = true;
-        this.listeDesInsultes = this.usefullFunction.fileReaderFunction('../../assets/insulte.txt');
+        this.listeDesInsultes = this.usefullFunction.fileReaderFunction('@src/assets/insulte.txt');
         this.tempsDeJeu = VALEUR_TEMPS_DEFAULT;
         this.difficulteFacile = true;
     }
@@ -58,10 +59,10 @@ export class SoloGameInitiatorComponent {
     }
 
     verifierNoms() {
-        let placeInName = 0;
-        const temp: string = this.nomTemporaire.split(' ').join('').toLocaleLowerCase();
+        // let placeInName = 0;
+        // const temp: string = this.nom.split(' ').join('').toLocaleLowerCase();
         this.assignerNomAdversaire();
-        if (this.nomTemporaire.split(' ').join('').toLocaleLowerCase() === this.nomAdversaire.split(' ').join('').toLocaleLowerCase()) {
+        if (this.nom.split(' ').join('').toLocaleLowerCase() === this.nomAdversaire.split(' ').join('').toLocaleLowerCase()) {
             switch (this.idNomAdversaire) {
                 case 1:
                     this.nomAdversaire = 'Daphne du Maurier';
@@ -72,11 +73,12 @@ export class SoloGameInitiatorComponent {
                 default:
                     this.nomAdversaire = 'Haruki Murakami';
             }
-        } else if (this.nomTemporaire.split(' ').join('') === '') {
+        } else if (this.nom.split(' ').join('') === '') {
             this.nomEstValide = false;
-        } else if (this.nomTemporaire.length > LONGUEURNOMMAX) {
+        } else if (this.nom.length > LONGUEURNOMMAX) {
             this.nomEstValide = false;
-        } else if (
+        } else if (this.listeDesInsultes.indexOf(this.nom) === VERIFICATION_PRESENCE) {
+            /*
             this.listeDesInsultes.search(temp.substring(placeInName++, LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE ||
             this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
                 VERIFICATION_PRESENCE ||
@@ -87,16 +89,15 @@ export class SoloGameInitiatorComponent {
             this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
                 VERIFICATION_PRESENCE ||
             this.listeDesInsultes.search(temp.substring(placeInName * LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE
-        ) {
-            this.nomEstValide = false;
+        ) */ this.nomEstValide = true;
         } else {
-            this.nomEstValide = true;
+            this.nomEstValide = false;
         }
     }
     setNom() {
         this.verifierNoms();
         if (this.nomEstValide) {
-            this.nom = this.nomTemporaire;
+            // this.nom = this.nomTemporaire;
             return this.nom;
         } else {
             return 'Ce nom est invalide! Recommencez...';
