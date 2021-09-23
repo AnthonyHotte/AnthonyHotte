@@ -24,11 +24,13 @@ export class TextBoxComponent implements OnInit {
     subscriptionLetterService: Subscription;
     subscriptionTimeManager: Subscription;
     subscriptionSoloOpponent: Subscription;
+    subscriptionTextBox: Subscription;
     word: string;
     array: string[];
     buttonCommandState: string;
     buttonMessageState: string;
-    // nput;
+    input: TextBox;
+    messageTextBox: string;
 
     debugCommand: boolean;
     turn: number;
@@ -54,6 +56,7 @@ export class TextBoxComponent implements OnInit {
         // this.input = new TextBox();
         this.debugCommand = false;
         this.messageSoloInfo = this.soloGameInformation.message;
+        this.input.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
     }
 
     @HostListener('keydown', ['$event'])
@@ -79,6 +82,7 @@ export class TextBoxComponent implements OnInit {
         this.subscriptionSoloOpponent = this.soloOpponent.messageTextBox.subscribe(
             (messageSoloOpponent) => (this.messageSoloOpponent = messageSoloOpponent),
         );
+        this.subscriptionTextBox = this.input.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
         this.turn = this.timeManager.turn;
         this.valueToEndGame = 0;
     }
@@ -92,6 +96,7 @@ export class TextBoxComponent implements OnInit {
     }
 
     verifyCommand(word: string) {
+        this.input.commandSuccessful = false;
         this.turn = this.timeManager.turn;
         const pass = '!passer';
         const exchange = '!échanger';
@@ -112,6 +117,7 @@ export class TextBoxComponent implements OnInit {
         } else if (this.buttonCommandState === 'ButtonCommandActivated' && this.turn !== 0 && word !== '!debug') {
             this.text = 'Commande impossible a réaliser...';
         }
+        this.input.sendExecutedCommand();
     }
 
     verifyCommandPasser() {
@@ -119,6 +125,7 @@ export class TextBoxComponent implements OnInit {
         if (this.valueToEndGame < this.soloPlayer.maximumAllowedSkippedTurns) {
             this.endTurn();
             this.text = 'Tour passé avec succès.';
+            this.input.commandSuccessful = true;
         } else {
             this.finishCurrentGame();
         }
@@ -148,6 +155,7 @@ export class TextBoxComponent implements OnInit {
                     this.soloPlayer.exchangeLetters();
                     this.endTurn();
                     this.text = 'Échange de lettre avec succès.';
+                    this.input.commandSuccessful = true;
                 } else {
                     this.letterService.selectedLettersForExchangePlayer.clear();
                 }
@@ -178,6 +186,14 @@ export class TextBoxComponent implements OnInit {
             this.soloPlayer.changeTurn(this.turn.toString());
         } else {
             this.soloOpponent.changeTurn(this.turn.toString());
+        }
+    }
+
+    getMessageSoloOpoonent() {
+        if (parseInt(this.messageSoloOpponent[1], 10) > 0) {
+            return 'commande: ' + this.messageSoloOpponent[0] + ' nombre de lettre(s) échangée(s): ' + this.messageSoloOpponent[1];
+        } else {
+            return 'commande: ' + this.messageSoloOpponent[0];
         }
     }
 }

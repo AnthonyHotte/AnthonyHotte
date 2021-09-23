@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { MAX_CHARACTERS } from '@app/constants';
 import { PlaceLettersService } from '@app/services/place-letters.service';
-// eslint-disable-next-line no-restricted-imports
 import * as Constants from '../constants';
+
+import { BehaviorSubject, Observable } from 'rxjs';
+
 @Injectable({
     providedIn: 'root',
 })
 export class TextBox {
+<<<<<<< client/src/app/classes/text-box-behavior.ts
     word: string = '';
     inputs: string[] = [];
     character: boolean = false;
@@ -24,6 +27,28 @@ export class TextBox {
         // this.buttonCommandState = 'ButtonCommandReleased';
         // this.debugCommand = false;
         // this.command = new Commands();
+=======
+    word: string;
+    inputs: string[];
+    character: boolean;
+    buttonMessageState: string;
+    buttonCommandState: string;
+    debugCommand: boolean;
+    command: Commands;
+    commandSuccessful: boolean = false;
+    currentMessage: Observable<string>;
+    messageSource = new BehaviorSubject('message for executed command');
+
+    constructor() {
+        this.word = '';
+        this.inputs = [];
+        this.character = false;
+        this.buttonMessageState = 'ButtonMessageActivated';
+        this.buttonCommandState = 'ButtonCommandReleased';
+        this.debugCommand = false;
+        this.command = new Commands();
+        this.currentMessage = this.messageSource.asObservable();
+>>>>>>> client/src/app/classes/text-box-behavior.ts
     }
     send(myWord: string) {
         this.inputVerification(myWord);
@@ -78,5 +103,10 @@ export class TextBox {
 
     getDebugCommand() {
         return this.debugCommand;
+    }
+
+    sendExecutedCommand() {
+        this.messageSource.next(this.commandSuccessful.toString());
+        this.commandSuccessful = false;
     }
 }

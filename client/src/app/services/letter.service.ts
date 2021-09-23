@@ -107,7 +107,7 @@ export class LetterService {
             }
         }
         for (i; i < this.lettersForPlayer.length; i++) {
-            if (buttonPressed.toLowerCase() === this.lettersForPlayer[i].letter.toLowerCase()) {
+            if (buttonPressed.toLowerCase() === this.lettersForPlayer[i].letter.toLowerCase() && !this.selectedLettersForExchangePlayer.has(i)) {
                 this.indexSelected = i;
                 this.buttonPressed = buttonPressed;
                 letterIsThere = true;
@@ -119,7 +119,10 @@ export class LetterService {
         if (checkLowerHalf) {
             for (let j = 0; j < i; j++) {
                 if (typeof this.lettersForPlayer[j].letter !== 'undefined') {
-                    if (buttonPressed.toLowerCase() === this.lettersForPlayer[j].letter.toLowerCase()) {
+                    if (
+                        buttonPressed.toLowerCase() === this.lettersForPlayer[j].letter.toLowerCase() &&
+                        !this.selectedLettersForExchangePlayer.has(i)
+                    ) {
                         this.indexSelected = j;
                         letterIsThere = true;
                         this.letterIsSelected = true;
