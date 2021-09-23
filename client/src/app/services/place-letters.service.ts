@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as Constants from '@app/constants';
 import { GridService } from '@app/services/grid.service';
+import { GameStateService } from '@app/services/game-state.service';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +12,7 @@ export class PlaceLettersService {
     orientation: string;
     wordToPlace: string;
     spaceIndexInput: number;
-    constructor(private readonly gridService: GridService) {}
+    constructor(private readonly gridService: GridService, private gameState: GameStateService) {}
     // TODO firstletter to place
     // TODO input seperated by , ?
     // TODO make sure that 2 " " back to back doesn't break the input
@@ -36,21 +37,7 @@ export class PlaceLettersService {
         }
         return returnVariable;
     }
-    seperateInputVariable(checkedUnVerifiedInput: string) {
-        const firstArgument: string = checkedUnVerifiedInput.substring(0, this.spaceIndexInput);
-        const lastArgument: string = checkedUnVerifiedInput.substring(this.spaceIndexInput + 1, checkedUnVerifiedInput.length);
-        this.wordToPlace = lastArgument;
-        // get the colomn number depending on if it's a colomn number made of 1 or 2 numbers (if it's above 9)
-        if (firstArgument.length === 3) {
-            this.row = this.rowLetterToNumbers(firstArgument.toLocaleLowerCase().charAt(0));
-            this.colomnNumber = Number(firstArgument.charAt(1));
-            this.orientation = firstArgument.charAt(2);
-        } else {
-            this.row = this.rowLetterToNumbers(firstArgument.toLocaleLowerCase().charAt(0));
-            this.colomnNumber = Number(firstArgument.substring(1, 2));
-            this.orientation = firstArgument.charAt(3);
-        }
-    }
+
     verifyrowInputVariable(): boolean {
         if (this.row > Constants.NUMBEROFCASE || this.row < 0) {
             return false;
@@ -59,7 +46,7 @@ export class PlaceLettersService {
         }
     }
     verifyColomnInputVariable(): boolean {
-        if (this.colomnNumber > Constants.NUMBEROFCASE || this.colomnNumber < 0) {
+        if (this.colomnNumber + 1 >= Constants.NUMBEROFCASE || this.colomnNumber + 1 < 0) {
             return false;
         } else {
             return true;
@@ -89,9 +76,9 @@ export class PlaceLettersService {
         }
     }
     verifyTileNotOutOfBound(): boolean {
-        if (this.orientation === 'h' && this.colomnNumber + this.wordToPlace.length >= Constants.NUMBEROFCASE) {
+        if (this.orientation === 'h' && this.colomnNumber + this.wordToPlace.length > Constants.NUMBEROFCASE) {
             return false;
-        } else if (this.orientation === 'v' && this.row + this.wordToPlace.length >= Constants.NUMBEROFCASE) {
+        } else if (this.orientation === 'v' && this.row + this.wordToPlace.length > Constants.NUMBEROFCASE) {
             return false;
         } else {
             return true;
@@ -115,12 +102,36 @@ export class PlaceLettersService {
         const match = regexInput.exec(commandrowInput);
         if (match != null && match.groups != null) {
             this.row = this.rowLetterToNumbers(match.groups.letter);
-            this.colomnNumber = Number(match.groups.number);
+            this.colomnNumber = Number(match.groups.number) - 1;
             this.orientation = match.groups.dir;
             this.wordToPlace = match.groups.word;
             return 'ok';
         } else {
             return 'Mauvais input!';
+        }
+    }
+
+    verifyAvailable(): boolean {
+        let xtile: number = this.colomnNumber;
+        let ytile: number = this.row;
+        for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
+            if (!this.verifyCaseAvailable(xtile, ytile, this.wordToPlace.charAt(i))) {
+                return false;
+            }
+            if (this.orientation === 'h') {
+                xtile++;
+            } else if (this.orientation === 'v') {
+                ytile++;
+            }
+        }
+        return true;
+    }
+
+    verifyCaseAvailable(i: number, j: number, letter: string): boolean {
+        if (this.gameState.lettersOnBoard[i][j] === '' || this.gameState.lettersOnBoard[i][j] === letter) {
+            return true;
+        } else {
+            return false;
         }
     }
     placeWord(commandrowInput: string): string {
@@ -130,6 +141,8 @@ export class PlaceLettersService {
             const tileoutofbound = this.verifyTileNotOutOfBound();
             if (tileoutofbound === false) {
                 return 'le mot dépasse du plateau de jeux';
+            } else if (!this.verifyAvailable()) {
+                return 'Au moins une des cases est déjà occuppée';
             } else {
                 this.drawword();
                 return 'ok';
@@ -144,6 +157,7 @@ export class PlaceLettersService {
         let ytile: number = this.row;
         for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
             this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile);
+            this.gameState.lettersOnBoard[xtile][ytile] = this.wordToPlace.charAt(i);
             // TODO repplace with drawletterwithposition and integrate with position
             if (this.orientation === 'h') {
                 xtile++;
