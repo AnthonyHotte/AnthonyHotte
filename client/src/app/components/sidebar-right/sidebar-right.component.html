@@ -36,7 +36,7 @@
         <fieldset>
             <h1>C'est le tour de {{ getPlayerName() }}</h1>
             <h2>Temps restant au tour:</h2>
-            <div class="Counter"><ngx-countdown #counter [time]="this.verifyChangedTurns() * 1000" format="ss" [autoStart]="true" (finish) = "endTurn()" (finish) = "counter.start()"></ngx-countdown>s</div>
+            <div class="Counter"><ngx-countdown #counter [time]="time * 1000" format="ss" [autoStart]="true" (finish) = "endTurn()" (finish) = "counter.start()" (reset) = "this.verifyChangedTurns()"></ngx-countdown>s</div>
             <br />
             <button *ngIf="turn === 1" (click)="counter.start()">Reprendre</button>&nbsp; <button *ngIf="turn === 1" (click)="counter.pause()">Pause</button>&nbsp;
             <button *ngIf="turn === 0" (click)="counter.reset()" (click)="skipTurn()" >Passer son tour</button>

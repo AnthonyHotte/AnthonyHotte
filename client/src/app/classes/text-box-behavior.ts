@@ -1,6 +1,7 @@
 import { MAX_CHARACTERS } from '@app/constants';
 import { Commands } from './commands';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -13,6 +14,9 @@ export class TextBox {
     buttonCommandState: string;
     debugCommand: boolean;
     command: Commands;
+    commandSuccessful: boolean = false;
+    currentMessage: Observable<string>;
+    messageSource = new BehaviorSubject('message for executed command');
 
     constructor() {
         this.word = '';
@@ -22,6 +26,7 @@ export class TextBox {
         this.buttonCommandState = 'ButtonCommandReleased';
         this.debugCommand = false;
         this.command = new Commands();
+        this.currentMessage = this.messageSource.asObservable();
     }
     send(myWord: string) {
         this.inputVerification(myWord);
@@ -76,5 +81,10 @@ export class TextBox {
 
     getDebugCommand() {
         return this.debugCommand;
+    }
+
+    sendExecutedCommand() {
+        this.messageSource.next(this.commandSuccessful.toString());
+        this.commandSuccessful = false;
     }
 }
