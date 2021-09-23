@@ -185,4 +185,12 @@ export class TextBoxComponent implements OnInit {
             this.soloOpponent.changeTurn(this.turn.toString());
         }
     }
+
+    getMessageSoloOpoonent() {
+        if (parseInt(this.messageSoloOpponent[1], 10) > 0) {
+            return 'commande: ' + this.messageSoloOpponent[0] + ' nombre de lettre(s) échangée(s): ' + this.messageSoloOpponent[1];
+        } else {
+            return 'commande: ' + this.messageSoloOpponent[0];
+        }
+    }
 }

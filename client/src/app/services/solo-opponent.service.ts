@@ -125,14 +125,13 @@ export class SoloOpponentService {
 
     skipTurn(turnToBeSkipped: number) {
         this.incrementPassedTurns();
-        this.myTurn = false;
-        const turn = 0;
-        this.changeTurn(turn.toString());
         this.messageSoloPlayer.next([this.valueToEndGame.toString(), this.lastTurnWasASkip.toString()]);
         this.timeManager.endTurn();
         setTimeout(() => {
             clearInterval(turnToBeSkipped);
         }, 1);
+        const numberOfLetters = 0;
+        this.sourceMessageTextBox.next(['!passer', numberOfLetters.toString()]);
     }
 
     exchangeLetters(numberOfLettersToTrade: number) {
