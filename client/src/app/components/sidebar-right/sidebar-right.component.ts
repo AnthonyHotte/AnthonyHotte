@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { TextBox } from '@app/classes/text-box-behavior';
 import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
 import { LetterService } from '@app/services/letter.service';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
@@ -17,10 +18,12 @@ export class SidebarRightComponent implements OnInit {
     opponentMessage: string;
     messageLetterService: string;
     messageTimeManager: string;
+    messageTextBox: string;
     subscriptionPlayer: Subscription;
     subscriptionOpponent: Subscription;
     subscriptionLetterService: Subscription;
     subscriptionTimeManager: Subscription;
+    subscriptionTextBox: Subscription;
     message: string[] = [];
     playerName: string[] = ['', ''];
 
@@ -39,6 +42,7 @@ export class SidebarRightComponent implements OnInit {
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
         private link: Router,
+        private textBox: TextBox,
     ) {
         this.message = this.soloGameInformation.message;
         this.setAttribute();
@@ -53,6 +57,7 @@ export class SidebarRightComponent implements OnInit {
         this.subscriptionTimeManager = this.turnTimeController.currentMessage.subscribe(
             (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
         );
+        this.subscriptionTextBox = this.textBox.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
     }
 
     setAttribute() {
@@ -83,6 +88,9 @@ export class SidebarRightComponent implements OnInit {
             this.soloOpponent.changeTurn(this.turn.toString());
         }
         this.changedTurns = true;
+        if (this.soloOpponent.valueToEndGame === this.soloOpponent.maximumAllowedSkippedTurns) {
+            this.finishCurrentGame();
+        }
     }
 
     skipTurn() {
@@ -148,10 +156,12 @@ export class SidebarRightComponent implements OnInit {
     }
 
     verifyChangedTurns() {
+        this.changedTurns ||= this.textBox.commandSuccessful;
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
+            return this.changedTurns;
         }
         this.changedTurns = false;
-        return this.time;
+        return this.changedTurns;
     }
 }
