@@ -44,20 +44,28 @@ export class SoloOpponentService {
     play() {
         this.myTurn = parseInt(this.messageTimeManager, 10) === 1;
         if (this.myTurn === true) {
+            const TIME_OUT_TIME = 3000;
+            const INTERVAL_TIME = 17000;
+            setTimeout(() => {
+                return null;
+            }, TIME_OUT_TIME);
+            const turnToBeSkipped = window.setInterval(() => {
+                this.skipTurn(turnToBeSkipped);
+            }, INTERVAL_TIME);
             const HUNDRED = 100;
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             const TEN = 10;
             const TWENTY = 20;
             if (PROBABILITY_OF_ACTION <= TEN) {
                 // skip turn
-                this.skipTurn();
+                this.skipTurn(turnToBeSkipped);
             } else if (PROBABILITY_OF_ACTION <= TWENTY) {
                 // trade letters
                 const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.numberOfLetters);
                 if (NUMBER_OF_LETTERS_TO_TRADE <= this.letters.allLetters.length) {
                     this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
                 } else {
-                    this.skipTurn();
+                    this.skipTurn(turnToBeSkipped);
                 }
             } else {
                 // play a word
@@ -115,13 +123,16 @@ export class SoloOpponentService {
         this.messageSource.next(this.valueToEndGame.toString());
     }
 
-    skipTurn() {
+    skipTurn(turnToBeSkipped: number) {
         this.incrementPassedTurns();
         this.myTurn = false;
         const turn = 0;
         this.changeTurn(turn.toString());
         this.messageSoloPlayer.next([this.valueToEndGame.toString(), this.lastTurnWasASkip.toString()]);
         this.timeManager.endTurn();
+        setTimeout(() => {
+            clearInterval(turnToBeSkipped);
+        }, 1);
     }
 
     exchangeLetters(numberOfLettersToTrade: number) {
