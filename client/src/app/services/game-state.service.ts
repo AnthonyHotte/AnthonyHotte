@@ -140,4 +140,8 @@ export class GameStateService {
         this.pointsForLastWord += this.scoreCalculator.calculateScoreForVertical(beginIndexWord, lastIndexWord, column, wordCreated);
         return this.wordValidator.isWordValid(wordCreated);
     }
+
+    removeLetter(row: number, column: number) {
+        this.lettersOnBoard[row][column] = '';
+    }
 }
