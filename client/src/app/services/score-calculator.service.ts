@@ -8,7 +8,7 @@ import { Letter } from '@app/letter';
 })
 export class ScoreCalculatorService {
     letters = new LetterMap();
-    constructor(private readonly tileMap: TileMap) {}
+    constructor(readonly tileMap: TileMap) {}
 
     calculateScoreForHorizontal(beginIndex: number, endIndex: number, row: number, word: string): number {
         let wordPoints = 0;
@@ -25,7 +25,7 @@ export class ScoreCalculatorService {
             }
             if (this.tileMap.isDoubleWordTile(index + 1, row + 1)) {
                 coefficient *= 2;
-            } else if (this.tileMap.isTripleLetterTile(index + 1, row + 1)) {
+            } else if (this.tileMap.isTripleWordTile(index + 1, row + 1)) {
                 coefficient *= 3;
             }
         }
