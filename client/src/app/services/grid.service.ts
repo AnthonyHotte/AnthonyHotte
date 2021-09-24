@@ -1,14 +1,25 @@
 import { Injectable } from '@angular/core';
+import { LetterMap } from '@app/all-letters';
 import { TileMap } from '@app/classes/grid-special-tile';
 import { Vec2 } from '@app/classes/vec2';
 import * as Constants from '@app/constants';
-
+import { Letter } from '@app/letter';
 @Injectable({
     providedIn: 'root',
 })
 export class GridService {
+    letters = new LetterMap();
+    minpolicesizelettervalue = Constants.LETTERVALUEMINPOLICESIZE;
+    policesizelettervalue = Constants.LETTERVALUEDEFAULTPOLICESIZE;
+    maxpolicesizelettervalue = Constants.LETTERVALUEMAXPOLICESIZE;
+
+    minpolicesizeletter = Constants.LETTERMINPOLICESIZE;
+    policesizeletter = Constants.LETTERMINPOLICESIZE;
+    maxpolicesizeletter = Constants.LETTERMAXPOLICESIZE;
+
     gridContext: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_WIDTH };
+    // constructor(private letterMap: LetterMap) {}
     // injector = Injector.create([{ provide: PlaceLettersService }]);
     drawGrid() {
         // Place numbers at the top
@@ -202,28 +213,45 @@ export class GridService {
     drawLetterwithpositionstring(word: string, x1: number, y1: number) {
         // const x: number = x1.charCodeAt(0) - Constants.SIDELETTERS_TO_ASCII * Constants.CASESIZE + Constants.CASESIZE / 2;
         // const y: number = Number(x1.charCodeAt(0)) * Constants.CASESIZE + Constants.CASESIZE / 2;
+        const offset = 8;
         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE;
         const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE;
-        this.gridContext.strokeRect(x + Constants.TILESPACE, y + Constants.TILESPACE, Constants.TILESIZE, Constants.TILESIZE);
+        this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
         this.gridContext.fillStyle = 'white';
-        this.gridContext.fillRect(x + Constants.TILESPACE, y + Constants.TILESPACE, Constants.TILESIZE, Constants.TILESIZE);
+        this.gridContext.fillRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
         this.gridContext.fillStyle = 'black';
-        this.gridContext.font = '20px system-ui';
-        this.gridContext.fillText(word, x + Constants.CASESIZE / 2 - Constants.TILESPACE, y + Constants.CASESIZE / 2 - Constants.TILESPACE);
+        this.gridContext.font = String(this.policesizeletter) + 'px system-ui';
+        this.gridContext.fillText(word, x + Constants.CASESIZE / 2, y + Constants.CASESIZE / 2);
+        const lettervalue = this.letters.letterMap.get(word) as Letter;
+        // const test: string = lettervalue.letter;
+        // log.console(lettervalue.letter);
+        // const lettervalue = { letter: 'A', point: 9, quantity: 1 };
+        this.drawLetterValuewithposition(lettervalue, x1, y1);
         // this.drawLetterValue(word, x, y);
         // this.drawLetterValue('2', x, y);
     }
-    /*
-    drawLetterValue(word: Letter, x1: number, y1: number) {
-        // drawLetterValue(word: string, x1: number, y1: number) {
-        // eslint-disable-next-line max-len
-        // const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + (Constants.CASESIZE * 3) / 4; // useful for future mouse input
-        // const y: number = Math.floor(y1 / Constants.CASESIZE) * Constants.CASESIZE + (Constants.CASESIZE * 3) / 4;
-        // const x: number = x1 * Constants.CASESIZE + (Constants.CASESIZE * 3) / 4;
-        // const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE / 4;
-        // this.gridContext.fillStyle = 'black';
-        // this.gridContext.font = '10px system-ui';
-        // this.gridContext.fillText(word.letter, x, y);
+    drawLetterValuewithposition(word: Letter, x1: number, y1: number) {
+        const valuePositionOffset = 1.75;
+        const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE * valuePositionOffset;
+        const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE * valuePositionOffset;
+        this.gridContext.fillStyle = 'black';
+        this.gridContext.font = String(this.policesizelettervalue) + 'px system-ui';
+        this.gridContext.fillText(String(word.point), x, y);
     }
-    */
+    increasepolicesize() {
+        if (this.policesizeletter - 2 < this.maxpolicesizeletter) {
+            this.policesizeletter = this.policesizeletter + 2;
+        }
+        if (this.policesizelettervalue - 1 < this.maxpolicesizelettervalue) {
+            this.policesizelettervalue = this.policesizelettervalue + 1;
+        }
+    }
+    decreasepolicesize() {
+        if (this.policesizeletter + 2 > this.minpolicesizeletter) {
+            this.policesizeletter = this.policesizeletter - 2;
+        }
+        if (this.policesizelettervalue + 1 > this.minpolicesizelettervalue) {
+            this.policesizelettervalue = this.policesizelettervalue - 1;
+        }
+    }
 }
