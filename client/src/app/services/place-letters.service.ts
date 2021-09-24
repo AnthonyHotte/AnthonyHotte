@@ -86,6 +86,7 @@ export class PlaceLettersService {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
         this.gameState.lastLettersAdded = [];
+        this.gameState.pointsForLastWord = 0;
         this.gameState.orientationOfLastWord = this.orientation;
         for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
             this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile);
@@ -105,24 +106,17 @@ export class PlaceLettersService {
             xtile = this.colomnNumber;
             ytile = this.row;
             setTimeout(() => {
-                for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
-                    this.gridService.drawtilebackground(xtile + 1, ytile + 1);
-                    // TODO replace with a function that removes tha letter from the letters placed
-                    // this.gameState.placeLetter(ytile, xtile, this.wordToPlace.charAt(i));
-                    if (this.orientation === 'h') {
-                        xtile++;
-                    } else if (this.orientation === 'v') {
-                        ytile++;
-                    }
+                for (let i = 0; i < this.gameState.lastLettersAdded.length; i += 2) {
+                    this.gridService.drawtilebackground(this.gameState.lastLettersAdded[i + 1] + 1, this.gameState.lastLettersAdded[i] + 1);
+                    this.gameState.removeLetter(this.gameState.lastLettersAdded[i], this.gameState.lastLettersAdded[i + 1]);
                 }
                 // console.log('sleep');
                 // And any other code that should run only after 5s
             }, delay);
 
-            // TODO IL FAUT  ETRE CAPABLE D'EFFACER LES LETTRES QU'ON VIENT DE RAJOUTER APRES 3 SECONDE. LES INDICES DES LETTRES
-            // SONT DISPO DANS this.gameState.lastLettersAdded
+            //
             // eslint-disable-next-line no-console
-            console.log('invalid entry');
+            console.log(this.gameState.pointsForLastWord);
         }
     }
 
