@@ -115,7 +115,7 @@ export class PlaceLettersService {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
         for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
-            if (!this.verifyCaseAvailable(xtile, ytile, this.wordToPlace.charAt(i))) {
+            if (!this.verifyCaseAvailable(ytile, xtile, this.wordToPlace.charAt(i))) {
                 return false;
             }
             if (this.orientation === 'h') {
@@ -134,6 +134,7 @@ export class PlaceLettersService {
             return false;
         }
     }
+
     placeWord(commandrowInput: string): string {
         // const checkArgumentlength: string = this.checkArgumentInputlength(commandrowInput);
         const chekinput = this.checkinput(commandrowInput);
@@ -155,15 +156,24 @@ export class PlaceLettersService {
     drawword() {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
+        this.gameState.lastLettersAdded = [];
+        this.gameState.orientationOfLastWord = this.orientation;
         for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
             this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile);
-            this.gameState.lettersOnBoard[xtile][ytile] = this.wordToPlace.charAt(i);
+            this.gameState.placeLetter(ytile, xtile, this.wordToPlace.charAt(i));
             // TODO repplace with drawletterwithposition and integrate with position
             if (this.orientation === 'h') {
                 xtile++;
             } else if (this.orientation === 'v') {
                 ytile++;
             }
+        }
+
+        if (!this.gameState.validateWordCreatedByNewLetters()) {
+            // TODO IL FAUT  ETRE CAPABLE D'EFFACER LES LETTRES QU'ON VIENT DE RAJOUTER APRES 3 SECONDE. LES INDICES DES LETTRES
+            // SONT DISPO DANS this.gameState.lastLettersAdded
+            // eslint-disable-next-line no-console
+            console.log('invalid entry');
         }
     }
     testing(): string {
