@@ -13,4 +13,7 @@ describe('LetterService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
+    it('should be created', () => {
+        expect(service.allLetters.length).toBeGreaterThan(0);
+    });
 });
