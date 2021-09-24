@@ -76,6 +76,7 @@ export class TextBox {
         if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!debug' && this.buttonCommandState === 'ButtonCommandActivated') {
             this.debugCommand = true;
         } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer' && this.buttonCommandState === 'ButtonCommandActivated') {
+            this.debugCommand = false;
             this.returnMessage = this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
         }
     }
