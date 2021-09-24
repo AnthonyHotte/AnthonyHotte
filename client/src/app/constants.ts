@@ -2,10 +2,11 @@
 const FOUR = 4;
 const SIXTEEN = 16;
 const SEVEN = 7;
-export const SIDESPACE = 30;
+// export const SIDESPACE = 30;
 export const NUMBEROFCASE = 15;
-export const DEFAULT_WIDTH = 500;
-export const CASESIZE = (DEFAULT_WIDTH - SIDESPACE) / NUMBEROFCASE;
+export const DEFAULT_WIDTH = 750;
+export const CASESIZE = DEFAULT_WIDTH / (NUMBEROFCASE + 1);
+export const SIDESPACE = CASESIZE;
 export const TILESIZE = (CASESIZE * 3) / FOUR;
 export const TILESPACE = CASESIZE / SIXTEEN;
 export const NOTEXT = -1;
@@ -13,6 +14,13 @@ export const CENTERCASE = 8;
 export const SIDELETTERS: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'];
 // value t0 removes from each letter ascii code to transform it into the line number,these should always be tranform into lowercase before use in code
 export const SIDELETTERS_TO_ASCII = 97;
+export const LETTERVALUEMINPOLICESIZE = 10;
+export const LETTERVALUEDEFAULTPOLICESIZE = 15;
+export const LETTERVALUEMAXPOLICESIZE = 20;
+
+export const LETTERMINPOLICESIZE = 20;
+export const LETTERDEFAULTPOLICESIZE = 28;
+export const LETTERMAXPOLICESIZE = 34;
 // to write on the Tiles
 export const TEXTONTILES = ['mot compte double', 'mot compte tripple', 'lettre compte tripple', 'lettre compte double'];
 // useful constants to draw the star in the middle of the board

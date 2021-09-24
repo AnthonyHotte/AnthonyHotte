@@ -1,11 +1,12 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
+import * as Constants from '@app/constants';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 
 // TODO : Avoir un fichier séparé pour les constantes!
-export const DEFAULT_WIDTH = 500;
-export const DEFAULT_HEIGHT = 500;
+export const DEFAULT_WIDTH = Constants.DEFAULT_WIDTH;
+export const DEFAULT_HEIGHT = Constants.DEFAULT_WIDTH;
 
 // TODO : Déplacer ça dans un fichier séparé accessible par tous
 export enum MouseButton {
