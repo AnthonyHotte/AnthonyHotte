@@ -68,11 +68,13 @@ describe('TextBox', () => {
         expect(textBox.buttonCommandState).toEqual('ButtonCommandReleased');
         expect(textBox.buttonMessageState).toEqual('ButtonMessageActivated');
     });
-    // it('should call input.push() and command.activateDebugCommand()', () => {
-    // const activateDebugCommandSpy = spyOn(textBox.command, 'activateDebugCommand');
-    // const pushSpy = spyOn(textBox.inputs, 'push');
-    // textBox.isCommand('!debug');
-    // expect(activateDebugCommandSpy).toHaveBeenCalled();
-    // expect(pushSpy).toHaveBeenCalledWith('Vous etes en mode debug');
-    // });
+    /*
+    it('should call input.push() and command.activateDebugCommand()', () => {
+       // const activateDebugCommandSpy = spyOn(textBox.debugCommand, 'activateDebugCommand');
+        const pushSpy = spyOn(textBox.inputs, 'push');
+        textBox.isCommand('!debug');
+        expect(activateDebugCommandSpy).toHaveBeenCalled();
+        expect(pushSpy).toHaveBeenCalledWith('Vous etes en mode debug');
+    });
+    */
 });

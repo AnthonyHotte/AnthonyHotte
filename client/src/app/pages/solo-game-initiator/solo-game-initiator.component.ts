@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UsefullFunctionService } from '@app/services/usefull-function.service';
 import { VALEUR_TEMPS_DEFAULT, LONGUEURNOMMAX } from '@app/constants';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
+// LENGTHWORDVALIDATION
 
 @Component({
     selector: 'app-solo-game-initiator',
@@ -11,7 +12,7 @@ import { SoloGameInformationService } from '@app/services/solo-game-information.
 export class SoloGameInitiatorComponent {
     message: string[] = [];
 
-    nomTemporaire: string;
+    // nomTemporaire: string;
     nom: string;
     nomAdversaire: string;
     idNomAdversaire: number;
@@ -25,12 +26,12 @@ export class SoloGameInitiatorComponent {
     ) {
         this.message = [];
 
-        this.nomTemporaire = 'Joueur';
+        // this.nomTemporaire = 'Joueur';
         this.nom = 'Joueur';
         this.nomAdversaire = '';
         this.idNomAdversaire = 0;
         this.nomEstValide = true;
-        this.listeDesInsultes = this.usefullFunction.fileReaderFunction('../../assets/insulte.txt');
+        this.listeDesInsultes = this.usefullFunction.fileReaderFunction('@src/assets/insulte.txt');
         this.tempsDeJeu = VALEUR_TEMPS_DEFAULT;
         this.difficulteFacile = true;
     }
@@ -59,7 +60,7 @@ export class SoloGameInitiatorComponent {
 
     verifierNoms() {
         const EXPRESSION = /^[A-Za-z]+$/;
-        const temp: string = this.nomTemporaire.split(' ').join('').toLocaleLowerCase();
+        const temp: string = this.nom.split(' ').join('').toLocaleLowerCase();
         this.assignerNomAdversaire();
         if (temp === this.nomAdversaire.split(' ').join('').toLocaleLowerCase()) {
             switch (this.idNomAdversaire) {
@@ -79,13 +80,13 @@ export class SoloGameInitiatorComponent {
         } else if (!EXPRESSION.test(temp)) {
             this.nomEstValide = false;
         } else {
-            this.nomEstValide = true;
+            this.nomEstValide = false;
         }
     }
     setNom() {
         this.verifierNoms();
         if (this.nomEstValide) {
-            this.nom = this.nomTemporaire;
+            // this.nom = this.nomTemporaire;
             return this.nom;
         } else {
             return 'Ce nom est invalide! Recommencez...';

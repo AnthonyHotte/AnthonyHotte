@@ -34,12 +34,12 @@ describe('PlayAreaComponent', () => {
         expect(component.mousePosition).toEqual(expectedPosition);
     });
 
-    /* eslint-disable @typescript-eslint/no-magic-numbers -- Add reason */
     it('mouseHitDetect should not change the mouse position if it is not a left click', () => {
         const expectedPosition: Vec2 = { x: 0, y: 0 };
+        const mouseMoved: Vec2 = { x: 10, y: 10 };
         mouseEvent = {
-            offsetX: expectedPosition.x + 10,
-            offsetY: expectedPosition.y + 10,
+            offsetX: expectedPosition.x + mouseMoved.x,
+            offsetY: expectedPosition.y + mouseMoved.y,
             button: 1,
         } as MouseEvent;
         component.mouseHitDetect(mouseEvent);
