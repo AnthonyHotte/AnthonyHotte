@@ -60,7 +60,7 @@ export class SoloGameInitiatorComponent {
 
     verifierNoms() {
         const EXPRESSION = /^[A-Za-z]+$/;
-        const temp: string = this.nomTemporaire.split(' ').join('').toLocaleLowerCase();
+        const temp: string = this.nom.split(' ').join('').toLocaleLowerCase();
         this.assignerNomAdversaire();
         if (temp === this.nomAdversaire.split(' ').join('').toLocaleLowerCase()) {
             switch (this.idNomAdversaire) {
