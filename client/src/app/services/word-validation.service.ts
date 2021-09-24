@@ -20,7 +20,7 @@ export class WordValidationService {
         return this.isWordInDictionnary(word) && this.isWordLongerThanTwo(word);
     }
 
-    isWordInDictionnary(word: string): boolean {
+    private isWordInDictionnary(word: string): boolean {
         const normalizedWord = word.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         let normalizedDicWord: string;
         let m: number;
@@ -43,7 +43,7 @@ export class WordValidationService {
 
         return false;
     }
-    isWordLongerThanTwo(word: string): boolean {
+    private isWordLongerThanTwo(word: string): boolean {
         if (word.length >= 2) {
             return true;
         } else {

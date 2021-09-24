@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { TileMap } from '@app/classes/grid-special-tile';
 import { Vec2 } from '@app/classes/vec2';
 import * as Constants from '@app/constants';
-import { TileMap } from '@app/classes/grid-special-tile';
 
 @Injectable({
     providedIn: 'root',
@@ -20,61 +20,64 @@ export class GridService {
         // create this.gridContext
         for (let i = 1; i <= Constants.NUMBEROFCASE; i++) {
             for (let j = 1; j <= Constants.NUMBEROFCASE; j++) {
-                // for the case style
-                let textChoice = -1;
-                // word x2 (pink)
-                if (TileMap.gridMap.isDoubleWordTile(i, j)) {
-                    this.gridContext.fillStyle = 'pink';
-                    if (i !== Constants.CENTERCASE && j !== Constants.CENTERCASE) {
-                        textChoice = 0;
-                    }
-                }
-                // word x3 (red)
-                else if (TileMap.gridMap.isTripleWordTile(i, j)) {
-                    this.gridContext.fillStyle = 'red';
-                    textChoice = 1;
-                }
-                // Letter x3 (dark blue)
-                else if (TileMap.gridMap.isTripleLetterTile(i, j)) {
-                    this.gridContext.fillStyle = 'darkblue';
-                    textChoice = 2;
-                }
-                // Letter x2 (Light blue)
-                else if (TileMap.gridMap.isDoubleLetterTile(i, j)) {
-                    this.gridContext.fillStyle = '#add8e6';
-                    textChoice = 3;
-                } else {
-                    this.gridContext.fillStyle = 'grey';
-                }
-
-                this.gridContext.fillRect(
-                    Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
-                    Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
-                    Constants.CASESIZE,
-                    Constants.CASESIZE,
-                );
-
-                this.gridContext.strokeRect(
-                    Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
-                    Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
-                    Constants.CASESIZE,
-                    Constants.CASESIZE,
-                );
-                // to write the text
-                if (textChoice !== Constants.NOTEXT) {
-                    this.gridContext.fillStyle = 'black';
-                    this.gridContext.fillText(
-                        Constants.TEXTONTILES[textChoice],
-                        Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
-                        Constants.CASESIZE * (j - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
-                        Constants.CASESIZE,
-                    );
-                }
-                // star
-                else if (i === Constants.CENTERCASE && j === Constants.CENTERCASE) {
-                    this.drawStar();
-                }
+                this.drawtilebackground(i, j);
             }
+        }
+    }
+    drawtilebackground(i: number, j: number) {
+        // for the case style
+        let textChoice = -1;
+        // word x2 (pink)
+        if (TileMap.gridMap.isDoubleWordTile(i, j)) {
+            this.gridContext.fillStyle = 'pink';
+            if (i !== Constants.CENTERCASE && j !== Constants.CENTERCASE) {
+                textChoice = 0;
+            }
+        }
+        // word x3 (red)
+        else if (TileMap.gridMap.isTripleWordTile(i, j)) {
+            this.gridContext.fillStyle = 'red';
+            textChoice = 1;
+        }
+        // Letter x3 (dark blue)
+        else if (TileMap.gridMap.isTripleLetterTile(i, j)) {
+            this.gridContext.fillStyle = 'darkblue';
+            textChoice = 2;
+        }
+        // Letter x2 (Light blue)
+        else if (TileMap.gridMap.isDoubleLetterTile(i, j)) {
+            this.gridContext.fillStyle = '#add8e6';
+            textChoice = 3;
+        } else {
+            this.gridContext.fillStyle = 'grey';
+        }
+
+        this.gridContext.fillRect(
+            Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
+            Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
+            Constants.CASESIZE,
+            Constants.CASESIZE,
+        );
+
+        this.gridContext.strokeRect(
+            Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
+            Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
+            Constants.CASESIZE,
+            Constants.CASESIZE,
+        );
+        // to write the text
+        if (textChoice !== Constants.NOTEXT) {
+            this.gridContext.fillStyle = 'black';
+            this.gridContext.fillText(
+                Constants.TEXTONTILES[textChoice],
+                Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
+                Constants.CASESIZE * (j - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
+                Constants.CASESIZE,
+            );
+        }
+        // star
+        else if (i === Constants.CENTERCASE && j === Constants.CENTERCASE) {
+            this.drawStar();
         }
     }
 
