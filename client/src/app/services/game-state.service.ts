@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as constants from '@app/constants';
 import { WordValidationService } from '@app/services/word-validation.service';
+import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -9,8 +10,10 @@ export class GameStateService {
     lettersOnBoard: string[][];
     lastLettersAdded: number[];
     orientationOfLastWord: string;
+    playerUsedAllLetters: boolean;
+    pointsForLastWord: number;
 
-    constructor(private readonly wordValidator: WordValidationService) {
+    constructor(private readonly wordValidator: WordValidationService, private readonly scoreCalculator: ScoreCalculatorService) {
         this.lettersOnBoard = [];
         for (let i = 0; i < constants.NUMBEROFCASE; i++) {
             this.lettersOnBoard[i] = [];
@@ -25,6 +28,11 @@ export class GameStateService {
             this.lastLettersAdded.push(row);
             this.lastLettersAdded.push(column);
             this.lettersOnBoard[row][column] = letter;
+        }
+        if (this.lastLettersAdded.length === constants.MAXLETTERINHAND) {
+            this.playerUsedAllLetters = true;
+        } else {
+            this.playerUsedAllLetters = false;
         }
     }
     isPartOfWordVertical(row: number, column: number): boolean {
@@ -88,6 +96,8 @@ export class GameStateService {
         return true;
     }
     validateHorizontalWord(row: number, column: number): boolean {
+        let beginIndexWord = 0;
+        let lastIndexWord = 0;
         let firstColumnOfWord = 0;
         let wordCreated = '';
         for (column; column >= 0; column--) {
@@ -95,31 +105,39 @@ export class GameStateService {
                 break;
             }
             firstColumnOfWord = column;
+            beginIndexWord = firstColumnOfWord;
         }
         for (firstColumnOfWord; firstColumnOfWord < constants.NUMBEROFCASE; firstColumnOfWord++) {
             if (this.lettersOnBoard[row][firstColumnOfWord] === '') {
                 break;
             }
             wordCreated += this.lettersOnBoard[row][firstColumnOfWord];
+            lastIndexWord = firstColumnOfWord;
         }
+        this.pointsForLastWord += this.scoreCalculator.calculateScoreForHorizontal(beginIndexWord, lastIndexWord, row, wordCreated);
         return this.wordValidator.isWordValid(wordCreated);
     }
 
     validateVerticalWord(row: number, column: number): boolean {
+        let beginIndexWord = 0;
+        let lastIndexWord = 0;
         let firstRowOfWord = 0;
         let wordCreated = '';
         for (row; row >= 0; row--) {
             if (this.lettersOnBoard[row][column] === '') {
                 break;
             }
-            firstRowOfWord = column;
+            firstRowOfWord = row;
+            beginIndexWord = firstRowOfWord;
         }
         for (firstRowOfWord; firstRowOfWord < constants.NUMBEROFCASE; firstRowOfWord++) {
             if (this.lettersOnBoard[firstRowOfWord][column] === '') {
                 break;
             }
             wordCreated += this.lettersOnBoard[firstRowOfWord][column];
+            lastIndexWord = firstRowOfWord;
         }
+        this.pointsForLastWord += this.scoreCalculator.calculateScoreForVertical(beginIndexWord, lastIndexWord, column, wordCreated);
         return this.wordValidator.isWordValid(wordCreated);
     }
 }
