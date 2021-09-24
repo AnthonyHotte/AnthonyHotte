@@ -3,6 +3,7 @@ import { LetterService } from './letter.service';
 import { GestionTimerTourService } from './gestion-timer-tour.service';
 import { SoloPlayerService } from './solo-player.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { MAXLETTERINHAND } from '@app/constants';
 
 describe('SoloPlayerService', () => {
     let service: SoloPlayerService;
@@ -13,7 +14,6 @@ describe('SoloPlayerService', () => {
         waitForAsync(() => {
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['exchangeLettersForPlayer', 'addLettersForPlayer']);
             letterServiceSpy.currentMessage = new Observable<string>();
-            letterServiceSpy.maxLettersInHand = 7;
             timeManagerSpy = jasmine.createSpyObj('GestionTimerTourService', ['initiateGame', 'sendTurn', 'endTurn']);
             timeManagerSpy.turn = 0;
             timeManagerSpy.currentMessage = new Observable<string>();
@@ -71,7 +71,7 @@ describe('SoloPlayerService', () => {
     });
     it('reset should call addLettersForPlayer()', () => {
         service.reset();
-        expect(letterServiceSpy.addLettersForPlayer).toHaveBeenCalledWith(letterServiceSpy.maxLettersInHand);
+        expect(letterServiceSpy.addLettersForPlayer).toHaveBeenCalledWith(MAXLETTERINHAND);
     });
     it(' reset with expected number of letter set to 5 should have numberOfLetters = 5', () => {
         const expectedNumLetter = 5;

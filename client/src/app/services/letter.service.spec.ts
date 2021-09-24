@@ -16,7 +16,4 @@ describe('LetterService', () => {
     it('attribute allLetter should not be empty', () => {
         expect(service.allLetters.length).toBeGreaterThan(0);
     });
-    it('addLettersForPlayer should not be empty', () => {
-        expect(service.allLetters.length).toBeGreaterThan(0);
-    });
 });

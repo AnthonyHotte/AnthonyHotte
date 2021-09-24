@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { GestionTimerTourService } from './gestion-timer-tour.service';
 import { LetterService } from './letter.service';
 import { SoloPlayerService } from './solo-player.service';
+import { MAXLETTERINHAND } from '@app/constants';
 
 @Injectable({
     providedIn: 'root',
@@ -29,7 +30,7 @@ export class SoloOpponentService {
     constructor(private letters: LetterService, private timeManager: GestionTimerTourService, private soloPlayer: SoloPlayerService) {
         this.subscription = this.letters.currentMessage.subscribe((message) => (this.message = message));
         this.currentMessage = this.messageSource.asObservable();
-        this.letters.addLettersForOpponent(this.letters.maxLettersInHand);
+        this.letters.addLettersForOpponent(MAXLETTERINHAND);
         this.numberOfLetters = parseInt(this.message, 10);
         this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
             (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
@@ -110,7 +111,7 @@ export class SoloOpponentService {
     }
 
     reset() {
-        this.letters.addLettersForOpponent(this.letters.maxLettersInHand);
+        this.letters.addLettersForOpponent(MAXLETTERINHAND);
         this.numberOfLetters = parseInt(this.message, 10);
         this.valueToEndGame = 0;
     }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { GestionTimerTourService } from './gestion-timer-tour.service';
 import { LetterService } from './letter.service';
+import { MAXLETTERINHAND } from '@app/constants';
 
 @Injectable({
     providedIn: 'root',
@@ -50,7 +51,7 @@ export class SoloPlayerService {
     }
 
     reset() {
-        this.letters.addLettersForPlayer(this.letters.maxLettersInHand);
+        this.letters.addLettersForPlayer(MAXLETTERINHAND);
         this.numberOfLetters = parseInt(this.message, 10);
         this.valueToEndGame = 0;
     }

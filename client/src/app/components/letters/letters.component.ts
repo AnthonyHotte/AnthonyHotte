@@ -37,7 +37,7 @@ export class LettersComponent implements OnInit {
 
     ngOnInit(): void {
         this.letterService.reset();
-        this.maxLettersInHand = this.letterService.maxLettersInHand; // constant that is supposed to be in the constant file
+        this.maxLettersInHand = Constants.MAXLETTERINHAND;
         this.currentLetterNumber = this.letterService.currentLetterNumberForPlayer;
         this.letterSize = Constants.CASESIZE;
         this.getNewLetters(this.maxLettersInHand);
