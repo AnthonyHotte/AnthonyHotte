@@ -33,6 +33,7 @@ export const PLACERCOMMANDFIRSTARGUMENTVALIDLENGTH2 = 4;
 export const PLACERCOMMANDLENGTH = 7;
 export const ASCIICODEOFLOWERA = 97;
 export const ASCIICODEOFLOWERZ = 122;
+export const MAXLETTERINHAND = 7;
 
 export const MAX_CHARACTERS = 512;
 export const ENTER_ASCII = 69;
