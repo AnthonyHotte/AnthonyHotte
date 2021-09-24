@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { UsefullFunctionService } from '@app/services/usefull-function.service';
-import { VALEUR_TEMPS_DEFAULT, LONGUEURNOMMAX, VERIFICATION_PRESENCE, LENGTHWORDVALIDATION } from '@app/constants';
+import { VALEUR_TEMPS_DEFAULT, LONGUEURNOMMAX } from '@app/constants';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 
 @Component({
@@ -58,10 +58,10 @@ export class SoloGameInitiatorComponent {
     }
 
     verifierNoms() {
-        let placeInName = 0;
+        const EXPRESSION = /^[A-Za-z]+$/;
         const temp: string = this.nomTemporaire.split(' ').join('').toLocaleLowerCase();
         this.assignerNomAdversaire();
-        if (this.nomTemporaire.split(' ').join('').toLocaleLowerCase() === this.nomAdversaire.split(' ').join('').toLocaleLowerCase()) {
+        if (temp === this.nomAdversaire.split(' ').join('').toLocaleLowerCase()) {
             switch (this.idNomAdversaire) {
                 case 1:
                     this.nomAdversaire = 'Daphne du Maurier';
@@ -72,22 +72,11 @@ export class SoloGameInitiatorComponent {
                 default:
                     this.nomAdversaire = 'Haruki Murakami';
             }
-        } else if (this.nomTemporaire.split(' ').join('') === '') {
+        } else if (temp === '') {
             this.nomEstValide = false;
-        } else if (this.nomTemporaire.length > LONGUEURNOMMAX) {
+        } else if (temp.length > LONGUEURNOMMAX) {
             this.nomEstValide = false;
-        } else if (
-            this.listeDesInsultes.search(temp.substring(placeInName++, LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE ||
-            this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE ||
-            this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE ||
-            this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE ||
-            this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE ||
-            this.listeDesInsultes.search(temp.substring(placeInName * LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE
-        ) {
+        } else if (!EXPRESSION.test(temp)) {
             this.nomEstValide = false;
         } else {
             this.nomEstValide = true;

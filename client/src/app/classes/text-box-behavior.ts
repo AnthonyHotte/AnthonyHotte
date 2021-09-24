@@ -15,8 +15,7 @@ export class TextBox {
     debugCommand: boolean = false;
     returnMessage: string;
     currentMessage: Observable<string>;
-    // why?
-    // injector = Injector.create([{ provide: PlaceLettersService }]);
+
     commandSuccessful: boolean = true;
     sourceMessage = new BehaviorSubject('command is successful');
     constructor(private readonly placeLettersService: PlaceLettersService) {
