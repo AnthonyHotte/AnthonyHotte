@@ -14,6 +14,7 @@ describe('SoloPlayerService', () => {
     beforeEach(
         waitForAsync(() => {
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['addLettersForPlayer']);
+            letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
             PlayerLetterHand.currentMessage = new Observable<string>();
             timeManagerSpy = jasmine.createSpyObj('GestionTimerTourService', ['initiateGame', 'sendTurn', 'endTurn']);
             timeManagerSpy.turn = 0;
@@ -42,8 +43,9 @@ describe('SoloPlayerService', () => {
         expect(sendNumberOfSkippedTurnSpy).toHaveBeenCalledWith(service.valueToEndGame.toString());
     });
     it('exchangeLetters should call exchangeLettersForPlayer', () => {
+        const mySpy = spyOn(letterServiceSpy.players[0], 'exchangeLetters');
         service.exchangeLetters();
-        expect(letterServiceSpy.players[0].exchangeLetters).toHaveBeenCalled();
+        expect(mySpy).toHaveBeenCalled();
     });
     it('incrementPassedTurns should call changeTurn', () => {
         const incrementPassedTurnSpy = spyOn(service, 'changeTurn');
@@ -70,9 +72,10 @@ describe('SoloPlayerService', () => {
         service.reset();
         expect(service.valueToEndGame).toEqual(0);
     });
-    it('reset should call addLettersForPlayer()', () => {
+    it('reset should call addLetters()', () => {
+        const mySpy = spyOn(letterServiceSpy.players[0], 'addLetters');
         service.reset();
-        expect(letterServiceSpy.addLettersForPlayer).toHaveBeenCalledWith(MAXLETTERINHAND);
+        expect(mySpy).toHaveBeenCalledWith(MAXLETTERINHAND);
     });
     it(' reset with expected number of letter set to 5 should have numberOfLetters = 5', () => {
         const expectedNumLetter = 5;
