@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { TimerTurnManagerService } from './timer-turn-manager.service';
-import { LetterService } from './letter.service';
-import { SoloPlayerService } from './solo-player.service';
-import { MAXLETTERINHAND } from '@app/constants';
+import { Injectable, Injector } from '@angular/core';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { MAXLETTERINHAND, NUMBEROFCASE } from '@app/constants';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { GameStateService } from './game-state.service';
+import { LetterPlacementPossibility } from './letter-placement-possibility';
+import { LetterService } from './letter.service';
+import { PlacementValidity } from './placement-validity';
+import { SoloPlayerService } from './solo-player.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 @Injectable({
     providedIn: 'root',
@@ -24,11 +27,19 @@ export class SoloOpponentService {
     score: number = 0;
     currentMessage: Observable<string>;
     lastTurnWasASkip: boolean = false;
+    possibilityOfPlayWord: string[];
     private messageSource = new BehaviorSubject('default message');
     private messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
+    private placementPossibilities = new Set<LetterPlacementPossibility>();
 
-    constructor(private letters: LetterService, private timeManager: TimerTurnManagerService, private soloPlayer: SoloPlayerService) {
+    constructor(
+        private letters: LetterService,
+        private timeManager: TimerTurnManagerService,
+        private soloPlayer: SoloPlayerService,
+        private gameState: GameStateService,
+        private injection: Injector,
+    ) {
         this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.currentMessage = this.messageSource.asObservable();
         this.letters.players[1].addLetters(MAXLETTERINHAND);
@@ -41,6 +52,7 @@ export class SoloOpponentService {
         );
         this.messageTextBox = this.sourceMessageTextBox.asObservable();
         this.maximumAllowedSkippedTurns = 6;
+        this.gameState = this.injection.get(GameStateService);
     }
 
     play() {
@@ -74,6 +86,7 @@ export class SoloOpponentService {
                 const PROBABILITY_OF_POINTS = this.calculateProbability(HUNDRED);
                 const FORTY = 40;
                 const SEVENTY = 70;
+                this.findValidPlacesOnBoard();
                 if (PROBABILITY_OF_POINTS <= FORTY) {
                     this.findLessThanEqualToSixPointWord();
                 } else if (PROBABILITY_OF_POINTS <= SEVENTY) {
@@ -152,19 +165,111 @@ export class SoloOpponentService {
         this.timeManager.endTurn();
     }
 
-    findLessThanEqualToSixPointWord() {
-        return 'ToDo';
+    findWordToPlay() {
+        const SIX_VALUE = 6;
+        for (const item of this.placementPossibilities.values()) {
+            
+        }
     }
-
-    findAWordForSevenToTwelvePoints() {
-        return 'ToDo';
-    }
-
-    findAWordForThirteenToEighteenPoints() {
-        return 'ToDO';
-    }
-
+    
     sendTradedLettersInformation(numberOfLettersToTrade: number) {
         this.sourceMessageTextBox.next(['!échanger', numberOfLettersToTrade.toString()]);
+    }
+
+    findValidPlacesOnBoard() {
+        for (let i = 0; i < NUMBEROFCASE; i++) {
+            for (let j = 0; j < NUMBEROFCASE; j++) {
+                if (this.gameState.lettersOnBoard[i][j] !== '') {
+                    let possibility = { row: i, column: j, letter: this.gameState.lettersOnBoard[i][j], placement: PlacementValidity.Nothing };
+                    possibility = this.checkRight(i, j, possibility);
+                    possibility = this.checkLeft(i, j, possibility);
+                    possibility = this.checkDown(i, j, possibility);
+                    possibility = this.checkUp(i, j, possibility);
+                    if (possibility.placement !== PlacementValidity.Nothing) {
+                        this.placementPossibilities.add(possibility);
+                    }
+                }
+            }
+        }
+    }
+
+    checkRight(i: number, j: number, possibility: LetterPlacementPossibility) {
+        if (i !== NUMBEROFCASE - 1) {
+            if (this.gameState.lettersOnBoard[i + 1][j] === '') {
+                possibility.placement = PlacementValidity.Right;
+            }
+        }
+        return possibility;
+    }
+
+    checkLeft(i: number, j: number, possibility: LetterPlacementPossibility) {
+        if (i !== 0) {
+            if (this.gameState.lettersOnBoard[i - 1][j] === '') {
+                if (possibility.placement === PlacementValidity.Right) {
+                    possibility.placement = PlacementValidity.LeftRight;
+                } else {
+                    possibility.placement = PlacementValidity.Left;
+                }
+            }
+        }
+        return possibility;
+    }
+
+    checkDown(i: number, j: number, possibility: LetterPlacementPossibility) {
+        if (j !== NUMBEROFCASE - 1) {
+            if (this.gameState.lettersOnBoard[i][j + 1] === '') {
+                switch (possibility.placement) {
+                    case PlacementValidity.Right: {
+                        possibility.placement = PlacementValidity.HDownRight;
+
+                        break;
+                    }
+                    case PlacementValidity.LeftRight: {
+                        possibility.placement = PlacementValidity.HDownLeftRight;
+
+                        break;
+                    }
+                    case PlacementValidity.Left: {
+                        possibility.placement = PlacementValidity.HDownLeft;
+
+                        break;
+                    }
+                    default: {
+                        possibility.placement = PlacementValidity.HDown;
+                    }
+                }
+            }
+        }
+        return possibility;
+    }
+
+    checkUp(i: number, j: number, possibility: LetterPlacementPossibility) {
+        if (j !== 0) {
+            if (this.gameState.lettersOnBoard[i][j- 1] === '') {
+                switch (possibility.placement) {
+                    case PlacementValidity.Right:
+                        possibility.placement = PlacementValidity.HUpRight;
+                        break;
+                    case PlacementValidity.Left:
+                        possibility.placement = PlacementValidity.HUpLeft;
+                        break;
+                    case PlacementValidity.LeftRight:
+                        possibility.placement = PlacementValidity.HUpLeftRight;
+                        break;
+                    case PlacementValidity.HUp:
+                        possibility.placement = PlacementValidity.HUpHDown;
+                        break;
+                    case PlacementValidity.HUpLeft:
+                        possibility.placement = PlacementValidity.HUpHDownLeft;
+                        break;
+                    case PlacementValidity.HUpRight:
+                        possibility.placement = PlacementValidity.HUpHDownRight;
+                        break;
+                    default:
+                        possibility.placement = PlacementValidity.HUp;
+                }
+            }
+        }
+        return possibility;
     }
 }
