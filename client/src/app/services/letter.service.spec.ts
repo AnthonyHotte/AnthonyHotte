@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { LetterService } from '@app/services/letter.service';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { LETTERS } from '@app/all-letters';
 
 describe('LetterService', () => {
     let service: LetterService;
@@ -147,6 +148,16 @@ describe('LetterService', () => {
         const result = service.getLettersForExchange();
         expect(result.has('i')).toBe(true);
         expect(result.has('a')).toBe(true);
+    });
+    it('reset should reinitialize PlayerLetterHand.allLetters', () => {
+        LETTERS.forEach((letter) => {
+            for (let i = 0; i < letter.quantity; i++) {
+                PlayerLetterHand.allLetters.push(letter);
+            }
+        });
+        const expectedResult = 102;
+        service.reset();
+        expect(PlayerLetterHand.allLetters.length).toEqual(expectedResult);
     });
 
     /*

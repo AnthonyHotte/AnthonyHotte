@@ -1,7 +1,6 @@
 import { Letter } from '@app/letter';
 import { MAXLETTERINHAND } from '@app/constants';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LETTERS } from '@app/all-letters';
 export class PlayerLetterHand {
     static allLetters: Letter[] = []; // all letters in available in bank
     static messageSource: BehaviorSubject<string> = new BehaviorSubject('default message');
@@ -30,10 +29,14 @@ export class PlayerLetterHand {
     }
     exchangeLetters() {
         for (const item of this.selectedLettersForExchange.values()) {
+            // put the letters in the bag
             PlayerLetterHand.allLetters.push(this.allLettersInHand[item]);
             const index: number = Math.floor(Math.random() * PlayerLetterHand.allLetters.length);
+            // remove letter in the player hand
             this.allLettersInHand.splice(item, 1);
+            // put new letter in player hand
             this.allLettersInHand.push(PlayerLetterHand.allLetters[index]);
+            // remove those letter from bag
             PlayerLetterHand.allLetters.splice(index, 1);
         }
         this.selectedLettersForExchange.clear();
@@ -45,11 +48,5 @@ export class PlayerLetterHand {
         this.allLettersInHand = []; // array containing the "hand" of the player, the letters he possesses
         this.numberLetterInHand = 0;
         this.selectedLettersForExchange.clear();
-        PlayerLetterHand.allLetters = [];
-        LETTERS.forEach((letter) => {
-            for (let i = 0; i < letter.quantity; i++) {
-                PlayerLetterHand.allLetters.push(letter);
-            }
-        });
     }
 }
