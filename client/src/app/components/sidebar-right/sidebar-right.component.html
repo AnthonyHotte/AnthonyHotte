@@ -53,8 +53,6 @@
                 >s
             </div>
             <br />
-            <button *ngIf="turn === 1" (click)="counter.start()">Reprendre</button>&nbsp;
-            <button *ngIf="turn === 1" (click)="counter.pause()">Pause</button>&nbsp;
             <button *ngIf="turn === 0" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button>
         </fieldset>
         <fieldset>
