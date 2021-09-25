@@ -7,6 +7,7 @@ import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { PlayerLetterHand } from './player-letter-hand';
 
 @Injectable({
     providedIn: 'root',
@@ -142,7 +143,7 @@ export class TextBox {
 
     verifyCommandEchanger(word: string) {
         const ALLOWED_NUMBER_OF_LETTERS = 7;
-        if (this.letterService.allLetters.length >= ALLOWED_NUMBER_OF_LETTERS) {
+        if (PlayerLetterHand.allLetters.length >= ALLOWED_NUMBER_OF_LETTERS) {
             let playerHasLetters = true;
             playerHasLetters = this.verifySelectedLetters(playerHasLetters, word);
             if (playerHasLetters) {
@@ -151,7 +152,7 @@ export class TextBox {
                 this.commandSuccessful = true;
                 return 'Échange de lettre avec succès.';
             } else {
-                this.letterService.selectedLettersForExchangePlayer.clear();
+                this.letterService.players[0].selectedLettersForExchange.clear();
                 return 'Erreur! Les lettres sélectionnées ne font pas partie de la main courante.';
             }
         } else {
@@ -171,7 +172,7 @@ export class TextBox {
                 return false;
             } else {
                 this.letterService.setIndexSelected(letter);
-                this.letterService.selectedLettersForExchangePlayer.add(this.letterService.indexSelected);
+                this.letterService.players[0].selectedLettersForExchange.add(this.letterService.indexSelected);
             }
         }
         return true;

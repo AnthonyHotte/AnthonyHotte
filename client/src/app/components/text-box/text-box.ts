@@ -8,6 +8,7 @@ import { SoloGameInformationService } from '@app/services/solo-game-information.
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { Subscription } from 'rxjs';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 @Component({
     selector: 'app-text-box',
     templateUrl: './text-box.html',
@@ -70,7 +71,7 @@ export class TextBoxComponent implements OnInit {
 
     ngOnInit() {
         this.subscriptionPlayer = this.soloPlayer.currentMessage.subscribe((messagePlayer) => (this.messagePlayer = messagePlayer));
-        this.subscriptionLetterService = this.letterService.currentMessage.subscribe(
+        this.subscriptionLetterService = PlayerLetterHand.currentMessage.subscribe(
             (messageLetterService) => (this.messageLetterService = messageLetterService),
         );
         this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(

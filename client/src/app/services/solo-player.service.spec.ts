@@ -3,6 +3,8 @@ import { LetterService } from './letter.service';
 import { GestionTimerTourService } from './gestion-timer-tour.service';
 import { SoloPlayerService } from './solo-player.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { MAXLETTERINHAND } from '@app/constants';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 
 describe('SoloPlayerService', () => {
     let service: SoloPlayerService;
@@ -11,9 +13,9 @@ describe('SoloPlayerService', () => {
 
     beforeEach(
         waitForAsync(() => {
-            letterServiceSpy = jasmine.createSpyObj('LetterService', ['exchangeLettersForPlayer', 'addLettersForPlayer']);
-            letterServiceSpy.currentMessage = new Observable<string>();
-            letterServiceSpy.maxLettersInHand = 7;
+            letterServiceSpy = jasmine.createSpyObj('LetterService', ['addLettersForPlayer']);
+            letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
+            PlayerLetterHand.currentMessage = new Observable<string>();
             timeManagerSpy = jasmine.createSpyObj('GestionTimerTourService', ['initiateGame', 'sendTurn', 'endTurn']);
             timeManagerSpy.turn = 0;
             timeManagerSpy.currentMessage = new Observable<string>();
@@ -41,8 +43,9 @@ describe('SoloPlayerService', () => {
         expect(sendNumberOfSkippedTurnSpy).toHaveBeenCalledWith(service.valueToEndGame.toString());
     });
     it('exchangeLetters should call exchangeLettersForPlayer', () => {
+        const mySpy = spyOn(letterServiceSpy.players[0], 'exchangeLetters');
         service.exchangeLetters();
-        expect(letterServiceSpy.exchangeLettersForPlayer).toHaveBeenCalled();
+        expect(mySpy).toHaveBeenCalled();
     });
     it('incrementPassedTurns should call changeTurn', () => {
         const incrementPassedTurnSpy = spyOn(service, 'changeTurn');
@@ -69,9 +72,10 @@ describe('SoloPlayerService', () => {
         service.reset();
         expect(service.valueToEndGame).toEqual(0);
     });
-    it('reset should call addLettersForPlayer()', () => {
+    it('reset should call addLetters()', () => {
+        const mySpy = spyOn(letterServiceSpy.players[0], 'addLetters');
         service.reset();
-        expect(letterServiceSpy.addLettersForPlayer).toHaveBeenCalledWith(letterServiceSpy.maxLettersInHand);
+        expect(mySpy).toHaveBeenCalledWith(MAXLETTERINHAND);
     });
     it(' reset with expected number of letter set to 5 should have numberOfLetters = 5', () => {
         const expectedNumLetter = 5;
