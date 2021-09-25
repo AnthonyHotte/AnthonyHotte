@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { GestionTimerTourService } from './gestion-timer-tour.service';
 import { LetterService } from './letter.service';
+import { MAXLETTERINHAND } from '@app/constants';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 
 @Injectable({
     providedIn: 'root',
@@ -25,7 +27,7 @@ export class SoloPlayerService {
 
     constructor(private letters: LetterService, private timeManager: GestionTimerTourService) {
         this.currentMessage = this.messageSource.asObservable();
-        this.subscription = this.letters.currentMessage.subscribe((message) => (this.message = message));
+        this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
             (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
         );
@@ -50,7 +52,7 @@ export class SoloPlayerService {
     }
 
     reset() {
-        this.letters.addLettersForPlayer(this.letters.maxLettersInHand);
+        this.letters.players[0].addLetters(MAXLETTERINHAND);
         this.numberOfLetters = parseInt(this.message, 10);
         this.valueToEndGame = 0;
     }
@@ -75,7 +77,7 @@ export class SoloPlayerService {
     }
 
     exchangeLetters() {
-        this.letters.exchangeLettersForPlayer();
+        this.letters.players[0].exchangeLetters();
     }
 
     sendNumberOfSkippedTurn() {

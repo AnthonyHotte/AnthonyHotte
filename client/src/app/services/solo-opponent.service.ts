@@ -3,6 +3,8 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { GestionTimerTourService } from './gestion-timer-tour.service';
 import { LetterService } from './letter.service';
 import { SoloPlayerService } from './solo-player.service';
+import { MAXLETTERINHAND } from '@app/constants';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 
 @Injectable({
     providedIn: 'root',
@@ -27,9 +29,9 @@ export class SoloOpponentService {
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
 
     constructor(private letters: LetterService, private timeManager: GestionTimerTourService, private soloPlayer: SoloPlayerService) {
-        this.subscription = this.letters.currentMessage.subscribe((message) => (this.message = message));
+        this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.currentMessage = this.messageSource.asObservable();
-        this.letters.addLettersForOpponent(this.letters.maxLettersInHand);
+        this.letters.players[1].addLetters(MAXLETTERINHAND);
         this.numberOfLetters = parseInt(this.message, 10);
         this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
             (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
@@ -62,7 +64,7 @@ export class SoloOpponentService {
             } else if (PROBABILITY_OF_ACTION <= TWENTY) {
                 // trade letters
                 const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.numberOfLetters);
-                if (NUMBER_OF_LETTERS_TO_TRADE <= this.letters.allLetters.length) {
+                if (NUMBER_OF_LETTERS_TO_TRADE <= PlayerLetterHand.allLetters.length) {
                     this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
                 } else {
                     this.skipTurn(turnToBeSkipped);
@@ -110,7 +112,7 @@ export class SoloOpponentService {
     }
 
     reset() {
-        this.letters.addLettersForOpponent(this.letters.maxLettersInHand);
+        this.letters.players[1].addLetters(MAXLETTERINHAND);
         this.numberOfLetters = parseInt(this.message, 10);
         this.valueToEndGame = 0;
     }
@@ -138,13 +140,13 @@ export class SoloOpponentService {
         let i = 0;
         while (i < numberOfLettersToTrade) {
             const INDEX_OF_LETTER_TO_TRADE = this.calculateProbability(this.numberOfLetters);
-            if (!this.letters.selectedLettersForExchangeOpponent.has(i)) {
-                this.letters.selectedLettersForExchangeOpponent.add(INDEX_OF_LETTER_TO_TRADE);
+            if (!this.letters.players[1].selectedLettersForExchange.has(i)) {
+                this.letters.players[1].selectedLettersForExchange.add(INDEX_OF_LETTER_TO_TRADE);
                 i++;
             }
         }
         this.sendTradedLettersInformation(numberOfLettersToTrade);
-        this.letters.exchangeLettersForOpponent();
+        this.letters.players[1].exchangeLetters();
         this.timeManager.endTurn();
     }
 
