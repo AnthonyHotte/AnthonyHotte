@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as Constants from '@app/constants';
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
+import { WordValidationService } from '@app/services/word-validation.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -15,7 +16,11 @@ export class PlaceLettersService {
     // policesize
     // policesize: number = 25;
 
-    constructor(private readonly gridService: GridService, private gameState: GameStateService) {}
+    constructor(
+        private readonly gridService: GridService,
+        private gameState: GameStateService,
+        private readonly wordValidator: WordValidationService,
+    ) {}
     // TODO firstletter to place
     // TODO input seperated by , ?
     // TODO make sure that 2 " " back to back doesn't break the input
@@ -89,7 +94,7 @@ export class PlaceLettersService {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
         this.gameState.lastLettersAdded = [];
-        this.gameState.pointsForLastWord = 0;
+        this.wordValidator.pointsForLastWord = 0;
         this.gameState.orientationOfLastWord = this.orientation;
         for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
             this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile);
@@ -116,11 +121,10 @@ export class PlaceLettersService {
                 // console.log('sleep');
                 // And any other code that should run only after 5s
             }, delay);
-
-            //
-            // eslint-disable-next-line no-console
-            console.log(this.gameState.pointsForLastWord);
+            this.wordValidator.pointsForLastWord = 0;
         }
+        // eslint-disable-next-line no-console
+        console.log(this.wordValidator.pointsForLastWord);
     }
     rowLetterToNumbers(row: string): number {
         const x: number = row.charCodeAt(0) - Constants.SIDELETTERS_TO_ASCII;

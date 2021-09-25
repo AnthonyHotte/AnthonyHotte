@@ -168,9 +168,6 @@ export class TextBox {
             const letter = letters.charAt(i);
             playerHasLetters = this.letterService.selectLetter(letter, 0) && playerHasLetters;
             if (!playerHasLetters) {
-                this.letterService.buttonPressed = '';
-                this.letterService.letterIsSelected = false;
-                this.letterService.indexSelected = -1;
                 this.letterService.players[0].selectedLettersForExchange.clear();
                 return false;
             }
