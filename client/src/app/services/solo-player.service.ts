@@ -52,6 +52,8 @@ export class SoloPlayerService {
     }
 
     reset() {
+        this.letters.players[0].allLettersInHand = [];
+        this.numberOfLetters = this.letters.players[0].numberLetterInHand = 0;
         this.letters.players[0].addLetters(MAXLETTERINHAND);
         this.numberOfLetters = parseInt(this.message, 10);
         this.valueToEndGame = 0;

@@ -20,7 +20,7 @@ export class PlayerLetterHand {
         if (this.numberLetterInHand + amount <= MAXLETTERINHAND) {
             this.numberLetterInHand += amount;
             for (let i = 0; i < amount; i++) {
-                const index: number = Math.floor(Math.random() * this.allLettersInHand.length);
+                const index: number = Math.floor(Math.random() * PlayerLetterHand.allLetters.length);
                 this.allLettersInHand.push(PlayerLetterHand.allLetters[index]);
                 PlayerLetterHand.allLetters.splice(index, 1);
             }

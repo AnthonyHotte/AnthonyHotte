@@ -112,6 +112,8 @@ export class SoloOpponentService {
     }
 
     reset() {
+        this.letters.players[1].allLettersInHand = [];
+        this.numberOfLetters = this.letters.players[1].numberLetterInHand = 0;
         this.letters.players[1].addLetters(MAXLETTERINHAND);
         this.numberOfLetters = parseInt(this.message, 10);
         this.valueToEndGame = 0;
