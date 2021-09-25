@@ -7,6 +7,7 @@ import { SoloGameInformationService } from '@app/services/solo-game-information.
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { Subscription } from 'rxjs';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 
 @Component({
     selector: 'app-sidebar-right',
@@ -51,7 +52,7 @@ export class SidebarRightComponent implements OnInit {
     ngOnInit() {
         this.subscriptionPlayer = this.soloPlayer.currentMessage.subscribe((messagePlayer) => (this.messagePlayer = messagePlayer));
         this.subscriptionOpponent = this.soloOpponent.currentMessage.subscribe((opponentMessage) => (this.opponentMessage = opponentMessage));
-        this.subscriptionLetterService = this.letterService.currentMessage.subscribe(
+        this.subscriptionLetterService = PlayerLetterHand.currentMessage.subscribe(
             (messageLetterService) => (this.messageLetterService = messageLetterService),
         );
         this.subscriptionTimeManager = this.turnTimeController.currentMessage.subscribe(
@@ -107,16 +108,16 @@ export class SidebarRightComponent implements OnInit {
     }
 
     getNumberRemainingLetters() {
-        this.letterService.sendLettersInSackNumber();
+        PlayerLetterHand.sendLettersInSackNumber();
         return this.messageLetterService;
     }
 
     getNumberOfLettersForPlayer() {
-        return this.letterService.lettersForPlayer.length;
+        return this.letterService.players[0].allLettersInHand.length;
     }
 
     getNumberOfLettersForOpponent() {
-        return this.letterService.lettersForOpponent.length;
+        return this.letterService.players[1].allLettersInHand.length;
     }
 
     getScorePlayer() {
@@ -138,7 +139,7 @@ export class SidebarRightComponent implements OnInit {
 
     showLettersToBeExchanged() {
         let letters = 'Aucune lettre';
-        if (this.letterService.selectedLettersForExchangePlayer.size !== 0) {
+        if (this.letterService.players[0].selectedLettersForExchange.size !== 0) {
             letters = '';
         }
         for (const item of this.letterService.getLettersForExchange()) {

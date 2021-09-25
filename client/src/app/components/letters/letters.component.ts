@@ -5,6 +5,7 @@ import { LetterService } from '@app/services/letter.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { Subscription } from 'rxjs';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 
 @Component({
     selector: 'app-letters',
@@ -26,7 +27,7 @@ export class LettersComponent implements OnInit {
         if (this.currentLetterNumber + amount <= this.maxLettersInHand) {
             this.soloPlayer.reset();
             this.soloOpponent.reset();
-            this.letters = this.letterService.getLetters();
+            this.letters = this.letterService.players[0].allLettersInHand;
             this.currentLetterNumber = parseInt(this.message, 10);
         }
     }
@@ -38,18 +39,18 @@ export class LettersComponent implements OnInit {
     ngOnInit(): void {
         this.letterService.reset();
         this.maxLettersInHand = Constants.MAXLETTERINHAND;
-        this.currentLetterNumber = this.letterService.currentLetterNumberForPlayer;
+        this.currentLetterNumber = this.letterService.players[0].numberLetterInHand;
         this.letterSize = Constants.CASESIZE;
         this.getNewLetters(this.maxLettersInHand);
-        this.subscription = this.letterService.currentMessage.subscribe((message) => (this.message = message));
+        this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
     }
 
     onRightClick(letter: string) {
         this.letterService.setIndexSelected(letter);
-        if (this.letterService.selectedLettersForExchangePlayer.has(this.letterService.indexSelected)) {
-            this.letterService.selectedLettersForExchangePlayer.delete(this.letterService.indexSelected);
+        if (this.letterService.players[0].selectedLettersForExchange.has(this.letterService.indexSelected)) {
+            this.letterService.players[0].selectedLettersForExchange.delete(this.letterService.indexSelected);
         } else {
-            this.letterService.selectedLettersForExchangePlayer.add(this.letterService.indexSelected);
+            this.letterService.players[0].selectedLettersForExchange.add(this.letterService.indexSelected);
         }
     }
 }

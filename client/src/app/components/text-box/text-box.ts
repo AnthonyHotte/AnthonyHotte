@@ -10,6 +10,7 @@ import { SoloGameInformationService } from '@app/services/solo-game-information.
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { Subscription } from 'rxjs';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 @Component({
     selector: 'app-text-box',
     templateUrl: './text-box.html',
@@ -75,7 +76,7 @@ export class TextBoxComponent implements OnInit {
 
     ngOnInit() {
         this.subscriptionPlayer = this.soloPlayer.currentMessage.subscribe((messagePlayer) => (this.messagePlayer = messagePlayer));
-        this.subscriptionLetterService = this.letterService.currentMessage.subscribe(
+        this.subscriptionLetterService = PlayerLetterHand.currentMessage.subscribe(
             (messageLetterService) => (this.messageLetterService = messageLetterService),
         );
         this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
@@ -137,7 +138,7 @@ export class TextBoxComponent implements OnInit {
     verifyCommandEchanger(word: string) {
         const ALLOWED_NUMBER_OF_LETTERS = 7;
         if (word !== undefined && word.length <= ALLOWED_NUMBER_OF_LETTERS + '!échanger '.length && word.length > '!échanger '.length) {
-            if (this.letterService.allLetters.length >= ALLOWED_NUMBER_OF_LETTERS) {
+            if (PlayerLetterHand.allLetters.length >= ALLOWED_NUMBER_OF_LETTERS) {
                 let playerHasLetters = true;
                 const letters = word.substring('!échanger '.length, word.length);
                 for (let i = 0; i < letters.length; i++) {
@@ -150,7 +151,7 @@ export class TextBoxComponent implements OnInit {
                         this.text = 'Erreur! Les lettres sélectionnées ne font pas partie de la main courante.';
                     } else {
                         this.letterService.setIndexSelected(letter);
-                        this.letterService.selectedLettersForExchangePlayer.add(this.letterService.indexSelected);
+                        this.letterService.players[0].selectedLettersForExchange.add(this.letterService.indexSelected);
                     }
                 }
                 if (playerHasLetters) {
@@ -159,7 +160,7 @@ export class TextBoxComponent implements OnInit {
                     this.text = 'Échange de lettre avec succès.';
                     this.input.commandSuccessful = true;
                 } else {
-                    this.letterService.selectedLettersForExchangePlayer.clear();
+                    this.letterService.players[0].selectedLettersForExchange.clear();
                 }
             } else {
                 this.text = 'Commande impossible à réaliser! La réserve ne contient pas assez de lettres.';
