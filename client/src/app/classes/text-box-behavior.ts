@@ -96,6 +96,7 @@ export class TextBox {
                 this.debugCommand = true;
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 this.returnMessage = this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
+                this.endTurn();
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
                 text = this.verifyCommandPasser();
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {

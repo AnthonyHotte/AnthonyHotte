@@ -1,11 +1,14 @@
 import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TextBox } from './text-box-behavior';
 
 describe('TextBox', () => {
     let textBox: TextBox;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            imports: [RouterTestingModule],
+        });
         textBox = TestBed.inject(TextBox);
     });
 
@@ -17,11 +20,12 @@ describe('TextBox', () => {
 
     it('should send a word correctly', () => {
         const inputVerificationSpy = spyOn(textBox, 'inputVerification');
-        const isCommandSpy = spyOn(textBox, 'isCommand');
+        // no need for both lines since logic was changed...
+        // const isCommandSpy = spyOn(textBox, 'isCommand');
         const pushSpy = spyOn(textBox.inputs, 'push');
         textBox.send('Hello');
         expect(inputVerificationSpy).toHaveBeenCalledWith('Hello');
-        expect(isCommandSpy).toHaveBeenCalledWith('Hello');
+        // expect(isCommandSpy).toHaveBeenCalledWith('');
         expect(pushSpy).toHaveBeenCalledWith('Hello');
     });
     it('should validate input correctly', () => {
@@ -31,8 +35,10 @@ describe('TextBox', () => {
     it('should invalidate input correctly', () => {
         const myInvalidString =
             // we need a large string
-            // eslint-disable-next-line max-len
-            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
+            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
+            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
+            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
         textBox.inputVerification(myInvalidString);
         expect(textBox.character).toBe(true);
     });
