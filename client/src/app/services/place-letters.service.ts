@@ -78,7 +78,7 @@ export class PlaceLettersService {
                 return 'Au moins une des cases est déjà occuppée';
             } else {
                 this.drawword();
-                return 'ok';
+                return 'Mot placé avec succès.';
             }
             // if (can it be placed.service.chek() )//TODO add if the word exist and can be placed there
         } else {
