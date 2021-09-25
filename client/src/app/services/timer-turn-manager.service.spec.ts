@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GestionTimerTourService } from './gestion-timer-tour.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 describe('GestionTimerTourService', () => {
-    let service: GestionTimerTourService;
+    let service: TimerTurnManagerService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.inject(GestionTimerTourService);
+        service = TestBed.inject(TimerTurnManagerService);
     });
 
     it('should be created', () => {

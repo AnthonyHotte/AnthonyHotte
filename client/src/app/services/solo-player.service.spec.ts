@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { LetterService } from './letter.service';
-import { GestionTimerTourService } from './gestion-timer-tour.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 import { SoloPlayerService } from './solo-player.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MAXLETTERINHAND } from '@app/constants';
@@ -9,21 +9,21 @@ import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 describe('SoloPlayerService', () => {
     let service: SoloPlayerService;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
-    let timeManagerSpy: jasmine.SpyObj<GestionTimerTourService>;
+    let timeManagerSpy: jasmine.SpyObj<TimerTurnManagerService>;
 
     beforeEach(
         waitForAsync(() => {
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['addLettersForPlayer']);
             letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
             PlayerLetterHand.currentMessage = new Observable<string>();
-            timeManagerSpy = jasmine.createSpyObj('GestionTimerTourService', ['initiateGame', 'sendTurn', 'endTurn']);
+            timeManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['initiateGame', 'sendTurn', 'endTurn']);
             timeManagerSpy.turn = 0;
             timeManagerSpy.currentMessage = new Observable<string>();
             timeManagerSpy.messageSource = new BehaviorSubject('default message');
             TestBed.configureTestingModule({
                 providers: [
                     { provide: LetterService, useValue: letterServiceSpy },
-                    { provide: GestionTimerTourService, useValue: timeManagerSpy },
+                    { provide: TimerTurnManagerService, useValue: timeManagerSpy },
                 ],
             }).compileComponents();
         }),

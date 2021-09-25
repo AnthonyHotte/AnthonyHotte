@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { GestionTimerTourService } from './gestion-timer-tour.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 import { LetterService } from './letter.service';
 import { SoloPlayerService } from './solo-player.service';
 import { MAXLETTERINHAND } from '@app/constants';
@@ -28,7 +28,7 @@ export class SoloOpponentService {
     private messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
 
-    constructor(private letters: LetterService, private timeManager: GestionTimerTourService, private soloPlayer: SoloPlayerService) {
+    constructor(private letters: LetterService, private timeManager: TimerTurnManagerService, private soloPlayer: SoloPlayerService) {
         this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.currentMessage = this.messageSource.asObservable();
         this.letters.players[1].addLetters(MAXLETTERINHAND);
