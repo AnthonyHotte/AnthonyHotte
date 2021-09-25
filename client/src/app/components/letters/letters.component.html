@@ -7,11 +7,10 @@
               [ngStyle]="{
                   'text-align': 'center',
                 'width.px': letterSize,
-               'height.px': letterSize,
-              'border-color': indexOfElem === getIndexSelected() ? 'red' : 'black'
+               'height.px': letterSize
                }"
             >
-                <div (contextmenu)="onRightClick(letter.letter)">
+                <div>
                 {{ letter.letter }}<sub>{{ letter.point }}</sub>
                 </div>
         </td>
