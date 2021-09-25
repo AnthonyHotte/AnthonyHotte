@@ -166,15 +166,13 @@ export class TextBox {
         const letters = word.substring('!échanger '.length, word.length);
         for (let i = 0; i < letters.length; i++) {
             const letter = letters.charAt(i);
-            playerHasLetters = this.letterService.selectIndex(letter) && playerHasLetters;
+            playerHasLetters = this.letterService.selectLetter(letter, 0) && playerHasLetters;
             if (!playerHasLetters) {
                 this.letterService.buttonPressed = '';
                 this.letterService.letterIsSelected = false;
                 this.letterService.indexSelected = -1;
+                this.letterService.players[0].selectedLettersForExchange.clear();
                 return false;
-            } else {
-                this.letterService.setIndexSelected(letter);
-                this.letterService.players[0].selectedLettersForExchange.add(this.letterService.indexSelected);
             }
         }
         return true;

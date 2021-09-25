@@ -125,4 +125,20 @@ export class LetterService {
             }
         });
     }
+
+    selectLetter(letter: string, indexPlayer: number) {
+        const NOT_PRESENT = -1;
+        let index = NOT_PRESENT;
+        for (let i = 0; i < this.players[indexPlayer].allLettersInHand.length; i++) {
+            if (
+                this.players[indexPlayer].allLettersInHand[i].letter.toLowerCase() === letter.toLowerCase() &&
+                !this.players[indexPlayer].selectedLettersForExchange.has(i)
+            ) {
+                index = i;
+                i = this.players[indexPlayer].allLettersInHand.length;
+                this.players[indexPlayer].selectedLettersForExchange.add(index);
+            }
+        }
+        return index !== NOT_PRESENT;
+    }
 }

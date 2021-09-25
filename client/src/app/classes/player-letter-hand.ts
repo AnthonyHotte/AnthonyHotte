@@ -8,6 +8,7 @@ export class PlayerLetterHand {
     allLettersInHand: Letter[];
     numberLetterInHand: number;
     selectedLettersForExchange: Set<number>;
+
     constructor() {
         this.allLettersInHand = [];
         this.numberLetterInHand = 0;
