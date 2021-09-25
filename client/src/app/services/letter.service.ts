@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LETTERS } from '@app/all-letters';
-import { Letter } from '@app/letter';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { Letter } from '@app/letter';
 @Injectable({
     providedIn: 'root',
 })
@@ -118,5 +118,11 @@ export class LetterService {
         }
         this.buttonPressed = ''; // the last button that was pressed by the user.
         this.indexSelected = -1; // the index of the letter that is currently selected in his hand
+        PlayerLetterHand.allLetters = [];
+        LETTERS.forEach((letter) => {
+            for (let i = 0; i < letter.quantity; i++) {
+                PlayerLetterHand.allLetters.push(letter);
+            }
+        });
     }
 }
