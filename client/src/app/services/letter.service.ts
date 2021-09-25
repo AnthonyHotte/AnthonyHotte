@@ -118,10 +118,7 @@ export class LetterService {
         }
         this.buttonPressed = ''; // the last button that was pressed by the user.
         this.indexSelected = -1; // the index of the letter that is currently selected in his hand
-        // PlayerLetterHand.allLetters = [];
-        while (PlayerLetterHand.allLetters.length) {
-            PlayerLetterHand.allLetters.pop();
-        }
+        PlayerLetterHand.allLetters = [];
         LETTERS.forEach((letter) => {
             for (let i = 0; i < letter.quantity; i++) {
                 PlayerLetterHand.allLetters.push(letter);
