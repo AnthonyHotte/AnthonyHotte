@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { MAX_CHARACTERS, PLACERCOMMANDLENGTH } from '@app/constants';
-import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
@@ -30,7 +30,7 @@ export class TextBox {
         private readonly placeLettersService: PlaceLettersService,
         private soloPlayer: SoloPlayerService,
         private soloOpponent: SoloOpponentService,
-        private timeManager: GestionTimerTourService,
+        private timeManager: TimerTurnManagerService,
         private link: Router,
         private letterService: LetterService,
     ) {

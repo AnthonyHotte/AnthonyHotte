@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TextBox } from '@app/classes/text-box-behavior';
-import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
@@ -40,7 +40,7 @@ export class SidebarRightComponent implements OnInit {
 
     constructor(
         private soloGameInformation: SoloGameInformationService,
-        private turnTimeController: GestionTimerTourService,
+        private turnTimeController: TimerTurnManagerService,
         private soloPlayer: SoloPlayerService,
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
@@ -136,10 +136,6 @@ export class SidebarRightComponent implements OnInit {
         this.link.navigate(['home']);
     }
 
-    exchangeLetters() {
-        this.soloPlayer.exchangeLetters();
-        this.endTurn();
-    }
     increasefontsize() {
         this.gridService.increasepolicesize();
         this.placeLetterService.policesizechanged();
@@ -147,17 +143,6 @@ export class SidebarRightComponent implements OnInit {
     decreasefontsize() {
         this.gridService.decreasepolicesize();
         this.placeLetterService.policesizechanged();
-    }
-
-    showLettersToBeExchanged() {
-        let letters = 'Aucune lettre';
-        if (this.letterService.players[0].selectedLettersForExchange.size !== 0) {
-            letters = '';
-        }
-        for (const item of this.letterService.getLettersForExchange()) {
-            letters += item + ' ';
-        }
-        return letters;
     }
 
     getPlayerName() {

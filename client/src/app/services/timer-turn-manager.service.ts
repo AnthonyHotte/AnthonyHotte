@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
     providedIn: 'root',
 })
-export class GestionTimerTourService {
+export class TimerTurnManagerService {
     turn: number = 0;
     currentMessage: Observable<string>;
     messageSource = new BehaviorSubject('default message');

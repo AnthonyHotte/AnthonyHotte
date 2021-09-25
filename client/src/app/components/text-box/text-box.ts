@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TextBox } from '@app/classes/text-box-behavior';
-import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
@@ -43,7 +43,7 @@ export class TextBoxComponent implements OnInit {
     constructor(
         private soloPlayer: SoloPlayerService,
         private letterService: LetterService,
-        private timeManager: GestionTimerTourService,
+        private timeManager: TimerTurnManagerService,
         private soloOpponent: SoloOpponentService,
         private soloGameInformation: SoloGameInformationService,
         private link: Router,

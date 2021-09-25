@@ -1,7 +1,7 @@
 // https://fireship.io/lessons/sharing-data-between-angular-components-four-methods/
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { GestionTimerTourService } from './gestion-timer-tour.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 import { LetterService } from './letter.service';
 import { MAXLETTERINHAND } from '@app/constants';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
@@ -25,7 +25,7 @@ export class SoloPlayerService {
     messageSource = new BehaviorSubject('default message');
     private messageToSoloOpponent = new BehaviorSubject(['turn', 'last turn was a skip']);
 
-    constructor(private letters: LetterService, private timeManager: GestionTimerTourService) {
+    constructor(private letters: LetterService, private timeManager: TimerTurnManagerService) {
         this.currentMessage = this.messageSource.asObservable();
         this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
