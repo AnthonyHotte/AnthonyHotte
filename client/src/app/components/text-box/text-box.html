@@ -2,17 +2,12 @@
     <h1 class="title">Boite de communication</h1>
 </div>
 <div class="DisplayZone">
-    <div
-        *ngIf="(this.buttonCommandState === 'ButtonCommandActivated' && !(this.debugCommand)) || this.buttonMessageState === 'ButtonMessageActivated'"
-    >
-        <p class="PlayerMessage" *ngFor="let word of this.array">{{this.messageSoloInfo[0]}}: {{word}} {{this.getText()}}</p>
-    </div>
-    <div *ngIf="this.debugCommand && this.buttonCommandState === 'ButtonCommandActivated'">
-        <p class="PlayerMessage" *ngFor="let word of this.array">Vous êtes en mode debug</p>
-    </div>
     <div>
-        <p class="OpponentMessage" *ngFor="let word of this.messageSoloInfo">{{this.messageSoloInfo[1]}}: {{getMessageSoloOpoonent()}}</p>
+        <p class="PlayerMessage" *ngFor="let word of this.array">Joueur: {{word}} </p>
     </div>
+    <!-- <div>
+        <p class="OpponentMessage" *ngFor="let word of this.messageSoloInfo">{{this.messageSoloInfo[1]}}: {{getMessageSoloOpoonent()}}</p>
+    </div> -->
 </div>
 <div *ngIf="input.character">
     <p class="AlertMessage">Votre commande ou message est trop longue</p>
@@ -24,8 +19,8 @@
         ngModel
         name="commandsAndMessages"
         [(ngModel)]="this.word"
-        (keyup.enter)="this.verifyCommand(this.array[this.array.length - 1])"
+        (keyup.enter)="this.buttonDetect()"
     />
-    <button [class]="this.input.buttonMessageState" (click)="activateMessage()">Message</button>
-    <button [class]="this.input.buttonCommandState" (click)="activateCommand()">Commande</button>
 </form>
+<button [class] = 'this.buttonMessageState' (click)="activateMessage()">Message</button>
+<button [class] = 'this.buttonCommandState' (click)="activateCommand()" >Commande</button>

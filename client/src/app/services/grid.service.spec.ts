@@ -1,13 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
+import { DEFAULT_WIDTH } from '@app/constants';
 import { GridService } from '@app/services/grid.service';
 
 describe('GridService', () => {
     let service: GridService;
     let ctxStub: CanvasRenderingContext2D;
 
-    const CANVAS_WIDTH = 500;
-    const CANVAS_HEIGHT = 500;
+    const CANVAS_WIDTH = DEFAULT_WIDTH;
+    const CANVAS_HEIGHT = DEFAULT_WIDTH;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});

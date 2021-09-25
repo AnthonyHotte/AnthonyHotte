@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
+import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
+import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
@@ -44,6 +46,8 @@ export class SidebarRightComponent implements OnInit {
         private letterService: LetterService,
         private link: Router,
         private textBox: TextBox,
+        private readonly gridService: GridService,
+        private readonly placeLetterService: PlaceLettersService,
     ) {
         this.message = this.soloGameInformation.message;
         this.setAttribute();
@@ -135,6 +139,14 @@ export class SidebarRightComponent implements OnInit {
     exchangeLetters() {
         this.soloPlayer.exchangeLetters();
         this.endTurn();
+    }
+    increasefontsize() {
+        this.gridService.increasepolicesize();
+        this.placeLetterService.policesizechanged();
+    }
+    decreasefontsize() {
+        this.gridService.decreasepolicesize();
+        this.placeLetterService.policesizechanged();
     }
 
     showLettersToBeExchanged() {

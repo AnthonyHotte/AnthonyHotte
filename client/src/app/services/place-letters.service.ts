@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import * as Constants from '@app/constants';
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -12,6 +11,10 @@ export class PlaceLettersService {
     orientation: string;
     wordToPlace: string;
     spaceIndexInput: number;
+
+    // policesize
+    // policesize: number = 25;
+
     constructor(private readonly gridService: GridService, private gameState: GameStateService) {}
     // TODO firstletter to place
     // TODO input seperated by , ?
@@ -119,13 +122,19 @@ export class PlaceLettersService {
             console.log(this.gameState.pointsForLastWord);
         }
     }
-
-    testing(): string {
-        return this.row + ' ' + this.colomnNumber + ' ' + this.orientation + ' ' + this.wordToPlace;
-    }
     rowLetterToNumbers(row: string): number {
         const x: number = row.charCodeAt(0) - Constants.SIDELETTERS_TO_ASCII;
         return x;
+    }
+    policesizechanged() {
+        const testing = this.gameState.lettersOnBoard;
+        for (let i = 0; i <= Constants.NUMBEROFCASE - 1; i++) {
+            for (let j = 0; j <= Constants.NUMBEROFCASE - 1; j++) {
+                if (testing[i][j] !== '') {
+                    this.gridService.drawLetterwithpositionstring(this.gameState.lettersOnBoard[i][j], j, i);
+                }
+            }
+        }
     }
     /*
     placeLetter(input: string){
