@@ -38,7 +38,7 @@ export class PlaceLettersService {
             return true;
         }
     }
-    checkinput(commandrowInput: string): string {
+    checkInput(commandrowInput: string): string {
         const regexInput = /(?<letter>[a-o])(?<number>[0-9]|1[0-5])(?<dir>[hv])(?<space>[ ])(?<word>[a-zA-Z]{1,15})/;
         const match = regexInput.exec(commandrowInput);
         if (match != null && match.groups != null) {
@@ -78,8 +78,8 @@ export class PlaceLettersService {
 
     placeWord(commandrowInput: string): string {
         // const checkArgumentlength: string = this.checkArgumentInputlength(commandrowInput);
-        const chekinput = this.checkinput(commandrowInput);
-        if (chekinput === 'ok') {
+        const checkInput = this.checkInput(commandrowInput);
+        if (checkInput === 'ok') {
             const tileoutofbound = this.verifyTileNotOutOfBound();
             if (tileoutofbound === false) {
                 return 'le mot dépasse du plateau de jeux';
@@ -98,7 +98,7 @@ export class PlaceLettersService {
                         this.removeLetterInGameState();
                         return 'Ce mot ne touche à aucune lettre déjà en jeu';
                     }
-                    this.drawword();
+                    this.drawWord();
                     if (this.validateWordPlaced()) {
                         this.gameState.isBoardEmpty = false;
                         return 'Mot placé avec succès.';
@@ -137,7 +137,7 @@ export class PlaceLettersService {
             this.gameState.removeLetter(this.gameState.indexLastLetters[i], this.gameState.indexLastLetters[i + 1]);
         }
     }
-    drawword() {
+    drawWord() {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
         this.wordValidator.pointsForLastWord = 0;
@@ -185,7 +185,7 @@ export class PlaceLettersService {
         const x: number = row.charCodeAt(0) - Constants.SIDELETTERS_TO_ASCII;
         return x;
     }
-    policesizechanged() {
+    policeSizeChanged() {
         const testing = this.gameState.lettersOnBoard;
         for (let i = 0; i <= Constants.NUMBEROFCASE - 1; i++) {
             for (let j = 0; j <= Constants.NUMBEROFCASE - 1; j++) {
