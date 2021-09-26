@@ -9,10 +9,12 @@ export class PlayerLetterHand {
     numberLetterInHand: number;
     selectedLettersForExchange: Set<number>;
     private lettersToRemoveForThreeSeconds: Letter[];
+    score: number;
 
     constructor() {
         this.allLettersInHand = [];
         this.numberLetterInHand = 0;
+        this.score = 0;
         this.selectedLettersForExchange = new Set<number>();
         this.lettersToRemoveForThreeSeconds = [];
     }

@@ -105,6 +105,7 @@ export class PlaceLettersService {
                     this.drawWord();
                     if (this.validateWordPlaced()) {
                         this.gameState.isBoardEmpty = false;
+                        this.letterService.players[this.timeManager.turn].score += this.wordValidator.pointsForLastWord;
                         return 'Mot placé avec succès.';
                     } else {
                         this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
@@ -181,8 +182,6 @@ export class PlaceLettersService {
             if (this.gameState.playerUsedAllLetters) {
                 this.wordValidator.pointsForLastWord += 50;
             }
-            // eslint-disable-next-line no-console
-            console.log(this.wordValidator.pointsForLastWord);
             return true;
         }
     }
