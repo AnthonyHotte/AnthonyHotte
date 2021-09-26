@@ -3,6 +3,8 @@ import * as Constants from '@app/constants';
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
 import { WordValidationService } from '@app/services/word-validation.service';
+import { LetterService } from '@app/services/letter.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -20,6 +22,8 @@ export class PlaceLettersService {
         private readonly gridService: GridService,
         private gameState: GameStateService,
         private readonly wordValidator: WordValidationService,
+        private letterService: LetterService,
+        private readonly timeManager: TimerTurnManagerService,
     ) {}
     // TODO firstletter to place
     // TODO input seperated by , ?
@@ -82,22 +86,33 @@ export class PlaceLettersService {
             } else if (!this.verifyAvailable()) {
                 return 'Au moins une des cases est déjà occuppée';
             } else {
-                this.drawword();
-                return 'Mot placé avec succès.';
+                this.placeWordGameState();
+                if (this.gameState.isWordCreationPossibleWithRessources()) {
+                    this.drawword();
+                    if (this.validateWordPlaced()) {
+                        return 'Mot placé avec succès.';
+                    } else {
+                        return "Un mot placé n'est pas valide";
+                    }
+                } else {
+                    for (let i = 0; i < this.gameState.indexLastLetters.length; i += 2) {
+                        this.gameState.removeLetter(this.gameState.indexLastLetters[i], this.gameState.indexLastLetters[i + 1]);
+                    }
+                    return "Vous n' avez pas les lettres pour écrire ce mot";
+                }
             }
             // if (can it be placed.service.chek() )//TODO add if the word exist and can be placed there
         } else {
             return 'argument de commande invalide';
         }
     }
-    drawword() {
+    placeWordGameState() {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
-        this.gameState.lastLettersAdded = [];
-        this.wordValidator.pointsForLastWord = 0;
+        this.gameState.indexLastLetters = [];
+        this.gameState.lastLettersAdded = '';
         this.gameState.orientationOfLastWord = this.orientation;
         for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
-            this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile);
             this.gameState.placeLetter(ytile, xtile, this.wordToPlace.charAt(i));
             // TODO repplace with drawletterwithposition and integrate with position
             if (this.orientation === 'h') {
@@ -106,26 +121,48 @@ export class PlaceLettersService {
                 ytile++;
             }
         }
+    }
+    drawword() {
+        let xtile: number = this.colomnNumber;
+        let ytile: number = this.row;
+        this.wordValidator.pointsForLastWord = 0;
+        for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
+            this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile);
+            // TODO repplace with drawletterwithposition and integrate with position
+            if (this.orientation === 'h') {
+                xtile++;
+            } else if (this.orientation === 'v') {
+                ytile++;
+            }
+        }
+    }
 
+    validateWordPlaced() {
         if (!this.gameState.validateWordCreatedByNewLetters()) {
             // TODO change logic so that it doesn't need +1. +1 is needed right now for the draw grid in grid service
             // eslint-disable-next-line @typescript-eslint/no-shadow
             const delay = 3000;
-            xtile = this.colomnNumber;
-            ytile = this.row;
             setTimeout(() => {
-                for (let i = 0; i < this.gameState.lastLettersAdded.length; i += 2) {
-                    this.gridService.drawtilebackground(this.gameState.lastLettersAdded[i + 1] + 1, this.gameState.lastLettersAdded[i] + 1);
-                    this.gameState.removeLetter(this.gameState.lastLettersAdded[i], this.gameState.lastLettersAdded[i + 1]);
+                for (let i = 0; i < this.gameState.indexLastLetters.length; i += 2) {
+                    this.gridService.drawtilebackground(this.gameState.indexLastLetters[i + 1] + 1, this.gameState.indexLastLetters[i] + 1);
+                    this.gameState.removeLetter(this.gameState.indexLastLetters[i], this.gameState.indexLastLetters[i + 1]);
                 }
                 // console.log('sleep');
                 // And any other code that should run only after 5s
             }, delay);
             this.wordValidator.pointsForLastWord = 0;
+            return false;
+        } else {
+            for (const letter of this.gameState.lastLettersAdded) {
+                this.letterService.selectLetter(letter, this.timeManager.turn);
+            }
+            this.letterService.players[this.timeManager.turn].exchangeLetters();
+            // eslint-disable-next-line no-console
+            console.log(this.wordValidator.pointsForLastWord);
+            return true;
         }
-        // eslint-disable-next-line no-console
-        console.log(this.wordValidator.pointsForLastWord);
     }
+
     rowLetterToNumbers(row: string): number {
         const x: number = row.charCodeAt(0) - Constants.SIDELETTERS_TO_ASCII;
         return x;
