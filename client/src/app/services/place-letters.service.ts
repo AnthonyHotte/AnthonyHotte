@@ -94,6 +94,10 @@ export class PlaceLettersService {
                             return 'Le premier mot doit toucher à la case h8';
                         }
                     }
+                    if (this.gameState.lastLettersAdded.length === this.wordToPlace.length && !this.gameState.isBoardEmpty) {
+                        this.removeLetterInGameState();
+                        return 'Ce mot ne touche à aucune lettre déjà en jeu';
+                    }
                     this.drawword();
                     if (this.validateWordPlaced()) {
                         this.gameState.isBoardEmpty = false;
