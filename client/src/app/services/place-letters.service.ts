@@ -82,37 +82,43 @@ export class PlaceLettersService {
         if (checkInput === 'ok') {
             const tileOutOfBound = this.verifyTileNotOutOfBound();
             if (tileOutOfBound === false) {
-                return 'le mot dépasse du plateau de jeux';
+                this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
+                return 'Le mot dépasse du plateau de jeux.';
             } else if (!this.verifyAvailable()) {
-                return 'Au moins une des cases est déjà occuppée';
+                this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
+                return 'Au moins une des cases est déjà occupée.';
             } else {
                 this.placeWordGameState();
                 if (this.gameState.isWordCreationPossibleWithRessources()) {
                     if (this.gameState.isBoardEmpty) {
                         if (!this.gameState.isLetterOnh8()) {
                             this.removeLetterInGameState();
-                            return 'Le premier mot doit toucher à la case h8';
+                            this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
+                            return 'Le premier mot doit toucher à la case h8.';
                         }
                     }
                     if (this.gameState.lastLettersAdded.length === this.wordToPlace.length && !this.gameState.isBoardEmpty) {
                         this.removeLetterInGameState();
-                        return 'Ce mot ne touche à aucune lettre déjà en jeu';
+                        this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
+                        return 'Ce mot ne touche à aucune lettre déjà en jeu.';
                     }
                     this.drawWord();
                     if (this.validateWordPlaced()) {
                         this.gameState.isBoardEmpty = false;
                         return 'Mot placé avec succès.';
                     } else {
+                        this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
                         return "Un mot placé n'est pas valide";
                     }
                 } else {
                     this.removeLetterInGameState();
+                    this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
                     return "Vous n'avez pas les lettres pour écrire ce mot";
                 }
             }
             // if (can it be placed.service.chek() )//TODO add if the word exist and can be placed there
         } else {
-            return 'argument de commande invalide';
+            return 'Argument de commande invalide';
         }
     }
     placeWordGameState() {

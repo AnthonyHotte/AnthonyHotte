@@ -8,11 +8,13 @@ export class PlayerLetterHand {
     allLettersInHand: Letter[];
     numberLetterInHand: number;
     selectedLettersForExchange: Set<number>;
+    private lettersToRemoveForThreeSeconds: Letter[];
 
     constructor() {
         this.allLettersInHand = [];
         this.numberLetterInHand = 0;
         this.selectedLettersForExchange = new Set<number>();
+        this.lettersToRemoveForThreeSeconds = [];
     }
     static sendLettersInSackNumber() {
         PlayerLetterHand.messageSource.next(PlayerLetterHand.allLetters.length.toString());
@@ -72,5 +74,30 @@ export class PlayerLetterHand {
             i++;
         }
         this.selectedLettersForExchange.clear();
+    }
+
+    removeLettersForThreeSeconds(word: string) {
+        word = word.toLowerCase();
+        for (let i = 0; i < this.allLettersInHand.length; i++) {
+            const temp = this.allLettersInHand[i];
+            for (let j = 0; j < word.length; j++) {
+                if (temp.letter.toLowerCase() === word.charAt(j) && !this.selectedLettersForExchange.has(i)) {
+                    this.selectedLettersForExchange.add(i);
+                    this.lettersToRemoveForThreeSeconds.push(temp);
+                    word.replace(temp.letter, '');
+                }
+            }
+        }
+        for (const item of this.selectedLettersForExchange.values()) {
+            this.allLettersInHand.splice(item, 1);
+        }
+        this.selectedLettersForExchange.clear();
+        const TIME_OUT_TIME = 3000;
+        setTimeout(() => {
+            for (const letter of this.lettersToRemoveForThreeSeconds) {
+                this.allLettersInHand.push(letter);
+                this.lettersToRemoveForThreeSeconds = [];
+            }
+        }, TIME_OUT_TIME);
     }
 }
