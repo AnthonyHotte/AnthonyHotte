@@ -10,6 +10,7 @@ export class WordValidationService {
     dictionnary: string[];
     dicLength: number;
     pointsForLastWord: number;
+    indexLastLetters: number[] = [];
 
     constructor(private readonly scoreCalculator: ScoreCalculatorService) {
         // when importing the json, typescript doesnt let me read it as a json object. To go around this, we stringify it then parse it
@@ -62,6 +63,7 @@ export class WordValidationService {
         let lastIndexWord = 0;
         let firstColumnOfWord = 0;
         let wordCreated = '';
+        this.scoreCalculator.indexLastLetters = this.indexLastLetters;
         for (column; column >= 0; column--) {
             if (lettersOnBoard[row][column] === '') {
                 break;
@@ -85,6 +87,7 @@ export class WordValidationService {
         let lastIndexWord = 0;
         let firstRowOfWord = 0;
         let wordCreated = '';
+        this.scoreCalculator.indexLastLetters = this.indexLastLetters;
         for (row; row >= 0; row--) {
             if (lettersOnBoard[row][column] === '') {
                 break;
