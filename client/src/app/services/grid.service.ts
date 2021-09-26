@@ -239,7 +239,7 @@ export class GridService {
         this.gridContext.font = String(this.policesizelettervalue) + 'px system-ui';
         this.gridContext.fillText(String(word.point), x, y);
     }
-    increasepolicesize() {
+    increasePoliceSize() {
         if (this.policesizeletter - 2 < this.maxpolicesizeletter) {
             this.policesizeletter = this.policesizeletter + 2;
         }
@@ -247,7 +247,7 @@ export class GridService {
             this.policesizelettervalue = this.policesizelettervalue + 1;
         }
     }
-    decreasepolicesize() {
+    decreasePoliceSize() {
         if (this.policesizeletter + 2 > this.minpolicesizeletter) {
             this.policesizeletter = this.policesizeletter - 2;
         }
