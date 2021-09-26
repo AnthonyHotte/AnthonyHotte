@@ -130,12 +130,8 @@ export class SidebarRightComponent implements OnInit {
         return this.letterService.players[1].allLettersInHand.length;
     }
 
-    getScorePlayer() {
-        return this.soloPlayer.getScore();
-    }
-
-    getScoreOpponent() {
-        return this.soloOpponent.getScore();
+    getScorePlayer(index: number) {
+        return this.letterService.players[index].score;
     }
 
     finishCurrentGame() {
