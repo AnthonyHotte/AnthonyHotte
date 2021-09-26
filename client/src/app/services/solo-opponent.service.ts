@@ -12,6 +12,7 @@ import dictionary from 'src/assets/dictionnary.json';
 import { LETTERS } from '@app/all-letters';
 import { PlaceLettersService } from './place-letters.service';
 import { PossibilityChecker } from '@app/classes/possibility-checker';
+import { SoloOpponentUsefulFunctions } from '@app/classes/solo-opponent-useful-functions';
 
 @Injectable({
     providedIn: 'root',
@@ -40,6 +41,7 @@ export class SoloOpponentService {
     private placementPossibilities = new Set<LetterPlacementPossibility>();
     private possibilityCheck: PossibilityChecker;
     private currentFirstLetterOfWord: LetterPlacementPossibility;
+    private soloOpponentFunctions: SoloOpponentUsefulFunctions;
 
     constructor(
         private letters: LetterService,
@@ -108,14 +110,30 @@ export class SoloOpponentService {
                 } else {
                     this.findWordsToPlay(THIRTEEN, EIGHTEEN);
                 }
-                let text = 'value for the time being';
-                const verification = 'Mot placé avec succès.';
-                let index = 0;
-                while (!(text === verification)) {
-                    text = this.placeLetters.placeWord(this.possibleWords[index]);
-                    index += 1;
+                for (let i = 0; i < this.possibleWords.length; i++) {
+                    if (
+                        !this.placeLetters.validateSoloOpponent(
+                            this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
+                                this.allRetainedOptions[i].column +
+                                this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
+                                ' ' +
+                                this.possibleWords[i],
+                        )
+                    ) {
+                        this.possibleWords.slice(i);
+                        this.allRetainedOptions.slice(i);
+                        i -= 1;
+                    }
                 }
-                
+                this.placeLetters.placeWord(
+                    this.soloOpponentFunctions.toChar(this.allRetainedOptions[0].row) +
+                        this.allRetainedOptions[0].column +
+                        this.soloOpponentFunctions.enumToString(this.allRetainedOptions[0].placement) +
+                        ' ' +
+                        this.possibleWords[0],
+                );
+                this.myTurn = false;
+                this.changeTurn(this.myTurn.toString());
                 this.timeManager.endTurn();
             }
         }
@@ -267,8 +285,8 @@ export class SoloOpponentService {
                 let isRowsToPlace = item.row - indexOfLetter >= 0;
                 let isColumnToPlace = item.column - indexOfLetter >= 0;
                 if (possibleWord) {
-                    isRowsToPlace &&= this.checkRowsAndColumnsForWordMatch(rowLetters, temporaryWord);
-                    isColumnToPlace &&= this.checkRowsAndColumnsForWordMatch(columnLetters, temporaryWord);
+                    isRowsToPlace &&= this.soloOpponentFunctions.checkRowsAndColumnsForWordMatch(rowLetters, temporaryWord);
+                    isColumnToPlace &&= this.soloOpponentFunctions.checkRowsAndColumnsForWordMatch(columnLetters, temporaryWord);
                 }
                 if (isRowsToPlace) {
                     this.currentFirstLetterOfWord.letter = word.charAt(0);
@@ -293,28 +311,6 @@ export class SoloOpponentService {
     addLetterAndWord(word: string) {
         this.allRetainedOptions.push(this.currentFirstLetterOfWord);
         this.possibleWords.push(word);
-    }
-
-    checkRowsAndColumnsForWordMatch(letters: string, word: string) {
-        let possibleWord = false;
-        for (let i = 0; i < letters.length; i++) {
-            if (letters.charAt(i) === word.charAt(0)) {
-                possibleWord = true;
-                for (let j = 1; j < word.length; j++) {
-                    if (i < letters.length) {
-                        i++;
-                    }
-                    if (letters.charAt(i) !== word.charAt(j)) {
-                        possibleWord = false;
-                        j = word.length;
-                    }
-                    if (j === word.length - 1 && possibleWord) {
-                        i = letters.length;
-                    }
-                }
-            }
-        }
-        return possibleWord;
     }
 
     sendTradedLettersInformation(numberOfLettersToTrade: number) {

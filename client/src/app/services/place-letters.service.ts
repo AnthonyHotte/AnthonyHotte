@@ -80,8 +80,8 @@ export class PlaceLettersService {
         // const checkArgumentlength: string = this.checkArgumentInputlength(commandrowInput);
         const checkInput = this.checkInput(commandrowInput);
         if (checkInput === 'ok') {
-            const tileoutofbound = this.verifyTileNotOutOfBound();
-            if (tileoutofbound === false) {
+            const tileOutOfBound = this.verifyTileNotOutOfBound();
+            if (tileOutOfBound === false) {
                 return 'le mot dépasse du plateau de jeux';
             } else if (!this.verifyAvailable()) {
                 return 'Au moins une des cases est déjà occuppée';
@@ -210,4 +210,32 @@ export class PlaceLettersService {
       
     }
     */
+    validateSoloOpponent(commandrowInput: string) {
+        const checkInput = this.checkInput(commandrowInput);
+        if (checkInput === 'ok') {
+            const tileOutOfBound = this.verifyTileNotOutOfBound();
+            if (tileOutOfBound === false) {
+                return false;
+            } else if (!this.verifyAvailable()) {
+                return false;
+            } else {
+                if (this.gameState.isWordCreationPossibleWithRessources()) {
+                    if (this.gameState.isBoardEmpty) {
+                        if (!this.gameState.isLetterOnh8()) {
+                            this.removeLetterInGameState();
+                            return false;
+                        }
+                    }
+                    if (this.gameState.lastLettersAdded.length === this.wordToPlace.length && !this.gameState.isBoardEmpty) {
+                        this.removeLetterInGameState();
+                        return false;
+                    }
+                    if (!this.validateWordPlaced()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }

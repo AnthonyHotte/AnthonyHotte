@@ -1,6 +1,6 @@
-import { NUMBEROFCASE } from "@app/constants";
-import { LetterPlacementPossibility } from "@app/services/letter-placement-possibility";
-import { PlacementValidity } from "@app/services/placement-validity";
+import { NUMBEROFCASE } from '@app/constants';
+import { LetterPlacementPossibility } from '@app/services/letter-placement-possibility';
+import { PlacementValidity } from '@app/services/placement-validity';
 
 export class PossibilityChecker {
     checkRight(lettersOnBoard: string[][], i: number, j: number, possibility: LetterPlacementPossibility) {
