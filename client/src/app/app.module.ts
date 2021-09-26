@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
 import { LettersComponent } from '@app/components/letters/letters.component';
 import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
 import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
@@ -51,6 +52,7 @@ import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-gam
         AutosizeModule,
         CountdownModule,
     ],
+    exports: [RouterModule],
     providers: [],
     bootstrap: [AppComponent],
 })
