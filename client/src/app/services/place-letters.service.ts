@@ -88,17 +88,22 @@ export class PlaceLettersService {
             } else {
                 this.placeWordGameState();
                 if (this.gameState.isWordCreationPossibleWithRessources()) {
+                    if (this.gameState.isBoardEmpty) {
+                        if (!this.gameState.isLetterOnh8()) {
+                            this.removeLetterInGameState();
+                            return 'Le premier mot doit toucher à la case h8';
+                        }
+                    }
                     this.drawword();
                     if (this.validateWordPlaced()) {
+                        this.gameState.isBoardEmpty = false;
                         return 'Mot placé avec succès.';
                     } else {
                         return "Un mot placé n'est pas valide";
                     }
                 } else {
-                    for (let i = 0; i < this.gameState.indexLastLetters.length; i += 2) {
-                        this.gameState.removeLetter(this.gameState.indexLastLetters[i], this.gameState.indexLastLetters[i + 1]);
-                    }
-                    return "Vous n' avez pas les lettres pour écrire ce mot";
+                    this.removeLetterInGameState();
+                    return "Vous n'avez pas les lettres pour écrire ce mot";
                 }
             }
             // if (can it be placed.service.chek() )//TODO add if the word exist and can be placed there
@@ -120,6 +125,12 @@ export class PlaceLettersService {
             } else if (this.orientation === 'v') {
                 ytile++;
             }
+        }
+    }
+
+    removeLetterInGameState() {
+        for (let i = 0; i < this.gameState.indexLastLetters.length; i += 2) {
+            this.gameState.removeLetter(this.gameState.indexLastLetters[i], this.gameState.indexLastLetters[i + 1]);
         }
     }
     drawword() {
@@ -145,8 +156,8 @@ export class PlaceLettersService {
             setTimeout(() => {
                 for (let i = 0; i < this.gameState.indexLastLetters.length; i += 2) {
                     this.gridService.drawtilebackground(this.gameState.indexLastLetters[i + 1] + 1, this.gameState.indexLastLetters[i] + 1);
-                    this.gameState.removeLetter(this.gameState.indexLastLetters[i], this.gameState.indexLastLetters[i + 1]);
                 }
+                this.removeLetterInGameState();
                 // console.log('sleep');
                 // And any other code that should run only after 5s
             }, delay);
