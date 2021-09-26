@@ -8,6 +8,62 @@ describe('ScoreCalculatorService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(ScoreCalculatorService);
+        const thirdRow = 3;
+        const fourthRow = 4;
+        const fifthRow = 5;
+        const fourthColumn = 4;
+        const sixthRow = 6;
+        const seventhRow = 7;
+        const eighthRow = 8;
+        service.indexLastLetters = [
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            fourthRow,
+            0,
+            fourthRow,
+            1,
+            fifthRow,
+            1,
+            fifthRow,
+            2,
+            fifthRow,
+            3,
+            fifthRow,
+            fourthColumn,
+            1,
+            1,
+            1,
+            2,
+            1,
+            3,
+            1,
+            fourthColumn,
+            1,
+            0,
+            thirdRow,
+            0,
+            fourthRow,
+            0,
+            fifthRow,
+            1,
+            sixthRow,
+            1,
+            seventhRow,
+            1,
+            eighthRow,
+            1,
+            1,
+            1,
+            2,
+            3,
+            1,
+            fourthRow,
+            1,
+        ];
     });
 
     it('should be created', () => {
@@ -69,9 +125,9 @@ describe('ScoreCalculatorService', () => {
     });
     it('calculateScoreForVertical should be return 8 when pass {5,8,1,aber}', () => {
         const expectedScore = 8;
-        const colPosition = 5;
-        const firstIndex = 1;
-        const secondIndex = 4;
+        const colPosition = 1;
+        const firstIndex = 5;
+        const secondIndex = 8;
         spyOn(service.tileMap, 'isTripleLetterTile').and.returnValues(true);
         const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'aber');
         expect(result).toEqual(expectedScore);

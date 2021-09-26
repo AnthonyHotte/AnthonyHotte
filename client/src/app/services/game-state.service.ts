@@ -43,6 +43,7 @@ export class GameStateService {
     }
 
     validateWordCreatedByNewLetters(): boolean {
+        this.wordValidator.indexLastLetters = this.indexLastLetters;
         this.wordValidator.pointsForLastWord = 0;
         if (this.orientationOfLastWord === 'h') {
             if (!this.wordValidator.validateHorizontalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard)) {

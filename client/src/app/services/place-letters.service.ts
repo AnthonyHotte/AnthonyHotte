@@ -157,6 +157,9 @@ export class PlaceLettersService {
                 this.letterService.selectLetter(letter, this.timeManager.turn);
             }
             this.letterService.players[this.timeManager.turn].exchangeLetters();
+            if (this.gameState.playerUsedAllLetters) {
+                this.wordValidator.pointsForLastWord += 50;
+            }
             // eslint-disable-next-line no-console
             console.log(this.wordValidator.pointsForLastWord);
             return true;
