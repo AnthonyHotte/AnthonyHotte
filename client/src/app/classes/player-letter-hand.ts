@@ -29,16 +29,19 @@ export class PlayerLetterHand {
         }
     }
     exchangeLetters() {
-        for (const item of this.selectedLettersForExchange.values()) {
-            // put the letters in the bag
-            PlayerLetterHand.allLetters.push(this.allLettersInHand[item]);
-            const index: number = Math.floor(Math.random() * PlayerLetterHand.allLetters.length);
-            // remove letter in the player hand
-            this.allLettersInHand.splice(item, 1);
-            // put new letter in player hand
-            this.allLettersInHand.push(PlayerLetterHand.allLetters[index]);
-            // remove those letter from bag
-            PlayerLetterHand.allLetters.splice(index, 1);
+        // only possible when at least 7 letters are there
+        if (PlayerLetterHand.allLetters.length >= MAXLETTERINHAND) {
+            for (const item of this.selectedLettersForExchange.values()) {
+                // put the letters in the bag
+                PlayerLetterHand.allLetters.push(this.allLettersInHand[item]);
+                const index: number = Math.floor(Math.random() * PlayerLetterHand.allLetters.length);
+                // remove letter in the player hand
+                this.allLettersInHand.splice(item, 1);
+                // put new letter in player hand
+                this.allLettersInHand.push(PlayerLetterHand.allLetters[index]);
+                // remove those letter from bag
+                PlayerLetterHand.allLetters.splice(index, 1);
+            }
         }
         this.selectedLettersForExchange.clear();
     }
@@ -48,6 +51,26 @@ export class PlayerLetterHand {
     reset() {
         this.allLettersInHand = []; // array containing the "hand" of the player, the letters he possesses
         this.numberLetterInHand = 0;
+        this.selectedLettersForExchange.clear();
+    }
+
+    removeLetters() {
+        // remove the played letters
+        for (const item of this.selectedLettersForExchange.values()) {
+            // remove letter in the player hand
+            this.allLettersInHand.splice(item, 1);
+        }
+        // add the letters according to what's bigger 7 or the number of remaining letters
+        let i = this.allLettersInHand.length;
+        const STOPPING_VALUE = PlayerLetterHand.allLetters.length >= MAXLETTERINHAND ? MAXLETTERINHAND : PlayerLetterHand.allLetters.length;
+        while (i < STOPPING_VALUE) {
+            const index: number = Math.floor(Math.random() * PlayerLetterHand.allLetters.length);
+            // put new letter in player hand
+            this.allLettersInHand.push(PlayerLetterHand.allLetters[index]);
+            // remove those letter from bag
+            PlayerLetterHand.allLetters.splice(index, 1);
+            i++;
+        }
         this.selectedLettersForExchange.clear();
     }
 }

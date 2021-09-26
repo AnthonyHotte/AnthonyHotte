@@ -171,7 +171,7 @@ export class PlaceLettersService {
             for (const letter of this.gameState.lastLettersAdded) {
                 this.letterService.selectLetter(letter, this.timeManager.turn);
             }
-            this.letterService.players[this.timeManager.turn].exchangeLetters();
+            this.letterService.players[this.timeManager.turn].removeLetters();
             if (this.gameState.playerUsedAllLetters) {
                 this.wordValidator.pointsForLastWord += 50;
             }
