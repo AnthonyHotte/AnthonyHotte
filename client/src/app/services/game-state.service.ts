@@ -13,6 +13,7 @@ export class GameStateService {
     orientationOfLastWord: string;
     playerUsedAllLetters: boolean;
     lastLettersAdded: string;
+    isBoardEmpty: boolean;
 
     constructor(
         private readonly wordValidator: WordValidationService,
@@ -20,6 +21,7 @@ export class GameStateService {
         private letterService: LetterService,
     ) {
         this.lettersOnBoard = [];
+        this.isBoardEmpty = true;
         for (let i = 0; i < constants.NUMBEROFCASE; i++) {
             this.lettersOnBoard[i] = [];
             for (let j = 0; j < constants.NUMBEROFCASE; j++) {
@@ -106,7 +108,14 @@ export class GameStateService {
             return false;
         }
     }
-
+    isLetterOnh8(): boolean {
+        for (let i = 0; i < this.indexLastLetters.length; i += 2) {
+            if (this.indexLastLetters[i] === constants.CENTERCASE - 1 && this.indexLastLetters[i + 1] === constants.CENTERCASE - 1) {
+                return true;
+            }
+        }
+        return false;
+    }
     // removeCharFromString is inspired from https://stackoverflow.com/a/9932996
     private removeCharFromString(lettersAvailable: string, index: number): string {
         const temp = lettersAvailable.split(''); // convert to an array
