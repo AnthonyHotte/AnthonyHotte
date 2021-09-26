@@ -1,6 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
-import { MAXLETTERINHAND, NUMBEROFCASE } from '@app/constants';
+import { CASESIZE, MAXLETTERINHAND, NUMBEROFCASE } from '@app/constants';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { GameStateService } from './game-state.service';
 import { LetterPlacementPossibility } from './letter-placement-possibility';
@@ -11,6 +11,7 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
 import dictionary from 'src/assets/dictionnary.json';
 import { LETTERS } from '@app/all-letters';
 import { PlaceLettersService } from './place-letters.service';
+import { PossibilityChecker } from '@app/classes/possibility-checker';
 
 @Injectable({
     providedIn: 'root',
@@ -32,10 +33,13 @@ export class SoloOpponentService {
     lastTurnWasASkip: boolean = false;
     possibleWords: string[];
     possibilityOfPlayWord: string[];
+    allRetainedOptions: LetterPlacementPossibility[];
     private messageSource = new BehaviorSubject('default message');
     private messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
     private placementPossibilities = new Set<LetterPlacementPossibility>();
+    private possibilityCheck: PossibilityChecker;
+    private currentFirstLetterOfWord: LetterPlacementPossibility;
 
     constructor(
         private letters: LetterService,
@@ -111,7 +115,7 @@ export class SoloOpponentService {
                     text = this.placeLetters.placeWord(this.possibleWords[index]);
                     index += 1;
                 }
-                // Need to remove letters from soloOpponent...
+                
                 this.timeManager.endTurn();
             }
         }
@@ -182,45 +186,61 @@ export class SoloOpponentService {
         this.timeManager.endTurn();
     }
 
-    // need to include possibility of letters on same line or same column like lxl where player has only o and no l so he can play lol...
     findWordsToPlay(minPointValue: number, maxPointValue: number) {
         const parser = dictionary.toString();
         const jsonObject = JSON.parse(parser);
         const allWords: string[] = jsonObject.words;
-        const NOT_PRESENT = -1;
-        let lettersInString: string;
-        lettersInString = '';
+        let lettersInString = '';
+        let otherLettersRow = '';
+        let otherLettersColumn = '';
         for (let i = 0; i < this.numberOfLetters; i++) {
             lettersInString += this.letters.players[1].allLettersInHand[i].letter.toLowerCase();
         }
         for (const item of this.placementPossibilities.values()) {
-            this.iterateWords(allWords, item.letter.toLowerCase());
-        }
-        for (let i = 0; i < this.possibleWords.length; i++) {
-            for (let j = 0; this.possibleWords[i].length; j++) {
-                if (this.letters.players[1].allLettersInHand.length >= this.possibleWords[i].length) {
-                    if (lettersInString.search(this.possibleWords[i].charAt(j)) === NOT_PRESENT) {
-                        j = this.possibleWords[i].length;
-                        this.possibleWords.slice(i);
-                        i -= 1;
-                    }
-                } else {
-                    j = this.possibleWords[i].length;
-                    this.possibleWords.slice(i);
-                    i -= 1;
-                }
-            }
+            otherLettersColumn += item.letter.toLocaleLowerCase();
+            otherLettersRow += item.letter.toLocaleLowerCase();
+            otherLettersColumn += this.findSameColumnItems(item.row, item.column);
+            otherLettersRow += this.findSameRowItems(item.row, item.column);
+            this.iterateWords(allWords, item, lettersInString, otherLettersRow, otherLettersColumn);
+            otherLettersColumn = '';
+            otherLettersRow = '';
         }
         this.eliminateWordsToMatchScore(minPointValue, maxPointValue);
     }
 
+    findSameColumnItems(row: number, column: number) {
+        let columnLetters = '';
+        for (let i = row + 1; i < CASESIZE; i++) {
+            if (this.gameState.lettersOnBoard[i][column] !== '') {
+                columnLetters += this.gameState.lettersOnBoard[row][i].toLocaleLowerCase();
+            } else {
+                columnLetters += ' ';
+            }
+        }
+        return columnLetters;
+    }
+
+    findSameRowItems(row: number, column: number) {
+        let rowLetters = '';
+        for (let i = column + 1; i < CASESIZE; i++) {
+            if (this.gameState.lettersOnBoard[row][i] !== '') {
+                rowLetters += this.gameState.lettersOnBoard[i][column].toLocaleLowerCase();
+            } else {
+                rowLetters += ' ';
+            }
+        }
+        return rowLetters;
+    }
+
     eliminateWordsToMatchScore(minPointValue: number, maxPointValue: number) {
-        const NOT_PRESENT = -1;
         for (let i = 0; i < this.possibleWords.length; i++) {
             let score = 0;
             for (const letter of LETTERS) {
-                if (this.possibleWords[i].search(letter.letter.toLowerCase()) !== NOT_PRESENT) {
-                    score += letter.point;
+                const temp = letter.letter.toLowerCase();
+                for (let j = 0; j < this.possibleWords[i].length; j++) {
+                    if (this.possibleWords[i].charAt(j) === temp) {
+                        score += letter.point;
+                    }
                 }
             }
             if (score < minPointValue || score > maxPointValue) {
@@ -230,13 +250,71 @@ export class SoloOpponentService {
         }
     }
 
-    iterateWords(allWords: string[], char: string) {
+    iterateWords(allWords: string[], item: LetterPlacementPossibility, lettersInString: string, rowLetters: string, columnLetters: string) {
         const NOT_PRESENT = -1;
         for (const word of allWords) {
-            if (word.search(char) !== NOT_PRESENT) {
-                this.possibleWords.push(word);
+            let indexOfLetter = 0;
+            if ((indexOfLetter = word.search(item.letter)) !== NOT_PRESENT) {
+                this.currentFirstLetterOfWord = item;
+                let possibleWord = false;
+                const temporaryWord = word;
+                for (let i = 0; i < lettersInString.length; i++) {
+                    if (temporaryWord.search(lettersInString.charAt(i)) !== NOT_PRESENT) {
+                        possibleWord = true;
+                        temporaryWord.replace(lettersInString.charAt(i), ' ');
+                    }
+                }
+                let isRowsToPlace = item.row - indexOfLetter >= 0;
+                let isColumnToPlace = item.column - indexOfLetter >= 0;
+                if (possibleWord) {
+                    isRowsToPlace &&= this.checkRowsAndColumnsForWordMatch(rowLetters, temporaryWord);
+                    isColumnToPlace &&= this.checkRowsAndColumnsForWordMatch(columnLetters, temporaryWord);
+                }
+                if (isRowsToPlace) {
+                    this.currentFirstLetterOfWord.letter = word.charAt(0);
+                    this.currentFirstLetterOfWord.row = item.row - indexOfLetter;
+                    this.currentFirstLetterOfWord.column = item.column;
+                    this.currentFirstLetterOfWord.placement =
+                        item.row - indexOfLetter === item.row ? PlacementValidity.Right : PlacementValidity.Left;
+                    this.addLetterAndWord(word);
+                }
+                if (isColumnToPlace) {
+                    this.currentFirstLetterOfWord.letter = word.charAt(0);
+                    this.currentFirstLetterOfWord.row = item.row;
+                    this.currentFirstLetterOfWord.column = item.column - indexOfLetter;
+                    this.currentFirstLetterOfWord.placement =
+                        item.column - indexOfLetter === item.column ? PlacementValidity.HDown : PlacementValidity.HUp;
+                    this.addLetterAndWord(word);
+                }
             }
         }
+    }
+
+    addLetterAndWord(word: string) {
+        this.allRetainedOptions.push(this.currentFirstLetterOfWord);
+        this.possibleWords.push(word);
+    }
+
+    checkRowsAndColumnsForWordMatch(letters: string, word: string) {
+        let possibleWord = false;
+        for (let i = 0; i < letters.length; i++) {
+            if (letters.charAt(i) === word.charAt(0)) {
+                possibleWord = true;
+                for (let j = 1; j < word.length; j++) {
+                    if (i < letters.length) {
+                        i++;
+                    }
+                    if (letters.charAt(i) !== word.charAt(j)) {
+                        possibleWord = false;
+                        j = word.length;
+                    }
+                    if (j === word.length - 1 && possibleWord) {
+                        i = letters.length;
+                    }
+                }
+            }
+        }
+        return possibleWord;
     }
 
     sendTradedLettersInformation(numberOfLettersToTrade: number) {
@@ -248,95 +326,15 @@ export class SoloOpponentService {
             for (let j = 0; j < NUMBEROFCASE; j++) {
                 if (this.gameState.lettersOnBoard[i][j] !== '') {
                     let possibility = { row: i, column: j, letter: this.gameState.lettersOnBoard[i][j], placement: PlacementValidity.Nothing };
-                    possibility = this.checkRight(i, j, possibility);
-                    possibility = this.checkLeft(i, j, possibility);
-                    possibility = this.checkDown(i, j, possibility);
-                    possibility = this.checkUp(i, j, possibility);
+                    possibility = this.possibilityCheck.checkRight(this.gameState.lettersOnBoard, i, j, possibility);
+                    possibility = this.possibilityCheck.checkLeft(this.gameState.lettersOnBoard, i, j, possibility);
+                    possibility = this.possibilityCheck.checkDown(this.gameState.lettersOnBoard, i, j, possibility);
+                    possibility = this.possibilityCheck.checkUp(this.gameState.lettersOnBoard, i, j, possibility);
                     if (possibility.placement !== PlacementValidity.Nothing) {
                         this.placementPossibilities.add(possibility);
                     }
                 }
             }
         }
-    }
-
-    checkRight(i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (i !== NUMBEROFCASE - 1) {
-            if (this.gameState.lettersOnBoard[i + 1][j] === '') {
-                possibility.placement = PlacementValidity.Right;
-            }
-        }
-        return possibility;
-    }
-
-    checkLeft(i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (i !== 0) {
-            if (this.gameState.lettersOnBoard[i - 1][j] === '') {
-                if (possibility.placement === PlacementValidity.Right) {
-                    possibility.placement = PlacementValidity.LeftRight;
-                } else {
-                    possibility.placement = PlacementValidity.Left;
-                }
-            }
-        }
-        return possibility;
-    }
-
-    checkDown(i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (j !== NUMBEROFCASE - 1) {
-            if (this.gameState.lettersOnBoard[i][j + 1] === '') {
-                switch (possibility.placement) {
-                    case PlacementValidity.Right: {
-                        possibility.placement = PlacementValidity.HDownRight;
-
-                        break;
-                    }
-                    case PlacementValidity.LeftRight: {
-                        possibility.placement = PlacementValidity.HDownLeftRight;
-
-                        break;
-                    }
-                    case PlacementValidity.Left: {
-                        possibility.placement = PlacementValidity.HDownLeft;
-
-                        break;
-                    }
-                    default: {
-                        possibility.placement = PlacementValidity.HDown;
-                    }
-                }
-            }
-        }
-        return possibility;
-    }
-
-    checkUp(i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (j !== 0) {
-            if (this.gameState.lettersOnBoard[i][j - 1] === '') {
-                switch (possibility.placement) {
-                    case PlacementValidity.Right:
-                        possibility.placement = PlacementValidity.HUpRight;
-                        break;
-                    case PlacementValidity.Left:
-                        possibility.placement = PlacementValidity.HUpLeft;
-                        break;
-                    case PlacementValidity.LeftRight:
-                        possibility.placement = PlacementValidity.HUpLeftRight;
-                        break;
-                    case PlacementValidity.HUp:
-                        possibility.placement = PlacementValidity.HUpHDown;
-                        break;
-                    case PlacementValidity.HUpLeft:
-                        possibility.placement = PlacementValidity.HUpHDownLeft;
-                        break;
-                    case PlacementValidity.HUpRight:
-                        possibility.placement = PlacementValidity.HUpHDownRight;
-                        break;
-                    default:
-                        possibility.placement = PlacementValidity.HUp;
-                }
-            }
-        }
-        return possibility;
     }
 }
