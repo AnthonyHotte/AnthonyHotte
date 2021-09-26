@@ -111,7 +111,7 @@ export class SoloOpponentService {
                     text = this.placeLetters.placeWord(this.possibleWords[index]);
                     index += 1;
                 }
-                // Need to remove letters from soloOpponent... 
+                // Need to remove letters from soloOpponent...
                 this.timeManager.endTurn();
             }
         }
