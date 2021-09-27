@@ -1,5 +1,5 @@
-import { Letter } from '@app/letter';
 import { MAXLETTERINHAND } from '@app/constants';
+import { Letter } from '@app/letter';
 import { BehaviorSubject, Observable } from 'rxjs';
 export class PlayerLetterHand {
     static allLetters: Letter[] = []; // all letters in available in bank
@@ -8,8 +8,8 @@ export class PlayerLetterHand {
     allLettersInHand: Letter[];
     numberLetterInHand: number;
     selectedLettersForExchange: Set<number>;
-    private lettersToRemoveForThreeSeconds: Letter[];
     score: number;
+    private lettersToRemoveForThreeSeconds: Letter[];
 
     constructor() {
         this.allLettersInHand = [];
