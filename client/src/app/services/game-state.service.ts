@@ -33,8 +33,8 @@ export class GameStateService {
             }
         }
     }
-
-    placeLetter(row: number, column: number, letter: string, letterJoker: string) {
+    // letterJoker is an optional parameter if nothing pass then letterJoker=''
+    placeLetter(row: number, column: number, letter: string, letterJoker: string = '') {
         if (this.lettersOnBoard[row][column] !== letter) {
             this.indexLastLetters.push(row);
             this.indexLastLetters.push(column);

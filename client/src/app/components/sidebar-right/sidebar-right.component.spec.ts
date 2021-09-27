@@ -6,13 +6,6 @@ import { SidebarRightComponent } from '@app/components/sidebar-right/sidebar-rig
 describe('SidebarRightComponent', () => {
     let component: SidebarRightComponent;
     let fixture: ComponentFixture<SidebarRightComponent>;
-    /*
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            declarations: [SidebarRightComponent],
-            imports: [RouterTestingModule],
-        }).compileComponents();
-    });*/
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
