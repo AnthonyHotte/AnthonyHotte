@@ -9,7 +9,7 @@ import { Letter } from '@app/letter';
 export class ScoreCalculatorService {
     letters = new LetterMap();
     indexLastLetters: number[] = [];
-    indexJoker: number[];
+    indexJoker: number[] = [];
 
     constructor(readonly tileMap: TileMap) {}
 
