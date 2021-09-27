@@ -5,6 +5,7 @@ import { GridService } from '@app/services/grid.service';
 import { WordValidationService } from '@app/services/word-validation.service';
 import { LetterService } from '@app/services/letter.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -13,6 +14,7 @@ export class PlaceLettersService {
     colomnNumber: number;
     orientation: string;
     wordToPlace: string;
+    lettersToPlace: string;
     spaceIndexInput: number;
 
     // policesize
@@ -24,6 +26,7 @@ export class PlaceLettersService {
         private readonly wordValidator: WordValidationService,
         private letterService: LetterService,
         private readonly timeManager: TimerTurnManagerService,
+        private scoreCalculator: ScoreCalculatorService,
     ) {}
     // TODO firstletter to place
     // TODO input seperated by , ?
@@ -46,6 +49,8 @@ export class PlaceLettersService {
             this.colomnNumber = Number(match.groups.number) - 1;
             this.orientation = match.groups.dir;
             this.wordToPlace = match.groups.word;
+            this.lettersToPlace = this.wordToPlace;
+            this.wordContainsJoker();
             return 'ok';
         } else {
             return 'Mauvais input!';
@@ -82,10 +87,8 @@ export class PlaceLettersService {
         if (checkInput === 'ok') {
             const tileOutOfBound = this.verifyTileNotOutOfBound();
             if (tileOutOfBound === false) {
-                this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
                 return 'Le mot dépasse du plateau de jeux.';
             } else if (!this.verifyAvailable()) {
-                this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
                 return 'Au moins une des cases est déjà occupée.';
             } else {
                 this.placeWordGameState();
@@ -93,13 +96,11 @@ export class PlaceLettersService {
                     if (this.gameState.isBoardEmpty) {
                         if (!this.gameState.isLetterOnh8()) {
                             this.removeLetterInGameState();
-                            this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
                             return 'Le premier mot doit toucher à la case h8.';
                         }
                     }
                     if (this.gameState.lastLettersAdded.length === this.wordToPlace.length && !this.gameState.isBoardEmpty) {
                         this.removeLetterInGameState();
-                        this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
                         return 'Ce mot ne touche à aucune lettre déjà en jeu.';
                     }
                     this.drawWord();
@@ -113,7 +114,6 @@ export class PlaceLettersService {
                     }
                 } else {
                     this.removeLetterInGameState();
-                    this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
                     return "Vous n'avez pas les lettres pour écrire ce mot";
                 }
             }
@@ -122,14 +122,17 @@ export class PlaceLettersService {
             return 'Argument de commande invalide';
         }
     }
+
     placeWordGameState() {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
         this.gameState.indexLastLetters = [];
         this.gameState.lastLettersAdded = '';
+        this.gameState.lastLettersAddedJoker = '';
+        this.scoreCalculator.indexJoker = [];
         this.gameState.orientationOfLastWord = this.orientation;
         for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
-            this.gameState.placeLetter(ytile, xtile, this.wordToPlace.charAt(i));
+            this.gameState.placeLetter(ytile, xtile, this.wordToPlace.charAt(i), this.lettersToPlace.charAt(i));
             // TODO repplace with drawletterwithposition and integrate with position
             if (this.orientation === 'h') {
                 xtile++;
@@ -175,7 +178,7 @@ export class PlaceLettersService {
             this.wordValidator.pointsForLastWord = 0;
             return false;
         } else {
-            for (const letter of this.gameState.lastLettersAdded) {
+            for (const letter of this.gameState.lastLettersAddedJoker) {
                 this.letterService.selectLetter(letter, this.timeManager.turn);
             }
             this.letterService.players[this.timeManager.turn].removeLetters();
@@ -242,5 +245,23 @@ export class PlaceLettersService {
             }
         }
         return true;
+    }
+
+    wordContainsJoker() {
+        let positionOfJoker = 0;
+        for (const letter of this.wordToPlace) {
+            if (letter === letter.toUpperCase()) {
+                this.wordToPlace = this.removeUpperCaseFromString(positionOfJoker);
+            }
+            positionOfJoker++;
+        }
+    }
+    private removeUpperCaseFromString(index: number): string {
+        const tempWord = this.wordToPlace.split('');
+        const tempLetters = [...tempWord];
+        tempWord[index] = tempWord[index].toLowerCase();
+        tempLetters[index] = '*';
+        this.lettersToPlace = tempLetters.join('');
+        return tempWord.join(''); // reconstruct the string
     }
 }
