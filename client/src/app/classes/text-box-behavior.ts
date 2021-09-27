@@ -97,9 +97,7 @@ export class TextBox {
                 this.debugCommand = true;
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 text = this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
-                if (text === 'Mot placé avec succès.') {
-                    this.endTurn();
-                }
+                this.endTurn();
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
                 text = this.verifyCommandPasser();
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
@@ -168,9 +166,6 @@ export class TextBox {
             const letter = letters.charAt(i);
             playerHasLetters = this.letterService.selectLetter(letter, 0) && playerHasLetters;
             if (!playerHasLetters) {
-                this.letterService.buttonPressed = '';
-                this.letterService.letterIsSelected = false;
-                this.letterService.indexSelected = -1;
                 this.letterService.players[0].selectedLettersForExchange.clear();
                 return false;
             }

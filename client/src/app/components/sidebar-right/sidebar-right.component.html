@@ -29,10 +29,10 @@
                 </tr>
                 <tr>
                     <td>
-                        <h2>{{ getScorePlayer() }}</h2>
+                        <h2>{{ getScorePlayer(0) }}</h2>
                     </td>
                     <td>
-                        <h2>{{ getScoreOpponent() }}</h2>
+                        <h2>{{ getScorePlayer(1) }}</h2>
                     </td>
                 </tr>
             </table>
@@ -48,12 +48,12 @@
                     [autoStart]="true"
                     (finish)="endTurn()"
                     (finish)="counter.start()"
-                    (reset)="this.verifyChangedTurns()"
+                    (tick)="this.verifyChangedTurns(counter)"
                 ></ngx-countdown
                 >s
             </div>
             <br />
-            <button *ngIf="turn === 0" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button>
+            <button *ngIf="turn === 0" class="buttonfontsize" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button>
         </fieldset>
         <fieldset>
             <label> Nombre de lettres dans la réserve: {{ getNumberRemainingLetters() }} </label>
@@ -69,11 +69,11 @@
             </label>
         </fieldset>
         <fieldset>
-            <button (click)="increasefontsize()">Augmenter la taille des lettres</button>
-            <button (click)="decreasefontsize()">réduire la taille des lettres</button>
+            <button class="buttonfontsize" (click)="increaseFontSize()">+</button>
+            <button class="buttonfontsize" (click)="decreaseFontSize()">-</button>
         </fieldset>
         <fieldset>
-            <button (click)="this.finishCurrentGame()">Abandonner la partie courante</button>
+            <button class="buttonsurrender" (click)="this.finishCurrentGame()">Abandonner la partie courante</button>
         </fieldset>
     </body>
 </div>

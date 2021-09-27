@@ -35,16 +35,6 @@ export class SoloPlayerService {
         this.maximumAllowedSkippedTurns = 6;
     }
 
-    // function never used...
-    /*
-    play() {
-        this.myTurn = parseInt(this.messageTimeManager, 10) === 0;
-        if (this.myTurn === true) {
-            return 'ToDo';
-        }
-        return 'ToDO';
-    }
-    */
     // message is a string 0 or 1, we pass the number of the turn of the person who just finish playing (if next turn is my turn then we pass 1)
     changeTurn(message: string) {
         this.messageSource.next(message);

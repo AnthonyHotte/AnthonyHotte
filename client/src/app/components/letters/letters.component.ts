@@ -16,7 +16,6 @@ export class LettersComponent implements OnInit {
     message: string;
     subscription: Subscription;
     letters: Letter[] = []; // the hand of the user
-    buttonPressed: string = ''; // the key that is being pressed by the user.
     maxLettersInHand: number;
     currentLetterNumber: number;
     letterSize: number;
@@ -32,10 +31,6 @@ export class LettersComponent implements OnInit {
         }
     }
 
-    getIndexSelected(): number {
-        return this.letterService.indexSelected;
-    }
-
     ngOnInit(): void {
         this.letterService.reset();
         this.maxLettersInHand = Constants.MAXLETTERINHAND;
@@ -43,14 +38,5 @@ export class LettersComponent implements OnInit {
         this.letterSize = Constants.CASESIZE;
         this.getNewLetters(this.maxLettersInHand);
         this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
-    }
-
-    onRightClick(letter: string) {
-        this.letterService.setIndexSelected(letter);
-        if (this.letterService.players[0].selectedLettersForExchange.has(this.letterService.indexSelected)) {
-            this.letterService.players[0].selectedLettersForExchange.delete(this.letterService.indexSelected);
-        } else {
-            this.letterService.players[0].selectedLettersForExchange.add(this.letterService.indexSelected);
-        }
     }
 }

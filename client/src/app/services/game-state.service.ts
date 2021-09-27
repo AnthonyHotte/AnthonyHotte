@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as constants from '@app/constants';
 import { WordValidationService } from '@app/services/word-validation.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { LetterService } from '@app/services/letter.service';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 
 @Injectable({
@@ -8,13 +10,22 @@ import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 })
 export class GameStateService {
     lettersOnBoard: string[][];
-    lastLettersAdded: number[];
+    indexLastLetters: number[];
+    lastLettersAdded: string;
     orientationOfLastWord: string;
+    lastLettersAddedJoker: string;
     playerUsedAllLetters: boolean;
-    pointsForLastWord: number;
+    isBoardEmpty: boolean;
 
-    constructor(private readonly wordValidator: WordValidationService, private readonly scoreCalculator: ScoreCalculatorService) {
+    constructor(
+        private readonly wordValidator: WordValidationService,
+        private timeManager: TimerTurnManagerService,
+        private letterService: LetterService,
+        private scoreCalculator: ScoreCalculatorService,
+    ) {
         this.lettersOnBoard = [];
+        this.isBoardEmpty = true;
+        this.lastLettersAddedJoker = '';
         for (let i = 0; i < constants.NUMBEROFCASE; i++) {
             this.lettersOnBoard[i] = [];
             for (let j = 0; j < constants.NUMBEROFCASE; j++) {
@@ -22,126 +33,102 @@ export class GameStateService {
             }
         }
     }
-
-    placeLetter(row: number, column: number, letter: string) {
+    // letterJoker is an optional parameter if nothing pass then letterJoker=''
+    placeLetter(row: number, column: number, letter: string, letterJoker: string = '') {
         if (this.lettersOnBoard[row][column] !== letter) {
-            this.lastLettersAdded.push(row);
-            this.lastLettersAdded.push(column);
+            this.indexLastLetters.push(row);
+            this.indexLastLetters.push(column);
+            this.lastLettersAdded += letter;
+            this.lastLettersAddedJoker += letterJoker;
+            if (letterJoker === '*') {
+                this.scoreCalculator.indexJoker.push(row);
+                this.scoreCalculator.indexJoker.push(column);
+            }
             this.lettersOnBoard[row][column] = letter;
         }
-        if (this.lastLettersAdded.length === constants.MAXLETTERINHAND) {
+        if (this.indexLastLetters.length === constants.MAXLETTERINHAND) {
             this.playerUsedAllLetters = true;
         } else {
             this.playerUsedAllLetters = false;
         }
     }
-    isPartOfWordVertical(row: number, column: number): boolean {
-        if (row === 0) {
-            if (this.lettersOnBoard[row + 1][column] === '') {
-                return false;
-            }
-        } else if (row === constants.NUMBEROFCASE - 1) {
-            if (this.lettersOnBoard[row - 1][column] === '') {
-                return false;
-            }
-        } else {
-            if (this.lettersOnBoard[row - 1][column] === '' && this.lettersOnBoard[row + 1][column] === '') {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    isPartOfWordHorizontal(row: number, column: number): boolean {
-        if (column === 0) {
-            if (this.lettersOnBoard[row][column + 1] === '') {
-                return false;
-            }
-        } else if (column === constants.NUMBEROFCASE - 1) {
-            if (this.lettersOnBoard[row][column - 1] === '') {
-                return false;
-            }
-        } else {
-            if (this.lettersOnBoard[row][column - 1] === '' && this.lettersOnBoard[row][column + 1] === '') {
-                return false;
-            }
-        }
-        return true;
-    }
 
     validateWordCreatedByNewLetters(): boolean {
+        this.wordValidator.indexLastLetters = this.indexLastLetters;
+        this.wordValidator.pointsForLastWord = 0;
         if (this.orientationOfLastWord === 'h') {
-            if (!this.validateHorizontalWord(this.lastLettersAdded[0], this.lastLettersAdded[1])) {
+            if (!this.wordValidator.validateHorizontalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard)) {
                 return false;
             }
-            for (let i = 0; i < this.lastLettersAdded.length; i += 2) {
-                if (this.isPartOfWordVertical(this.lastLettersAdded[i], this.lastLettersAdded[i + 1])) {
-                    if (!this.validateVerticalWord(this.lastLettersAdded[i], this.lastLettersAdded[i + 1])) {
+            for (let i = 0; i < this.indexLastLetters.length; i += 2) {
+                if (this.wordValidator.isPartOfWordVertical(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
+                    if (!this.wordValidator.validateVerticalWord(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
                         return false;
                     }
                 }
             }
         } else {
-            if (!this.validateVerticalWord(this.lastLettersAdded[0], this.lastLettersAdded[1])) {
+            if (!this.wordValidator.validateVerticalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard)) {
                 return false;
             }
-            for (let i = 0; i < this.lastLettersAdded.length; i += 2) {
-                if (this.isPartOfWordHorizontal(this.lastLettersAdded[i], this.lastLettersAdded[i + 1])) {
-                    if (!this.validateHorizontalWord(this.lastLettersAdded[i], this.lastLettersAdded[i + 1])) {
+            for (let i = 0; i < this.indexLastLetters.length; i += 2) {
+                if (this.wordValidator.isPartOfWordHorizontal(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
+                    if (!this.wordValidator.validateHorizontalWord(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
                         return false;
                     }
                 }
             }
         }
         return true;
-    }
-    validateHorizontalWord(row: number, column: number): boolean {
-        let beginIndexWord = 0;
-        let lastIndexWord = 0;
-        let firstColumnOfWord = 0;
-        let wordCreated = '';
-        for (column; column >= 0; column--) {
-            if (this.lettersOnBoard[row][column] === '') {
-                break;
-            }
-            firstColumnOfWord = column;
-            beginIndexWord = firstColumnOfWord;
-        }
-        for (firstColumnOfWord; firstColumnOfWord < constants.NUMBEROFCASE; firstColumnOfWord++) {
-            if (this.lettersOnBoard[row][firstColumnOfWord] === '') {
-                break;
-            }
-            wordCreated += this.lettersOnBoard[row][firstColumnOfWord];
-            lastIndexWord = firstColumnOfWord;
-        }
-        this.pointsForLastWord += this.scoreCalculator.calculateScoreForHorizontal(beginIndexWord, lastIndexWord, row, wordCreated);
-        return this.wordValidator.isWordValid(wordCreated);
-    }
-
-    validateVerticalWord(row: number, column: number): boolean {
-        let beginIndexWord = 0;
-        let lastIndexWord = 0;
-        let firstRowOfWord = 0;
-        let wordCreated = '';
-        for (row; row >= 0; row--) {
-            if (this.lettersOnBoard[row][column] === '') {
-                break;
-            }
-            firstRowOfWord = row;
-            beginIndexWord = firstRowOfWord;
-        }
-        for (firstRowOfWord; firstRowOfWord < constants.NUMBEROFCASE; firstRowOfWord++) {
-            if (this.lettersOnBoard[firstRowOfWord][column] === '') {
-                break;
-            }
-            wordCreated += this.lettersOnBoard[firstRowOfWord][column];
-            lastIndexWord = firstRowOfWord;
-        }
-        this.pointsForLastWord += this.scoreCalculator.calculateScoreForVertical(beginIndexWord, lastIndexWord, column, wordCreated);
-        return this.wordValidator.isWordValid(wordCreated);
     }
 
     removeLetter(row: number, column: number) {
         this.lettersOnBoard[row][column] = '';
+    }
+
+    isWordCreationPossibleWithRessources(): boolean {
+        let lettersAvailable = '';
+        for (const letter of this.letterService.players[this.timeManager.turn].allLettersInHand) {
+            lettersAvailable += letter.letter;
+        }
+        return this.canWordBeCreated(lettersAvailable);
+    }
+
+    canWordBeCreated(lettersAvailable: string): boolean {
+        let tempLetters = this.lastLettersAddedJoker;
+        let i = 0;
+        for (const letter of this.lastLettersAddedJoker) {
+            if (lettersAvailable.includes(letter.toUpperCase())) {
+                let j = 0;
+                for (const letterInHand of lettersAvailable) {
+                    if (letterInHand === letter.toUpperCase()) {
+                        lettersAvailable = this.removeCharFromString(lettersAvailable, j);
+                        tempLetters = this.removeCharFromString(tempLetters, i--);
+                        break;
+                    }
+                    j++;
+                }
+            }
+            i++;
+        }
+        if (tempLetters.length === 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    isLetterOnh8(): boolean {
+        for (let i = 0; i < this.indexLastLetters.length; i += 2) {
+            if (this.indexLastLetters[i] === constants.CENTERCASE - 1 && this.indexLastLetters[i + 1] === constants.CENTERCASE - 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+    // removeCharFromString is inspired from https://stackoverflow.com/a/9932996
+    private removeCharFromString(lettersAvailable: string, index: number): string {
+        const temp = lettersAvailable.split(''); // convert to an array
+        temp.splice(index, 1);
+        return temp.join(''); // reconstruct the string
     }
 }
