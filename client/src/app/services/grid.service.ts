@@ -52,7 +52,8 @@ export class GridService {
         }
         // Letter x3 (dark blue)
         else if (TileMap.gridMap.isTripleLetterTile(i, j)) {
-            this.gridContext.fillStyle = 'darkblue';
+            // this.gridContext.fillStyle = 'darkblue';
+            this.gridContext.fillStyle = '#4640ff';
             textChoice = 2;
         }
         // Letter x2 (Light blue)
@@ -61,15 +62,15 @@ export class GridService {
             textChoice = 3;
         } else {
             this.gridContext.fillStyle = 'grey';
+            // this.gridContext.fillStyle = '#FFE6AC';
         }
-
         this.gridContext.fillRect(
             Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
             Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
             Constants.CASESIZE,
             Constants.CASESIZE,
         );
-
+        this.gridContext.strokeStyle = 'white';
         this.gridContext.strokeRect(
             Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
             Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
@@ -79,10 +80,20 @@ export class GridService {
         // to write the text
         if (textChoice !== Constants.NOTEXT) {
             this.gridContext.fillStyle = 'black';
+            const textpositionoffset = 3;
+            const textpositionoffset2 = 0.75;
+            this.gridContext.font = '19px system-ui';
             this.gridContext.fillText(
                 Constants.TEXTONTILES[textChoice],
                 Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
-                Constants.CASESIZE * (j - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
+                Constants.CASESIZE * (j - 1) + Constants.CASESIZE / textpositionoffset + Constants.SIDESPACE,
+                Constants.CASESIZE,
+            );
+            this.gridContext.fillStyle = 'black';
+            this.gridContext.fillText(
+                Constants.TEXTONTILESVALUE[textChoice],
+                Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
+                Constants.CASESIZE * (j - 1) + Constants.CASESIZE * textpositionoffset2 + Constants.SIDESPACE,
                 Constants.CASESIZE,
             );
         }

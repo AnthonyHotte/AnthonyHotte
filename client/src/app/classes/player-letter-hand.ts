@@ -1,5 +1,5 @@
-import { Letter } from '@app/letter';
 import { MAXLETTERINHAND } from '@app/constants';
+import { Letter } from '@app/letter';
 import { BehaviorSubject, Observable } from 'rxjs';
 export class PlayerLetterHand {
     static allLetters: Letter[] = []; // all letters in available in bank
