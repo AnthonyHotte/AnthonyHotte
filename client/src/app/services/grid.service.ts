@@ -251,18 +251,18 @@ export class GridService {
         this.gridContext.fillText(String(word.point), x, y);
     }
     increasePoliceSize() {
-        if (this.policesizeletter - 2 < this.maxpolicesizeletter) {
+        if (this.policesizeletter + 2 <= this.maxpolicesizeletter) {
             this.policesizeletter = this.policesizeletter + 2;
         }
-        if (this.policesizelettervalue - 1 < this.maxpolicesizelettervalue) {
+        if (this.policesizelettervalue + 1 <= this.maxpolicesizelettervalue) {
             this.policesizelettervalue = this.policesizelettervalue + 1;
         }
     }
     decreasePoliceSize() {
-        if (this.policesizeletter + 2 > this.minpolicesizeletter) {
+        if (this.policesizeletter - 2 >= this.minpolicesizeletter) {
             this.policesizeletter = this.policesizeletter - 2;
         }
-        if (this.policesizelettervalue + 1 > this.minpolicesizelettervalue) {
+        if (this.policesizelettervalue - 1 >= this.minpolicesizelettervalue) {
             this.policesizelettervalue = this.policesizelettervalue - 1;
         }
     }

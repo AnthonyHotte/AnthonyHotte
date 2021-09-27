@@ -56,6 +56,13 @@ describe('SoloPlayerService', () => {
         service.incrementPassedTurns(1, true);
         expect(service.myTurn).toBe(false);
     });
+
+    it('incrementPassedTurns should have myturn = false', () => {
+        service.incrementPassedTurns(1, false);
+        expect(service.myTurn).toBe(false);
+        expect(service.lastTurnWasASkip).toBe(true);
+    });
+
     it('incrementPassedTurns should have valueToEndGame = 2', () => {
         service.valueToEndGame = 1;
         service.incrementPassedTurns(1, true);

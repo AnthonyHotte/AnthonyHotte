@@ -135,7 +135,7 @@ export class SidebarRightComponent implements OnInit {
     }
 
     finishCurrentGame() {
-        this.link.navigate(['home']);
+        this.link.navigate(['']);
     }
 
     increaseFontSize() {
