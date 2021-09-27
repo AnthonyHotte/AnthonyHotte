@@ -26,6 +26,7 @@ describe('PlayerLetterHand', () => {
         expect(spy).toHaveBeenCalledWith('test');
     });
     it('exchangeLetters should call push and slice method', () => {
+        playerLetterHand.selectedLettersForExchange = new Set<number>([0, 1]);
         playerLetterHand.allLettersInHand = [
             { letter: 'a', quantity: 1, point: 1 },
             { letter: 'e', quantity: 1, point: 1 },
