@@ -9,6 +9,7 @@ import { SoloGameInformationService } from '@app/services/solo-game-information.
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { CountdownComponent } from '@ciri/ngx-countdown';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -72,6 +73,7 @@ export class SidebarRightComponent implements OnInit {
             this.playerName[1] = this.message[1];
             this.easyDifficultyIsTrue = this.message[2] === 'true';
             this.time = parseInt(this.message[3], 10);
+            this.turn = this.turnTimeController.turn;
         } else {
             // if page is refreshed
             this.finishCurrentGame();
@@ -155,13 +157,13 @@ export class SidebarRightComponent implements OnInit {
         return this.playerName[this.turn];
     }
 
-    verifyChangedTurns() {
+    verifyChangedTurns(counter: CountdownComponent) {
         this.changedTurns ||= this.textBox.commandSuccessful;
+        this.textBox.commandSuccessful = false;
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
-            return this.changedTurns;
+            counter.reset();
         }
         this.changedTurns = false;
-        return this.changedTurns;
     }
 }

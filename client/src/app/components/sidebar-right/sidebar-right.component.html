@@ -48,7 +48,7 @@
                     [autoStart]="true"
                     (finish)="endTurn()"
                     (finish)="counter.start()"
-                    (reset)="this.verifyChangedTurns()"
+                    (tick)="this.verifyChangedTurns(counter)"
                 ></ngx-countdown
                 >s
             </div>
