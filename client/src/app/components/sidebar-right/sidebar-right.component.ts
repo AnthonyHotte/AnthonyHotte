@@ -130,25 +130,21 @@ export class SidebarRightComponent implements OnInit {
         return this.letterService.players[1].allLettersInHand.length;
     }
 
-    getScorePlayer() {
-        return this.soloPlayer.getScore();
-    }
-
-    getScoreOpponent() {
-        return this.soloOpponent.getScore();
+    getScorePlayer(index: number) {
+        return this.letterService.players[index].score;
     }
 
     finishCurrentGame() {
         this.link.navigate(['home']);
     }
 
-    increasefontsize() {
-        this.gridService.increasepolicesize();
-        this.placeLetterService.policesizechanged();
+    increaseFontSize() {
+        this.gridService.increasePoliceSize();
+        this.placeLetterService.policeSizeChanged();
     }
-    decreasefontsize() {
-        this.gridService.decreasepolicesize();
-        this.placeLetterService.policesizechanged();
+    decreaseFontSize() {
+        this.gridService.decreasePoliceSize();
+        this.placeLetterService.policeSizeChanged();
     }
 
     getPlayerName() {

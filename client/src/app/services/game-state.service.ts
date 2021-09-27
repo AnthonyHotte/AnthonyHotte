@@ -3,6 +3,7 @@ import * as constants from '@app/constants';
 import { WordValidationService } from '@app/services/word-validation.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { LetterService } from '@app/services/letter.service';
+import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -10,16 +11,21 @@ import { LetterService } from '@app/services/letter.service';
 export class GameStateService {
     lettersOnBoard: string[][];
     indexLastLetters: number[];
-    orientationOfLastWord: string;
-    playerUsedAllLetters: boolean;
     lastLettersAdded: string;
+    orientationOfLastWord: string;
+    lastLettersAddedJoker: string;
+    playerUsedAllLetters: boolean;
+    isBoardEmpty: boolean;
 
     constructor(
         private readonly wordValidator: WordValidationService,
         private timeManager: TimerTurnManagerService,
         private letterService: LetterService,
+        private scoreCalculator: ScoreCalculatorService,
     ) {
         this.lettersOnBoard = [];
+        this.isBoardEmpty = true;
+        this.lastLettersAddedJoker = '';
         for (let i = 0; i < constants.NUMBEROFCASE; i++) {
             this.lettersOnBoard[i] = [];
             for (let j = 0; j < constants.NUMBEROFCASE; j++) {
@@ -28,11 +34,16 @@ export class GameStateService {
         }
     }
 
-    placeLetter(row: number, column: number, letter: string) {
+    placeLetter(row: number, column: number, letter: string, letterJoker: string) {
         if (this.lettersOnBoard[row][column] !== letter) {
             this.indexLastLetters.push(row);
             this.indexLastLetters.push(column);
             this.lastLettersAdded += letter;
+            this.lastLettersAddedJoker += letterJoker;
+            if (letterJoker === '*') {
+                this.scoreCalculator.indexJoker.push(row);
+                this.scoreCalculator.indexJoker.push(column);
+            }
             this.lettersOnBoard[row][column] = letter;
         }
         if (this.indexLastLetters.length === constants.MAXLETTERINHAND) {
@@ -84,9 +95,9 @@ export class GameStateService {
     }
 
     canWordBeCreated(lettersAvailable: string): boolean {
-        let tempLetters = this.lastLettersAdded;
+        let tempLetters = this.lastLettersAddedJoker;
         let i = 0;
-        for (const letter of this.lastLettersAdded) {
+        for (const letter of this.lastLettersAddedJoker) {
             if (lettersAvailable.includes(letter.toUpperCase())) {
                 let j = 0;
                 for (const letterInHand of lettersAvailable) {
@@ -106,7 +117,14 @@ export class GameStateService {
             return false;
         }
     }
-
+    isLetterOnh8(): boolean {
+        for (let i = 0; i < this.indexLastLetters.length; i += 2) {
+            if (this.indexLastLetters[i] === constants.CENTERCASE - 1 && this.indexLastLetters[i + 1] === constants.CENTERCASE - 1) {
+                return true;
+            }
+        }
+        return false;
+    }
     // removeCharFromString is inspired from https://stackoverflow.com/a/9932996
     private removeCharFromString(lettersAvailable: string, index: number): string {
         const temp = lettersAvailable.split(''); // convert to an array
