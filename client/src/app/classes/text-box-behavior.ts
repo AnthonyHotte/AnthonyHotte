@@ -24,7 +24,7 @@ export class TextBox {
     valueToEndGame: number;
     turn: number;
 
-    commandSuccessful: boolean = true;
+    commandSuccessful: boolean = false;
     sourceMessage = new BehaviorSubject('command is successful');
     constructor(
         private readonly placeLettersService: PlaceLettersService,
@@ -113,13 +113,13 @@ export class TextBox {
     }
     sendExecutedCommand() {
         this.sourceMessage.next(this.commandSuccessful.toString());
+        this.commandSuccessful = false;
     }
 
     verifyCommandPasser() {
         this.soloPlayer.incrementPassedTurns(this.soloOpponent.valueToEndGame, this.soloOpponent.lastTurnWasASkip);
         if (this.valueToEndGame < this.soloPlayer.maximumAllowedSkippedTurns) {
             this.endTurn();
-            this.commandSuccessful = true;
             return 'Tour passé avec succès.';
         } else {
             this.finishCurrentGame();
@@ -133,7 +133,9 @@ export class TextBox {
 
     endTurn() {
         this.timeManager.endTurn();
+        this.commandSuccessful = true;
         this.turn = this.timeManager.turn;
+        this.sendExecutedCommand();
         if (this.turn === 0) {
             this.soloPlayer.changeTurn(this.turn.toString());
         } else {
@@ -149,7 +151,6 @@ export class TextBox {
             if (playerHasLetters) {
                 this.soloPlayer.exchangeLetters();
                 this.endTurn();
-                this.commandSuccessful = true;
                 return 'Échange de lettre avec succès.';
             } else {
                 this.letterService.players[0].selectedLettersForExchange.clear();

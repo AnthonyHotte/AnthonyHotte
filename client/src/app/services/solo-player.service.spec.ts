@@ -96,11 +96,11 @@ describe('SoloPlayerService', () => {
         expect(nextSpy).toHaveBeenCalledWith('0');
     });
     it('changeTurn should have myTurn = false', () => {
-        service.changeTurn('0');
+        service.changeTurn('1');
         expect(service.myTurn).toBe(false);
     });
     it('changeTurn should have myTurn = true', () => {
-        service.changeTurn('1');
+        service.changeTurn('0');
         expect(service.myTurn).toBe(true);
     });
 });

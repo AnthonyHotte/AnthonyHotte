@@ -12,6 +12,7 @@ export class TimerTurnManagerService {
     constructor() {
         this.initiateGame();
         this.currentMessage = this.messageSource.asObservable();
+        this.sendTurn();
     }
 
     initiateGame() {
