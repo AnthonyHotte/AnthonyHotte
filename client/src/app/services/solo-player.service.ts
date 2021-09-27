@@ -65,7 +65,8 @@ export class SoloPlayerService {
         }
         this.myTurn = false;
         this.messageToSoloOpponent.next([this.valueToEndGame.toString(), this.lastTurnWasASkip.toString()]);
-        this.changeTurn(this.myTurn.toString());
+        const ZERO = 0;
+        this.changeTurn(ZERO.toString());
     }
 
     exchangeLetters() {

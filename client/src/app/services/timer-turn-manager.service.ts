@@ -16,6 +16,7 @@ export class TimerTurnManagerService {
 
     initiateGame() {
         this.turn = Math.floor(Math.random() * 2);
+        this.sendTurn();
     }
 
     endTurn() {
