@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
     templateUrl: './sidebar-right.component.html',
     styleUrls: ['./sidebar-right.component.scss'],
 })
-export class SidebarRightComponent implements OnInit {
+export class SidebarRightComponent implements OnInit, AfterViewInit {
     messagePlayer: string;
     opponentMessage: string;
     messageLetterService: string;
@@ -53,6 +53,12 @@ export class SidebarRightComponent implements OnInit {
     ) {
         this.message = this.soloGameInformation.message;
         this.setAttribute();
+    }
+
+    ngAfterViewInit() {
+        if (this.turn === 1) {
+            this.soloOpponent.play();
+        }
     }
 
     ngOnInit() {
@@ -162,6 +168,9 @@ export class SidebarRightComponent implements OnInit {
         this.textBox.commandSuccessful = false;
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
+            if (this.turn === 1) {
+                this.soloOpponent.play();
+            }
             counter.reset();
         }
         this.changedTurns = false;

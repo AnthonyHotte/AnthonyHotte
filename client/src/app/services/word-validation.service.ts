@@ -1,6 +1,5 @@
 import jsonDictionnary from 'src/assets/dictionnary.json';
 import { Injectable } from '@angular/core';
-import * as constants from '@app/constants';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 
 @Injectable({
@@ -12,7 +11,7 @@ export class WordValidationService {
     pointsForLastWord: number;
     indexLastLetters: number[] = [];
 
-    constructor(private readonly scoreCalculator: ScoreCalculatorService) {
+    constructor(readonly scoreCalculator: ScoreCalculatorService) {
         // when importing the json, typescript doesnt let me read it as a json object. To go around this, we stringify it then parse it
         const temp = JSON.stringify(jsonDictionnary);
         const temp2 = JSON.parse(temp);
@@ -29,7 +28,7 @@ export class WordValidationService {
             if (lettersOnBoard[row + 1][column] === '') {
                 return false;
             }
-        } else if (row === constants.NUMBEROFCASE - 1) {
+        } else if (row === lettersOnBoard.length - 1) {
             if (lettersOnBoard[row - 1][column] === '') {
                 return false;
             }
@@ -46,7 +45,7 @@ export class WordValidationService {
             if (lettersOnBoard[row][column + 1] === '') {
                 return false;
             }
-        } else if (column === constants.NUMBEROFCASE - 1) {
+        } else if (column === lettersOnBoard.length - 1) {
             if (lettersOnBoard[row][column - 1] === '') {
                 return false;
             }
@@ -71,7 +70,7 @@ export class WordValidationService {
             firstColumnOfWord = column;
             beginIndexWord = firstColumnOfWord;
         }
-        for (firstColumnOfWord; firstColumnOfWord < constants.NUMBEROFCASE; firstColumnOfWord++) {
+        for (firstColumnOfWord; firstColumnOfWord < lettersOnBoard.length; firstColumnOfWord++) {
             if (lettersOnBoard[row][firstColumnOfWord] === '') {
                 break;
             }
@@ -95,7 +94,7 @@ export class WordValidationService {
             firstRowOfWord = row;
             beginIndexWord = firstRowOfWord;
         }
-        for (firstRowOfWord; firstRowOfWord < constants.NUMBEROFCASE; firstRowOfWord++) {
+        for (firstRowOfWord; firstRowOfWord < lettersOnBoard.length; firstRowOfWord++) {
             if (lettersOnBoard[firstRowOfWord][column] === '') {
                 break;
             }
@@ -104,6 +103,13 @@ export class WordValidationService {
         }
         this.pointsForLastWord += this.scoreCalculator.calculateScoreForVertical(beginIndexWord, lastIndexWord, column, wordCreated);
         return this.isWordValid(wordCreated);
+    }
+    isWordLongerThanTwo(word: string): boolean {
+        if (word.length >= 2) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private isWordInDictionnary(word: string): boolean {
@@ -128,12 +134,5 @@ export class WordValidationService {
         }
 
         return false;
-    }
-    private isWordLongerThanTwo(word: string): boolean {
-        if (word.length >= 2) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }
