@@ -41,11 +41,13 @@ describe('LettersComponent', () => {
         const mySpy = spyOn(soloPlayerServiceSpy, 'reset');
         const mySpy2 = spyOn(soloOpponentServiceSpy, 'reset');
         const amount = 10;
+        component.message = 'awdadawdwad';
         component.currentLetterNumber = 0;
         component.maxLettersInHand = 12;
         component.getNewLetters(amount);
         expect(mySpy).toHaveBeenCalled();
         expect(mySpy2).toHaveBeenCalled();
-        // expect(component.letters).toEqual(letterServiceSpy.players[0].allLettersInHand);
+        expect(component.letters).toEqual(letterServiceSpy.players[0].allLettersInHand);
+        expect(component.currentLetterNumber).toEqual(parseInt(component.message, 10));
     });
 });
