@@ -22,7 +22,8 @@ export const LETTERMINPOLICESIZE = 20;
 export const LETTERDEFAULTPOLICESIZE = 28;
 export const LETTERMAXPOLICESIZE = 34;
 // to write on the Tiles
-export const TEXTONTILES = ['mot compte double', 'mot compte tripple', 'lettre compte tripple', 'lettre compte double'];
+export const TEXTONTILES = ['mot', 'mot ', 'lettre', 'lettre'];
+export const TEXTONTILESVALUE = ['X2', 'X3', 'X3', 'X2'];
 // useful constants to draw the star in the middle of the board
 export const MIDDLECASENUMBER = NUMBEROFCASE / 2;
 export const OUTERRADIUS = CASESIZE * (SEVEN / SIXTEEN);

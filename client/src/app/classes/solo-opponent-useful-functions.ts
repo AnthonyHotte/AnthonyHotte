@@ -1,4 +1,4 @@
-import { PlacementValidity } from '@app/services/placement-validity';
+import { PlacementValidity } from '@app/classes/placement-validity';
 
 export class SoloOpponentUsefulFunctions {
     toChar(row: number) {
