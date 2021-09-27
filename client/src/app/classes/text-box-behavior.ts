@@ -128,7 +128,7 @@ export class TextBox {
     }
 
     finishCurrentGame() {
-        this.link.navigate(['home']);
+        this.link.navigate(['']);
     }
 
     endTurn() {
