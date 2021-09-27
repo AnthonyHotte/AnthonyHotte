@@ -12,11 +12,11 @@ export class TimerTurnManagerService {
     constructor() {
         this.initiateGame();
         this.currentMessage = this.messageSource.asObservable();
+        this.sendTurn();
     }
 
     initiateGame() {
         this.turn = Math.floor(Math.random() * 2);
-        this.sendTurn();
     }
 
     endTurn() {

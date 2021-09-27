@@ -128,8 +128,7 @@ export class SoloOpponentService {
                             this.possibleWords[0],
                     );
                     this.myTurn = false;
-                    const ONE = 1;
-                    this.changeTurn(ONE.toString());
+                    this.changeTurn(this.myTurn.toString());
                     this.timeManager.endTurn();
                 }
             }, TIME_OUT_TIME);

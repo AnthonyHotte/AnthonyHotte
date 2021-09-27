@@ -38,7 +38,7 @@ export class SoloPlayerService {
     // message is a string 0 or 1, we pass the number of the turn of the person who just finish playing (if next turn is my turn then we pass 1)
     changeTurn(message: string) {
         this.messageSource.next(message);
-        this.myTurn = parseInt(message, 10) === 1;
+        this.myTurn = parseInt(message, 10) === 0;
     }
 
     reset() {
@@ -65,8 +65,7 @@ export class SoloPlayerService {
         }
         this.myTurn = false;
         this.messageToSoloOpponent.next([this.valueToEndGame.toString(), this.lastTurnWasASkip.toString()]);
-        const ZERO = 0;
-        this.changeTurn(ZERO.toString());
+        this.changeTurn(this.myTurn.toString());
     }
 
     exchangeLetters() {
