@@ -8,8 +8,8 @@ export class PlayerLetterHand {
     allLettersInHand: Letter[];
     numberLetterInHand: number;
     selectedLettersForExchange: Set<number>;
-    private lettersToRemoveForThreeSeconds: Letter[];
     score: number;
+    private lettersToRemoveForThreeSeconds: Letter[];
 
     constructor() {
         this.allLettersInHand = [];
