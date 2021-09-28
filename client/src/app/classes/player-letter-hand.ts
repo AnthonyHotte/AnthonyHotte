@@ -34,6 +34,7 @@ export class PlayerLetterHand {
     }
     exchangeLetters() {
         // only possible when at least 7 letters are there
+        // should it not be this.selectedLettersForExchange.length instead of MAXLETTERINHAND
         if (PlayerLetterHand.allLetters.length >= MAXLETTERINHAND) {
             for (const item of this.selectedLettersForExchange.values()) {
                 // put the letters in the bag

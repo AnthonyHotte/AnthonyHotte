@@ -26,7 +26,15 @@ describe('PlayerLetterHand', () => {
         expect(spy).toHaveBeenCalledWith('test');
     });
     it('exchangeLetters should call push and slice method', () => {
-        playerLetterHand.selectedLettersForExchange = new Set<number>([0, 1]);
+        // we need to add seven letters so we have at least the equal number of letters to that of the minimum amount which is seven
+        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'b', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'c', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'd', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'f', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
+
         playerLetterHand.allLettersInHand = [
             { letter: 'a', quantity: 1, point: 1 },
             { letter: 'e', quantity: 1, point: 1 },
@@ -34,6 +42,20 @@ describe('PlayerLetterHand', () => {
         const spyPush = spyOn(playerLetterHand.allLettersInHand, 'push');
         const spySplice = spyOn(playerLetterHand.allLettersInHand, 'splice');
         const expectedCallTime = 2;
+        playerLetterHand.selectedLettersForExchange = new Set<number>([0, 1]);
+        playerLetterHand.exchangeLetters();
+        expect(spyPush).toHaveBeenCalledTimes(expectedCallTime);
+        expect(spySplice).toHaveBeenCalledTimes(expectedCallTime);
+    });
+    it('exchangeLetters is not possible when the player has more letters than what is in the bag', () => {
+        PlayerLetterHand.allLetters = [];
+        playerLetterHand.allLettersInHand = [
+            { letter: 'a', quantity: 1, point: 1 },
+            { letter: 'e', quantity: 1, point: 1 },
+        ];
+        const spyPush = spyOn(playerLetterHand.allLettersInHand, 'push');
+        const spySplice = spyOn(playerLetterHand.allLettersInHand, 'splice');
+        const expectedCallTime = 0;
         playerLetterHand.selectedLettersForExchange = new Set<number>([0, 1]);
         playerLetterHand.exchangeLetters();
         expect(spyPush).toHaveBeenCalledTimes(expectedCallTime);

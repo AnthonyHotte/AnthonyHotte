@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
@@ -9,6 +9,7 @@ import { SoloGameInformationService } from '@app/services/solo-game-information.
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { CountdownComponent } from '@ciri/ngx-countdown';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,7 +17,7 @@ import { Subscription } from 'rxjs';
     templateUrl: './sidebar-right.component.html',
     styleUrls: ['./sidebar-right.component.scss'],
 })
-export class SidebarRightComponent implements OnInit {
+export class SidebarRightComponent implements OnInit, AfterViewInit {
     messagePlayer: string;
     opponentMessage: string;
     messageLetterService: string;
@@ -29,6 +30,7 @@ export class SidebarRightComponent implements OnInit {
     subscriptionTextBox: Subscription;
     message: string[] = [];
     playerName: string[] = ['', ''];
+    opponentSet: boolean = false;
 
     numberOfSkippedTurns: number = 0;
 
@@ -54,6 +56,17 @@ export class SidebarRightComponent implements OnInit {
         this.setAttribute();
     }
 
+    ngAfterViewInit() {
+        if (this.turn === 1) {
+            const TIME_TO_LOAD = 1000;
+            setTimeout(() => {
+                this.soloOpponent.firstWordToPlay = true;
+                this.opponentSet = true;
+                this.soloOpponentPlays();
+            }, TIME_TO_LOAD);
+        }
+    }
+
     ngOnInit() {
         this.subscriptionPlayer = this.soloPlayer.currentMessage.subscribe((messagePlayer) => (this.messagePlayer = messagePlayer));
         this.subscriptionOpponent = this.soloOpponent.currentMessage.subscribe((opponentMessage) => (this.opponentMessage = opponentMessage));
@@ -72,6 +85,7 @@ export class SidebarRightComponent implements OnInit {
             this.playerName[1] = this.message[1];
             this.easyDifficultyIsTrue = this.message[2] === 'true';
             this.time = parseInt(this.message[3], 10);
+            this.turn = this.turnTimeController.turn;
         } else {
             // if page is refreshed
             this.finishCurrentGame();
@@ -112,6 +126,7 @@ export class SidebarRightComponent implements OnInit {
             this.soloPlayer.changeTurn(this.turn.toString());
             this.numberOfSkippedTurns = this.soloPlayer.valueToEndGame;
             this.changedTurns = true;
+            this.opponentSet = true;
         } else {
             this.finishCurrentGame();
         }
@@ -155,13 +170,28 @@ export class SidebarRightComponent implements OnInit {
         return this.playerName[this.turn];
     }
 
-    verifyChangedTurns() {
-        this.changedTurns ||= this.textBox.commandSuccessful;
+    verifyChangedTurns(counter: CountdownComponent) {
+        this.changedTurns ||= this.opponentSet = this.textBox.commandSuccessful;
+        this.textBox.commandSuccessful = false;
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
-            return this.changedTurns;
+            if (this.turn === 1) {
+                this.soloOpponentPlays();
+            }
+            counter.reset();
         }
         this.changedTurns = false;
-        return this.changedTurns;
+    }
+
+    soloOpponentPlays() {
+        if (this.turnTimeController.turn === 1 && this.opponentSet) {
+            this.opponentSet = false;
+            const INTERVAL_TIME = 20500;
+            window.setInterval(() => {
+                this.soloOpponent.skipTurn();
+            }, INTERVAL_TIME);
+            this.soloOpponent.play();
+            this.changedTurns = true;
+        }
     }
 }
