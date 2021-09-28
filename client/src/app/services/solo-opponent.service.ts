@@ -64,7 +64,7 @@ export class SoloOpponentService {
         this.myTurn = this.timeManager.turn === 1;
     }
     play() {
-        this.myTurn = parseInt(this.messageTimeManager, 10) === 1;
+        this.myTurn = this.timeManager.turn === 1;
         if (this.myTurn === true) {
             const HUNDRED = 100;
             const TWENTY = 20;
@@ -85,25 +85,26 @@ export class SoloOpponentService {
                 const EIGHTEEN = 18;
                 if (!this.firstWordToPlay) {
                     this.findValidPlacesOnBoard();
+                    if (PROBABILITY_OF_POINTS <= FORTY) {
+                        this.findWordsToPlay(0, SIX);
+                    } else if (PROBABILITY_OF_POINTS <= SEVENTY) {
+                        this.findWordsToPlay(SEVEN, TWELVE);
+                    } else {
+                        this.findWordsToPlay(THIRTEEN, EIGHTEEN);
+                    }
                 } else {
                     this.playFirstWordInGame();
-                }
-                if (PROBABILITY_OF_POINTS <= FORTY) {
-                    this.findWordsToPlay(0, SIX);
-                } else if (PROBABILITY_OF_POINTS <= SEVENTY) {
-                    this.findWordsToPlay(SEVEN, TWELVE);
-                } else {
-                    this.findWordsToPlay(THIRTEEN, EIGHTEEN);
+                    this.findWordsToPlay(0, EIGHTEEN);
                 }
                 let text = 'temporary message';
                 let i = 0;
-                while (text !== 'Mot placé avec succès.') {
+                while (text !== 'Mot placé avec succès.' && i < this.allRetainedOptions.length) {
                     text = this.placeLetters.placeWord(
                         this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
-                            this.allRetainedOptions[0].column +
+                            this.allRetainedOptions[i].column +
                             this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
                             ' ' +
-                            this.possibleWords[0],
+                            this.possibleWords[i],
                     );
                     i++;
                 }
@@ -188,6 +189,7 @@ export class SoloOpponentService {
         this.sendTradedLettersInformation(numberOfLettersToTrade);
         this.letters.players[1].exchangeLetters();
         this.timeManager.endTurn();
+        this.sourceMessageTextBox.next(['!échanger ', numberOfLettersToTrade.toString()]);
     }
     findWordsToPlay(minPointValue: number, maxPointValue: number) {
         const allWords: string[] = this.placeLetters.getDictionary();
@@ -245,6 +247,7 @@ export class SoloOpponentService {
             }
             if (score < minPointValue || score > maxPointValue) {
                 this.possibleWords.splice(i, 1);
+                this.allRetainedOptions.splice(i, 1);
                 i -= 1;
             }
         }
@@ -282,18 +285,18 @@ export class SoloOpponentService {
                 if (isRowsToPlace) {
                     const possibility: LetterPlacementPossibility = {
                         letter: word.charAt(0).toLowerCase(),
-                        row: item.row - indexOfLetter,
-                        column: item.column,
-                        placement: item.row - indexOfLetter === item.row ? PlacementValidity.Right : PlacementValidity.Left,
+                        row: item.row,
+                        column: item.column - indexOfLetter,
+                        placement: item.column - indexOfLetter === item.column ? PlacementValidity.Right : PlacementValidity.Left,
                     };
                     this.addLetterAndWord(word, possibility);
                 }
                 if (isColumnToPlace) {
                     const possibility: LetterPlacementPossibility = {
                         letter: word.charAt(0).toLowerCase(),
-                        row: item.row,
-                        column: item.column - indexOfLetter,
-                        placement: item.column - indexOfLetter === item.column ? PlacementValidity.HDown : PlacementValidity.HUp,
+                        row: item.row - indexOfLetter,
+                        column: item.column,
+                        placement: item.row - indexOfLetter === item.row ? PlacementValidity.HDown : PlacementValidity.HUp,
                     };
                     this.addLetterAndWord(word, possibility);
                 }
