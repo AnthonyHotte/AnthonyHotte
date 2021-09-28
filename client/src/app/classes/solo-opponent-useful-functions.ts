@@ -25,7 +25,11 @@ export class SoloOpponentUsefulFunctions {
     }
 
     toChar(row: number) {
-        return this.map.get(row);
+        const char = this.map.get(row);
+        if (char === undefined) {
+            return '';
+        }
+        return char;
     }
 
     enumToString(validity: PlacementValidity) {
