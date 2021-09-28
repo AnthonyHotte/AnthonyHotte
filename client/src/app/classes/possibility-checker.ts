@@ -1,8 +1,13 @@
 import { NUMBEROFCASE } from '@app/constants';
-import { LetterPlacementPossibility } from '@app/services/letter-placement-possibility';
-import { PlacementValidity } from '@app/services/placement-validity';
+import { LetterPlacementPossibility } from '@app/classes/letter-placement-possibility';
+import { PlacementValidity } from '@app/classes/placement-validity';
 
 export class PossibilityChecker {
+    valid: boolean = false;
+    constructor(valid: boolean) {
+        this.valid = valid;
+    }
+
     checkRight(lettersOnBoard: string[][], i: number, j: number, possibility: LetterPlacementPossibility) {
         if (i !== NUMBEROFCASE - 1) {
             if (lettersOnBoard[i + 1][j] === '') {
