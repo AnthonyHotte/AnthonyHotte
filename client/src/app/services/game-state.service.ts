@@ -19,8 +19,8 @@ export class GameStateService {
 
     constructor(
         private readonly wordValidator: WordValidationService,
-        private timeManager: TimerTurnManagerService,
-        private letterService: LetterService,
+        public timeManager: TimerTurnManagerService,
+        public letterService: LetterService,
         private scoreCalculator: ScoreCalculatorService,
     ) {
         this.lettersOnBoard = [];
@@ -46,7 +46,8 @@ export class GameStateService {
             }
             this.lettersOnBoard[row][column] = letter;
         }
-        if (this.indexLastLetters.length === constants.MAXLETTERINHAND) {
+        // magic number two is ther because we are doing 2 push for each letter added
+        if (this.indexLastLetters.length === 2 * constants.MAXLETTERINHAND) {
             this.playerUsedAllLetters = true;
         } else {
             this.playerUsedAllLetters = false;
