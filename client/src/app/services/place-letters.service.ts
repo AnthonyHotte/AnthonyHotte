@@ -256,6 +256,11 @@ export class PlaceLettersService {
             positionOfJoker++;
         }
     }
+
+    getDictionary() {
+        return this.wordValidator.dictionnary;
+    }
+
     private removeUpperCaseFromString(index: number): string {
         const tempWord = this.wordToPlace.split('');
         const tempLetters = [...tempWord];

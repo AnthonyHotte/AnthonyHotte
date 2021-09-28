@@ -57,7 +57,8 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         if (this.turn === 1) {
-            this.soloOpponent.play();
+            this.soloOpponent.firstWordToPlay = true;
+            this.soloOpponentPlays();
         }
     }
 
@@ -169,10 +170,18 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
             if (this.turn === 1) {
-                this.soloOpponent.play();
+                this.soloOpponentPlays();
             }
             counter.reset();
         }
         this.changedTurns = false;
+    }
+
+    soloOpponentPlays() {
+        const INTERVAL_TIME = 20500;
+        const turnToBeSkipped = window.setInterval(() => {
+            this.soloOpponent.skipTurn(turnToBeSkipped);
+        }, INTERVAL_TIME);
+        this.soloOpponent.play(turnToBeSkipped);
     }
 }

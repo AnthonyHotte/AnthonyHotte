@@ -1,6 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
-import { CASESIZE, MAXLETTERINHAND, NUMBEROFCASE } from '@app/constants';
+import { CASESIZE, MAXLETTERINHAND, NUMBEROFCASE, CENTERCASE } from '@app/constants';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { GameStateService } from './game-state.service';
 import { LetterPlacementPossibility } from '@app/classes/letter-placement-possibility';
@@ -8,12 +8,10 @@ import { LetterService } from './letter.service';
 import { PlacementValidity } from '@app/classes/placement-validity';
 import { SoloPlayerService } from './solo-player.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
-import dictionary from 'src/assets/dictionnary.json';
 import { LETTERS } from '@app/all-letters';
 import { PlaceLettersService } from './place-letters.service';
 import { PossibilityChecker } from '@app/classes/possibility-checker';
 import { SoloOpponentUsefulFunctions } from '@app/classes/solo-opponent-useful-functions';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -32,17 +30,16 @@ export class SoloOpponentService {
     score: number = 0;
     currentMessage: Observable<string>;
     lastTurnWasASkip: boolean = false;
-    possibleWords: string[];
-    possibilityOfPlayWord: string[];
-    allRetainedOptions: LetterPlacementPossibility[];
+    possibleWords: string[] = [];
+    possibilityOfPlayWord: string[] = [];
+    allRetainedOptions: LetterPlacementPossibility[] = [];
+    firstWordToPlay: boolean = false;
     private messageSource = new BehaviorSubject('default message');
     private messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
-    private placementPossibilities = new Set<LetterPlacementPossibility>();
+    private placementPossibilities: LetterPlacementPossibility[] = [];
     private possibilityCheck: PossibilityChecker;
-    private currentFirstLetterOfWord: LetterPlacementPossibility;
-    private soloOpponentFunctions: SoloOpponentUsefulFunctions;
-
+    private soloOpponentFunctions: SoloOpponentUsefulFunctions = new SoloOpponentUsefulFunctions(true);
     constructor(
         private letters: LetterService,
         private timeManager: TimerTurnManagerService,
@@ -65,83 +62,73 @@ export class SoloOpponentService {
         this.maximumAllowedSkippedTurns = 6;
         this.gameState = this.injection.get(GameStateService);
     }
-
-    play() {
+    play(turnToBeSkipped: number) {
         this.myTurn = parseInt(this.messageTimeManager, 10) === 1;
         if (this.myTurn === true) {
+            const HUNDRED = 100;
+            const TWENTY = 20;
+            const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             const TIME_OUT_TIME = 3500;
-            const INTERVAL_TIME = 17000;
-            setTimeout(() => {
-                const HUNDRED = 100;
-                const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
-                const TEN = 10;
-                const TWENTY = 20;
-                if (PROBABILITY_OF_ACTION <= TEN) {
-                    // skip turn
-                    this.skipTurn(turnToBeSkipped);
-                } else if (PROBABILITY_OF_ACTION <= TWENTY) {
-                    // trade letters
-                    const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.numberOfLetters);
-                    if (NUMBER_OF_LETTERS_TO_TRADE <= PlayerLetterHand.allLetters.length) {
-                        this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
-                    } else {
-                        this.skipTurn(turnToBeSkipped);
-                    }
-                } else {
-                    // play a word
-                    const PROBABILITY_OF_POINTS = this.calculateProbability(HUNDRED);
-                    const FORTY = 40;
-                    const SEVENTY = 70;
+            if (PROBABILITY_OF_ACTION > TWENTY) {
+                // play a word
+                const PROBABILITY_OF_POINTS = this.calculateProbability(HUNDRED);
+                const FORTY = 40;
+                const SEVENTY = 70;
+                const SIX = 6;
+                const SEVEN = 7;
+                const TWELVE = 12;
+                const THIRTEEN = 13;
+                const EIGHTEEN = 18;
+                if (!this.firstWordToPlay) {
                     this.findValidPlacesOnBoard();
-                    const SIX = 6;
-                    const SEVEN = 7;
-                    const TWELVE = 12;
-                    const THIRTEEN = 13;
-                    const EIGHTEEN = 18;
-                    if (PROBABILITY_OF_POINTS <= FORTY) {
-                        this.findWordsToPlay(0, SIX);
-                    } else if (PROBABILITY_OF_POINTS <= SEVENTY) {
-                        this.findWordsToPlay(SEVEN, TWELVE);
-                    } else {
-                        this.findWordsToPlay(THIRTEEN, EIGHTEEN);
-                    }
-                    for (let i = 0; i < this.possibleWords.length; i++) {
-                        if (
-                            !this.placeLetters.validateSoloOpponent(
-                                this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
-                                    this.allRetainedOptions[i].column +
-                                    this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
-                                    ' ' +
-                                    this.possibleWords[i],
-                            )
-                        ) {
-                            this.possibleWords.splice(i, 1);
-                            this.allRetainedOptions.splice(i, 1);
-                            i -= 1;
-                        }
-                    }
-                    this.placeLetters.placeWord(
-                        this.soloOpponentFunctions.toChar(this.allRetainedOptions[0].row) +
+                } else {
+                    this.playFirstWordInGame();
+                }
+                if (PROBABILITY_OF_POINTS <= FORTY) {
+                    this.findWordsToPlay(0, SIX);
+                } else if (PROBABILITY_OF_POINTS <= SEVENTY) {
+                    this.findWordsToPlay(SEVEN, TWELVE);
+                } else {
+                    this.findWordsToPlay(THIRTEEN, EIGHTEEN);
+                }
+                this.firstWordToPlay = false;
+                let text = 'temporary message';
+                let i = 0;
+                while (text !== 'Mot placé avec succès.') {
+                    text = this.placeLetters.placeWord(
+                        this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
                             this.allRetainedOptions[0].column +
-                            this.soloOpponentFunctions.enumToString(this.allRetainedOptions[0].placement) +
+                            this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
                             ' ' +
                             this.possibleWords[0],
                     );
-                    this.myTurn = false;
-                    this.changeTurn(this.myTurn.toString());
-                    this.timeManager.endTurn();
+                    i++;
                 }
-            }, TIME_OUT_TIME);
-            const turnToBeSkipped = window.setInterval(() => {
-                this.skipTurn(turnToBeSkipped);
-            }, INTERVAL_TIME);
+                this.myTurn = false;
+                this.changeTurn(this.myTurn.toString());
+                this.timeManager.endTurn();
+            } else {
+                setTimeout(() => {
+                    const TEN = 10;
+                    if (PROBABILITY_OF_ACTION <= TEN) {
+                        // skip turn
+                        this.skipTurn(turnToBeSkipped);
+                    } else if (PROBABILITY_OF_ACTION <= TWENTY) {
+                        // trade letters
+                        const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
+                        if (NUMBER_OF_LETTERS_TO_TRADE <= PlayerLetterHand.allLetters.length) {
+                            this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
+                        } else {
+                            this.skipTurn(turnToBeSkipped);
+                        }
+                    }
+                }, TIME_OUT_TIME);
+            }
         }
     }
-
     calculateProbability(percentage: number) {
         return Math.floor(Math.random() * percentage);
     }
-
     incrementPassedTurns() {
         this.valueToEndGame = parseInt(this.messageFromSoloPlayer[0], 10);
         this.lastTurnWasASkip = this.messageFromSoloPlayer[1] === 'true';
@@ -156,28 +143,24 @@ export class SoloOpponentService {
             this.changeTurn(this.myTurn.toString());
         }
     }
-
     changeTurn(message: string) {
         this.messageSource.next(message);
         this.myTurn = parseInt(this.message, 10) === 1;
     }
-
     reset() {
         this.letters.players[1].allLettersInHand = [];
         this.numberOfLetters = this.letters.players[1].numberLetterInHand = 0;
         this.letters.players[1].addLetters(MAXLETTERINHAND);
         this.numberOfLetters = parseInt(this.message, 10);
         this.valueToEndGame = 0;
+        this.firstWordToPlay = true;
     }
-
     getScore() {
         return this.score;
     }
-
     sendNumberOfSkippedTurn() {
         this.messageSource.next(this.valueToEndGame.toString());
     }
-
     skipTurn(turnToBeSkipped: number) {
         this.incrementPassedTurns();
         this.messageSoloPlayer.next([this.valueToEndGame.toString(), this.lastTurnWasASkip.toString()]);
@@ -188,7 +171,6 @@ export class SoloOpponentService {
         const numberOfLetters = 0;
         this.sourceMessageTextBox.next(['!passer', numberOfLetters.toString()]);
     }
-
     exchangeLetters(numberOfLettersToTrade: number) {
         let i = 0;
         while (i < numberOfLettersToTrade) {
@@ -202,41 +184,38 @@ export class SoloOpponentService {
         this.letters.players[1].exchangeLetters();
         this.timeManager.endTurn();
     }
-
     findWordsToPlay(minPointValue: number, maxPointValue: number) {
-        const parser = dictionary.toString();
-        const jsonObject = JSON.parse(parser);
-        const allWords: string[] = jsonObject.words;
+        const allWords: string[] = this.placeLetters.getDictionary();
         let lettersInString = '';
         let otherLettersRow = '';
         let otherLettersColumn = '';
-        for (let i = 0; i < this.numberOfLetters; i++) {
-            lettersInString += this.letters.players[1].allLettersInHand[i].letter.toLowerCase();
+        for (const letter of this.letters.players[1].allLettersInHand) {
+            lettersInString += letter.letter.toLowerCase();
         }
-        for (const item of this.placementPossibilities.values()) {
-            otherLettersColumn += item.letter.toLocaleLowerCase();
-            otherLettersRow += item.letter.toLocaleLowerCase();
-            otherLettersColumn += this.findSameColumnItems(item.row, item.column);
-            otherLettersRow += this.findSameRowItems(item.row, item.column);
+        for (const item of this.placementPossibilities) {
+            otherLettersColumn += item.letter.toLowerCase();
+            otherLettersRow += item.letter.toLowerCase();
+            if (!this.firstWordToPlay) {
+                otherLettersColumn += this.findSameColumnItems(item.row, item.column);
+                otherLettersRow += this.findSameRowItems(item.row, item.column);
+            }
             this.iterateWords(allWords, item, lettersInString, otherLettersRow, otherLettersColumn);
             otherLettersColumn = '';
             otherLettersRow = '';
         }
         this.eliminateWordsToMatchScore(minPointValue, maxPointValue);
     }
-
     findSameColumnItems(row: number, column: number) {
         let columnLetters = '';
         for (let i = row + 1; i < CASESIZE; i++) {
             if (this.gameState.lettersOnBoard[i][column] !== '') {
-                columnLetters += this.gameState.lettersOnBoard[row][i].toLocaleLowerCase();
+                columnLetters += this.gameState.lettersOnBoard[row][i].toLowerCase();
             } else {
                 columnLetters += ' ';
             }
         }
         return columnLetters;
     }
-
     findSameRowItems(row: number, column: number) {
         let rowLetters = '';
         for (let i = column + 1; i < CASESIZE; i++) {
@@ -248,7 +227,6 @@ export class SoloOpponentService {
         }
         return rowLetters;
     }
-
     eliminateWordsToMatchScore(minPointValue: number, maxPointValue: number) {
         for (let i = 0; i < this.possibleWords.length; i++) {
             let score = 0;
@@ -266,56 +244,57 @@ export class SoloOpponentService {
             }
         }
     }
-
     iterateWords(allWords: string[], item: LetterPlacementPossibility, lettersInString: string, rowLetters: string, columnLetters: string) {
         const NOT_PRESENT = -1;
         for (const word of allWords) {
+            const itemHolder = item;
             let indexOfLetter = 0;
-            if ((indexOfLetter = word.search(item.letter)) !== NOT_PRESENT) {
-                this.currentFirstLetterOfWord = item;
+            if ((indexOfLetter = word.search(itemHolder.letter.toLowerCase())) !== NOT_PRESENT) {
                 let possibleWord = false;
-                const temporaryWord = word;
+                let temporaryWord = word;
                 for (let i = 0; i < lettersInString.length; i++) {
                     if (temporaryWord.search(lettersInString.charAt(i)) !== NOT_PRESENT) {
                         possibleWord = true;
-                        temporaryWord.replace(lettersInString.charAt(i), ' ');
+                        temporaryWord = temporaryWord.replace(lettersInString.charAt(i), ' ');
                     }
                 }
                 let isRowsToPlace = item.row - indexOfLetter >= 0;
                 let isColumnToPlace = item.column - indexOfLetter >= 0;
-                if (possibleWord) {
+                if (this.firstWordToPlay) {
+                    isColumnToPlace = isRowsToPlace &&= temporaryWord.split(' ').join('').length === 0;
+                }
+                if (possibleWord && !this.firstWordToPlay) {
                     isRowsToPlace &&= this.soloOpponentFunctions.checkRowsAndColumnsForWordMatch(rowLetters, temporaryWord);
                     isColumnToPlace &&= this.soloOpponentFunctions.checkRowsAndColumnsForWordMatch(columnLetters, temporaryWord);
                 }
                 if (isRowsToPlace) {
-                    this.currentFirstLetterOfWord.letter = word.charAt(0);
-                    this.currentFirstLetterOfWord.row = item.row - indexOfLetter;
-                    this.currentFirstLetterOfWord.column = item.column;
-                    this.currentFirstLetterOfWord.placement =
-                        item.row - indexOfLetter === item.row ? PlacementValidity.Right : PlacementValidity.Left;
-                    this.addLetterAndWord(word);
+                    const possibility: LetterPlacementPossibility = {
+                        letter: word.charAt(0).toLowerCase(),
+                        row: item.row - indexOfLetter,
+                        column: item.column,
+                        placement: item.row - indexOfLetter === item.row ? PlacementValidity.Right : PlacementValidity.Left,
+                    };
+                    this.addLetterAndWord(word, possibility);
                 }
                 if (isColumnToPlace) {
-                    this.currentFirstLetterOfWord.letter = word.charAt(0);
-                    this.currentFirstLetterOfWord.row = item.row;
-                    this.currentFirstLetterOfWord.column = item.column - indexOfLetter;
-                    this.currentFirstLetterOfWord.placement =
-                        item.column - indexOfLetter === item.column ? PlacementValidity.HDown : PlacementValidity.HUp;
-                    this.addLetterAndWord(word);
+                    const possibility: LetterPlacementPossibility = {
+                        letter: word.charAt(0).toLowerCase(),
+                        row: item.row,
+                        column: item.column - indexOfLetter,
+                        placement: item.column - indexOfLetter === item.column ? PlacementValidity.HDown : PlacementValidity.HUp,
+                    };
+                    this.addLetterAndWord(word, possibility);
                 }
             }
         }
     }
-
-    addLetterAndWord(word: string) {
-        this.allRetainedOptions.push(this.currentFirstLetterOfWord);
+    addLetterAndWord(word: string, possibility: LetterPlacementPossibility) {
+        this.allRetainedOptions.push(possibility);
         this.possibleWords.push(word);
     }
-
     sendTradedLettersInformation(numberOfLettersToTrade: number) {
-        this.sourceMessageTextBox.next(['!échanger', numberOfLettersToTrade.toString()]);
+        this.sourceMessageTextBox.next(['!échanger ', numberOfLettersToTrade.toString()]);
     }
-
     findValidPlacesOnBoard() {
         for (let i = 0; i < NUMBEROFCASE; i++) {
             for (let j = 0; j < NUMBEROFCASE; j++) {
@@ -326,10 +305,22 @@ export class SoloOpponentService {
                     possibility = this.possibilityCheck.checkDown(this.gameState.lettersOnBoard, i, j, possibility);
                     possibility = this.possibilityCheck.checkUp(this.gameState.lettersOnBoard, i, j, possibility);
                     if (possibility.placement !== PlacementValidity.Nothing) {
-                        this.placementPossibilities.add(possibility);
+                        this.placementPossibilities.push(possibility);
                     }
                 }
             }
+        }
+    }
+    playFirstWordInGame() {
+        for (const letter of this.letters.players[1].allLettersInHand) {
+            const possibility: LetterPlacementPossibility = {
+                row: CENTERCASE - 1,
+                column: CENTERCASE - 1,
+                letter: letter.letter,
+                placement: PlacementValidity.Right,
+            };
+            this.placementPossibilities.push(possibility);
+            this.placementPossibilities.push(possibility);
         }
     }
 }
