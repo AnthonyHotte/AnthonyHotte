@@ -13,5 +13,6 @@ export enum PlacementValidity {
     HUpHDownRight = 'HUHDR',
     HUpLeftRight = 'HULR',
     HDownLeftRight = 'HDLR',
+    HDownLeftRightHUp = 'HUHDLR',
     Nothing = 'N',
 }
