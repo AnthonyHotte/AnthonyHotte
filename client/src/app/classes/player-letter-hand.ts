@@ -60,10 +60,16 @@ export class PlayerLetterHand {
     }
 
     removeLetters() {
+        const lettersExchanged: Letter[] = [];
+        // needed for deleting correctly
+        let numberOfElementDeleted = 0;
         // remove the played letters
         for (const item of this.selectedLettersForExchange.values()) {
             // remove letter in the player hand
-            this.allLettersInHand.splice(item, 1);
+            // [0] is there because slice return an array an we only want the first and unique element
+            const letterToChanged: Letter = this.allLettersInHand.splice(item - numberOfElementDeleted, 1)[0];
+            numberOfElementDeleted += 1;
+            lettersExchanged.push(letterToChanged);
         }
         // add the letters according to what's bigger 7 or the number of remaining letters
         let i = this.allLettersInHand.length;
@@ -76,6 +82,10 @@ export class PlayerLetterHand {
             PlayerLetterHand.allLetters.splice(index, 1);
             i++;
         }
+        // add the letter that we removed to the bag
+        lettersExchanged.forEach((letter) => {
+            PlayerLetterHand.allLetters.push(letter);
+        });
         this.selectedLettersForExchange.clear();
     }
 
@@ -99,8 +109,8 @@ export class PlayerLetterHand {
         setTimeout(() => {
             for (const letter of this.lettersToRemoveForThreeSeconds) {
                 this.allLettersInHand.push(letter);
-                this.lettersToRemoveForThreeSeconds = [];
             }
+            this.lettersToRemoveForThreeSeconds = [];
         }, TIME_OUT_TIME);
     }
 }
