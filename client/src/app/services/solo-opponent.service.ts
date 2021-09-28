@@ -325,10 +325,7 @@ export class SoloOpponentService {
             for (let j = 0; j < NUMBEROFCASE; j++) {
                 if (this.gameState.lettersOnBoard[i][j] !== '') {
                     let possibility = { row: i, column: j, letter: this.gameState.lettersOnBoard[i][j], placement: PlacementValidity.Nothing };
-                    possibility = this.possibilityCheck.checkRight(this.gameState.lettersOnBoard, i, j, possibility);
-                    possibility = this.possibilityCheck.checkLeft(this.gameState.lettersOnBoard, i, j, possibility);
-                    possibility = this.possibilityCheck.checkDown(this.gameState.lettersOnBoard, i, j, possibility);
-                    possibility = this.possibilityCheck.checkUp(this.gameState.lettersOnBoard, i, j, possibility);
+                    possibility = this.possibilityCheck.checkAll(this.gameState.lettersOnBoard, i, j, possibility);
                     if (possibility.placement !== PlacementValidity.Nothing) {
                         this.placementPossibilities.push(possibility);
                     }
