@@ -3,6 +3,11 @@ import { LetterPlacementPossibility } from '@app/classes/letter-placement-possib
 import { PlacementValidity } from '@app/classes/placement-validity';
 
 export class PossibilityChecker {
+    valid: boolean = false;
+    constructor(valid: boolean) {
+        this.valid = valid;
+    }
+
     checkRight(lettersOnBoard: string[][], i: number, j: number, possibility: LetterPlacementPossibility) {
         if (i !== NUMBEROFCASE - 1) {
             if (lettersOnBoard[i + 1][j] === '') {

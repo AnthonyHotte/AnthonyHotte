@@ -30,6 +30,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     subscriptionTextBox: Subscription;
     message: string[] = [];
     playerName: string[] = ['', ''];
+    opponentSet: boolean = false;
 
     numberOfSkippedTurns: number = 0;
 
@@ -57,7 +58,12 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         if (this.turn === 1) {
-            this.soloOpponent.play();
+            const TIME_TO_LOAD = 1000;
+            setTimeout(() => {
+                this.soloOpponent.firstWordToPlay = true;
+                this.opponentSet = true;
+                this.soloOpponentPlays();
+            }, TIME_TO_LOAD);
         }
     }
 
@@ -120,6 +126,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
             this.soloPlayer.changeTurn(this.turn.toString());
             this.numberOfSkippedTurns = this.soloPlayer.valueToEndGame;
             this.changedTurns = true;
+            this.opponentSet = true;
         } else {
             this.finishCurrentGame();
         }
@@ -164,15 +171,27 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     verifyChangedTurns(counter: CountdownComponent) {
-        this.changedTurns ||= this.textBox.commandSuccessful;
+        this.changedTurns ||= this.opponentSet = this.textBox.commandSuccessful;
         this.textBox.commandSuccessful = false;
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
             if (this.turn === 1) {
-                this.soloOpponent.play();
+                this.soloOpponentPlays();
             }
             counter.reset();
         }
         this.changedTurns = false;
+    }
+
+    soloOpponentPlays() {
+        if (this.turnTimeController.turn === 1 && this.opponentSet) {
+            this.opponentSet = false;
+            const INTERVAL_TIME = 20500;
+            window.setInterval(() => {
+                this.soloOpponent.skipTurn();
+            }, INTERVAL_TIME);
+            this.soloOpponent.play();
+            this.changedTurns = true;
+        }
     }
 }

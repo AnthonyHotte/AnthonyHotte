@@ -98,6 +98,9 @@ export class TextBox {
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 text = this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
                 this.endTurn();
+                if (text === 'Mot placé avec succès.') {
+                    this.soloOpponent.firstWordToPlay = false;
+                }
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
                 text = this.verifyCommandPasser();
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {

@@ -1,6 +1,11 @@
 import { PlacementValidity } from '@app/classes/placement-validity';
 
 export class SoloOpponentUsefulFunctions {
+    valid: boolean;
+    constructor(valid: boolean) {
+        this.valid = valid;
+    }
+
     toChar(row: number) {
         const FOUR = 4;
         const FIVE = 5;
