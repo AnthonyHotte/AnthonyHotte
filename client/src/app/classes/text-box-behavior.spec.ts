@@ -92,15 +92,6 @@ describe('TextBox', () => {
         expect(textBox.buttonCommandState).toEqual('ButtonCommandReleased');
         expect(textBox.buttonMessageState).toEqual('ButtonMessageActivated');
     });
-    /*
-    it('should call input.push() and command.activateDebugCommand()', () => {
-       // const activateDebugCommandSpy = spyOn(textBox.debugCommand, 'activateDebugCommand');
-        const pushSpy = spyOn(textBox.inputs, 'push');
-        textBox.isCommand('!debug');
-        expect(activateDebugCommandSpy).toHaveBeenCalled();
-        expect(pushSpy).toHaveBeenCalledWith('Vous etes en mode debug');
-    });
-    */
     it('isCommand should call debugCommand', () => {
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
         soloPlayerServiceSpy = jasmine.createSpyObj('SoloPlayerService', ['reset']);
@@ -221,5 +212,32 @@ describe('TextBox', () => {
         timerTurnManagerServiceSpy.turn = 1;
         textBox.endTurn();
         expect(mySpy).toHaveBeenCalledWith(textBox.turn.toString());
+    });
+    it('verifySelectedLetters should call letterService.selectedLetters', () => {
+        const word = 'wfwefw';
+        const playerHasLetters = true;
+        const letters = word.substring('!échanger '.length, word.length);
+        const mySpy = spyOn(letterServiceSpy, 'selectLetter');
+        textBox.verifySelectedLetters(playerHasLetters, word);
+        for (let i = 0; i < letters.length; ++i) {
+            const letter = letters.charAt(i);
+            expect(mySpy).toHaveBeenCalledWith(letter, 0);
+        }
+    });
+    it('verifySelectedLetters should call clear', () => {
+        const word = 'wfwefw';
+        const playerHasLetters = false;
+        const letters = word.substring('!échanger '.length, word.length);
+        const mySpy = spyOn(letterServiceSpy.players[0].selectedLettersForExchange, 'clear');
+        textBox.verifySelectedLetters(playerHasLetters, word);
+        for (let i = 0; i < letters.length; ++i) {
+            expect(mySpy).toHaveBeenCalled();
+        }
+    });
+    it('verifySelectedLetters should return true', () => {
+        const word = 'wfwefw';
+        const playerHasLetters = false;
+        const retour = textBox.verifySelectedLetters(playerHasLetters, word);
+        expect(retour).toBe(true);
     });
 });
