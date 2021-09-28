@@ -124,26 +124,11 @@ describe('TextBox', () => {
         expect(textBox.debugCommand).toEqual(true);
     });
     it('isCommand should call placeWord', () => {
-        letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
-        soloPlayerServiceSpy = jasmine.createSpyObj('SoloPlayerService', ['reset']);
-        soloOpponentServiceSpy = jasmine.createSpyObj('SoloOpponentService', ['reset']);
-        placerLetterServiceSpy = jasmine.createSpyObj('PlacerLettersService', ['placeWord']);
-        timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerServiceSpy', ['endTurn']);
-        routerSpy = jasmine.createSpyObj('Router', ['initialNavigation']);
-
-        textBox = new TextBox(
-            placerLetterServiceSpy,
-            soloPlayerServiceSpy,
-            soloOpponentServiceSpy,
-            timerTurnManagerServiceSpy,
-            routerSpy,
-            letterServiceSpy,
-        );
-
+        const mySPy = spyOn(placerLetterServiceSpy, 'placeWord');
         timerTurnManagerServiceSpy.turn = 0;
         const maChaine = '!placer';
         textBox.isCommand(maChaine);
-        expect(placerLetterServiceSpy.placeWord).toHaveBeenCalled();
+        expect(mySPy).toHaveBeenCalled();
     });
     it('isCommand should call verifyCommandPasser', () => {
         const mySpy = spyOn(textBox, 'verifyCommandPasser');
@@ -202,7 +187,6 @@ describe('TextBox', () => {
         soloPlayerServiceSpy.maximumAllowedSkippedTurns = 10;
         textBox.verifyCommandPasser();
         expect(mySpy).toHaveBeenCalled();
-        expect(textBox.commandSuccessful).toBe(true);
     });
     it('verifyCommandPasser should call clear', () => {
         const mySpy = spyOn(textBox, 'finishCurrentGame');
@@ -222,19 +206,20 @@ describe('TextBox', () => {
         timerTurnManagerServiceSpy.turn = 4;
         textBox.endTurn();
         expect(textBox.turn).toBe(timerTurnManagerServiceSpy.turn);
-        expect(mySpy).toHaveBeenCalled();
-    });
-    it('endTurn should call changeTurn of player', () => {
-        const mySpy = spyOn(soloPlayerServiceSpy, 'changeTurn');
         textBox.turn = 0;
-        textBox.endTurn();
+
         expect(mySpy).toHaveBeenCalled();
     });
     it('endTurn should call changeTurn of opponent', () => {
         const mySpy = spyOn(soloOpponentServiceSpy, 'changeTurn');
-        timerTurnManagerServiceSpy.turn = 1;
-        textBox.turn = 1;
+        timerTurnManagerServiceSpy.turn = 0;
         textBox.endTurn();
-        expect(mySpy).toHaveBeenCalled();
+        expect(mySpy).toHaveBeenCalledWith(textBox.turn.toString());
+    });
+    it('endTurn should call changeTurn of player', () => {
+        const mySpy = spyOn(soloPlayerServiceSpy, 'changeTurn');
+        timerTurnManagerServiceSpy.turn = 1;
+        textBox.endTurn();
+        expect(mySpy).toHaveBeenCalledWith(textBox.turn.toString());
     });
 });
