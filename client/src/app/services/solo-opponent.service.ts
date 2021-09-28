@@ -5,7 +5,7 @@ import { PlacementValidity } from '@app/classes/placement-validity';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { PossibilityChecker } from '@app/classes/possibility-checker';
 import { SoloOpponentUsefulFunctions } from '@app/classes/solo-opponent-useful-functions';
-import { CASESIZE, CENTERCASE, MAXLETTERINHAND, NUMBEROFCASE } from '@app/constants';
+import { CENTERCASE, MAXLETTERINHAND, NUMBEROFCASE } from '@app/constants';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { GameStateService } from './game-state.service';
 import { LetterService } from './letter.service';
@@ -38,7 +38,7 @@ export class SoloOpponentService {
     private messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
     private placementPossibilities: LetterPlacementPossibility[] = [];
-    private possibilityCheck: PossibilityChecker;
+    private possibilityCheck: PossibilityChecker = new PossibilityChecker(true);
     private soloOpponentFunctions: SoloOpponentUsefulFunctions = new SoloOpponentUsefulFunctions(true);
     constructor(
         private letters: LetterService,
@@ -72,6 +72,9 @@ export class SoloOpponentService {
             const TIME_OUT_TIME = 3500;
             if (PROBABILITY_OF_ACTION > TWENTY) {
                 // play a word
+                this.allRetainedOptions = [];
+                this.possibleWords = [];
+                this.placementPossibilities = [];
                 const PROBABILITY_OF_POINTS = this.calculateProbability(HUNDRED);
                 const FORTY = 40;
                 const SEVENTY = 70;
@@ -147,7 +150,7 @@ export class SoloOpponentService {
     }
     changeTurn(message: string) {
         this.messageSource.next(message);
-        this.myTurn = parseInt(this.message, 10) === 1;
+        this.myTurn = parseInt(this.messageTimeManager, 10) === 1;
     }
     reset() {
         this.letters.players[1].allLettersInHand = [];
@@ -209,9 +212,9 @@ export class SoloOpponentService {
     }
     findSameColumnItems(row: number, column: number) {
         let columnLetters = '';
-        for (let i = row + 1; i < CASESIZE; i++) {
+        for (let i = row + 1; i < NUMBEROFCASE; i++) {
             if (this.gameState.lettersOnBoard[i][column] !== '') {
-                columnLetters += this.gameState.lettersOnBoard[row][i].toLowerCase();
+                columnLetters += this.gameState.lettersOnBoard[i][column].toLowerCase();
             } else {
                 columnLetters += ' ';
             }
@@ -220,9 +223,9 @@ export class SoloOpponentService {
     }
     findSameRowItems(row: number, column: number) {
         let rowLetters = '';
-        for (let i = column + 1; i < CASESIZE; i++) {
+        for (let i = column + 1; i < NUMBEROFCASE; i++) {
             if (this.gameState.lettersOnBoard[row][i] !== '') {
-                rowLetters += this.gameState.lettersOnBoard[i][column].toLocaleLowerCase();
+                rowLetters += this.gameState.lettersOnBoard[row][i].toLocaleLowerCase();
             } else {
                 rowLetters += ' ';
             }
@@ -258,6 +261,13 @@ export class SoloOpponentService {
                     if (temporaryWord.search(lettersInString.charAt(i)) !== NOT_PRESENT) {
                         possibleWord = true;
                         temporaryWord = temporaryWord.replace(lettersInString.charAt(i), ' ');
+                    } else if (lettersInString.charAt(i) === '*') {
+                        possibleWord = true;
+                        for (let j = 0; j < temporaryWord.length; j++) {
+                            if (temporaryWord.charAt(j) !== ' ') {
+                                temporaryWord = temporaryWord.replace(temporaryWord.charAt(j), ' ');
+                            }
+                        }
                     }
                 }
                 let isRowsToPlace = item.row - indexOfLetter >= 0;
