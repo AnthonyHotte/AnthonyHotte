@@ -41,19 +41,21 @@ export class GridService {
         // word x2 (pink)
         if (TileMap.gridMap.isDoubleWordTile(i, j)) {
             this.gridContext.fillStyle = 'pink';
+            // this.gridContext.fillStyle = '#f6b4aa;';
             if (i !== Constants.CENTERCASE && j !== Constants.CENTERCASE) {
                 textChoice = 0;
             }
         }
         // word x3 (red)
         else if (TileMap.gridMap.isTripleWordTile(i, j)) {
-            this.gridContext.fillStyle = 'red';
+            // this.gridContext.fillStyle = 'red';
+            this.gridContext.fillStyle = '#fa644d';
             textChoice = 1;
         }
         // Letter x3 (dark blue)
         else if (TileMap.gridMap.isTripleLetterTile(i, j)) {
             // this.gridContext.fillStyle = 'darkblue';
-            this.gridContext.fillStyle = '#4640ff';
+            this.gridContext.fillStyle = '#3fa1b4';
             textChoice = 2;
         }
         // Letter x2 (Light blue)
@@ -61,8 +63,9 @@ export class GridService {
             this.gridContext.fillStyle = '#add8e6';
             textChoice = 3;
         } else {
-            this.gridContext.fillStyle = 'grey';
+            // this.gridContext.fillStyle = 'grey';
             // this.gridContext.fillStyle = '#FFE6AC';
+            this.gridContext.fillStyle = '#c8c3a6';
         }
         this.gridContext.fillRect(
             Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
