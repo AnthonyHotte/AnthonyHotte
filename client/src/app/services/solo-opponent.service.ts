@@ -1,17 +1,17 @@
 import { Injectable, Injector } from '@angular/core';
-import { PlayerLetterHand } from '@app/classes/player-letter-hand';
-import { CASESIZE, MAXLETTERINHAND, NUMBEROFCASE, CENTERCASE } from '@app/constants';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { GameStateService } from './game-state.service';
-import { LetterPlacementPossibility } from '@app/classes/letter-placement-possibility';
-import { LetterService } from './letter.service';
-import { PlacementValidity } from '@app/classes/placement-validity';
-import { SoloPlayerService } from './solo-player.service';
-import { TimerTurnManagerService } from './timer-turn-manager.service';
 import { LETTERS } from '@app/all-letters';
-import { PlaceLettersService } from './place-letters.service';
+import { LetterPlacementPossibility } from '@app/classes/letter-placement-possibility';
+import { PlacementValidity } from '@app/classes/placement-validity';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { PossibilityChecker } from '@app/classes/possibility-checker';
 import { SoloOpponentUsefulFunctions } from '@app/classes/solo-opponent-useful-functions';
+import { CASESIZE, CENTERCASE, MAXLETTERINHAND, NUMBEROFCASE } from '@app/constants';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { GameStateService } from './game-state.service';
+import { LetterService } from './letter.service';
+import { PlaceLettersService } from './place-letters.service';
+import { SoloPlayerService } from './solo-player.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -61,8 +61,9 @@ export class SoloOpponentService {
         this.messageTextBox = this.sourceMessageTextBox.asObservable();
         this.maximumAllowedSkippedTurns = 6;
         this.gameState = this.injection.get(GameStateService);
+        this.myTurn = this.timeManager.turn === 1;
     }
-    play(turnToBeSkipped: number) {
+    play() {
         this.myTurn = parseInt(this.messageTimeManager, 10) === 1;
         if (this.myTurn === true) {
             const HUNDRED = 100;
@@ -91,7 +92,6 @@ export class SoloOpponentService {
                 } else {
                     this.findWordsToPlay(THIRTEEN, EIGHTEEN);
                 }
-                this.firstWordToPlay = false;
                 let text = 'temporary message';
                 let i = 0;
                 while (text !== 'Mot placé avec succès.') {
@@ -104,7 +104,9 @@ export class SoloOpponentService {
                     );
                     i++;
                 }
+                this.firstWordToPlay = false;
                 this.myTurn = false;
+                this.placementPossibilities = [];
                 this.changeTurn(this.myTurn.toString());
                 this.timeManager.endTurn();
             } else {
@@ -112,14 +114,14 @@ export class SoloOpponentService {
                     const TEN = 10;
                     if (PROBABILITY_OF_ACTION <= TEN) {
                         // skip turn
-                        this.skipTurn(turnToBeSkipped);
+                        this.skipTurn();
                     } else if (PROBABILITY_OF_ACTION <= TWENTY) {
                         // trade letters
                         const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
                         if (NUMBER_OF_LETTERS_TO_TRADE <= PlayerLetterHand.allLetters.length) {
                             this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
                         } else {
-                            this.skipTurn(turnToBeSkipped);
+                            this.skipTurn();
                         }
                     }
                 }, TIME_OUT_TIME);
@@ -161,15 +163,15 @@ export class SoloOpponentService {
     sendNumberOfSkippedTurn() {
         this.messageSource.next(this.valueToEndGame.toString());
     }
-    skipTurn(turnToBeSkipped: number) {
-        this.incrementPassedTurns();
-        this.messageSoloPlayer.next([this.valueToEndGame.toString(), this.lastTurnWasASkip.toString()]);
-        this.timeManager.endTurn();
-        setTimeout(() => {
-            clearInterval(turnToBeSkipped);
-        }, 1);
-        const numberOfLetters = 0;
-        this.sourceMessageTextBox.next(['!passer', numberOfLetters.toString()]);
+    skipTurn() {
+        this.myTurn = this.timeManager.turn === 1;
+        if (this.myTurn === true) {
+            this.incrementPassedTurns();
+            this.messageSoloPlayer.next([this.valueToEndGame.toString(), this.lastTurnWasASkip.toString()]);
+            this.timeManager.endTurn();
+            const numberOfLetters = 0;
+            this.sourceMessageTextBox.next(['!passer', numberOfLetters.toString()]);
+        }
     }
     exchangeLetters(numberOfLettersToTrade: number) {
         let i = 0;

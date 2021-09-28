@@ -218,34 +218,6 @@ export class PlaceLettersService {
       
     }
     */
-    validateSoloOpponent(commandrowInput: string) {
-        const checkInput = this.checkInput(commandrowInput);
-        if (checkInput === 'ok') {
-            const tileOutOfBound = this.verifyTileNotOutOfBound();
-            if (tileOutOfBound === false) {
-                return false;
-            } else if (!this.verifyAvailable()) {
-                return false;
-            } else {
-                if (this.gameState.isWordCreationPossibleWithRessources()) {
-                    if (this.gameState.isBoardEmpty) {
-                        if (!this.gameState.isLetterOnh8()) {
-                            this.removeLetterInGameState();
-                            return false;
-                        }
-                    }
-                    if (this.gameState.lastLettersAdded.length === this.wordToPlace.length && !this.gameState.isBoardEmpty) {
-                        this.removeLetterInGameState();
-                        return false;
-                    }
-                    if (!this.validateWordPlaced()) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
 
     wordContainsJoker() {
         let positionOfJoker = 0;
