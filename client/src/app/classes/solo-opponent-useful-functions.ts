@@ -52,6 +52,8 @@ export class SoloOpponentUsefulFunctions {
 
     checkRowsAndColumnsForWordMatch(letters: string, word: string) {
         let possibleWord = false;
+        let index = -1;
+        const MINUS_ONE = -1;
         for (let i = 0; i < letters.length; i++) {
             if (letters.charAt(i) === word.charAt(0)) {
                 possibleWord = true;
@@ -64,10 +66,15 @@ export class SoloOpponentUsefulFunctions {
                         j = word.length;
                     }
                     if (j === word.length - 1 && possibleWord) {
+                        index = i;
                         i = letters.length;
                     }
                 }
             }
+        }
+        possibleWord &&= index !== MINUS_ONE && index + word.length < letters.length;
+        if (possibleWord) {
+            possibleWord = index === 0 ? true : letters.charAt(index - 1) === ' ' && letters.charAt(index + word.length) === ' ';
         }
         return possibleWord;
     }

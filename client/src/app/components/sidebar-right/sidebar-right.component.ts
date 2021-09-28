@@ -175,10 +175,10 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         this.textBox.commandSuccessful = false;
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
+            counter.reset();
             if (this.turn === 1) {
                 this.soloOpponentPlays();
             }
-            counter.reset();
         }
         this.changedTurns = false;
     }
