@@ -273,8 +273,8 @@ export class SoloOpponentService {
                         }
                     }
                 }
-                let isRowsToPlace = item.row - indexOfLetter >= 0;
-                let isColumnToPlace = item.column - indexOfLetter >= 0;
+                let isRowsToPlace = item.column - indexOfLetter >= 0;
+                let isColumnToPlace = item.row - indexOfLetter >= 0;
                 if (this.firstWordToPlay) {
                     isColumnToPlace = isRowsToPlace &&= temporaryWord.split(' ').join('').length === 0;
                 }
@@ -282,25 +282,34 @@ export class SoloOpponentService {
                     isRowsToPlace &&= this.soloOpponentFunctions.checkRowsAndColumnsForWordMatch(rowLetters, temporaryWord);
                     isColumnToPlace &&= this.soloOpponentFunctions.checkRowsAndColumnsForWordMatch(columnLetters, temporaryWord);
                 }
-                if (isRowsToPlace) {
-                    const possibility: LetterPlacementPossibility = {
-                        letter: word.charAt(0).toLowerCase(),
-                        row: item.row,
-                        column: item.column - indexOfLetter,
-                        placement: item.column - indexOfLetter === item.column ? PlacementValidity.Right : PlacementValidity.Left,
-                    };
-                    this.addLetterAndWord(word, possibility);
-                }
-                if (isColumnToPlace) {
-                    const possibility: LetterPlacementPossibility = {
-                        letter: word.charAt(0).toLowerCase(),
-                        row: item.row - indexOfLetter,
-                        column: item.column,
-                        placement: item.row - indexOfLetter === item.row ? PlacementValidity.HDown : PlacementValidity.HUp,
-                    };
-                    this.addLetterAndWord(word, possibility);
-                }
+                this.checkRowAndColumnAvailability(isRowsToPlace, isColumnToPlace, word, indexOfLetter, item);
             }
+        }
+    }
+    checkRowAndColumnAvailability(
+        isRowsToPlace: boolean,
+        isColumnToPlace: boolean,
+        word: string,
+        indexOfLetter: number,
+        item: LetterPlacementPossibility,
+    ) {
+        if (isRowsToPlace) {
+            const possibility: LetterPlacementPossibility = {
+                letter: word.charAt(0).toLowerCase(),
+                row: item.row,
+                column: item.column - indexOfLetter,
+                placement: item.column - indexOfLetter === item.column ? PlacementValidity.Right : PlacementValidity.Left,
+            };
+            this.addLetterAndWord(word, possibility);
+        }
+        if (isColumnToPlace) {
+            const possibility: LetterPlacementPossibility = {
+                letter: word.charAt(0).toLowerCase(),
+                row: item.row - indexOfLetter,
+                column: item.column,
+                placement: item.row - indexOfLetter === item.row ? PlacementValidity.HDown : PlacementValidity.HUp,
+            };
+            this.addLetterAndWord(word, possibility);
         }
     }
     addLetterAndWord(word: string, possibility: LetterPlacementPossibility) {
