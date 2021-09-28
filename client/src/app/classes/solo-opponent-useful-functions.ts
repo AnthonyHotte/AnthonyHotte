@@ -34,7 +34,9 @@ export class SoloOpponentUsefulFunctions {
 
     enumToString(validity: PlacementValidity) {
         switch (validity) {
-            case PlacementValidity.Right || PlacementValidity.Left:
+            case PlacementValidity.Right:
+                return 'h';
+            case PlacementValidity.Left:
                 return 'h';
             // case PlacementValidity.HUp:
             default:

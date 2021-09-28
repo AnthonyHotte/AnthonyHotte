@@ -1,12 +1,11 @@
-import { TestBed } from '@angular/core/testing';
 import { SoloOpponentUsefulFunctions } from '@app/classes/solo-opponent-useful-functions';
 import { PlacementValidity } from './placement-validity';
 
-describe('CanvasTestHelper', () => {
+describe('SoloOpponentUsefulFunctions', () => {
     let service: SoloOpponentUsefulFunctions;
 
     beforeEach(() => {
-        service = TestBed.inject(SoloOpponentUsefulFunctions);
+        service = new SoloOpponentUsefulFunctions(true);
     });
 
     it('should be created', () => {

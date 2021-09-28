@@ -9,10 +9,8 @@ export class PossibilityChecker {
     }
 
     checkRight(lettersOnBoard: string[][], i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (i !== lettersOnBoard.length - 1) {
-            if (lettersOnBoard[i + 1][j] === '') {
-                possibility.placement = PlacementValidity.Right;
-            }
+        if (i !== lettersOnBoard.length - 1 && lettersOnBoard[i][j + 1] === '') {
+            possibility.placement = PlacementValidity.Right;
         }
         return possibility;
     }
