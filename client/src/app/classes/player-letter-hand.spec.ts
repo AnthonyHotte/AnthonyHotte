@@ -99,33 +99,40 @@ describe('PlayerLetterHand', () => {
         PlayerLetterHand.allLetters.push({ letter: 'f', quantity: 1, point: 1 });
         PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
         playerLetterHand.allLettersInHand = [
-            { letter: 'd', quantity: 1, point: 1 },
             { letter: 'b', quantity: 1, point: 1 },
-            { letter: 'c', quantity: 1, point: 1 },
+            { letter: 'o', quantity: 1, point: 1 },
+            { letter: 'n', quantity: 1, point: 1 },
+            { letter: 'j', quantity: 1, point: 1 },
+            { letter: 'o', quantity: 1, point: 1 },
+            { letter: 'u', quantity: 1, point: 1 },
+            { letter: 'r', quantity: 1, point: 1 },
         ];
-        const expectedLetterInBag = PlayerLetterHand.allLetters.length - MAXLETTERINHAND + playerLetterHand.allLettersInHand.length;
-        playerLetterHand.selectedLettersForExchange = new Set<number>([0, 1, 2]);
-        playerLetterHand.removeLetters();
+        const lettersToRemove = 'bon';
+        const expectedLetterInBag = PlayerLetterHand.allLetters.length - lettersToRemove.length;
+        playerLetterHand.removeLetters(lettersToRemove);
         expect(playerLetterHand.allLettersInHand.length).toEqual(MAXLETTERINHAND);
         expect(PlayerLetterHand.allLetters.length).toEqual(expectedLetterInBag);
-        expect(playerLetterHand.selectedLettersForExchange.size).toEqual(0);
     });
     it('removeLetters should change letter for exchange when less then 7 letters available', () => {
         PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
         PlayerLetterHand.allLetters.push({ letter: 'b', quantity: 1, point: 1 });
         PlayerLetterHand.allLetters.push({ letter: 'c', quantity: 1, point: 1 });
         playerLetterHand.allLettersInHand = [
-            { letter: 'd', quantity: 1, point: 1 },
-            { letter: 'e', quantity: 1, point: 1 },
-            { letter: 'f', quantity: 1, point: 1 },
+            { letter: 'b', quantity: 1, point: 1 },
+            { letter: 'o', quantity: 1, point: 1 },
+            { letter: 'n', quantity: 1, point: 1 },
+            { letter: 'j', quantity: 1, point: 1 },
+            { letter: 'o', quantity: 1, point: 1 },
+            { letter: 'u', quantity: 1, point: 1 },
+            { letter: 'r', quantity: 1, point: 1 },
         ];
-        const numberLetterAdded = PlayerLetterHand.allLetters.length >= MAXLETTERINHAND ? MAXLETTERINHAND : PlayerLetterHand.allLetters.length;
-        const expectedLetterInBag = PlayerLetterHand.allLetters.length - numberLetterAdded + playerLetterHand.allLettersInHand.length;
-        playerLetterHand.selectedLettersForExchange = new Set<number>([0, 1, 2]);
-        playerLetterHand.removeLetters();
-        expect(playerLetterHand.allLettersInHand.length).toEqual(3);
+
+        const lettersToRemove = 'bonj';
+        const expectedLetterInBag = 0;
+        const expectedLetterInHand = playerLetterHand.allLettersInHand.length - lettersToRemove.length + PlayerLetterHand.allLetters.length;
+        playerLetterHand.removeLetters(lettersToRemove);
+        expect(playerLetterHand.allLettersInHand.length).toEqual(expectedLetterInHand);
         expect(PlayerLetterHand.allLetters.length).toEqual(expectedLetterInBag);
-        expect(playerLetterHand.selectedLettersForExchange.size).toEqual(0);
     });
     // Need to talk to the group for this one
     it('removeLettersForThreeSeconds should call push and slice 4 times', () => {
