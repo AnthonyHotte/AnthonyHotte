@@ -1,66 +1,48 @@
 import { PlacementValidity } from '@app/classes/placement-validity';
+import { FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE, THIRTEEN, FOURTEEN } from '@app/constants';
 
 export class SoloOpponentUsefulFunctions {
     valid: boolean;
+    map: Map<number, string>;
     constructor(valid: boolean) {
         this.valid = valid;
+        this.map = new Map<number, string>();
+        this.map.set(0, 'a');
+        this.map.set(1, 'b');
+        this.map.set(2, 'c');
+        this.map.set(3, 'd');
+        this.map.set(FOUR, 'e');
+        this.map.set(FIVE, 'f');
+        this.map.set(SIX, 'g');
+        this.map.set(SEVEN, 'h');
+        this.map.set(EIGHT, 'i');
+        this.map.set(NINE, 'j');
+        this.map.set(TEN, 'k');
+        this.map.set(ELEVEN, 'l');
+        this.map.set(TWELVE, 'm');
+        this.map.set(THIRTEEN, 'n');
+        this.map.set(FOURTEEN, 'o');
     }
 
     toChar(row: number) {
-        const FOUR = 4;
-        const FIVE = 5;
-        const SIX = 6;
-        const SEVEN = 7;
-        const EIGHT = 8;
-        const NINE = 9;
-        const TEN = 10;
-        const ELEVEN = 11;
-        const TWELVE = 12;
-        const THIRTEEN = 13;
-        switch (row) {
-            case 0:
-                return 'a';
-            case 1:
-                return 'b';
-            case 2:
-                return 'c';
-            case 3:
-                return 'd';
-            case FOUR:
-                return 'e';
-            case FIVE:
-                return 'f';
-            case SIX:
-                return 'g';
-            case SEVEN:
-                return 'h';
-            case EIGHT:
-                return 'i';
-            case NINE:
-                return 'j';
-            case TEN:
-                return 'k';
-            case ELEVEN:
-                return 'l';
-            case TWELVE:
-                return 'm';
-            case THIRTEEN:
-                return 'n';
-            default:
-                return 'o';
-        }
+        return this.map.get(row);
     }
 
     enumToString(validity: PlacementValidity) {
         switch (validity) {
-            case PlacementValidity.Right:
-            case PlacementValidity.Left:
+            case PlacementValidity.Right || PlacementValidity.Left:
                 return 'h';
-            case PlacementValidity.HUp:
+            // case PlacementValidity.HUp:
             default:
                 return 'v';
         }
     }
+    // verifier que word et letter son compatible
+    // letter sur le jeu col ou ligne toujours longueur 15
+    // word  eau  main a   => remplace a espace  =>e u
+    // match letter word
+    // word n'importe
+    // papa
 
     checkRowsAndColumnsForWordMatch(letters: string, word: string) {
         let possibleWord = false;

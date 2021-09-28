@@ -1,7 +1,17 @@
-// useful constants for the board
-const FOUR = 4;
-const SIXTEEN = 16;
-const SEVEN = 7;
+// solo-opponent-useful-functions
+export const FOUR = 4;
+export const FIVE = 5;
+export const SIX = 6;
+export const SEVEN = 7;
+export const EIGHT = 8;
+export const NINE = 9;
+export const TEN = 10;
+export const ELEVEN = 11;
+export const TWELVE = 12;
+export const THIRTEEN = 13;
+export const FOURTEEN = 14;
+export const SIXTEEN = 16;
+
 // export const SIDESPACE = 30;
 export const NUMBEROFCASE = 15;
 export const DEFAULT_WIDTH = 750;

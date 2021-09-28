@@ -9,7 +9,7 @@ export class PossibilityChecker {
     }
 
     checkRight(lettersOnBoard: string[][], i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (i !== NUMBEROFCASE - 1) {
+        if (i !== lettersOnBoard.length - 1) {
             if (lettersOnBoard[i + 1][j] === '') {
                 possibility.placement = PlacementValidity.Right;
             }
