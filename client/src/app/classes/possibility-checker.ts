@@ -15,22 +15,18 @@ export class PossibilityChecker {
     }
 
     checkRight(lettersOnBoard: string[][], i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (j !== lettersOnBoard.length - 1) {
-            if (lettersOnBoard[i][j + 1] === '') {
-                possibility.placement = PlacementValidity.Right;
-            }
+        if (j !== lettersOnBoard.length - 1 && lettersOnBoard[i][j + 1] === '') {
+            possibility.placement = PlacementValidity.Right;
         }
         return possibility;
     }
 
     checkLeft(lettersOnBoard: string[][], i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (j !== 0) {
-            if (lettersOnBoard[i][j - 1] === '') {
-                if (possibility.placement === PlacementValidity.Right) {
-                    possibility.placement = PlacementValidity.LeftRight;
-                } else {
-                    possibility.placement = PlacementValidity.Left;
-                }
+        if (j !== 0 && lettersOnBoard[i][j - 1] === '') {
+            if (possibility.placement === PlacementValidity.Right) {
+                possibility.placement = PlacementValidity.LeftRight;
+            } else {
+                possibility.placement = PlacementValidity.Left;
             }
         }
         return possibility;
