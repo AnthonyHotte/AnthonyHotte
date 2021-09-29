@@ -58,12 +58,9 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         if (this.turn === 1) {
-            const TIME_TO_LOAD = 1000;
-            setTimeout(() => {
-                this.soloOpponent.firstWordToPlay = true;
-                this.opponentSet = true;
-                this.soloOpponentPlays();
-            }, TIME_TO_LOAD);
+            this.soloOpponent.firstWordToPlay = true;
+            this.opponentSet = true;
+            this.soloOpponentPlays();
         }
     }
 
@@ -165,13 +162,16 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     getPlayerName() {
         if (this.turn !== this.turnTimeController.turn) {
             this.changedTurns = true;
+            if (this.turn === 0) {
+                this.opponentSet = true;
+            }
             this.turn = this.turnTimeController.turn;
         }
         return this.playerName[this.turn];
     }
 
     verifyChangedTurns(counter: CountdownComponent) {
-        this.changedTurns ||= this.opponentSet = this.textBox.commandSuccessful;
+        this.changedTurns ||= this.textBox.commandSuccessful;
         this.textBox.commandSuccessful = false;
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
@@ -185,13 +185,19 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     soloOpponentPlays() {
         if (this.turnTimeController.turn === 1 && this.opponentSet) {
-            this.opponentSet = false;
-            const INTERVAL_TIME = 20500;
-            window.setInterval(() => {
-                this.soloOpponent.skipTurn();
-            }, INTERVAL_TIME);
-            this.soloOpponent.play();
-            this.changedTurns = true;
+            const TIME_TO_LOAD = 3200;
+            setTimeout(() => {
+                this.opponentSet = false;
+                const INTERVAL_TIME = 17000;
+                const INTERVAL = window.setInterval(() => {
+                    this.soloOpponent.skipTurn();
+                    setTimeout(() => {
+                        clearInterval(INTERVAL);
+                    }, 1);
+                }, INTERVAL_TIME);
+                this.soloOpponent.play();
+                this.changedTurns = true;
+            }, TIME_TO_LOAD);
         }
     }
 }
