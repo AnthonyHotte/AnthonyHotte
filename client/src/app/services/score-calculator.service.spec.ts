@@ -150,4 +150,24 @@ describe('ScoreCalculatorService', () => {
         const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'aa');
         expect(result).toEqual(expectedScore);
     });
+    it("LetterAlreadyOnBoard shouldn't give bonus if on bonus tile", () => {
+        const expectedScore = 3;
+        const colPosition = 7;
+        const firstIndex = 12;
+        const secondIndex = 14;
+        spyOn(service.tileMap, 'isTripleWordTile').and.returnValues(true);
+        const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'nos');
+        expect(result).toEqual(expectedScore);
+    });
+    it("Joker shouldn't give points", () => {
+        const expectedScore = 3;
+        const colPosition = 14;
+        const firstIndex = 10;
+        const secondIndex = 13;
+        const indexXJoker = 14;
+        const indexYJoker = 11;
+        service.indexJoker = [indexYJoker, indexXJoker];
+        const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'note');
+        expect(result).toEqual(expectedScore);
+    });
 });
