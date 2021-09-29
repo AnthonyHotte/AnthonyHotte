@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GestionTimerTourService } from './gestion-timer-tour.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 
-describe('GestionTimerTourService', () => {
-    let service: GestionTimerTourService;
+describe('TimerTurnManager', () => {
+    let service: TimerTurnManagerService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.inject(GestionTimerTourService);
+        service = TestBed.inject(TimerTurnManagerService);
     });
 
     it('should be created', () => {
@@ -18,7 +18,7 @@ describe('GestionTimerTourService', () => {
         const boolValue = service.turn === 1 || service.turn === 0;
         expect(boolValue).toBe(true);
     });
-    it('turn should be one or zero', () => {
+    it('floor should be called', () => {
         const floorSpy = spyOn(Math, 'floor');
         service.initiateGame();
         expect(floorSpy).toHaveBeenCalled();

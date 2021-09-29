@@ -2,17 +2,12 @@
     <h1 class="header-item">Bienvenue au cours {{ title }}</h1>
     <img src="https://bit.ly/3m206ss" width="400" height="80" alt="Logo Scrabble" />
     <section id="server-message">
-        <p>Petit message du serveur : {{ message.getValue() }}</p>
         <div class="justified">
-            <button class="button" (click)="getMessagesFromServer()">Récupérer un message du serveur</button>
-            <button class="button" (click)="sendTimeToServer()">Envoyer un message au serveur</button>
-            <button class="button" routerLink="/material">Voir la page démo Angular Material</button>
         </div>
     </section>
     <button class="button" routerLink="/selection">Scrabble classique</button>
     <button class="button" routerLink="/selection">Scrabble 2990</button>
-    <button class="button" routerLink="/scores">Meilleurs scores</button>
-    <button class="button" routerLink="/game">Jouer!</button>
+    <button class="button" >Meilleurs scores</button>
 
     <div class="footer-item">
         <h4 class="team-name">104 - Les Québecois et quelques survenants</h4>

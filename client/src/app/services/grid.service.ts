@@ -41,18 +41,21 @@ export class GridService {
         // word x2 (pink)
         if (TileMap.gridMap.isDoubleWordTile(i, j)) {
             this.gridContext.fillStyle = 'pink';
+            // this.gridContext.fillStyle = '#f6b4aa;';
             if (i !== Constants.CENTERCASE && j !== Constants.CENTERCASE) {
                 textChoice = 0;
             }
         }
         // word x3 (red)
         else if (TileMap.gridMap.isTripleWordTile(i, j)) {
-            this.gridContext.fillStyle = 'red';
+            // this.gridContext.fillStyle = 'red';
+            this.gridContext.fillStyle = '#fa644d';
             textChoice = 1;
         }
         // Letter x3 (dark blue)
         else if (TileMap.gridMap.isTripleLetterTile(i, j)) {
-            this.gridContext.fillStyle = 'darkblue';
+            // this.gridContext.fillStyle = 'darkblue';
+            this.gridContext.fillStyle = '#3fa1b4';
             textChoice = 2;
         }
         // Letter x2 (Light blue)
@@ -60,16 +63,17 @@ export class GridService {
             this.gridContext.fillStyle = '#add8e6';
             textChoice = 3;
         } else {
-            this.gridContext.fillStyle = 'grey';
+            // this.gridContext.fillStyle = 'grey';
+            // this.gridContext.fillStyle = '#FFE6AC';
+            this.gridContext.fillStyle = '#c8c3a6';
         }
-
         this.gridContext.fillRect(
             Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
             Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
             Constants.CASESIZE,
             Constants.CASESIZE,
         );
-
+        this.gridContext.strokeStyle = 'white';
         this.gridContext.strokeRect(
             Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
             Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
@@ -79,10 +83,20 @@ export class GridService {
         // to write the text
         if (textChoice !== Constants.NOTEXT) {
             this.gridContext.fillStyle = 'black';
+            const textpositionoffset = 3;
+            const textpositionoffset2 = 0.75;
+            this.gridContext.font = '19px system-ui';
             this.gridContext.fillText(
                 Constants.TEXTONTILES[textChoice],
                 Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
-                Constants.CASESIZE * (j - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
+                Constants.CASESIZE * (j - 1) + Constants.CASESIZE / textpositionoffset + Constants.SIDESPACE,
+                Constants.CASESIZE,
+            );
+            this.gridContext.fillStyle = 'black';
+            this.gridContext.fillText(
+                Constants.TEXTONTILESVALUE[textChoice],
+                Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
+                Constants.CASESIZE * (j - 1) + Constants.CASESIZE * textpositionoffset2 + Constants.SIDESPACE,
                 Constants.CASESIZE,
             );
         }
@@ -163,6 +177,7 @@ export class GridService {
         this.gridContext.lineWidth = 1;
     }
 
+    //  not used yet, Julien do you need it in the future?
     drawWord(word: string) {
         const startPosition: Vec2 = { x: 175, y: 100 };
         const step = 20;
@@ -193,29 +208,11 @@ export class GridService {
         this.gridContext.fillText(word, x, y);
     }
     */
-    /*
-    drawLetterwithposition(word: Letter, x1: number, y1: number) {
-         const x: number = x1.charCodeAt(0) - Constants.SIDELETTERS_TO_ASCII * Constants.CASESIZE + Constants.CASESIZE / 2;
-         const y: number = Number(x1.charCodeAt(0)) * Constants.CASESIZE + Constants.CASESIZE / 2;
-         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE / 2;
-         const y: number = y1 * Constants.CASESIZE * Constants.CASESIZE + Constants.CASESIZE / 2;
-         this.gridContext.strokeRect(x - 12.5, y - 12.5, 23.5, 23.5);
-         this.gridContext.fillStyle = 'white';
-         this.gridContext.fillRect(x - 12, y - 12, 23, 23);
-         this.gridContext.fillStyle = 'black';
-         this.gridContext.font = '20px system-ui';
-         this.gridContext.fillText(word.letter, x, y);
-         this.drawLetterValue(word, x, y);
-         this.drawLetterValue('2', x, y);
-    }
-    */
-    // TODO to be removed, added for testing purpose;
     drawLetterwithpositionstring(word: string, x1: number, y1: number) {
-        // const x: number = x1.charCodeAt(0) - Constants.SIDELETTERS_TO_ASCII * Constants.CASESIZE + Constants.CASESIZE / 2;
-        // const y: number = Number(x1.charCodeAt(0)) * Constants.CASESIZE + Constants.CASESIZE / 2;
         const offset = 8;
         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE;
         const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE;
+        this.gridContext.strokeStyle = 'black';
         this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
         this.gridContext.fillStyle = 'white';
         this.gridContext.fillRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
@@ -223,12 +220,7 @@ export class GridService {
         this.gridContext.font = String(this.policesizeletter) + 'px system-ui';
         this.gridContext.fillText(word, x + Constants.CASESIZE / 2, y + Constants.CASESIZE / 2);
         const lettervalue = this.letters.letterMap.get(word) as Letter;
-        // const test: string = lettervalue.letter;
-        // log.console(lettervalue.letter);
-        // const lettervalue = { letter: 'A', point: 9, quantity: 1 };
         this.drawLetterValuewithposition(lettervalue, x1, y1);
-        // this.drawLetterValue(word, x, y);
-        // this.drawLetterValue('2', x, y);
     }
     drawLetterValuewithposition(word: Letter, x1: number, y1: number) {
         const valuePositionOffset = 1.75;
@@ -238,19 +230,19 @@ export class GridService {
         this.gridContext.font = String(this.policesizelettervalue) + 'px system-ui';
         this.gridContext.fillText(String(word.point), x, y);
     }
-    increasepolicesize() {
-        if (this.policesizeletter - 2 < this.maxpolicesizeletter) {
+    increasePoliceSize() {
+        if (this.policesizeletter + 2 <= this.maxpolicesizeletter) {
             this.policesizeletter = this.policesizeletter + 2;
         }
-        if (this.policesizelettervalue - 1 < this.maxpolicesizelettervalue) {
+        if (this.policesizelettervalue + 1 <= this.maxpolicesizelettervalue) {
             this.policesizelettervalue = this.policesizelettervalue + 1;
         }
     }
-    decreasepolicesize() {
-        if (this.policesizeletter + 2 > this.minpolicesizeletter) {
+    decreasePoliceSize() {
+        if (this.policesizeletter - 2 >= this.minpolicesizeletter) {
             this.policesizeletter = this.policesizeletter - 2;
         }
-        if (this.policesizelettervalue + 1 > this.minpolicesizelettervalue) {
+        if (this.policesizelettervalue - 1 >= this.minpolicesizelettervalue) {
             this.policesizelettervalue = this.policesizelettervalue - 1;
         }
     }

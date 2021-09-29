@@ -1,20 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
-import { GestionTimerTourService } from '@app/services/gestion-timer-tour.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { CountdownComponent } from '@ciri/ngx-countdown';
 import { Subscription } from 'rxjs';
+
 @Component({
     selector: 'app-sidebar-right',
     templateUrl: './sidebar-right.component.html',
     styleUrls: ['./sidebar-right.component.scss'],
 })
-export class SidebarRightComponent implements OnInit {
+export class SidebarRightComponent implements OnInit, AfterViewInit {
     messagePlayer: string;
     opponentMessage: string;
     messageLetterService: string;
@@ -27,6 +30,7 @@ export class SidebarRightComponent implements OnInit {
     subscriptionTextBox: Subscription;
     message: string[] = [];
     playerName: string[] = ['', ''];
+    opponentSet: boolean = false;
 
     numberOfSkippedTurns: number = 0;
 
@@ -35,10 +39,11 @@ export class SidebarRightComponent implements OnInit {
     turn: number;
 
     changedTurns: boolean = false;
+    isRefreshed: boolean = false;
 
     constructor(
         private soloGameInformation: SoloGameInformationService,
-        private turnTimeController: GestionTimerTourService,
+        private turnTimeController: TimerTurnManagerService,
         private soloPlayer: SoloPlayerService,
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
@@ -51,10 +56,21 @@ export class SidebarRightComponent implements OnInit {
         this.setAttribute();
     }
 
+    ngAfterViewInit() {
+        if (this.turn === 1) {
+            const TIME_TO_LOAD = 1000;
+            setTimeout(() => {
+                this.soloOpponent.firstWordToPlay = true;
+                this.opponentSet = true;
+                this.soloOpponentPlays();
+            }, TIME_TO_LOAD);
+        }
+    }
+
     ngOnInit() {
         this.subscriptionPlayer = this.soloPlayer.currentMessage.subscribe((messagePlayer) => (this.messagePlayer = messagePlayer));
         this.subscriptionOpponent = this.soloOpponent.currentMessage.subscribe((opponentMessage) => (this.opponentMessage = opponentMessage));
-        this.subscriptionLetterService = this.letterService.currentMessage.subscribe(
+        this.subscriptionLetterService = PlayerLetterHand.currentMessage.subscribe(
             (messageLetterService) => (this.messageLetterService = messageLetterService),
         );
         this.subscriptionTimeManager = this.turnTimeController.currentMessage.subscribe(
@@ -64,10 +80,16 @@ export class SidebarRightComponent implements OnInit {
     }
 
     setAttribute() {
-        this.playerName[0] = this.message[0];
-        this.playerName[1] = this.message[1];
-        this.easyDifficultyIsTrue = this.message[2] === 'true';
-        this.time = parseInt(this.message[3], 10);
+        if (this.message.length !== 0) {
+            this.playerName[0] = this.message[0];
+            this.playerName[1] = this.message[1];
+            this.easyDifficultyIsTrue = this.message[2] === 'true';
+            this.time = parseInt(this.message[3], 10);
+            this.turn = this.turnTimeController.turn;
+        } else {
+            // if page is refreshed
+            this.finishCurrentGame();
+        }
         this.turnTimeController.initiateGame();
         this.turn = this.turnTimeController.turn;
         this.letterService.reset();
@@ -104,58 +126,40 @@ export class SidebarRightComponent implements OnInit {
             this.soloPlayer.changeTurn(this.turn.toString());
             this.numberOfSkippedTurns = this.soloPlayer.valueToEndGame;
             this.changedTurns = true;
+            this.opponentSet = true;
         } else {
             this.finishCurrentGame();
         }
     }
 
     getNumberRemainingLetters() {
-        this.letterService.sendLettersInSackNumber();
+        PlayerLetterHand.sendLettersInSackNumber();
         return this.messageLetterService;
     }
 
     getNumberOfLettersForPlayer() {
-        return this.letterService.lettersForPlayer.length;
+        return this.letterService.players[0].allLettersInHand.length;
     }
 
     getNumberOfLettersForOpponent() {
-        return this.letterService.lettersForOpponent.length;
+        return this.letterService.players[1].allLettersInHand.length;
     }
 
-    getScorePlayer() {
-        return this.soloPlayer.getScore();
-    }
-
-    getScoreOpponent() {
-        return this.soloOpponent.getScore();
+    getScorePlayer(index: number) {
+        return this.letterService.players[index].score;
     }
 
     finishCurrentGame() {
-        this.link.navigate(['home']);
+        this.link.navigate(['']);
     }
 
-    exchangeLetters() {
-        this.soloPlayer.exchangeLetters();
-        this.endTurn();
+    increaseFontSize() {
+        this.gridService.increasePoliceSize();
+        this.placeLetterService.policeSizeChanged();
     }
-    increasefontsize() {
-        this.gridService.increasepolicesize();
-        this.placeLetterService.policesizechanged();
-    }
-    decreasefontsize() {
-        this.gridService.decreasepolicesize();
-        this.placeLetterService.policesizechanged();
-    }
-
-    showLettersToBeExchanged() {
-        let letters = 'Aucune lettre';
-        if (this.letterService.selectedLettersForExchangePlayer.size !== 0) {
-            letters = '';
-        }
-        for (const item of this.letterService.getLettersForExchange()) {
-            letters += item + ' ';
-        }
-        return letters;
+    decreaseFontSize() {
+        this.gridService.decreasePoliceSize();
+        this.placeLetterService.policeSizeChanged();
     }
 
     getPlayerName() {
@@ -166,13 +170,28 @@ export class SidebarRightComponent implements OnInit {
         return this.playerName[this.turn];
     }
 
-    verifyChangedTurns() {
-        this.changedTurns ||= this.textBox.commandSuccessful;
+    verifyChangedTurns(counter: CountdownComponent) {
+        this.changedTurns ||= this.opponentSet = this.textBox.commandSuccessful;
+        this.textBox.commandSuccessful = false;
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
-            return this.changedTurns;
+            if (this.turn === 1) {
+                this.soloOpponentPlays();
+            }
+            counter.reset();
         }
         this.changedTurns = false;
-        return this.changedTurns;
+    }
+
+    soloOpponentPlays() {
+        if (this.turnTimeController.turn === 1 && this.opponentSet) {
+            this.opponentSet = false;
+            const INTERVAL_TIME = 20500;
+            window.setInterval(() => {
+                this.soloOpponent.skipTurn();
+            }, INTERVAL_TIME);
+            this.soloOpponent.play();
+            this.changedTurns = true;
+        }
     }
 }

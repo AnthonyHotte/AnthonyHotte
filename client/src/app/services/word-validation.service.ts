@@ -1,5 +1,6 @@
 import jsonDictionnary from 'src/assets/dictionnary.json';
 import { Injectable } from '@angular/core';
+import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 
 @Injectable({
     providedIn: 'root',
@@ -7,8 +8,10 @@ import { Injectable } from '@angular/core';
 export class WordValidationService {
     dictionnary: string[];
     dicLength: number;
+    pointsForLastWord: number;
+    indexLastLetters: number[] = [];
 
-    constructor() {
+    constructor(readonly scoreCalculator: ScoreCalculatorService) {
         // when importing the json, typescript doesnt let me read it as a json object. To go around this, we stringify it then parse it
         const temp = JSON.stringify(jsonDictionnary);
         const temp2 = JSON.parse(temp);
@@ -18,6 +21,95 @@ export class WordValidationService {
     // The binary search was inspired by the binarysearch method provided here https://www.geeksforgeeks.org/binary-search/
     isWordValid(word: string): boolean {
         return this.isWordInDictionnary(word) && this.isWordLongerThanTwo(word);
+    }
+
+    isPartOfWordVertical(row: number, column: number, lettersOnBoard: string[][]): boolean {
+        if (row === 0) {
+            if (lettersOnBoard[row + 1][column] === '') {
+                return false;
+            }
+        } else if (row === lettersOnBoard.length - 1) {
+            if (lettersOnBoard[row - 1][column] === '') {
+                return false;
+            }
+        } else {
+            if (lettersOnBoard[row - 1][column] === '' && lettersOnBoard[row + 1][column] === '') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    isPartOfWordHorizontal(row: number, column: number, lettersOnBoard: string[][]): boolean {
+        if (column === 0) {
+            if (lettersOnBoard[row][column + 1] === '') {
+                return false;
+            }
+        } else if (column === lettersOnBoard.length - 1) {
+            if (lettersOnBoard[row][column - 1] === '') {
+                return false;
+            }
+        } else {
+            if (lettersOnBoard[row][column - 1] === '' && lettersOnBoard[row][column + 1] === '') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][]): boolean {
+        let beginIndexWord = 0;
+        let lastIndexWord = 0;
+        let firstColumnOfWord = 0;
+        let wordCreated = '';
+        this.scoreCalculator.indexLastLetters = this.indexLastLetters;
+        for (column; column >= 0; column--) {
+            if (lettersOnBoard[row][column] === '') {
+                break;
+            }
+            firstColumnOfWord = column;
+            beginIndexWord = firstColumnOfWord;
+        }
+        for (firstColumnOfWord; firstColumnOfWord < lettersOnBoard.length; firstColumnOfWord++) {
+            if (lettersOnBoard[row][firstColumnOfWord] === '') {
+                break;
+            }
+            wordCreated += lettersOnBoard[row][firstColumnOfWord];
+            lastIndexWord = firstColumnOfWord;
+        }
+        this.pointsForLastWord += this.scoreCalculator.calculateScoreForHorizontal(beginIndexWord, lastIndexWord, row, wordCreated);
+        return this.isWordValid(wordCreated);
+    }
+
+    validateVerticalWord(row: number, column: number, lettersOnBoard: string[][]): boolean {
+        let beginIndexWord = 0;
+        let lastIndexWord = 0;
+        let firstRowOfWord = 0;
+        let wordCreated = '';
+        this.scoreCalculator.indexLastLetters = this.indexLastLetters;
+        for (row; row >= 0; row--) {
+            if (lettersOnBoard[row][column] === '') {
+                break;
+            }
+            firstRowOfWord = row;
+            beginIndexWord = firstRowOfWord;
+        }
+        for (firstRowOfWord; firstRowOfWord < lettersOnBoard.length; firstRowOfWord++) {
+            if (lettersOnBoard[firstRowOfWord][column] === '') {
+                break;
+            }
+            wordCreated += lettersOnBoard[firstRowOfWord][column];
+            lastIndexWord = firstRowOfWord;
+        }
+        this.pointsForLastWord += this.scoreCalculator.calculateScoreForVertical(beginIndexWord, lastIndexWord, column, wordCreated);
+        return this.isWordValid(wordCreated);
+    }
+    isWordLongerThanTwo(word: string): boolean {
+        if (word.length >= 2) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private isWordInDictionnary(word: string): boolean {
@@ -42,12 +134,5 @@ export class WordValidationService {
         }
 
         return false;
-    }
-    private isWordLongerThanTwo(word: string): boolean {
-        if (word.length >= 2) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }

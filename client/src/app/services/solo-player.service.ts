@@ -1,8 +1,10 @@
 // https://fireship.io/lessons/sharing-data-between-angular-components-four-methods/
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { GestionTimerTourService } from './gestion-timer-tour.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 import { LetterService } from './letter.service';
+import { MAXLETTERINHAND } from '@app/constants';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 
 @Injectable({
     providedIn: 'root',
@@ -23,9 +25,9 @@ export class SoloPlayerService {
     messageSource = new BehaviorSubject('default message');
     private messageToSoloOpponent = new BehaviorSubject(['turn', 'last turn was a skip']);
 
-    constructor(private letters: LetterService, private timeManager: GestionTimerTourService) {
+    constructor(private letters: LetterService, private timeManager: TimerTurnManagerService) {
         this.currentMessage = this.messageSource.asObservable();
-        this.subscription = this.letters.currentMessage.subscribe((message) => (this.message = message));
+        this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
             (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
         );
@@ -33,24 +35,16 @@ export class SoloPlayerService {
         this.maximumAllowedSkippedTurns = 6;
     }
 
-    // function never used...
-    /*
-    play() {
-        this.myTurn = parseInt(this.messageTimeManager, 10) === 0;
-        if (this.myTurn === true) {
-            return 'ToDo';
-        }
-        return 'ToDO';
-    }
-    */
     // message is a string 0 or 1, we pass the number of the turn of the person who just finish playing (if next turn is my turn then we pass 1)
     changeTurn(message: string) {
         this.messageSource.next(message);
-        this.myTurn = parseInt(message, 10) === 1;
+        this.myTurn = parseInt(message, 10) === 0;
     }
 
     reset() {
-        this.letters.addLettersForPlayer(this.letters.maxLettersInHand);
+        this.letters.players[0].allLettersInHand = [];
+        this.numberOfLetters = this.letters.players[0].numberLetterInHand = 0;
+        this.letters.players[0].addLetters(MAXLETTERINHAND);
         this.numberOfLetters = parseInt(this.message, 10);
         this.valueToEndGame = 0;
     }
@@ -75,7 +69,7 @@ export class SoloPlayerService {
     }
 
     exchangeLetters() {
-        this.letters.exchangeLettersForPlayer();
+        this.letters.players[0].exchangeLetters();
     }
 
     sendNumberOfSkippedTurn() {

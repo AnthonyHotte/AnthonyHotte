@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { UsefullFunctionService } from '@app/services/usefull-function.service';
-import { VALEUR_TEMPS_DEFAULT, LONGUEURNOMMAX, VERIFICATION_PRESENCE, LENGTHWORDVALIDATION } from '@app/constants';
+import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 
 @Component({
@@ -11,107 +10,93 @@ import { SoloGameInformationService } from '@app/services/solo-game-information.
 export class SoloGameInitiatorComponent {
     message: string[] = [];
 
-    nomTemporaire: string;
-    nom: string;
-    nomAdversaire: string;
-    idNomAdversaire: number;
-    nomEstValide: boolean;
-    listeDesInsultes: string;
-    tempsDeJeu: number;
-    difficulteFacile: boolean = true;
-    constructor(
-        private informations: SoloGameInformationService,
-        private usefullFunction: UsefullFunctionService, // private toTextBox: CommunicationTextBoxSoloGameInitiatorService,
-    ) {
+    temporaryName: string;
+    name: string;
+    opponentName: string;
+    idNameOpponent: number;
+    nameIsValid: boolean;
+    playTime: number;
+    easyDifficulty: boolean = true;
+
+    constructor(private informations: SoloGameInformationService /* private toTextBox: CommunicationTextBoxSoloGameInitiatorService,*/) {
         this.message = [];
 
-        this.nomTemporaire = 'Joueur';
-        this.nom = 'Joueur';
-        this.nomAdversaire = '';
-        this.idNomAdversaire = 0;
-        this.nomEstValide = true;
-        this.listeDesInsultes = this.usefullFunction.fileReaderFunction('../../assets/insulte.txt');
-        this.tempsDeJeu = VALEUR_TEMPS_DEFAULT;
-        this.difficulteFacile = true;
+        this.temporaryName = 'Joueur';
+        this.name = 'Joueur';
+        this.opponentName = '';
+        this.idNameOpponent = 0;
+        this.nameIsValid = true;
+        this.playTime = VALEUR_TEMPS_DEFAULT;
+        this.easyDifficulty = true;
     }
 
     sendMessage(): void {
         // send message to subscribers via observable subject
-        this.assignerNomAdversaire();
-        const difficulteFacileString = this.difficulteFacile ? 'true' : 'false';
-        this.message.push(this.nom, this.nomAdversaire, difficulteFacileString, String(this.tempsDeJeu));
+        this.assignOpponentName();
+        const difficultyEasyString = this.easyDifficulty ? 'true' : 'false';
+        this.message.push(this.name, this.opponentName, difficultyEasyString, String(this.playTime));
         this.informations.sendMessage(this.message);
     }
 
-    assignerNomAdversaire() {
-        const NOMBRE_DE_NOMS = 3;
-        switch ((this.idNomAdversaire = Math.floor(Math.random() * NOMBRE_DE_NOMS) + 1)) {
+    assignOpponentName() {
+        const NUMBER_OF_NAMES = 3;
+        switch ((this.idNameOpponent = Math.floor(Math.random() * NUMBER_OF_NAMES) + 1)) {
             case 1:
-                this.nomAdversaire = 'Haruki Murakami';
+                this.opponentName = 'Haruki Murakami';
                 break;
             case 2:
-                this.nomAdversaire = 'Daphne du Maurier';
+                this.opponentName = 'Daphne du Maurier';
                 break;
             default:
-                this.nomAdversaire = 'Jane Austen';
+                this.opponentName = 'Jane Austen';
         }
     }
 
-    verifierNoms() {
-        let placeInName = 0;
-        const temp: string = this.nomTemporaire.split(' ').join('').toLocaleLowerCase();
-        this.assignerNomAdversaire();
-        if (this.nomTemporaire.split(' ').join('').toLocaleLowerCase() === this.nomAdversaire.split(' ').join('').toLocaleLowerCase()) {
-            switch (this.idNomAdversaire) {
+    verifyNames() {
+        const EXPRESSION = /^[A-Za-z]+$/;
+        const temp: string = this.temporaryName.split(' ').join('').toLocaleLowerCase();
+        this.assignOpponentName();
+        this.switchOpponentName(temp);
+        if (temp.length > LONGUEURNOMMAX || temp === '') {
+            this.nameIsValid = false;
+        } else if (EXPRESSION.test(temp)) {
+            this.nameIsValid = true;
+        } else {
+            this.nameIsValid = false;
+        }
+    }
+    switchOpponentName(temp: string) {
+        if (temp === this.opponentName.split(' ').join('').toLocaleLowerCase()) {
+            switch (this.idNameOpponent) {
                 case 1:
-                    this.nomAdversaire = 'Daphne du Maurier';
+                    this.opponentName = 'Daphne du Maurier';
                     break;
                 case 2:
-                    this.nomAdversaire = 'Jane Austen';
+                    this.opponentName = 'Jane Austen';
                     break;
                 default:
-                    this.nomAdversaire = 'Haruki Murakami';
+                    this.opponentName = 'Haruki Murakami';
             }
-        } else if (this.nomTemporaire.split(' ').join('') === '') {
-            this.nomEstValide = false;
-        } else if (this.nomTemporaire.length > LONGUEURNOMMAX) {
-            this.nomEstValide = false;
-        } else if (
-            this.listeDesInsultes.search(temp.substring(placeInName++, LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE ||
-            this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE ||
-            this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE ||
-            this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE ||
-            this.listeDesInsultes.search(temp.substring(placeInName++ * LENGTHWORDVALIDATION, placeInName * LENGTHWORDVALIDATION)) !==
-                VERIFICATION_PRESENCE ||
-            this.listeDesInsultes.search(temp.substring(placeInName * LENGTHWORDVALIDATION)) !== VERIFICATION_PRESENCE
-        ) {
-            this.nomEstValide = false;
-        } else {
-            this.nomEstValide = true;
         }
     }
-    setNom() {
-        this.verifierNoms();
-        if (this.nomEstValide) {
-            this.nom = this.nomTemporaire;
-            return this.nom;
+    setName() {
+        this.verifyNames();
+        if (this.nameIsValid) {
+            this.name = this.temporaryName;
         } else {
-            return 'Ce nom est invalide! Recommencez...';
+            this.name = 'Joueur';
         }
     }
-    afficherValiditeEnCaracteres() {
-        if (this.nomEstValide) {
+    nameValidityInChar() {
+        if (this.nameIsValid) {
             return 'valide';
         } else return 'invalide';
     }
-    setDifficulte(facile: boolean) {
-        this.difficulteFacile = facile;
+    setDifficulte(easy: boolean) {
+        this.easyDifficulty = easy;
     }
     getDifficulte() {
-        if (this.difficulteFacile === true) {
+        if (this.easyDifficulty === true) {
             return 'Débutant';
         } else {
             return 'Expert';

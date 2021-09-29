@@ -1,5 +1,5 @@
-import { TileMap } from './grid-special-tile';
 import { TestBed } from '@angular/core/testing';
+import { TileMap } from './grid-special-tile';
 
 describe('TileMap', () => {
     let map: TileMap;
@@ -76,5 +76,37 @@ describe('TileMap', () => {
         const positionX = 1;
         const positionY = 4;
         expect(map.isDoubleLetterTile(positionX, positionY)).toBe(true);
+    });
+    it('isDoubleLetterTile should return an error for position undefined', () => {
+        const positionX = 1;
+        const positionY = 4;
+        const spy = spyOn(map.tileMap, 'get').and.returnValue(undefined);
+        const res = map.isDoubleLetterTile(positionX, positionY);
+        expect(spy).toHaveBeenCalled();
+        expect(res).toBe(false);
+    });
+    it('isTripleLetterTile should return an error for position undefined', () => {
+        const positionX = 1;
+        const positionY = 4;
+        const spy = spyOn(map.tileMap, 'get').and.returnValue(undefined);
+        const res = map.isTripleLetterTile(positionX, positionY);
+        expect(spy).toHaveBeenCalled();
+        expect(res).toBe(false);
+    });
+    it('isTripleWorldTile should return an error for position undefined', () => {
+        const positionX = 1;
+        const positionY = 4;
+        const spy = spyOn(map.tileMap, 'get').and.returnValue(undefined);
+        const res = map.isTripleWordTile(positionX, positionY);
+        expect(spy).toHaveBeenCalled();
+        expect(res).toBe(false);
+    });
+    it('isDoubleWorldTile should return an error for position undefined', () => {
+        const positionX = 1;
+        const positionY = 4;
+        const spy = spyOn(map.tileMap, 'get').and.returnValue(undefined);
+        const res = map.isDoubleWordTile(positionX, positionY);
+        expect(spy).toHaveBeenCalled();
+        expect(res).toBe(false);
     });
 });

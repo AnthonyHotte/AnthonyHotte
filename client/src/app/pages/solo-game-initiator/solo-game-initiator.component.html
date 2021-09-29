@@ -7,7 +7,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             <article class="forecast">
                 <h2>Entrez votre identifiant. Les règles à suivre:</h2>
                 <article class="day-forecast">
-                    <h3><strong>1 -</strong> Ne pas entrer de vulgarités</h3>
+                    <h3><strong>1 -</strong> N'entrer que des lettres d'alphabet</h3>
                     <h3><strong>2 -</strong> Ne pas entrer le même nom que celui de votre adversaire (ce dernier sera changé)</h3>
                     <h3><strong>3 -</strong> Ne pas entrer un nom vide</h3>
                     <h3><strong>4 -</strong> Ne pas entrer un nom de plus de 17 caractères</h3>
@@ -17,24 +17,23 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 <div>
                     <fieldset>
                         <p>
-                            <label> {{ 'Validité du nom: ' + afficherValiditeEnCaracteres() }}</label>
+                            <label> {{ 'Validité du nom: ' + nameValidityInChar() }}</label>
                         </p>
                         <label> Nom du joueur : </label>
-                        <input [(ngModel)]="nomTemporaire" type="string" />
-                        <p>{{ 'Votre nom: ' + nom }}</p>
-                        <p>{{ "Nom de l'adversaire: " + nomAdversaire }}</p>
-                        <button class="button" (click)="setNom()">Validation de l'identifiant</button>
+                        <input [(ngModel)]="temporaryName" type="string" />
+                        <p>Nom du joueur: {{ this.name }}</p>
+                        <p>{{ "Nom de l'adversaire: " + opponentName }}</p>
+                        <button class="button" (click)="setName()">Validation de l'identifiant</button>
                     </fieldset>
                 </div>
                 <div>
                     <fieldset>
                         <legend>Choisissez votre difficulté</legend>
 
-                        <input type="radio" id="facile" name="difficulte" (click)="setDifficulte(true)" />
+                        <input type="radio" id="facile" name="difficulte" (click)="setDifficulte(true)" checked/>
                         <label for="facile">Débutant</label><br />
-
-                        <input type="radio" id="difficile" name="difficulte" (click)="setDifficulte(false)" />
-                        <label for="difficile">Expert</label><br />
+                        <!-- <input type="radio" id="difficile" name="difficulte" (click)="setDifficulte(false)" /> -->
+                        <!-- <label for="difficile">Expert</label><br /> -->
                         <p>Difficulté: {{ getDifficulte() }}</p>
                     </fieldset>
                 </div>
@@ -42,13 +41,13 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <fieldset>
                         <legend>Choisissez le temps par tour de jeu</legend>
                         <form oninput="tempsDeJeu = Math.max(parseInt(barre.value),parseInt(increment.value))">
-                            <input [(ngModel)]="tempsDeJeu" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" /> ou
-                            <input [(ngModel)]="tempsDeJeu" type="number" id="increment" name="inc" step="30" min="30" max="300" value="60" /> =
-                            <output name="temps" for="tempsDeJeu">{{ tempsDeJeu }}</output> secondes par tour de jeu
+                            <input [(ngModel)]="playTime" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" /> ou
+                            <input [(ngModel)]="playTime" type="number" id="increment" name="inc" step="30" min="30" max="300" value="60" /> =
+                            <output name="temps" for="tempsDeJeu">{{ playTime }}</output> secondes par tour de jeu
                         </form>
                     </fieldset>
                 </div>
-                <p><button *ngIf="nomEstValide" (click)="setNom()" (click)="sendMessage()" routerLink="/game">Démarrer la partie!</button></p>
+                <p><button *ngIf="nameIsValid" (click)="setName()" (click)="sendMessage()" routerLink="/game">Démarrer la partie!</button></p>
                 <button class="button" routerLink="/selection">Revenir en arrière</button>
             </article>
         </div>

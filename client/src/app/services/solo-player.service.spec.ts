@@ -1,27 +1,29 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { LetterService } from './letter.service';
-import { GestionTimerTourService } from './gestion-timer-tour.service';
-import { SoloPlayerService } from './solo-player.service';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { MAXLETTERINHAND } from '@app/constants';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { LetterService } from './letter.service';
+import { SoloPlayerService } from './solo-player.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 describe('SoloPlayerService', () => {
     let service: SoloPlayerService;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
-    let timeManagerSpy: jasmine.SpyObj<GestionTimerTourService>;
+    let timeManagerSpy: jasmine.SpyObj<TimerTurnManagerService>;
 
     beforeEach(
         waitForAsync(() => {
-            letterServiceSpy = jasmine.createSpyObj('LetterService', ['exchangeLettersForPlayer', 'addLettersForPlayer']);
-            letterServiceSpy.currentMessage = new Observable<string>();
-            letterServiceSpy.maxLettersInHand = 7;
-            timeManagerSpy = jasmine.createSpyObj('GestionTimerTourService', ['initiateGame', 'sendTurn', 'endTurn']);
+            letterServiceSpy = jasmine.createSpyObj('LetterService', ['addLettersForPlayer']);
+            letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
+            PlayerLetterHand.currentMessage = new Observable<string>();
+            timeManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['initiateGame', 'sendTurn', 'endTurn']);
             timeManagerSpy.turn = 0;
             timeManagerSpy.currentMessage = new Observable<string>();
             timeManagerSpy.messageSource = new BehaviorSubject('default message');
             TestBed.configureTestingModule({
                 providers: [
                     { provide: LetterService, useValue: letterServiceSpy },
-                    { provide: GestionTimerTourService, useValue: timeManagerSpy },
+                    { provide: TimerTurnManagerService, useValue: timeManagerSpy },
                 ],
             }).compileComponents();
         }),
@@ -41,8 +43,9 @@ describe('SoloPlayerService', () => {
         expect(sendNumberOfSkippedTurnSpy).toHaveBeenCalledWith(service.valueToEndGame.toString());
     });
     it('exchangeLetters should call exchangeLettersForPlayer', () => {
+        const mySpy = spyOn(letterServiceSpy.players[0], 'exchangeLetters');
         service.exchangeLetters();
-        expect(letterServiceSpy.exchangeLettersForPlayer).toHaveBeenCalled();
+        expect(mySpy).toHaveBeenCalled();
     });
     it('incrementPassedTurns should call changeTurn', () => {
         const incrementPassedTurnSpy = spyOn(service, 'changeTurn');
@@ -53,6 +56,13 @@ describe('SoloPlayerService', () => {
         service.incrementPassedTurns(1, true);
         expect(service.myTurn).toBe(false);
     });
+
+    it('incrementPassedTurns should have myturn = false', () => {
+        service.incrementPassedTurns(1, false);
+        expect(service.myTurn).toBe(false);
+        expect(service.lastTurnWasASkip).toBe(true);
+    });
+
     it('incrementPassedTurns should have valueToEndGame = 2', () => {
         service.valueToEndGame = 1;
         service.incrementPassedTurns(1, true);
@@ -69,9 +79,10 @@ describe('SoloPlayerService', () => {
         service.reset();
         expect(service.valueToEndGame).toEqual(0);
     });
-    it('reset should call addLettersForPlayer()', () => {
+    it('reset should call addLetters()', () => {
+        const mySpy = spyOn(letterServiceSpy.players[0], 'addLetters');
         service.reset();
-        expect(letterServiceSpy.addLettersForPlayer).toHaveBeenCalledWith(letterServiceSpy.maxLettersInHand);
+        expect(mySpy).toHaveBeenCalledWith(MAXLETTERINHAND);
     });
     it(' reset with expected number of letter set to 5 should have numberOfLetters = 5', () => {
         const expectedNumLetter = 5;
@@ -85,11 +96,11 @@ describe('SoloPlayerService', () => {
         expect(nextSpy).toHaveBeenCalledWith('0');
     });
     it('changeTurn should have myTurn = false', () => {
-        service.changeTurn('0');
+        service.changeTurn('1');
         expect(service.myTurn).toBe(false);
     });
     it('changeTurn should have myTurn = true', () => {
-        service.changeTurn('1');
+        service.changeTurn('0');
         expect(service.myTurn).toBe(true);
     });
 });
