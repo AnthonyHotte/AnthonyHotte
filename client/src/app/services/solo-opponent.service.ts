@@ -98,12 +98,14 @@ export class SoloOpponentService {
                 let text = 'temporary message';
                 let i = 0;
                 while (text !== 'Mot placé avec succès.' && i < this.allRetainedOptions.length) {
+                    // to be deleted -- problem with placement of second word
                     this.placementPossibilities;
                     const temp = this.letters.players[1].allLettersInHand;
                     if (temp.length === 7) {
                         i++;
                         i--;
                     }
+                    // delete ends here
                     text = this.placeLetters.placeWord(
                         this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
                             this.allRetainedOptions[i].column +
