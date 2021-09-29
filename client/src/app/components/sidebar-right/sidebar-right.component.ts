@@ -122,8 +122,8 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
             this.turn = parseInt(this.messageTimeManager, 10);
             this.soloPlayer.changeTurn(this.turn.toString());
             this.numberOfSkippedTurns = this.soloPlayer.valueToEndGame;
-            this.changedTurns = true;
             this.opponentSet = true;
+            this.soloOpponentPlays();
         } else {
             this.finishCurrentGame();
         }
@@ -185,19 +185,9 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     soloOpponentPlays() {
         if (this.turnTimeController.turn === 1 && this.opponentSet) {
-            const TIME_TO_LOAD = 3200;
-            setTimeout(() => {
-                this.opponentSet = false;
-                const INTERVAL_TIME = 17000;
-                const INTERVAL = window.setInterval(() => {
-                    this.soloOpponent.skipTurn();
-                    setTimeout(() => {
-                        clearInterval(INTERVAL);
-                    }, 1);
-                }, INTERVAL_TIME);
-                this.soloOpponent.play();
-                this.changedTurns = true;
-            }, TIME_TO_LOAD);
+            this.opponentSet = false;
+            this.soloOpponent.play();
+            this.changedTurns = true;
         }
     }
 }
