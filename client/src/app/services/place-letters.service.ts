@@ -85,8 +85,7 @@ export class PlaceLettersService {
         // const checkArgumentlength: string = this.checkArgumentInputlength(commandrowInput);
         const checkInput = this.checkInput(commandrowInput);
         if (checkInput === 'ok') {
-            const tileOutOfBound = this.verifyTileNotOutOfBound();
-            if (tileOutOfBound === false) {
+            if (!this.verifyTileNotOutOfBound()) {
                 return 'Le mot dépasse du plateau de jeux.';
             } else if (!this.verifyAvailable()) {
                 return 'Au moins une des cases est déjà occupée.';
@@ -98,6 +97,10 @@ export class PlaceLettersService {
                             this.removeLetterInGameState();
                             return 'Le premier mot doit toucher à la case h8.';
                         }
+                    }
+                    if (this.gameState.lastLettersAdded.length === 0) {
+                        this.removeLetterInGameState();
+                        return 'Vous devez utiliser au moins une lettre de votre main pour créer un mot';
                     }
                     if (this.gameState.lastLettersAdded.length === this.wordToPlace.length && !this.gameState.isBoardEmpty) {
                         this.removeLetterInGameState();
