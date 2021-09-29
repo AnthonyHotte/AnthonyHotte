@@ -69,8 +69,8 @@ export class SoloOpponentService {
         if (this.myTurn === true) {
             const HUNDRED = 100;
             const TWENTY = 20;
+            const SEVEN = 7;
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
-            const TIME_OUT_TIME = 3500;
             if (PROBABILITY_OF_ACTION > TWENTY) {
                 // play a word
                 this.allRetainedOptions = [];
@@ -80,7 +80,6 @@ export class SoloOpponentService {
                 const FORTY = 40;
                 const SEVENTY = 70;
                 const SIX = 6;
-                const SEVEN = 7;
                 const TWELVE = 12;
                 const THIRTEEN = 13;
                 const EIGHTEEN = 18;
@@ -102,7 +101,7 @@ export class SoloOpponentService {
                 while (text !== 'Mot placé avec succès.' && i < this.allRetainedOptions.length) {
                     text = this.placeLetters.placeWord(
                         this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
-                            this.allRetainedOptions[i].column +
+                            (this.allRetainedOptions[i].column + 1) +
                             this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
                             ' ' +
                             this.possibleWords[i],
@@ -115,21 +114,19 @@ export class SoloOpponentService {
                 this.changeTurn(this.myTurn.toString());
                 this.timeManager.endTurn();
             } else {
-                setTimeout(() => {
-                    const TEN = 10;
-                    if (PROBABILITY_OF_ACTION <= TEN) {
-                        // skip turn
+                const TEN = 10;
+                if (PROBABILITY_OF_ACTION <= TEN) {
+                    // skip turn
+                    this.skipTurn();
+                } else if (PROBABILITY_OF_ACTION <= TWENTY) {
+                    // trade letters
+                    const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
+                    if (NUMBER_OF_LETTERS_TO_TRADE <= SEVEN) {
+                        this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
+                    } else {
                         this.skipTurn();
-                    } else if (PROBABILITY_OF_ACTION <= TWENTY) {
-                        // trade letters
-                        const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
-                        if (NUMBER_OF_LETTERS_TO_TRADE <= PlayerLetterHand.allLetters.length) {
-                            this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
-                        } else {
-                            this.skipTurn();
-                        }
                     }
-                }, TIME_OUT_TIME);
+                }
             }
         }
     }
