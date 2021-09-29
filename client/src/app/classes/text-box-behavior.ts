@@ -85,16 +85,19 @@ export class TextBox {
     }
 
     isCommand(myWord: string) {
-        // const test: PlaceLettersService;
-        // switch (myWord) {
-        // case '!debug':
         let text = '';
         text = 'Commande invalide.';
-        this.debugCommand = false;
         if (this.timeManager.turn === 0) {
             if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!debug') {
-                text = 'Commande debug activé';
-                this.debugCommand = true;
+                if (!this.debugCommand) {
+                    text = 'Affichages de débogage activés';
+                    this.debugCommand = true;
+                    this.inputs.push(text);
+                    text = this.soloOpponent.lastCommandEntered;
+                } else {
+                    this.debugCommand = false;
+                    text = 'Affichages de débogage désactivés';
+                }
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 text = this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
                 this.endTurn();

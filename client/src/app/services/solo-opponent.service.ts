@@ -34,6 +34,7 @@ export class SoloOpponentService {
     possibilityOfPlayWord: string[] = [];
     allRetainedOptions: LetterPlacementPossibility[] = [];
     firstWordToPlay: boolean = false;
+    lastCommandEntered: string = 'Bonjour joueur!';
     private messageSource = new BehaviorSubject('default message');
     private messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
@@ -106,6 +107,19 @@ export class SoloOpponentService {
                             this.possibleWords[i],
                     );
                     i++;
+                    this.lastCommandEntered =
+                        '!placer ' +
+                        this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
+                        (this.allRetainedOptions[i].column + 1) +
+                        this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
+                        ' ' +
+                        this.possibleWords[i] +
+                        ' placements alternatifs: ' +
+                        this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
+                        ' ' +
+                        this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
+                        ' ' +
+                        this.possibleWords[this.calculateProbability(this.possibleWords.length)];
                 }
                 this.firstWordToPlay = false;
                 this.myTurn = false;
@@ -172,6 +186,7 @@ export class SoloOpponentService {
             this.timeManager.endTurn();
             const numberOfLetters = 0;
             this.sourceMessageTextBox.next(['!passer', numberOfLetters.toString()]);
+            this.lastCommandEntered = '!passer';
         }
     }
     exchangeLetters(numberOfLettersToTrade: number) {
@@ -187,6 +202,7 @@ export class SoloOpponentService {
         this.letters.players[1].exchangeLetters();
         this.timeManager.endTurn();
         this.sourceMessageTextBox.next(['!échanger ', numberOfLettersToTrade.toString()]);
+        this.lastCommandEntered = '!échanger ' + numberOfLettersToTrade.toString();
     }
     findWordsToPlay(minPointValue: number, maxPointValue: number) {
         const allWords: string[] = this.placeLetters.getDictionary();
@@ -322,9 +338,6 @@ export class SoloOpponentService {
                 if (this.gameState.lettersOnBoard[i][j] !== '') {
                     let possibility = { row: i, column: j, letter: this.gameState.lettersOnBoard[i][j], placement: PlacementValidity.Nothing };
                     possibility = this.possibilityCheck.checkRight(this.gameState.lettersOnBoard, i, j, possibility);
-                    possibility = this.possibilityCheck.checkLeft(this.gameState.lettersOnBoard, i, j, possibility);
-                    possibility = this.possibilityCheck.checkDown(this.gameState.lettersOnBoard, i, j, possibility);
-                    possibility = this.possibilityCheck.checkUp(this.gameState.lettersOnBoard, i, j, possibility);
                     if (possibility.placement !== PlacementValidity.Nothing) {
                         this.placementPossibilities.push(possibility);
                     }

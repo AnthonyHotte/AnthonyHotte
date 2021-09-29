@@ -9,17 +9,17 @@ export class PossibilityChecker {
     }
 
     checkRight(lettersOnBoard: string[][], i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (i !== NUMBEROFCASE - 1) {
-            if (lettersOnBoard[i + 1][j] === '') {
+        if (j !== NUMBEROFCASE - 1) {
+            if (lettersOnBoard[i][j + 1] === '') {
                 possibility.placement = PlacementValidity.Right;
             }
         }
-        return possibility;
+        return this.checkLeft(lettersOnBoard, i, j, possibility);
     }
 
     checkLeft(lettersOnBoard: string[][], i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (i !== 0) {
-            if (lettersOnBoard[i - 1][j] === '') {
+        if (j !== 0) {
+            if (lettersOnBoard[i][j - 1] === '') {
                 if (possibility.placement === PlacementValidity.Right) {
                     possibility.placement = PlacementValidity.LeftRight;
                 } else {
@@ -27,12 +27,12 @@ export class PossibilityChecker {
                 }
             }
         }
-        return possibility;
+        return this.checkDown(lettersOnBoard, i, j, possibility);
     }
 
     checkDown(lettersOnBoard: string[][], i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (j !== NUMBEROFCASE - 1) {
-            if (lettersOnBoard[i][j + 1] === '') {
+        if (i !== NUMBEROFCASE - 1) {
+            if (lettersOnBoard[i + 1][j] === '') {
                 switch (possibility.placement) {
                     case PlacementValidity.Right: {
                         possibility.placement = PlacementValidity.HDownRight;
@@ -55,12 +55,12 @@ export class PossibilityChecker {
                 }
             }
         }
-        return possibility;
+        return this.checkUp(lettersOnBoard, i, j, possibility);
     }
 
     checkUp(lettersOnBoard: string[][], i: number, j: number, possibility: LetterPlacementPossibility) {
-        if (j !== 0) {
-            if (lettersOnBoard[i][j - 1] === '') {
+        if (i !== 0) {
+            if (lettersOnBoard[i - 1][j] === '') {
                 switch (possibility.placement) {
                     case PlacementValidity.Right:
                         possibility.placement = PlacementValidity.HUpRight;
