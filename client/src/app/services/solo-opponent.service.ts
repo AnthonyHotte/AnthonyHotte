@@ -66,86 +66,83 @@ export class SoloOpponentService {
         this.myTurn = this.timeManager.turn === 1;
     }
     play() {
-        const TIME_TO_LOAD = 3000;
-        setTimeout(() => {
-            this.myTurn = this.timeManager.turn === 1;
-            if (this.myTurn === true) {
-                const HUNDRED = 100;
-                const TWENTY = 20;
-                const SEVEN = 7;
-                const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
-                if (PROBABILITY_OF_ACTION > TWENTY) {
-                    // play a word
-                    this.allRetainedOptions = [];
-                    this.possibleWords = [];
-                    this.placementPossibilities = [];
-                    const PROBABILITY_OF_POINTS = this.calculateProbability(HUNDRED);
-                    const FORTY = 40;
-                    const SEVENTY = 70;
-                    const SIX = 6;
-                    const TWELVE = 12;
-                    const THIRTEEN = 13;
-                    const EIGHTEEN = 18;
-                    if (!this.firstWordToPlay) {
-                        this.findValidPlacesOnBoard();
-                        if (PROBABILITY_OF_POINTS <= FORTY) {
-                            this.findWordsToPlay(0, SIX);
-                        } else if (PROBABILITY_OF_POINTS <= SEVENTY) {
-                            this.findWordsToPlay(SEVEN, TWELVE);
-                        } else {
-                            this.findWordsToPlay(THIRTEEN, EIGHTEEN);
-                        }
+        this.myTurn = this.timeManager.turn === 1;
+        if (this.myTurn === true) {
+            const HUNDRED = 100;
+            const TWENTY = 20;
+            const SEVEN = 7;
+            const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
+            if (PROBABILITY_OF_ACTION > TWENTY) {
+                // play a word
+                this.allRetainedOptions = [];
+                this.possibleWords = [];
+                this.placementPossibilities = [];
+                const PROBABILITY_OF_POINTS = this.calculateProbability(HUNDRED);
+                const FORTY = 40;
+                const SEVENTY = 70;
+                const SIX = 6;
+                const TWELVE = 12;
+                const THIRTEEN = 13;
+                const EIGHTEEN = 18;
+                if (!this.firstWordToPlay) {
+                    this.findValidPlacesOnBoard();
+                    if (PROBABILITY_OF_POINTS <= FORTY) {
+                        this.findWordsToPlay(0, SIX);
+                    } else if (PROBABILITY_OF_POINTS <= SEVENTY) {
+                        this.findWordsToPlay(SEVEN, TWELVE);
                     } else {
-                        this.playFirstWordInGame();
-                        this.findWordsToPlay(0, EIGHTEEN);
+                        this.findWordsToPlay(THIRTEEN, EIGHTEEN);
                     }
-                    let text = 'temporary message';
-                    let i = 0;
-                    while (text !== 'Mot placé avec succès.' && i < this.allRetainedOptions.length) {
-                        text = this.placeLetters.placeWord(
-                            this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
-                                (this.allRetainedOptions[i].column + 1) +
-                                this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
-                                ' ' +
-                                this.possibleWords[i],
-                        );
-                        this.lastCommandEntered =
-                            '!placer ' +
-                            this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
+                } else {
+                    this.playFirstWordInGame();
+                    this.findWordsToPlay(0, EIGHTEEN);
+                }
+                let text = 'temporary message';
+                let i = 0;
+                while (text !== 'Mot placé avec succès.' && i < this.allRetainedOptions.length) {
+                    text = this.placeLetters.placeWord(
+                        this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
                             (this.allRetainedOptions[i].column + 1) +
                             this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
                             ' ' +
-                            this.possibleWords[i] +
-                            ' placements alternatifs: ' +
-                            this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
-                            ' ' +
-                            this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
-                            ' ' +
-                            this.possibleWords[this.calculateProbability(this.possibleWords.length)];
-                        i++;
-                    }
-                    this.firstWordToPlay = false;
-                    this.myTurn = false;
-                    this.placementPossibilities = [];
-                    this.changeTurn(this.myTurn.toString());
-                    this.timeManager.endTurn();
-                } else {
-                    const TEN = 10;
-                    if (PROBABILITY_OF_ACTION <= TEN) {
-                        // skip turn
+                            this.possibleWords[i],
+                    );
+                    this.lastCommandEntered =
+                        '!placer ' +
+                        this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
+                        (this.allRetainedOptions[i].column + 1) +
+                        this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
+                        ' ' +
+                        this.possibleWords[i] +
+                        ' placements alternatifs: ' +
+                        this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
+                        ' ' +
+                        this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
+                        ' ' +
+                        this.possibleWords[this.calculateProbability(this.possibleWords.length)];
+                    i++;
+                }
+                this.firstWordToPlay = false;
+                this.myTurn = false;
+                this.placementPossibilities = [];
+                this.changeTurn(this.myTurn.toString());
+                this.timeManager.endTurn();
+            } else {
+                const TEN = 10;
+                if (PROBABILITY_OF_ACTION <= TEN) {
+                    // skip turn
+                    this.skipTurn();
+                } else if (PROBABILITY_OF_ACTION <= TWENTY) {
+                    // trade letters
+                    const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
+                    if (NUMBER_OF_LETTERS_TO_TRADE <= SEVEN) {
+                        this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
+                    } else {
                         this.skipTurn();
-                    } else if (PROBABILITY_OF_ACTION <= TWENTY) {
-                        // trade letters
-                        const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
-                        if (NUMBER_OF_LETTERS_TO_TRADE <= SEVEN) {
-                            this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
-                        } else {
-                            this.skipTurn();
-                        }
                     }
                 }
             }
-        }, TIME_TO_LOAD);
+        }
     }
     calculateProbability(percentage: number) {
         return Math.floor(Math.random() * percentage);
