@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { MAX_CHARACTERS, PLACERCOMMANDLENGTH } from '@app/constants';
-import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PlayerLetterHand } from './player-letter-hand';
 

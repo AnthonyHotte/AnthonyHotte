@@ -109,7 +109,7 @@ export class PlaceLettersService {
                         this.letterService.players[this.timeManager.turn].score += this.wordValidator.pointsForLastWord;
                         return 'Mot placé avec succès.';
                     } else {
-                        this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
+                        this.letterService.players[this.timeManager.turn].removeLettersForThreeSeconds(this.gameState.lastLettersAddedJoker);
                         return "Un mot placé n'est pas valide";
                     }
                 } else {
@@ -181,7 +181,7 @@ export class PlaceLettersService {
             for (const letter of this.gameState.lastLettersAddedJoker) {
                 this.letterService.selectLetter(letter, this.timeManager.turn);
             }
-            this.letterService.players[this.timeManager.turn].removeLetters();
+            this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
             if (this.gameState.playerUsedAllLetters) {
                 this.wordValidator.pointsForLastWord += 50;
             }

@@ -40,7 +40,7 @@ export class SoloOpponentService {
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
     private placementPossibilities: LetterPlacementPossibility[] = [];
     private possibilityCheck: PossibilityChecker = new PossibilityChecker(true);
-    private soloOpponentFunctions: SoloOpponentUsefulFunctions = new SoloOpponentUsefulFunctions(true);
+    private soloOpponentFunctions: SoloOpponentUsefulFunctions;
     constructor(
         private letters: LetterService,
         private timeManager: TimerTurnManagerService,
@@ -49,6 +49,7 @@ export class SoloOpponentService {
         private placeLetters: PlaceLettersService,
         private injection: Injector,
     ) {
+        this.soloOpponentFunctions = new SoloOpponentUsefulFunctions(true);
         this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.currentMessage = this.messageSource.asObservable();
         this.letters.players[1].addLetters(MAXLETTERINHAND);
@@ -337,7 +338,7 @@ export class SoloOpponentService {
             for (let j = 0; j < NUMBEROFCASE; j++) {
                 if (this.gameState.lettersOnBoard[i][j] !== '') {
                     let possibility = { row: i, column: j, letter: this.gameState.lettersOnBoard[i][j], placement: PlacementValidity.Nothing };
-                    possibility = this.possibilityCheck.checkRight(this.gameState.lettersOnBoard, i, j, possibility);
+                    possibility = this.possibilityCheck.checkAll(this.gameState.lettersOnBoard, i, j, possibility);
                     if (possibility.placement !== PlacementValidity.Nothing) {
                         this.placementPossibilities.push(possibility);
                     }
