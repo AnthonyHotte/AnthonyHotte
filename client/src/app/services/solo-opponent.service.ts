@@ -6,6 +6,7 @@ import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { PossibilityChecker } from '@app/classes/possibility-checker';
 import { SoloOpponentUsefulFunctions } from '@app/classes/solo-opponent-useful-functions';
 import { CENTERCASE, MAXLETTERINHAND, NUMBEROFCASE } from '@app/constants';
+import { WordValidationService } from '@app/services/word-validation.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { GameStateService } from './game-state.service';
 import { LetterService } from './letter.service';
@@ -47,6 +48,7 @@ export class SoloOpponentService {
         private gameState: GameStateService,
         private placeLetters: PlaceLettersService,
         private injection: Injector,
+        private readonly wordValidator: WordValidationService,
     ) {
         this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.currentMessage = this.messageSource.asObservable();
@@ -190,7 +192,8 @@ export class SoloOpponentService {
         this.timeManager.endTurn();
     }
     findWordsToPlay(minPointValue: number, maxPointValue: number) {
-        const allWords: string[] = this.placeLetters.getDictionary();
+        // const allWords: string[] = this.placeLetters.getDictionary();
+        const allWords: string[] = this.wordValidator.dictionnary;
         let lettersInString = '';
         let otherLettersRow = '';
         let otherLettersColumn = '';
@@ -249,6 +252,7 @@ export class SoloOpponentService {
             }
         }
     }
+    // eslint-disable-next-line complexity
     iterateWords(allWords: string[], item: LetterPlacementPossibility, lettersInString: string, rowLetters: string, columnLetters: string) {
         const NOT_PRESENT = -1;
         for (const word of allWords) {

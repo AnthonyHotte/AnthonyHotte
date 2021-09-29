@@ -208,29 +208,11 @@ export class GridService {
         this.gridContext.fillText(word, x, y);
     }
     */
-    /*
-    drawLetterwithposition(word: Letter, x1: number, y1: number) {
-         const x: number = x1.charCodeAt(0) - Constants.SIDELETTERS_TO_ASCII * Constants.CASESIZE + Constants.CASESIZE / 2;
-         const y: number = Number(x1.charCodeAt(0)) * Constants.CASESIZE + Constants.CASESIZE / 2;
-         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE / 2;
-         const y: number = y1 * Constants.CASESIZE * Constants.CASESIZE + Constants.CASESIZE / 2;
-         this.gridContext.strokeRect(x - 12.5, y - 12.5, 23.5, 23.5);
-         this.gridContext.fillStyle = 'white';
-         this.gridContext.fillRect(x - 12, y - 12, 23, 23);
-         this.gridContext.fillStyle = 'black';
-         this.gridContext.font = '20px system-ui';
-         this.gridContext.fillText(word.letter, x, y);
-         this.drawLetterValue(word, x, y);
-         this.drawLetterValue('2', x, y);
-    }
-    */
-    // TODO to be removed, added for testing purpose;
     drawLetterwithpositionstring(word: string, x1: number, y1: number) {
-        // const x: number = x1.charCodeAt(0) - Constants.SIDELETTERS_TO_ASCII * Constants.CASESIZE + Constants.CASESIZE / 2;
-        // const y: number = Number(x1.charCodeAt(0)) * Constants.CASESIZE + Constants.CASESIZE / 2;
         const offset = 8;
         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE;
         const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE;
+        this.gridContext.strokeStyle = 'black';
         this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
         this.gridContext.fillStyle = 'white';
         this.gridContext.fillRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
@@ -238,12 +220,7 @@ export class GridService {
         this.gridContext.font = String(this.policesizeletter) + 'px system-ui';
         this.gridContext.fillText(word, x + Constants.CASESIZE / 2, y + Constants.CASESIZE / 2);
         const lettervalue = this.letters.letterMap.get(word) as Letter;
-        // const test: string = lettervalue.letter;
-        // log.console(lettervalue.letter);
-        // const lettervalue = { letter: 'A', point: 9, quantity: 1 };
         this.drawLetterValuewithposition(lettervalue, x1, y1);
-        // this.drawLetterValue(word, x, y);
-        // this.drawLetterValue('2', x, y);
     }
     drawLetterValuewithposition(word: Letter, x1: number, y1: number) {
         const valuePositionOffset = 1.75;

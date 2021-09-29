@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import * as Constants from '@app/constants';
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
-import { WordValidationService } from '@app/services/word-validation.service';
 import { LetterService } from '@app/services/letter.service';
-import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { WordValidationService } from '@app/services/word-validation.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -228,12 +228,12 @@ export class PlaceLettersService {
             positionOfJoker++;
         }
     }
-
-    getDictionary() {
+    /*
+    getDictionary() { //TODO remove, a get function is not usefull 
         return this.wordValidator.dictionnary;
-    }
+    }*/
 
-    private removeUpperCaseFromString(index: number): string {
+    removeUpperCaseFromString(index: number): string {
         const tempWord = this.wordToPlace.split('');
         const tempLetters = [...tempWord];
         tempWord[index] = tempWord[index].toLowerCase();
