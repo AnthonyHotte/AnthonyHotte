@@ -115,4 +115,62 @@ describe('GridService', () => {
         expect(lineToSpy).toHaveBeenCalledTimes(expectedCallLineToTimes);
         expect(fillSpy).toHaveBeenCalledTimes(expectedCallFillTimes);
     });
+    it(' drawLetterwithpositionstring should call strokeRect, drawLetterValuewithposition, fillRect, fillText 1, 1, 1, 1  times', () => {
+        const expectedCallFillTextTimes = 1;
+        const expectedCallStrokeRectTimes = 1;
+        const expectedCallFillRectTimes = 1;
+        const expectedDrawLetterValueWithPosition = 1;
+        const strokeSpy = spyOn(service.gridContext, 'strokeRect').and.callThrough();
+        const lineToSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
+        const fillSpy = spyOn(service.gridContext, 'fillRect').and.callThrough();
+        const spy = spyOn(service, 'drawLetterValuewithposition');
+        service.drawLetterwithpositionstring('a', 0, 0);
+        expect(strokeSpy).toHaveBeenCalledTimes(expectedCallStrokeRectTimes);
+        expect(lineToSpy).toHaveBeenCalledTimes(expectedCallFillTextTimes);
+        expect(fillSpy).toHaveBeenCalledTimes(expectedCallFillRectTimes);
+        expect(spy).toHaveBeenCalledTimes(expectedDrawLetterValueWithPosition);
+    });
+    it(' drawLetterValuewithposition should call filltext 1 times', () => {
+        const expectedCallFillTextTimes = 1;
+        const lineToSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
+        const letter = { letter: 'a', quantity: 1, point: 1 };
+        service.drawLetterValuewithposition(letter, 0, 0);
+        expect(lineToSpy).toHaveBeenCalledTimes(expectedCallFillTextTimes);
+    });
+    it(' increasePoliceSize should increment size of a letter', () => {
+        service.policesizeletter = 25;
+        service.policesizelettervalue = 12;
+        const expectedPoliceSizeLetter = 27;
+        const expectedPoliceSizeLetterValue = 13;
+        service.increasePoliceSize();
+        expect(service.policesizeletter).toEqual(expectedPoliceSizeLetter);
+        expect(service.policesizelettervalue).toEqual(expectedPoliceSizeLetterValue);
+    });
+    it(' increasePoliceSize should not increment size of a letter', () => {
+        service.policesizeletter = 55;
+        service.policesizelettervalue = 52;
+        const expectedPoliceSizeLetter = 55;
+        const expectedPoliceSizeLetterValue = 52;
+        service.increasePoliceSize();
+        expect(service.policesizeletter).toEqual(expectedPoliceSizeLetter);
+        expect(service.policesizelettervalue).toEqual(expectedPoliceSizeLetterValue);
+    });
+    it(' decreasePoliceSize should decrement size of a letter', () => {
+        service.policesizeletter = 25;
+        service.policesizelettervalue = 15;
+        const expectedPoliceSizeLetter = 23;
+        const expectedPoliceSizeLetterValue = 14;
+        service.decreasePoliceSize();
+        expect(service.policesizeletter).toEqual(expectedPoliceSizeLetter);
+        expect(service.policesizelettervalue).toEqual(expectedPoliceSizeLetterValue);
+    });
+    it(' decreasePoliceSize should not decrement size of a letter', () => {
+        service.policesizeletter = 20;
+        service.policesizelettervalue = 10;
+        const expectedPoliceSizeLetter = 20;
+        const expectedPoliceSizeLetterValue = 10;
+        service.decreasePoliceSize();
+        expect(service.policesizeletter).toEqual(expectedPoliceSizeLetter);
+        expect(service.policesizelettervalue).toEqual(expectedPoliceSizeLetterValue);
+    });
 });

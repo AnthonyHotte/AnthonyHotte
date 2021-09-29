@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import * as Constants from '@app/constants';
 import { Letter } from '@app/letter';
 import { LetterService } from '@app/services/letter.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { Subscription } from 'rxjs';
-import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 
 @Component({
     selector: 'app-letters',
