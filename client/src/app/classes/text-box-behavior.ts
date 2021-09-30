@@ -145,7 +145,6 @@ export class TextBox {
         this.timeManager.endTurn();
         this.commandSuccessful = true;
         this.turn = this.timeManager.turn;
-        this.sendExecutedCommand();
         if (this.turn === 0) {
             this.soloPlayer.changeTurn(this.turn.toString());
         } else {
