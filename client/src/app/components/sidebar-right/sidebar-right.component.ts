@@ -165,9 +165,17 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     soloOpponentPlays() {
         if (this.turnTimeController.turn === 1 && this.opponentSet) {
             this.opponentSet = false;
-            this.soloOpponent.play();
-            this.changedTurns = true;
-            this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
+            const TIME_TO_LOAD = 3500;
+            const INTERVAL_TIME = 17000;
+            setTimeout(() => {
+                const INTERVAL = setInterval(() => {
+                    this.soloOpponent.skipTurn();
+                    clearInterval(INTERVAL);
+                }, INTERVAL_TIME);
+                this.soloOpponent.play();
+                this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
+                this.changedTurns = true;
+            }, TIME_TO_LOAD);
         }
     }
 }

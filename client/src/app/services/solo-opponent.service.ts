@@ -124,7 +124,6 @@ export class SoloOpponentService {
                 }
                 this.firstWordToPlay = false;
                 this.myTurn = false;
-                this.placementPossibilities = [];
                 this.changeTurn(this.myTurn.toString());
                 this.timeManager.endTurn();
             } else {
@@ -220,8 +219,8 @@ export class SoloOpponentService {
                 otherLettersColumn += this.findSameColumnItems(item.row, item.column);
                 otherLettersRow += this.findSameRowItems(item.row, item.column);
             }
-            const FIFTY = 25;
-            if (this.allRetainedOptions.length <= FIFTY) {
+            const TWENTY_FIVE = 25;
+            if (this.allRetainedOptions.length <= TWENTY_FIVE) {
                 this.iterateWords(allWords, item, lettersInString, otherLettersRow, otherLettersColumn);
                 this.eliminateWordsToMatchScore(minPointValue, maxPointValue);
             }

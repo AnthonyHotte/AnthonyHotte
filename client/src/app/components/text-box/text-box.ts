@@ -59,7 +59,9 @@ export class TextBoxComponent implements OnInit {
         }
         this.word = this.input.getWord();
         this.array = this.input.getArray();
-        this.messagesSoloOpponent = this.input.getMessagesSoloOpponent();
+        if (this.input.getDebugCommand()) {
+            this.messagesSoloOpponent = this.input.getMessagesSoloOpponent();
+        }
         this.debugCommand = this.input.getDebugCommand();
     }
 
