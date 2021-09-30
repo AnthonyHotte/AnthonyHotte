@@ -15,6 +15,7 @@ import { PlayerLetterHand } from './player-letter-hand';
 export class TextBox {
     word: string = '';
     inputs: string[] = [];
+    inputsSoloOpponent: string[];
     character: boolean = false;
     buttonMessageState: string = 'ButtonMessageActivated';
     buttonCommandState: string = 'ButtonCommandReleased';
@@ -44,6 +45,7 @@ export class TextBox {
         this.sendExecutedCommand();
         this.valueToEndGame = 0;
         this.turn = this.timeManager.turn;
+        this.inputsSoloOpponent = [];
     }
     send(myWord: string) {
         this.inputVerification(myWord);
@@ -67,6 +69,10 @@ export class TextBox {
         return this.inputs;
     }
 
+    getMessagesSoloOpponent() {
+        return this.inputsSoloOpponent;
+    }
+
     getButtonMessageState() {
         return this.buttonMessageState;
     }
@@ -87,18 +93,16 @@ export class TextBox {
     isCommand(myWord: string) {
         let text = '';
         text = 'Commande invalide.';
-        if (this.timeManager.turn === 0) {
-            if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!debug') {
-                if (!this.debugCommand) {
-                    text = 'Affichages de débogage activés';
-                    this.debugCommand = true;
-                    this.inputs.push(text);
-                    text = this.soloOpponent.lastCommandEntered;
-                } else {
-                    this.debugCommand = false;
-                    text = 'Affichages de débogage désactivés';
-                }
-            } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
+        if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!debug') {
+            if (!this.debugCommand) {
+                text = 'Affichages de débogage activés';
+                this.debugCommand = true;
+            } else {
+                this.debugCommand = false;
+                text = 'Affichages de débogage désactivés';
+            }
+        } else if (this.timeManager.turn === 0) {
+            if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 text = this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
                 this.endTurn();
                 if (text === 'Mot placé avec succès.') {
@@ -141,7 +145,6 @@ export class TextBox {
         this.timeManager.endTurn();
         this.commandSuccessful = true;
         this.turn = this.timeManager.turn;
-        this.sendExecutedCommand();
         if (this.turn === 0) {
             this.soloPlayer.changeTurn(this.turn.toString());
         } else {

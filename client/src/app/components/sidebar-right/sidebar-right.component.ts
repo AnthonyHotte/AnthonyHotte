@@ -39,7 +39,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     turn: number;
 
     changedTurns: boolean = false;
-    isRefreshed: boolean = false;
 
     constructor(
         public soloGameInformation: SoloGameInformationService,
@@ -57,7 +56,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (this.turn === 1) {
+        if (this.turnTimeController.turn === 1) {
             this.soloOpponent.firstWordToPlay = true;
             this.opponentSet = true;
             this.soloOpponentPlays();
@@ -101,32 +100,12 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         }
     }
 
-    endTurn() {
-        this.turnTimeController.endTurn();
-        this.turn = parseInt(this.messageTimeManager, 10);
-        if (this.turn === 0) {
-            this.soloPlayer.changeTurn(this.turn.toString());
-        } else {
-            this.soloOpponent.changeTurn(this.turn.toString());
-        }
-        this.changedTurns = true;
-        if (this.soloOpponent.valueToEndGame === this.soloOpponent.maximumAllowedSkippedTurns) {
-            this.finishCurrentGame();
-        }
-    }
-
     skipTurn() {
-        this.soloPlayer.incrementPassedTurns(this.soloOpponent.valueToEndGame, this.soloOpponent.lastTurnWasASkip);
-        if (this.soloPlayer.valueToEndGame < this.soloPlayer.maximumAllowedSkippedTurns) {
-            this.turnTimeController.endTurn();
-            this.turn = parseInt(this.messageTimeManager, 10);
-            this.soloPlayer.changeTurn(this.turn.toString());
-            this.numberOfSkippedTurns = this.soloPlayer.valueToEndGame;
-            this.changedTurns = true;
-            this.opponentSet = true;
-        } else {
-            this.finishCurrentGame();
-        }
+        this.textBox.send('!passer');
+        this.textBox.isCommand('!passer');
+        this.textBox.commandSuccessful = false;
+        this.opponentSet = true;
+        this.soloOpponentPlays();
     }
 
     getNumberRemainingLetters() {
@@ -162,8 +141,10 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     getPlayerName() {
         if (this.turn !== this.turnTimeController.turn) {
             this.changedTurns = true;
-            if (this.turn === 0) {
+            if (this.turn === 0 && this.textBox.commandSuccessful) {
                 this.opponentSet = true;
+                this.textBox.commandSuccessful = false;
+                this.soloOpponentPlays();
             }
             this.turn = this.turnTimeController.turn;
         }
@@ -171,8 +152,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     verifyChangedTurns(counter: CountdownComponent) {
-        this.changedTurns ||= this.textBox.commandSuccessful;
-        this.textBox.commandSuccessful = false;
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
             counter.reset();
@@ -185,17 +164,16 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     soloOpponentPlays() {
         if (this.turnTimeController.turn === 1 && this.opponentSet) {
-            const TIME_TO_LOAD = 3200;
+            this.opponentSet = false;
+            const TIME_TO_LOAD = 3500;
+            const INTERVAL_TIME = 17000;
             setTimeout(() => {
-                this.opponentSet = false;
-                const INTERVAL_TIME = 17000;
-                const INTERVAL = window.setInterval(() => {
+                const INTERVAL = setInterval(() => {
                     this.soloOpponent.skipTurn();
-                    setTimeout(() => {
-                        clearInterval(INTERVAL);
-                    }, 1);
+                    clearInterval(INTERVAL);
                 }, INTERVAL_TIME);
                 this.soloOpponent.play();
+                this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
                 this.changedTurns = true;
             }, TIME_TO_LOAD);
         }
