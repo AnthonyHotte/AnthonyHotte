@@ -276,14 +276,14 @@ export class SoloOpponentService {
         for (const word of allWords) {
             let indexOfLetter = 0;
             if ((indexOfLetter = word.search(item.letter.toLowerCase())) !== NOT_PRESENT) {
-                let possibleWord = false;
+                // let possibleWord = false;
                 let temporaryWord = word;
                 for (let i = 0; i < lettersInString.length; i++) {
                     if (temporaryWord.search(lettersInString.charAt(i)) !== NOT_PRESENT) {
-                        possibleWord = true;
+                        // possibleWord = true;
                         temporaryWord = temporaryWord.replace(lettersInString.charAt(i), ' ');
                     } else if (lettersInString.charAt(i) === '*') {
-                        possibleWord = true;
+                        // possibleWord = true;
                         for (let j = 0; j < temporaryWord.length; j++) {
                             if (temporaryWord.charAt(j) !== ' ') {
                                 temporaryWord = temporaryWord.replace(temporaryWord.charAt(j), ' ');
@@ -293,13 +293,11 @@ export class SoloOpponentService {
                 }
                 let isRowsToPlace = item.column - indexOfLetter >= 0;
                 let isColumnToPlace = item.row - indexOfLetter >= 0;
-                if (this.firstWordToPlay) {
-                    isColumnToPlace = isRowsToPlace &&= temporaryWord.split(' ').join('').length === 0;
-                }
-                if (possibleWord && !this.firstWordToPlay) {
-                    isRowsToPlace &&= this.soloOpponentFunctions.checkRowsAndColumnsForWordMatch(rowLetters, temporaryWord);
-                    isColumnToPlace &&= this.soloOpponentFunctions.checkRowsAndColumnsForWordMatch(columnLetters, temporaryWord);
-                }
+                isColumnToPlace = isRowsToPlace &&= temporaryWord.split(' ').join('').length === 0;
+                // if (possibleWord && !this.firstWordToPlay) {
+                //     isRowsToPlace &&= this.soloOpponentFunctions.checkRowsAndColumnsForWordMatch(rowLetters, temporaryWord);
+                //     isColumnToPlace &&= this.soloOpponentFunctions.checkRowsAndColumnsForWordMatch(columnLetters, temporaryWord);
+                // }
                 this.checkRowAndColumnAvailability(isRowsToPlace, isColumnToPlace, word, indexOfLetter, item);
             }
         }
