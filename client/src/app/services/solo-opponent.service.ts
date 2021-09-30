@@ -219,8 +219,10 @@ export class SoloOpponentService {
                 otherLettersColumn += this.findSameColumnItems(item.row, item.column);
                 otherLettersRow += this.findSameRowItems(item.row, item.column);
             }
-            const TWENTY_FIVE = 25;
-            if (this.allRetainedOptions.length <= TWENTY_FIVE) {
+
+            const TWENTY = 20;
+
+            if (this.allRetainedOptions.length <= TWENTY) {
                 this.iterateWords(allWords, item, lettersInString, otherLettersRow, otherLettersColumn);
                 this.eliminateWordsToMatchScore(minPointValue, maxPointValue);
             }
@@ -272,9 +274,8 @@ export class SoloOpponentService {
     iterateWords(allWords: string[], item: LetterPlacementPossibility, lettersInString: string, rowLetters: string, columnLetters: string) {
         const NOT_PRESENT = -1;
         for (const word of allWords) {
-            const itemHolder = item;
             let indexOfLetter = 0;
-            if ((indexOfLetter = word.search(itemHolder.letter.toLowerCase())) !== NOT_PRESENT) {
+            if ((indexOfLetter = word.search(item.letter.toLowerCase())) !== NOT_PRESENT) {
                 let possibleWord = false;
                 let temporaryWord = word;
                 for (let i = 0; i < lettersInString.length; i++) {
@@ -351,14 +352,20 @@ export class SoloOpponentService {
     }
     playFirstWordInGame() {
         for (const letter of this.letters.players[1].allLettersInHand) {
-            const possibility: LetterPlacementPossibility = {
+            const possibility1: LetterPlacementPossibility = {
                 row: CENTERCASE - 1,
                 column: CENTERCASE - 1,
                 letter: letter.letter,
                 placement: PlacementValidity.Right,
             };
-            this.placementPossibilities.push(possibility);
-            this.placementPossibilities.push(possibility);
+            const possibility2: LetterPlacementPossibility = {
+                row: CENTERCASE - 1,
+                column: CENTERCASE - 1,
+                letter: letter.letter,
+                placement: PlacementValidity.HDown,
+            };
+            this.placementPossibilities.push(possibility1);
+            this.placementPossibilities.push(possibility2);
         }
     }
 }
