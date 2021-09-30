@@ -42,15 +42,15 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     isRefreshed: boolean = false;
 
     constructor(
-        private soloGameInformation: SoloGameInformationService,
-        private turnTimeController: TimerTurnManagerService,
-        private soloPlayer: SoloPlayerService,
-        private soloOpponent: SoloOpponentService,
-        private letterService: LetterService,
-        private link: Router,
-        private textBox: TextBox,
-        private readonly gridService: GridService,
-        private readonly placeLetterService: PlaceLettersService,
+        public soloGameInformation: SoloGameInformationService,
+        public turnTimeController: TimerTurnManagerService,
+        public soloPlayer: SoloPlayerService,
+        public soloOpponent: SoloOpponentService,
+        public letterService: LetterService,
+        public link: Router,
+        public textBox: TextBox,
+        public gridService: GridService,
+        public placeLetterService: PlaceLettersService,
     ) {
         this.message = this.soloGameInformation.message;
         this.setAttribute();
