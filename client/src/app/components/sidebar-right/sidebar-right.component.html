@@ -46,7 +46,7 @@
                     [time]="time * 1000"
                     format="ss"
                     [autoStart]="true"
-                    (finish)="endTurn()"
+                    (finish)="skipTurn()"
                     (finish)="counter.start()"
                     (tick)="this.verifyChangedTurns(counter)"
                 ></ngx-countdown

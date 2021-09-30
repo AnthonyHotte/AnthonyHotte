@@ -14,6 +14,7 @@ export class TextBoxComponent implements OnInit {
     messageSoloInfo: string[];
     word: string;
     array: string[];
+    messagesSoloOpponent: string[];
     buttonCommandState: string;
     buttonMessageState: string;
     debugCommand: boolean;
@@ -31,6 +32,11 @@ export class TextBoxComponent implements OnInit {
         this.buttonCommandState = 'ButtonCommandReleased';
         this.buttonMessageState = 'ButtonMessageActivated';
         this.debugCommand = false;
+
+        this.messagesSoloOpponent = [];
+        // this.messageSoloInfo = this.soloGameInformation.message;
+        // this.input = new TextBox(this.placeLetter, this.soloPlayer, this.soloOpponent, this.timeManager, this.link, this.letterService);
+        // this.input.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
     }
 
     buttonDetect() {
@@ -40,17 +46,13 @@ export class TextBoxComponent implements OnInit {
         }
         this.word = this.input.getWord();
         this.array = this.input.getArray();
-
-        this.activateDebugCommand();
         this.scrollDown();
+        if (this.input.getDebugCommand()) {
+            this.messagesSoloOpponent = this.input.getMessagesSoloOpponent();
+        }
+        this.debugCommand = this.input.getDebugCommand();
     }
 
-    activateDebugCommand() {
-        this.debugCommand = this.input.getDebugCommand();
-        if (this.debugCommand) {
-            this.input.activateDebugCommand();
-        }
-    }
     ngOnInit() {
         this.turn = this.timeManager.turn;
         this.valueToEndGame = 0;
@@ -73,5 +75,20 @@ export class TextBoxComponent implements OnInit {
         if (mondiv !== null) {
             mondiv.scrollTo(0, mondiv.scrollHeight);
         }
+    }
+    // getMessageSoloOpoonent() {
+    //     if (parseInt(this.messageSoloOpponent[1], 10) > 0) {
+    //         return 'commande: ' + this.messageSoloOpponent[0] + ' nombre de lettre(s) échangée(s): ' + this.messageSoloOpponent[1];
+    //     } else {
+    //         return 'commande: ' + this.messageSoloOpponent[0];
+    //     }
+    // }
+
+    getInputs() {
+        return this.input.getArray();
+    }
+
+    getSoloOpponentInputs() {
+        return this.input.inputsSoloOpponent;
     }
 }

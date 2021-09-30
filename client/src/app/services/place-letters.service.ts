@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import * as Constants from '@app/constants';
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
-import { WordValidationService } from '@app/services/word-validation.service';
 import { LetterService } from '@app/services/letter.service';
-import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { WordValidationService } from '@app/services/word-validation.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -85,8 +85,7 @@ export class PlaceLettersService {
         // const checkArgumentlength: string = this.checkArgumentInputlength(commandrowInput);
         const checkInput = this.checkInput(commandrowInput);
         if (checkInput === 'ok') {
-            const tileOutOfBound = this.verifyTileNotOutOfBound();
-            if (tileOutOfBound === false) {
+            if (!this.verifyTileNotOutOfBound()) {
                 return 'Le mot dépasse du plateau de jeux.';
             } else if (!this.verifyAvailable()) {
                 return 'Au moins une des cases est déjà occupée.';
@@ -99,6 +98,10 @@ export class PlaceLettersService {
                             return 'Le premier mot doit toucher à la case h8.';
                         }
                     }
+                    if (this.gameState.lastLettersAdded.length === 0) {
+                        this.removeLetterInGameState();
+                        return 'Vous devez utiliser au moins une lettre de votre main pour créer un mot';
+                    }
                     if (this.gameState.lastLettersAdded.length === this.wordToPlace.length && !this.gameState.isBoardEmpty) {
                         this.removeLetterInGameState();
                         return 'Ce mot ne touche à aucune lettre déjà en jeu.';
@@ -109,7 +112,7 @@ export class PlaceLettersService {
                         this.letterService.players[this.timeManager.turn].score += this.wordValidator.pointsForLastWord;
                         return 'Mot placé avec succès.';
                     } else {
-                        this.letterService.players[0].removeLettersForThreeSeconds(this.wordToPlace);
+                        this.letterService.players[this.timeManager.turn].removeLettersForThreeSeconds(this.gameState.lastLettersAddedJoker);
                         return "Un mot placé n'est pas valide";
                     }
                 } else {
@@ -181,7 +184,7 @@ export class PlaceLettersService {
             for (const letter of this.gameState.lastLettersAddedJoker) {
                 this.letterService.selectLetter(letter, this.timeManager.turn);
             }
-            this.letterService.players[this.timeManager.turn].removeLetters();
+            this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
             if (this.gameState.playerUsedAllLetters) {
                 this.wordValidator.pointsForLastWord += 50;
             }
@@ -218,34 +221,6 @@ export class PlaceLettersService {
       
     }
     */
-    validateSoloOpponent(commandrowInput: string) {
-        const checkInput = this.checkInput(commandrowInput);
-        if (checkInput === 'ok') {
-            const tileOutOfBound = this.verifyTileNotOutOfBound();
-            if (tileOutOfBound === false) {
-                return false;
-            } else if (!this.verifyAvailable()) {
-                return false;
-            } else {
-                if (this.gameState.isWordCreationPossibleWithRessources()) {
-                    if (this.gameState.isBoardEmpty) {
-                        if (!this.gameState.isLetterOnh8()) {
-                            this.removeLetterInGameState();
-                            return false;
-                        }
-                    }
-                    if (this.gameState.lastLettersAdded.length === this.wordToPlace.length && !this.gameState.isBoardEmpty) {
-                        this.removeLetterInGameState();
-                        return false;
-                    }
-                    if (!this.validateWordPlaced()) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
 
     wordContainsJoker() {
         let positionOfJoker = 0;
@@ -256,7 +231,12 @@ export class PlaceLettersService {
             positionOfJoker++;
         }
     }
-    private removeUpperCaseFromString(index: number): string {
+    /*
+    getDictionary() { //TODO remove, a get function is not usefull 
+        return this.wordValidator.dictionnary;
+    }*/
+
+    removeUpperCaseFromString(index: number): string {
         const tempWord = this.wordToPlace.split('');
         const tempLetters = [...tempWord];
         tempWord[index] = tempWord[index].toLowerCase();

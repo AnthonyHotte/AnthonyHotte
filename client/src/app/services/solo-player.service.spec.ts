@@ -52,7 +52,7 @@ describe('SoloPlayerService', () => {
         service.incrementPassedTurns(1, true);
         expect(incrementPassedTurnSpy).toHaveBeenCalledWith(service.myTurn.toString());
     });
-    it('incrementPassedTurns should have myturn = false', () => {
+    it('incrementPassedTurns should have myTurn = false', () => {
         service.incrementPassedTurns(1, true);
         expect(service.myTurn).toBe(false);
     });
