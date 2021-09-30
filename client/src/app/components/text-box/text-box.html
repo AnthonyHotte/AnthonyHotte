@@ -3,11 +3,11 @@
 </div>
 <div class="DisplayZone">
     <div>
-        <p class="PlayerMessage" *ngFor="let word of this.array">Joueur: {{word}} </p>
+        <p class="PlayerMessage" *ngFor="let word of this.getInputs()" style="color :green; ">Joueur: {{word}} </p>
     </div>
-    <!-- <div>
-        <p class="OpponentMessage" *ngFor="let word of this.messageSoloInfo">{{this.messageSoloInfo[1]}}: {{getMessageSoloOpoonent()}}</p>
-    </div> -->
+    <div>
+        <p class="OpponentMessage" *ngFor="let word of this.getSoloOpponentInputs()" style="color :red; ">Opposant: {{word}}</p>
+    </div>
 </div>
 <div *ngIf="input.character">
     <p class="AlertMessage">Votre commande ou message est trop longue</p>

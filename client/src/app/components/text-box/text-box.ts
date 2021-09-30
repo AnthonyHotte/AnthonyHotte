@@ -19,6 +19,7 @@ export class TextBoxComponent implements OnInit {
     // subscriptionTextBox: Subscription;
     word: string;
     array: string[];
+    messagesSoloOpponent: string[];
     buttonCommandState: string;
     buttonMessageState: string;
     // messageTextBox: string;
@@ -45,6 +46,7 @@ export class TextBoxComponent implements OnInit {
         this.buttonCommandState = 'ButtonCommandReleased';
         this.buttonMessageState = 'ButtonMessageActivated';
         this.debugCommand = false;
+        this.messagesSoloOpponent = [];
         // this.messageSoloInfo = this.soloGameInformation.message;
         // this.input = new TextBox(this.placeLetter, this.soloPlayer, this.soloOpponent, this.timeManager, this.link, this.letterService);
         // this.input.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
@@ -57,6 +59,9 @@ export class TextBoxComponent implements OnInit {
         }
         this.word = this.input.getWord();
         this.array = this.input.getArray();
+        if (this.input.getDebugCommand()) {
+            this.messagesSoloOpponent = this.input.getMessagesSoloOpponent();
+        }
         this.debugCommand = this.input.getDebugCommand();
     }
 
@@ -95,4 +100,12 @@ export class TextBoxComponent implements OnInit {
     //         return 'commande: ' + this.messageSoloOpponent[0];
     //     }
     // }
+
+    getInputs() {
+        return this.input.getArray();
+    }
+
+    getSoloOpponentInputs() {
+        return this.input.inputsSoloOpponent;
+    }
 }
