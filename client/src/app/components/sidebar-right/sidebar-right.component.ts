@@ -170,6 +170,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
             setTimeout(() => {
                 const INTERVAL = setInterval(() => {
                     this.soloOpponent.skipTurn();
+                    this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
                     clearInterval(INTERVAL);
                 }, INTERVAL_TIME);
                 this.soloOpponent.play();
