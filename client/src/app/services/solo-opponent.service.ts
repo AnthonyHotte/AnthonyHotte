@@ -124,10 +124,14 @@ export class SoloOpponentService {
                         i = this.allRetainedOptions.length;
                     }
                 }
-                this.firstWordToPlay = false;
-                this.myTurn = false;
-                this.changeTurn(this.myTurn.toString());
-                this.timeManager.endTurn();
+                if (text === 'Mot placé avec succès.') {
+                    this.firstWordToPlay = false;
+                    this.myTurn = false;
+                    this.changeTurn(this.myTurn.toString());
+                    this.timeManager.endTurn();
+                } else {
+                    this.skipTurn();
+                }
             } else {
                 const TEN = 10;
                 if (PROBABILITY_OF_ACTION <= TEN) {
