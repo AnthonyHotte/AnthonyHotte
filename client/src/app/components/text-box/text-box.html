@@ -1,13 +1,10 @@
 <div class="textBox">
     <h1 class="title">Boite de communication</h1>
 </div>
-<div class="DisplayZone">
+<div id="DisplayZone">
     <div>
         <p class="PlayerMessage" *ngFor="let word of this.array">Joueur: {{word}} </p>
     </div>
-    <!-- <div>
-        <p class="OpponentMessage" *ngFor="let word of this.messageSoloInfo">{{this.messageSoloInfo[1]}}: {{getMessageSoloOpoonent()}}</p>
-    </div> -->
 </div>
 <div *ngIf="input.character">
     <p class="AlertMessage">Votre commande ou message est trop longue</p>

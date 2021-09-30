@@ -72,4 +72,10 @@ describe('TextBoxComponent', () => {
         component.buttonDetect();
         expect(textBoxServiceSpy.isCommand).not.toHaveBeenCalled();
     });
+    it('buttonDetect should call scrollDown', () => {
+        component.buttonCommandState = 'ButtonCommandReleased';
+        const mySpy = spyOn(component, 'scrollDown');
+        component.buttonDetect();
+        expect(mySpy).toHaveBeenCalled();
+    });
 });
