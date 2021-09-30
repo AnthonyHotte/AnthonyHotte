@@ -359,4 +359,38 @@ export class SoloOpponentService {
             this.placementPossibilities.push(possibility1);
         }
     }
+
+    isWordPlayable(word: string, possibility: LetterPlacementPossibility): boolean {
+        this.placeLetters.row = possibility.row;
+        this.placeLetters.colomnNumber = possibility.column;
+        this.placeLetters.orientation = this.soloOpponentFunctions.enumToString(possibility.placement);
+        this.placeLetters.wordToPlace = word;
+        this.placeLetters.lettersToPlace = word;
+        let isPlayable = true;
+        if (!this.placeLetters.verifyTileNotOutOfBound()) {
+            isPlayable = false;
+        } else if (!this.placeLetters.verifyAvailable()) {
+            isPlayable = false;
+        } else {
+            this.placeLetters.placeWordGameState();
+            if (this.gameState.isWordCreationPossibleWithRessources()) {
+                if (this.gameState.isBoardEmpty) {
+                    if (!this.gameState.isLetterOnh8()) {
+                        isPlayable = false;
+                    }
+                } else if (this.gameState.lastLettersAdded.length === 0) {
+                    isPlayable = false;
+                } else if (!this.gameState.isWordTouchingLetterOnBoard(word, this.placeLetters.orientation)) {
+                    isPlayable = false;
+                } else if (!this.gameState.validateWordCreatedByNewLetters()) {
+                    isPlayable = false;
+                }
+            } else {
+                isPlayable = false;
+            }
+        }
+
+        this.placeLetters.removeLetterInGameState();
+        return isPlayable;
+    }
 }
