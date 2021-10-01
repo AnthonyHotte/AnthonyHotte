@@ -120,19 +120,15 @@ export class SoloOpponentService {
         this.lastTurnWasASkip = false;
         let i = 0;
         while (i < numberOfLettersToTrade) {
-            const INDEX_OF_LETTER_TO_TRADE = this.calculateProbability(this.numberOfLetters);
-            if (!this.letters.players[1].selectedLettersForExchange.has(i)) {
+            const INDEX_OF_LETTER_TO_TRADE = this.calculateProbability(this.letters.players[1].numberLetterInHand);
+            if (!this.letters.players[1].selectedLettersForExchange.has(INDEX_OF_LETTER_TO_TRADE)) {
                 this.letters.players[1].selectedLettersForExchange.add(INDEX_OF_LETTER_TO_TRADE);
                 i++;
             }
         }
-        this.sendTradedLettersInformation(numberOfLettersToTrade);
         this.letters.players[1].exchangeLetters();
         this.timeManager.endTurn();
         this.sourceMessageTextBox.next(['!échanger ', numberOfLettersToTrade.toString()]);
         this.lastCommandEntered = '!échanger ' + numberOfLettersToTrade.toString();
-    }
-    sendTradedLettersInformation(numberOfLettersToTrade: number) {
-        this.sourceMessageTextBox.next(['!échanger ', numberOfLettersToTrade.toString()]);
     }
 }
