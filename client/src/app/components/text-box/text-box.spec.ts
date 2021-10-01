@@ -28,10 +28,7 @@ describe('TextBoxComponent', () => {
             providers: [{ provide: TextBox, useValue: textBoxServiceSpy }],
         }).compileComponents();
     });
-    it('buttonDetect should call getWord', () => {
-        component.buttonDetect();
-        expect(textBoxServiceSpy.getWord).toHaveBeenCalled();
-    });
+
     beforeEach(() => {
         fixture = TestBed.createComponent(TextBoxComponent);
         component = fixture.componentInstance;
@@ -63,16 +60,8 @@ describe('TextBoxComponent', () => {
     });
     it('buttonDetect should call isCommand', () => {
         component.buttonCommandState = 'ButtonCommandActivated';
-        it('buttonDetect should call getWord', () => {
-            component.buttonDetect();
-            expect(textBoxServiceSpy.getWord).toHaveBeenCalled();
-        });
         component.buttonDetect();
         expect(textBoxServiceSpy.isCommand).toHaveBeenCalled();
-    });
-    it('buttonDetect should call getWord', () => {
-        component.buttonDetect();
-        expect(textBoxServiceSpy.getWord).toHaveBeenCalled();
     });
     it('buttonDetect should not call isCommand', () => {
         component.buttonCommandState = 'ButtonCommandReleased';
