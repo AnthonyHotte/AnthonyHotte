@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+
 import { MAX_CHARACTERS, PLACERCOMMANDLENGTH } from '@app/constants';
 import { MessagePlayer } from '@app/message';
 import { LetterService } from '@app/services/letter.service';
@@ -9,6 +9,7 @@ import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PlayerLetterHand } from './player-letter-hand';
+import { FinishGameService } from '@app/services/finish-game.service';
 
 @Injectable({
     providedIn: 'root',
@@ -33,8 +34,8 @@ export class TextBox {
         private soloPlayer: SoloPlayerService,
         private soloOpponent: SoloOpponentService,
         private timeManager: TimerTurnManagerService,
-        private link: Router,
         private letterService: LetterService,
+        private finishGameService: FinishGameService,
     ) {
         this.word = { message: '', sender: '', debugState: false };
         this.inputs = [];
@@ -143,13 +144,16 @@ export class TextBox {
     }
 
     finishCurrentGame() {
-        this.link.navigate(['/home']);
+        this.finishGameService.isGameFinished = true;
     }
 
     endTurn() {
         this.timeManager.endTurn();
         this.commandSuccessful = true;
         this.turn = this.timeManager.turn;
+        if (this.letterService.players[this.timeManager.turn].allLettersInHand.length === 0) {
+            this.finishCurrentGame();
+        }
         if (this.turn === 0) {
             this.soloPlayer.changeTurn(this.turn.toString());
         } else {
