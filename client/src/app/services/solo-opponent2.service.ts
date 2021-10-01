@@ -45,9 +45,6 @@ export class SoloOpponent2Service {
                         if (wordToPlay !== undefined) {
                             for (const word2 of wordToPlay) {
                                 for (let k = 0; k < word2.length; k++) {
-                                    const temp = letteronbord[i][j];
-                                    // eslint-disable-next-line no-console
-                                    console.log(temp);
                                     // eslint-disable-next-line eqeqeq
                                     if (letteronbord[i][j] == word2.charAt(k)) {
                                         if (this.isWordPlayable(word2, i - k, j, 'h')) {
