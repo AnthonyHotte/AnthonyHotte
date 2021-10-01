@@ -54,10 +54,6 @@ describe('TextBoxComponent', () => {
         component.buttonDetect();
         expect(textBoxServiceSpy.send).toHaveBeenCalled();
     });
-    it('buttonDetect should call getWord', () => {
-        component.buttonDetect();
-        expect(textBoxServiceSpy.getWord).toHaveBeenCalled();
-    });
     it('buttonDetect should call getDebugCommand', () => {
         component.buttonDetect();
         expect(textBoxServiceSpy.getDebugCommand).toHaveBeenCalled();
