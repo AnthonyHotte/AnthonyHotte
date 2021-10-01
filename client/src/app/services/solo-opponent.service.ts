@@ -75,6 +75,7 @@ export class SoloOpponentService {
             const SEVEN = 7;
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             if (PROBABILITY_OF_ACTION > TWENTY) {
+                this.lastTurnWasASkip = false;
                 this.allRetainedOptions = [];
                 this.possibleWords = [];
                 this.placementPossibilities = [];
@@ -101,38 +102,44 @@ export class SoloOpponentService {
                 let text = 'temporary message';
                 let i = 0;
                 while (i < this.allRetainedOptions.length) {
-                    text = this.placeLetters.placeWord(
-                        this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
+                    if (this.isWordPlayable(this.possibleWords[i], this.allRetainedOptions[i])) {
+                        text = this.placeLetters.placeWord(
+                            this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
+                                (this.allRetainedOptions[i].column + 1) +
+                                this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
+                                ' ' +
+                                this.possibleWords[i],
+                        );
+                        this.lastCommandEntered =
+                            '!placer ' +
+                            this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
                             (this.allRetainedOptions[i].column + 1) +
                             this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
                             ' ' +
-                            this.possibleWords[i],
-                    );
-                    this.lastCommandEntered =
-                        '!placer ' +
-                        this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
-                        (this.allRetainedOptions[i].column + 1) +
-                        this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
-                        ' ' +
-                        this.possibleWords[i] +
-                        ' placements alternatifs: ' +
-                        this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
-                        ' ' +
-                        this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
-                        ' ' +
-                        this.possibleWords[this.calculateProbability(this.possibleWords.length)];
+                            this.possibleWords[i] +
+                            ' placements alternatifs: ' +
+                            this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
+                            ' ' +
+                            this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
+                            ' ' +
+                            this.possibleWords[this.calculateProbability(this.possibleWords.length)];
+                    }
                     i++;
                     if (text === 'Mot placé avec succès.') {
                         i = this.allRetainedOptions.length;
                     }
                 }
-                this.firstWordToPlay = false;
-                this.myTurn = false;
-                this.changeTurn(this.myTurn.toString());
-                this.timeManager.endTurn();
+                if (text === 'Mot placé avec succès.') {
+                    this.firstWordToPlay = false;
+                    this.myTurn = false;
+                    this.changeTurn(this.myTurn.toString());
+                    this.timeManager.endTurn();
+                } else {
+                    this.skipTurn();
+                }
             } else {
-                const TEN = 10;
-                if (PROBABILITY_OF_ACTION <= TEN) {
+                const FIVE = 5;
+                if (PROBABILITY_OF_ACTION <= FIVE) {
                     this.skipTurn();
                 } else if (PROBABILITY_OF_ACTION <= TWENTY) {
                     const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
@@ -192,6 +199,7 @@ export class SoloOpponentService {
         }
     }
     exchangeLetters(numberOfLettersToTrade: number) {
+        this.lastTurnWasASkip = false;
         let i = 0;
         while (i < numberOfLettersToTrade) {
             const INDEX_OF_LETTER_TO_TRADE = this.calculateProbability(this.numberOfLetters);
@@ -333,7 +341,7 @@ export class SoloOpponentService {
         this.sourceMessageTextBox.next(['!échanger ', numberOfLettersToTrade.toString()]);
     }
     findValidPlacesOnBoard() {
-        const TOO_MUCH = 7;
+        const TOO_MUCH = 4;
         for (let i = 0; i < NUMBEROFCASE; i++) {
             for (let j = 0; j < NUMBEROFCASE; j++) {
                 if (this.gameState.lettersOnBoard[i][j] !== '') {
@@ -358,5 +366,39 @@ export class SoloOpponentService {
             possibility1.placement = PlacementValidity.HDown;
             this.placementPossibilities.push(possibility1);
         }
+    }
+
+    isWordPlayable(word: string, possibility: LetterPlacementPossibility): boolean {
+        this.placeLetters.row = possibility.row;
+        this.placeLetters.colomnNumber = possibility.column;
+        this.placeLetters.orientation = this.soloOpponentFunctions.enumToString(possibility.placement);
+        this.placeLetters.wordToPlace = word;
+        this.placeLetters.lettersToPlace = word;
+        let isPlayable = true;
+        if (!this.placeLetters.verifyTileNotOutOfBound()) {
+            isPlayable = false;
+        } else if (!this.placeLetters.verifyAvailable()) {
+            isPlayable = false;
+        } else {
+            this.placeLetters.placeWordGameState();
+            if (this.gameState.isWordCreationPossibleWithRessources()) {
+                if (this.gameState.isBoardEmpty) {
+                    if (!this.gameState.isLetterOnh8()) {
+                        isPlayable = false;
+                    }
+                } else if (this.gameState.lastLettersAdded.length === 0) {
+                    isPlayable = false;
+                } else if (!this.gameState.isWordTouchingLetterOnBoard(word, this.placeLetters.orientation)) {
+                    isPlayable = false;
+                } else if (!this.gameState.validateWordCreatedByNewLetters()) {
+                    isPlayable = false;
+                }
+            } else {
+                isPlayable = false;
+            }
+        }
+
+        this.placeLetters.removeLetterInGameState();
+        return isPlayable;
     }
 }

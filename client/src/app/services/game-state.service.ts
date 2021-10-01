@@ -126,6 +126,77 @@ export class GameStateService {
         }
         return false;
     }
+
+    isWordTouchingLetterOnBoard(wordToPlace: string, orientation: string): boolean {
+        if (this.lastLettersAdded.length !== wordToPlace.length || this.isBoardEmpty) {
+            return true;
+        } else if (orientation === 'h') {
+            return this.isWordTouchingHorizontal();
+        } else {
+            return this.isWordTouchingVertical();
+        }
+    }
+    private isWordTouchingHorizontal(): boolean {
+        for (let i = 0; i < this.indexLastLetters.length; i += 2) {
+            if (i === 0 && this.indexLastLetters[i + 1] !== 0) {
+                if (this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] - 1] !== '') {
+                    return true;
+                }
+            } else if (i === this.indexLastLetters.length - 2 && this.indexLastLetters[i + 1] !== constants.FOURTEEN) {
+                if (this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] + 1] !== '') {
+                    return true;
+                }
+            }
+            if (this.indexLastLetters[i] === 0) {
+                if (this.lettersOnBoard[this.indexLastLetters[i] + 1][this.indexLastLetters[i + 1]] !== '') {
+                    return true;
+                }
+            } else if (this.indexLastLetters[i] === constants.FOURTEEN) {
+                if (this.lettersOnBoard[this.indexLastLetters[i] - 1][this.indexLastLetters[i + 1]] !== '') {
+                    return true;
+                }
+            } else {
+                if (
+                    this.lettersOnBoard[this.indexLastLetters[i] - 1][this.indexLastLetters[i + 1]] !== '' ||
+                    this.lettersOnBoard[this.indexLastLetters[i] + 1][this.indexLastLetters[i + 1]] !== ''
+                ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private isWordTouchingVertical(): boolean {
+        for (let i = 0; i < this.indexLastLetters.length; i += 2) {
+            if (i === 0 && this.indexLastLetters[i] !== 0) {
+                if (this.lettersOnBoard[this.indexLastLetters[i] - 1][this.indexLastLetters[i + 1]] !== '') {
+                    return true;
+                }
+            } else if (i === this.indexLastLetters.length - 2 && this.indexLastLetters[i] !== constants.FOURTEEN) {
+                if (this.lettersOnBoard[this.indexLastLetters[i] + 1][this.indexLastLetters[i + 1]] !== '') {
+                    return true;
+                }
+            }
+            if (this.indexLastLetters[i + 1] === 0) {
+                if (this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] + 1] !== '') {
+                    return true;
+                }
+            } else if (this.indexLastLetters[i + 1] === constants.FOURTEEN) {
+                if (this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] - 1] !== '') {
+                    return true;
+                }
+            } else {
+                if (
+                    this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] - 1] !== '' ||
+                    this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] + 1] !== ''
+                ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     // removeCharFromString is inspired from https://stackoverflow.com/a/9932996
     private removeCharFromString(lettersAvailable: string, index: number): string {
         const temp = lettersAvailable.split(''); // convert to an array
