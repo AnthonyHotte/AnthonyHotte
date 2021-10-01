@@ -7,7 +7,6 @@ import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
-import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
@@ -42,16 +41,16 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     changedTurns: boolean = false;
 
     constructor(
-        private soloGameInformation: SoloGameInformationService,
-        private turnTimeController: TimerTurnManagerService,
-        private soloPlayer: SoloPlayerService,
-        private soloOpponent: SoloOpponentService,
-        private soloOpponent2: SoloOpponent2Service,
-        private letterService: LetterService,
-        private link: Router,
-        private textBox: TextBox,
-        private readonly gridService: GridService,
-        private readonly placeLetterService: PlaceLettersService,
+        public soloGameInformation: SoloGameInformationService,
+        public turnTimeController: TimerTurnManagerService,
+        public soloPlayer: SoloPlayerService,
+        public soloOpponent: SoloOpponentService,
+        public soloOpponent2: SoloOpponentService,
+        public letterService: LetterService,
+        public link: Router,
+        public textBox: TextBox,
+        public gridService: GridService,
+        public placeLetterService: PlaceLettersService,
     ) {
         this.message = this.soloGameInformation.message;
         this.setAttribute();
@@ -105,9 +104,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     skipTurn() {
         this.textBox.send('!passer');
         this.textBox.isCommand('!passer');
-        this.textBox.commandSuccessful = false;
-        this.opponentSet = true;
-        this.soloOpponentPlays();
     }
 
     getNumberRemainingLetters() {
@@ -115,12 +111,8 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         return this.messageLetterService;
     }
 
-    getNumberOfLettersForPlayer() {
-        return this.letterService.players[0].allLettersInHand.length;
-    }
-
-    getNumberOfLettersForOpponent() {
-        return this.letterService.players[1].allLettersInHand.length;
+    getNumberOfLettersForPlayer(indexPlayer: number) {
+        return this.letterService.players[indexPlayer].allLettersInHand.length;
     }
 
     getScorePlayer(index: number) {
@@ -143,7 +135,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     getPlayerName() {
         if (this.turn !== this.turnTimeController.turn) {
             this.changedTurns = true;
-            if (this.turn === 0 && this.textBox.commandSuccessful) {
+            if (this.textBox.commandSuccessful) {
                 this.opponentSet = true;
                 this.textBox.commandSuccessful = false;
                 this.soloOpponentPlays();
@@ -157,9 +149,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
             counter.reset();
-            if (this.turn === 1) {
-                this.soloOpponentPlays();
-            }
         }
         this.changedTurns = false;
     }

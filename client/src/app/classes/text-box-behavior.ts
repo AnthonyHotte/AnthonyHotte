@@ -107,6 +107,8 @@ export class TextBox {
                 this.endTurn();
                 if (text === 'Mot placé avec succès.') {
                     this.soloOpponent.firstWordToPlay = false;
+                } else {
+                    this.verifyCommandPasser();
                 }
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
                 text = this.verifyCommandPasser();
@@ -128,7 +130,7 @@ export class TextBox {
 
     verifyCommandPasser() {
         this.soloPlayer.incrementPassedTurns(this.soloOpponent.valueToEndGame, this.soloOpponent.lastTurnWasASkip);
-        if (this.valueToEndGame < this.soloPlayer.maximumAllowedSkippedTurns) {
+        if (this.soloPlayer.valueToEndGame < this.soloPlayer.maximumAllowedSkippedTurns) {
             this.endTurn();
             return 'Tour passé avec succès.';
         } else {
@@ -138,7 +140,7 @@ export class TextBox {
     }
 
     finishCurrentGame() {
-        this.link.navigate(['']);
+        this.link.navigate(['/home']);
     }
 
     endTurn() {
