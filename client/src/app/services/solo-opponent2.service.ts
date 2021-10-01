@@ -71,7 +71,7 @@ export class SoloOpponent2Service {
             this.placeLetterService.placeWord(tempword);
         }
         this.timeManagerService.endTurn();
-        return '!placer' + tempword;
+        return '!placer ' + tempword;
     }
     // return all the word that exist with the letters given;
     findValidWords(dict: string[], letters: string[]): string[] {

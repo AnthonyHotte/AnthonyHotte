@@ -1,22 +1,6 @@
 <div class="container">
     <body ng-app="app" style="text-align: Center">
         <fieldset>
-            <h1>Informations sur la partie en cours</h1>
-            <p>Mode: Jouer Solo (TODO)</p>
-            <p>
-                <label>Votre nom: {{ playerName[0] }}</label>
-            </p>
-            <p>
-                <label> Nom de votre adversaire: {{ playerName[1] }}</label>
-            </p>
-            <p>
-                <label>Temps par tours: {{ time }} secondes.</label>
-            </p>
-            <p>
-                <label>Difficulté du joueur virtuel: {{ difficultyInCharacters() }}.</label>
-            </p>
-        </fieldset>
-        <fieldset>
             <h1>Score</h1>
             <table>
                 <tr>
@@ -73,7 +57,10 @@
             <button class="buttonfontsize" (click)="decreaseFontSize()">-</button>
         </fieldset>
         <fieldset>
-            <button class="buttonsurrender" (click)="this.finishCurrentGame()">Abandonner la partie courante</button>
+            <button class="buttonsurrender" (click)="this.finishCurrentGame()">Terminer la partie courante</button>
+        </fieldset>
+        <fieldset>
+            <app-finished-game></app-finished-game>
         </fieldset>
     </body>
 </div>
