@@ -165,29 +165,23 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     soloOpponentPlays() {
         if (this.turnTimeController.turn === 1 && this.opponentSet) {
             this.opponentSet = false;
-            let skipNeeded = false;
+            // let skipNeeded = false;
             const TIME_TO_LOAD = 3200;
-            const INTERVAL_TIME = 17400;
+            // const INTERVAL_TIME = 17400;
             setTimeout(() => {
-                const INTERVAL_SKIP = setInterval(() => {
-                    if (skipNeeded) {
-                        this.soloOpponent.skipTurn();
-                        this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
-                        this.changedTurns = true;
-                        skipNeeded = false;
-                        clearTimeout(TIMEOUT_PLAY);
-                    }
-                    clearInterval(INTERVAL_SKIP);
-                }, INTERVAL_TIME);
-                const TIMEOUT_PLAY = setTimeout(() => {
-                    skipNeeded = true;
-                    this.soloOpponent.play();
-                    skipNeeded = false;
-                    clearInterval(INTERVAL_SKIP);
-                    this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
-                    this.changedTurns = true;
-                    clearTimeout(TIMEOUT_PLAY);
-                }, 1);
+                // setTimeout(() => {
+                //     if (skipNeeded) {
+                //         this.soloOpponent.skipTurn();
+                //         this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
+                //         this.changedTurns = true;
+                //         skipNeeded = false;
+                //     }
+                // }, INTERVAL_TIME);
+                // skipNeeded = true;
+                this.soloOpponent.play();
+                // skipNeeded = false;
+                this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
+                this.changedTurns = true;
             }, TIME_TO_LOAD);
         }
     }
