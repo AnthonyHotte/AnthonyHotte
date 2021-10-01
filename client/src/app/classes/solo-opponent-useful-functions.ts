@@ -1,5 +1,5 @@
 import { PlacementValidity } from '@app/classes/placement-validity';
-import { FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE, THIRTEEN, FOURTEEN } from '@app/constants';
+import { FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, ELEVEN, TWELVE, THIRTEEN, FOURTEEN, NUMBEROFCASE } from '@app/constants';
 
 export class SoloOpponentUsefulFunctions {
     valid: boolean;
@@ -77,5 +77,24 @@ export class SoloOpponentUsefulFunctions {
             possibleWord = index === 0 ? true : letters.charAt(index - 1) === ' ' && letters.charAt(index + word.length) === ' ';
         }
         return possibleWord;
+    }
+
+    findSameColumnItems(lettersOnBoard: string[][], row: number, column: number) {
+        let columnLetters = '';
+        for (let i = row + 1; i < NUMBEROFCASE; i++) {
+            if (lettersOnBoard[i][column] !== '') {
+                columnLetters += lettersOnBoard[i][column].toLowerCase();
+            }
+        }
+        return columnLetters;
+    }
+    findSameRowItems(lettersOnBoard: string[][], row: number, column: number) {
+        let rowLetters = '';
+        for (let i = column + 1; i < NUMBEROFCASE; i++) {
+            if (lettersOnBoard[row][i] !== '') {
+                rowLetters += lettersOnBoard[row][i].toLocaleLowerCase();
+            }
+        }
+        return rowLetters;
     }
 }
