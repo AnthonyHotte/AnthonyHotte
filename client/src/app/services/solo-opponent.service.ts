@@ -34,9 +34,9 @@ export class SoloOpponentService {
     private messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
     constructor(
-        private letters: LetterService,
-        private timeManager: TimerTurnManagerService,
-        private soloPlayer: SoloPlayerService,
+        public letters: LetterService,
+        public timeManager: TimerTurnManagerService,
+        public soloPlayer: SoloPlayerService,
         public soloOpponent2: SoloOpponent2Service,
     ) {
         this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
