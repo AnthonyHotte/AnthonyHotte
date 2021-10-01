@@ -130,7 +130,7 @@ export class TextBox {
 
     verifyCommandPasser() {
         this.soloPlayer.incrementPassedTurns(this.soloOpponent.valueToEndGame, this.soloOpponent.lastTurnWasASkip);
-        if (this.valueToEndGame < this.soloPlayer.maximumAllowedSkippedTurns) {
+        if (this.soloPlayer.valueToEndGame < this.soloPlayer.maximumAllowedSkippedTurns) {
             this.endTurn();
             return 'Tour passé avec succès.';
         } else {
