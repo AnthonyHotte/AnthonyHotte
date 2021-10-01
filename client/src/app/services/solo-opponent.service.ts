@@ -1,16 +1,16 @@
-import { Injectable, Injector } from '@angular/core';
-import { LETTERS } from '@app/all-letters';
+import { Injectable, /*Injector*/ } from '@angular/core';
+// import { LETTERS } from '@app/all-letters';
 import { LetterPlacementPossibility } from '@app/classes/letter-placement-possibility';
-import { PlacementValidity } from '@app/classes/placement-validity';
+// import { PlacementValidity } from '@app/classes/placement-validity';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
-import { PossibilityChecker } from '@app/classes/possibility-checker';
-import { SoloOpponentUsefulFunctions } from '@app/classes/solo-opponent-useful-functions';
-import { CENTERCASE, MAXLETTERINHAND, NUMBEROFCASE } from '@app/constants';
-import { WordValidationService } from '@app/services/word-validation.service';
+// import { PossibilityChecker } from '@app/classes/possibility-checker';
+// import { SoloOpponentUsefulFunctions } from '@app/classes/solo-opponent-useful-functions';
+import { /*CENTERCASE,*/ MAXLETTERINHAND, /*NUMBEROFCASE*/ } from '@app/constants';
+// import { WordValidationService } from '@app/services/word-validation.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { GameStateService } from './game-state.service';
+// import { GameStateService } from './game-state.service';
 import { LetterService } from './letter.service';
-import { PlaceLettersService } from './place-letters.service';
+// import { PlaceLettersService } from './place-letters.service';
 import { SoloPlayerService } from './solo-player.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 @Injectable({
@@ -39,19 +39,19 @@ export class SoloOpponentService {
     private messageSource = new BehaviorSubject('default message');
     private messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
-    private placementPossibilities: LetterPlacementPossibility[] = [];
-    private possibilityCheck: PossibilityChecker = new PossibilityChecker(true);
-    private soloOpponentFunctions: SoloOpponentUsefulFunctions;
+    // private placementPossibilities: LetterPlacementPossibility[] = [];
+    // private possibilityCheck: PossibilityChecker = new PossibilityChecker(true);
+    // private soloOpponentFunctions: SoloOpponentUsefulFunctions;
     constructor(
         private letters: LetterService,
         private timeManager: TimerTurnManagerService,
         private soloPlayer: SoloPlayerService,
-        private gameState: GameStateService,
-        private placeLetters: PlaceLettersService,
-        private injection: Injector,
-        private readonly wordValidator: WordValidationService,
+        // private gameState: GameStateService,
+        // private placeLetters: PlaceLettersService,
+        // private injection: Injector,
+        // private readonly wordValidator: WordValidationService,
     ) {
-        this.soloOpponentFunctions = new SoloOpponentUsefulFunctions(true);
+        // this.soloOpponentFunctions = new SoloOpponentUsefulFunctions(true);
         this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.currentMessage = this.messageSource.asObservable();
         this.letters.players[1].addLetters(MAXLETTERINHAND);
@@ -64,7 +64,7 @@ export class SoloOpponentService {
         );
         this.messageTextBox = this.sourceMessageTextBox.asObservable();
         this.maximumAllowedSkippedTurns = 6;
-        this.gameState = this.injection.get(GameStateService);
+        // this.gameState = this.injection.get(GameStateService);
         this.myTurn = this.timeManager.turn === 1;
     }
     play() {
@@ -137,6 +137,7 @@ export class SoloOpponentService {
                 //     this.skipTurn();
                 // }
                 this.lastCommandEntered = 'Solo Opponent joue un tour';
+                this.timeManager.endTurn();
             } else if (PROBABILITY_OF_ACTION <= TEN) {
                 this.skipTurn();
             } else {
