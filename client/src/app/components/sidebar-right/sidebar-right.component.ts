@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
+import { MessagePlayer } from '@app/message';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
@@ -101,7 +102,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     skipTurn() {
-        this.textBox.send('!passer');
         this.textBox.isCommand('!passer');
         this.textBox.commandSuccessful = false;
         this.opponentSet = true;
@@ -168,11 +168,14 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
             let skipNeeded = false;
             const TIME_TO_LOAD = 3200;
             const INTERVAL_TIME = 17400;
+            const messagePlayer: MessagePlayer = { message: '', sender: '', debugSate: this.textBox.debugCommand };
+            messagePlayer.sender = 'Adversaire';
             setTimeout(() => {
                 const INTERVAL_SKIP = setInterval(() => {
                     if (skipNeeded) {
                         this.soloOpponent.skipTurn();
-                        this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
+                        messagePlayer.message = this.soloOpponent.lastCommandEntered;
+                        this.textBox.inputs.push(messagePlayer);
                         this.changedTurns = true;
                         skipNeeded = false;
                         clearTimeout(TIMEOUT_PLAY);
@@ -184,7 +187,8 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
                     this.soloOpponent.play();
                     skipNeeded = false;
                     clearInterval(INTERVAL_SKIP);
-                    this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
+                    messagePlayer.message = this.soloOpponent.lastCommandEntered;
+                    this.textBox.inputs.push(messagePlayer);
                     this.changedTurns = true;
                 }, 1);
             }, TIME_TO_LOAD);

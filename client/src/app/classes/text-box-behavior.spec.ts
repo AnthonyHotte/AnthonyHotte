@@ -61,11 +61,16 @@ describe('TextBox', () => {
         expect(textBox.character).toBe(true);
     });
     it('should get word Hello', () => {
-        textBox.word = 'Hello';
+        textBox.word = { message: '', sender: '' };
+        textBox.word.message = 'Hello';
         expect(textBox.getWord()).toEqual('Hello');
     });
     it('should get inputs Hello, You, Man', () => {
-        const arr = ['Hello', 'You', 'Man'];
+        const arr = [
+            { message: 'Hello', sender: '' },
+            { message: 'You', sender: '' },
+            { message: 'Man', sender: '' },
+        ];
         textBox.inputs = arr;
         for (let i = 0; i < arr.length; i++) {
             expect(textBox.getArray()[i]).toEqual(arr[i]);

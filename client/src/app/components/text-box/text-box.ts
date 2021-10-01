@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
+import { MessagePlayer } from '@app/message';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 @Component({
     selector: 'app-text-box',
@@ -13,7 +14,7 @@ export class TextBoxComponent implements OnInit {
     messageSoloOpponent: string[];
     messageSoloInfo: string[];
     word: string;
-    array: string[];
+    array: MessagePlayer[];
     messagesSoloOpponent: string[];
     buttonCommandState: string;
     buttonMessageState: string;
@@ -25,6 +26,7 @@ export class TextBoxComponent implements OnInit {
 
     playerName: string;
     oponentName: string;
+    message: MessagePlayer;
 
     constructor(private timeManager: TimerTurnManagerService, public input: TextBox) {
         this.word = '';
@@ -34,17 +36,18 @@ export class TextBoxComponent implements OnInit {
         this.debugCommand = false;
 
         this.messagesSoloOpponent = [];
-        // this.messageSoloInfo = this.soloGameInformation.message;
-        // this.input = new TextBox(this.placeLetter, this.soloPlayer, this.soloOpponent, this.timeManager, this.link, this.letterService);
-        // this.input.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
+        this.message = { message: '', sender: 'Joueur', debugSate: false };
     }
 
     buttonDetect() {
-        this.input.send(this.word);
+        const myMessage: MessagePlayer = { message: '', sender: 'Joueur', debugSate: false };
+        myMessage.message = this.word;
         if (this.buttonCommandState === 'ButtonCommandActivated') {
-            this.input.isCommand(this.word);
+            this.input.send(myMessage);
+            this.input.isCommand(myMessage.message);
+        } else {
+            this.input.send(myMessage);
         }
-        this.word = this.input.getWord();
         this.array = this.input.getArray();
         this.scrollDown();
         if (this.input.getDebugCommand()) {
@@ -76,13 +79,6 @@ export class TextBoxComponent implements OnInit {
             mondiv.scrollTo(0, mondiv.scrollHeight);
         }
     }
-    // getMessageSoloOpoonent() {
-    //     if (parseInt(this.messageSoloOpponent[1], 10) > 0) {
-    //         return 'commande: ' + this.messageSoloOpponent[0] + ' nombre de lettre(s) échangée(s): ' + this.messageSoloOpponent[1];
-    //     } else {
-    //         return 'commande: ' + this.messageSoloOpponent[0];
-    //     }
-    // }
 
     getInputs() {
         return this.input.getArray();

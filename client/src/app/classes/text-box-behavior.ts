@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { MAX_CHARACTERS, PLACERCOMMANDLENGTH } from '@app/constants';
+import { MessagePlayer } from '@app/message';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
@@ -13,8 +14,8 @@ import { PlayerLetterHand } from './player-letter-hand';
     providedIn: 'root',
 })
 export class TextBox {
-    word: string = '';
-    inputs: string[] = [];
+    word: MessagePlayer;
+    inputs: MessagePlayer[] = [];
     inputsSoloOpponent: string[];
     character: boolean = false;
     buttonMessageState: string = 'ButtonMessageActivated';
@@ -35,7 +36,7 @@ export class TextBox {
         private link: Router,
         private letterService: LetterService,
     ) {
-        this.word = '';
+        this.word = { message: '', sender: '', debugSate: false };
         this.inputs = [];
         this.character = false;
         this.buttonMessageState = 'ButtonMessageActivated';
@@ -47,8 +48,8 @@ export class TextBox {
         this.turn = this.timeManager.turn;
         this.inputsSoloOpponent = [];
     }
-    send(myWord: string) {
-        this.inputVerification(myWord);
+    send(myWord: MessagePlayer) {
+        this.inputVerification(myWord.message);
         if (this.character === false) {
             this.inputs.push(myWord);
         }
@@ -62,7 +63,7 @@ export class TextBox {
     }
 
     getWord() {
-        return this.word;
+        return this.word.message;
     }
 
     getArray() {
@@ -116,7 +117,9 @@ export class TextBox {
                 text = 'Erreur de syntaxe...';
             }
         }
-        this.inputs.push(text);
+        const message: MessagePlayer = { message: '', sender: 'Systeme', debugSate: false };
+        message.message = text;
+        this.inputs.push(message);
     }
     getDebugCommand() {
         return this.debugCommand;
