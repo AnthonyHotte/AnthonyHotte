@@ -1,13 +1,13 @@
 <div class="textBox">
     <h1 class="title">Boite de communication</h1>
 </div>
-<div class="DisplayZone">
-    <div>
-        <p class="PlayerMessage" *ngFor="let word of this.getInputs()" style="color :green; ">Joueur: {{word}} </p>
+<div id="DisplayZone">
+    <div *ngFor="let word of array">
+        <p [class]="word.sender" *ngIf="word.sender==='Joueur' || (word.sender === 'Adversaire' && word.debugState === true) || word.sender==='Systeme'">{{word.sender}}: {{word.message}} </p>
     </div>
-    <div>
-        <p class="OpponentMessage" *ngFor="let word of this.getSoloOpponentInputs()" style="color :red; ">Opposant: {{word}}</p>
-    </div>
+    <!-- <div>
+        <p *ngFor="let wo of array"> Opposant: {{wo.message}}</p>
+    </div> -->
 </div>
 <div *ngIf="input.character">
     <p class="AlertMessage">Votre commande ou message est trop longue</p>

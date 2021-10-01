@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
+import { MessagePlayer } from '@app/message';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 @Component({
     selector: 'app-text-box',
@@ -12,71 +13,50 @@ export class TextBoxComponent implements OnInit {
     messageTimeManager: string;
     messageSoloOpponent: string[];
     messageSoloInfo: string[];
-    // subscriptionPlayer: Subscription;
-    // subscriptionLetterService: Subscription;
-    // subscriptionTimeManager: Subscription;
-    // subscriptionSoloOpponent: Subscription;
-    // subscriptionTextBox: Subscription;
     word: string;
-    array: string[];
+    array: MessagePlayer[];
     messagesSoloOpponent: string[];
     buttonCommandState: string;
     buttonMessageState: string;
-    // messageTextBox: string;
     debugCommand: boolean;
     turn: number;
     text: string;
     valueToEndGame: number;
+    debugMessage: string;
 
     playerName: string;
     oponentName: string;
+    message: MessagePlayer;
 
-    constructor(
-        // private soloPlayer: SoloPlayerService,
-        // private letterService: LetterService,
-        private timeManager: TimerTurnManagerService,
-        // private soloOpponent: SoloOpponentService,
-        // private soloGameInformation: SoloGameInformationService,
-        // private link: Router,
-        // private placeLetter: PlaceLettersService,
-        public input: TextBox,
-    ) {
+    constructor(private timeManager: TimerTurnManagerService, public input: TextBox) {
         this.word = '';
         this.array = [];
         this.buttonCommandState = 'ButtonCommandReleased';
         this.buttonMessageState = 'ButtonMessageActivated';
         this.debugCommand = false;
+
         this.messagesSoloOpponent = [];
-        // this.messageSoloInfo = this.soloGameInformation.message;
-        // this.input = new TextBox(this.placeLetter, this.soloPlayer, this.soloOpponent, this.timeManager, this.link, this.letterService);
-        // this.input.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
+        this.message = { message: '', sender: 'Joueur', debugState: false };
     }
 
     buttonDetect() {
-        this.input.send(this.word);
+        const myMessage: MessagePlayer = { message: '', sender: 'Joueur', debugState: false };
+        myMessage.message = this.word;
         if (this.buttonCommandState === 'ButtonCommandActivated') {
-            this.input.isCommand(this.word);
+            this.input.send(myMessage);
+            this.input.isCommand(myMessage.message);
+        } else {
+            this.input.send(myMessage);
         }
-        this.word = this.input.getWord();
         this.array = this.input.getArray();
         if (this.input.getDebugCommand()) {
             this.messagesSoloOpponent = this.input.getMessagesSoloOpponent();
         }
         this.debugCommand = this.input.getDebugCommand();
+        this.word = '';
     }
 
     ngOnInit() {
-        // this.subscriptionPlayer = this.soloPlayer.currentMessage.subscribe((messagePlayer) => (this.messagePlayer = messagePlayer));
-        // this.subscriptionLetterService = PlayerLetterHand.currentMessage.subscribe(
-        //     (messageLetterService) => (this.messageLetterService = messageLetterService),
-        // );
-        // this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
-        //     (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
-        // );
-        // this.subscriptionSoloOpponent = this.soloOpponent.messageTextBox.subscribe(
-        //     (messageSoloOpponent) => (this.messageSoloOpponent = messageSoloOpponent),
-        // );
-        // this.subscriptionTextBox = this.input.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
         this.turn = this.timeManager.turn;
         this.valueToEndGame = 0;
     }
@@ -92,15 +72,6 @@ export class TextBoxComponent implements OnInit {
         this.buttonMessageState = 'ButtonMessageActivated';
         this.input.activateMessageButton();
     }
-
-    // getMessageSoloOpoonent() {
-    //     if (parseInt(this.messageSoloOpponent[1], 10) > 0) {
-    //         return 'commande: ' + this.messageSoloOpponent[0] + ' nombre de lettre(s) échangée(s): ' + this.messageSoloOpponent[1];
-    //     } else {
-    //         return 'commande: ' + this.messageSoloOpponent[0];
-    //     }
-    // }
-
     getInputs() {
         return this.input.getArray();
     }
