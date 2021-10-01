@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
+import { MessagePlayer } from '@app/message';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
@@ -106,7 +107,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     skipTurn() {
-        this.textBox.send('!passer');
         this.textBox.isCommand('!passer');
     }
 
@@ -161,11 +161,15 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         if (this.turnTimeController.turn === 1 && this.opponentSet) {
             this.opponentSet = false;
             const TIME_TO_LOAD = 3200;
+            const messagePlayer: MessagePlayer = { message: '', sender: '', debugState: this.textBox.debugCommand };
+            messagePlayer.sender = 'Adversaire';
             setTimeout(() => {
                 this.soloOpponent.play();
-                this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
+                messagePlayer.message = this.soloOpponent.lastCommandEntered;
+                this.textBox.inputs.push(messagePlayer);
                 this.changedTurns = true;
             }, TIME_TO_LOAD);
+            this.textBox.scrollDown();
             return;
         }
     }
