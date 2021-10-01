@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
+// import { MessagePlayer } from '@app/message';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
+// import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
@@ -106,8 +108,8 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     skipTurn() {
-        this.textBox.send('!passer');
         this.textBox.isCommand('!passer');
+        this.soloOpponentPlays();
     }
 
     getNumberRemainingLetters() {
@@ -158,15 +160,18 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     soloOpponentPlays() {
-        if (this.turnTimeController.turn === 1 && this.opponentSet) {
-            this.opponentSet = false;
-            const TIME_TO_LOAD = 3200;
-            setTimeout(() => {
-                this.soloOpponent.play();
-                this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
-                this.changedTurns = true;
-            }, TIME_TO_LOAD);
-            return;
-        }
+        // if (this.turnTimeController.turn === 1 && this.opponentSet) {
+        //     this.opponentSet = false;
+        // let skipNeeded = false;
+        // const TIME_TO_LOAD = 3200;
+        // setTimeout(() => {
+        this.soloOpponent.play();
+        // skipNeeded = true;
+        // skipNeeded = false;
+        // clearInterval(INTERVAL_SKIP);
+        //   this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
+        //        this.changedTurns = true;
+        // }, TIME_TO_LOAD);
+        // }
     }
 }

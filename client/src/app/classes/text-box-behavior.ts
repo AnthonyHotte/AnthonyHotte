@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { MAX_CHARACTERS, PLACERCOMMANDLENGTH } from '@app/constants';
+import { MessagePlayer } from '@app/message';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
@@ -14,8 +15,8 @@ import { FinishGameService } from '@app/services/finish-game.service';
     providedIn: 'root',
 })
 export class TextBox {
-    word: string = '';
-    inputs: string[] = [];
+    word: MessagePlayer;
+    inputs: MessagePlayer[] = [];
     inputsSoloOpponent: string[];
     character: boolean = false;
     buttonMessageState: string = 'ButtonMessageActivated';
@@ -36,7 +37,7 @@ export class TextBox {
         private letterService: LetterService,
         private finishGameService: FinishGameService,
     ) {
-        this.word = '';
+        this.word = { message: '', sender: '', debugState: false };
         this.inputs = [];
         this.character = false;
         this.buttonMessageState = 'ButtonMessageActivated';
@@ -48,8 +49,8 @@ export class TextBox {
         this.turn = this.timeManager.turn;
         this.inputsSoloOpponent = [];
     }
-    send(myWord: string) {
-        this.inputVerification(myWord);
+    send(myWord: MessagePlayer) {
+        this.inputVerification(myWord.message);
         if (this.character === false) {
             this.inputs.push(myWord);
         }
@@ -63,7 +64,7 @@ export class TextBox {
     }
 
     getWord() {
-        return this.word;
+        return this.word.message;
     }
 
     getArray() {
@@ -119,7 +120,9 @@ export class TextBox {
                 text = 'Erreur de syntaxe...';
             }
         }
-        this.inputs.push(text);
+        const message: MessagePlayer = { message: '', sender: 'Systeme', debugState: false };
+        message.message = text;
+        this.inputs.push(message);
     }
     getDebugCommand() {
         return this.debugCommand;
@@ -187,5 +190,11 @@ export class TextBox {
             }
         }
         return true;
+    }
+    scrollDown() {
+        const mondiv = document.getElementById('DisplayZone');
+        if (mondiv !== null) {
+            mondiv.scrollTo(0, mondiv.scrollHeight);
+        }
     }
 }
