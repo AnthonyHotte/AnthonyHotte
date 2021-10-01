@@ -11,10 +11,12 @@ export class PlayerLetterHand {
     numberLetterInHand: number;
     selectedLettersForExchange: Set<number>;
     score: number;
+    name: string;
     letterMap: LetterMap;
 
     constructor() {
         this.allLettersInHand = [];
+        this.name = '';
         this.numberLetterInHand = 0;
         this.score = 0;
         this.selectedLettersForExchange = new Set<number>();

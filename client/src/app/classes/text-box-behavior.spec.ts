@@ -1,33 +1,36 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { FinishGameService } from '@app/services/finish-game.service';
 import { TextBox } from './text-box-behavior';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('TextBox', () => {
     let textBox: TextBox;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let soloPlayerServiceSpy: jasmine.SpyObj<SoloPlayerService>;
     let soloOpponentServiceSpy: jasmine.SpyObj<SoloOpponentService>;
-    let routerSpy: jasmine.SpyObj<Router>;
     let placerLetterServiceSpy: jasmine.SpyObj<PlaceLettersService>;
     let timerTurnManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
+    let finishGameServiceSpy: jasmine.SpyObj<FinishGameService>;
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [RouterTestingModule],
+        }).compileComponents();
+    });
 
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
-        });
+        TestBed.configureTestingModule({});
         textBox = TestBed.inject(TextBox);
         letterServiceSpy = TestBed.inject(LetterService) as jasmine.SpyObj<LetterService>;
         soloPlayerServiceSpy = TestBed.inject(SoloPlayerService) as jasmine.SpyObj<SoloPlayerService>;
         soloOpponentServiceSpy = TestBed.inject(SoloOpponentService) as jasmine.SpyObj<SoloOpponentService>;
-        routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
         placerLetterServiceSpy = TestBed.inject(PlaceLettersService) as jasmine.SpyObj<PlaceLettersService>;
         timerTurnManagerServiceSpy = TestBed.inject(TimerTurnManagerService) as jasmine.SpyObj<TimerTurnManagerService>;
+        finishGameServiceSpy = TestBed.inject(FinishGameService) as jasmine.SpyObj<FinishGameService>;
     });
 
     it('should create an instance', () => {
@@ -107,15 +110,15 @@ describe('TextBox', () => {
         soloOpponentServiceSpy = jasmine.createSpyObj('SoloOpponentService', ['reset']);
         placerLetterServiceSpy = jasmine.createSpyObj('PlacerLettersService', ['placeWord']);
         timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerServiceSpy', ['endTurn']);
-        routerSpy = jasmine.createSpyObj('Router', ['initialNavigation']);
+        finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['goToHomeAndRefresh']);
 
         textBox = new TextBox(
             placerLetterServiceSpy,
             soloPlayerServiceSpy,
             soloOpponentServiceSpy,
             timerTurnManagerServiceSpy,
-            routerSpy,
             letterServiceSpy,
+            finishGameServiceSpy,
         );
 
         timerTurnManagerServiceSpy.turn = 0;
@@ -166,15 +169,15 @@ describe('TextBox', () => {
         soloOpponentServiceSpy = jasmine.createSpyObj('SoloOpponentService', ['reset']);
         placerLetterServiceSpy = jasmine.createSpyObj('PlacerLettersService', ['placeWord']);
         timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerServiceSpy', ['endTurn']);
-        routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+        finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['goToHomeAndRefresh']);
 
         textBox = new TextBox(
             placerLetterServiceSpy,
             soloPlayerServiceSpy,
             soloOpponentServiceSpy,
             timerTurnManagerServiceSpy,
-            routerSpy,
             letterServiceSpy,
+            finishGameServiceSpy,
         );
 
         textBox.verifyCommandPasser();
@@ -196,18 +199,10 @@ describe('TextBox', () => {
         textBox.verifyCommandPasser();
         expect(mySpy).toHaveBeenCalled();
     });
-    it('finishCurrent game should call navigate', () => {
-        const mySpy = spyOn(routerSpy, 'navigate');
-        textBox.finishCurrentGame();
-        expect(mySpy).toHaveBeenCalled();
-    });
+
     it('endTurn should call endTurn of timeManager', () => {
         const mySpy = spyOn(timerTurnManagerServiceSpy, 'endTurn');
-        timerTurnManagerServiceSpy.turn = 4;
         textBox.endTurn();
-        expect(textBox.turn).toBe(timerTurnManagerServiceSpy.turn);
-        textBox.turn = 0;
-
         expect(mySpy).toHaveBeenCalled();
     });
     it('endTurn should call changeTurn of opponent', () => {

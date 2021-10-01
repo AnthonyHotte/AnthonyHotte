@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { GridService } from '@app/services/grid.service';
@@ -11,6 +10,7 @@ import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
 import { Subscription } from 'rxjs';
+// import { FinishGameService } from '@app/services/finish-game.service';
 
 @Component({
     selector: 'app-sidebar-right',
@@ -18,6 +18,9 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./sidebar-right.component.scss'],
 })
 export class SidebarRightComponent implements OnInit, AfterViewInit {
+    /* @ViewChild('counter')
+    counterTimer: CountdownComponent;
+    gameFinish: Subscription;*/
     messagePlayer: string;
     opponentMessage: string;
     messageLetterService: string;
@@ -41,17 +44,19 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     changedTurns: boolean = false;
 
     constructor(
-        public soloGameInformation: SoloGameInformationService,
-        public turnTimeController: TimerTurnManagerService,
-        public soloPlayer: SoloPlayerService,
-        public soloOpponent: SoloOpponentService,
-        public letterService: LetterService,
-        public link: Router,
-        public textBox: TextBox,
-        public gridService: GridService,
-        public placeLetterService: PlaceLettersService,
+        private soloGameInformation: SoloGameInformationService,
+        private turnTimeController: TimerTurnManagerService,
+        private soloPlayer: SoloPlayerService,
+        private soloOpponent: SoloOpponentService,
+        private letterService: LetterService,
+        private textBox: TextBox,
+        private readonly gridService: GridService,
+        private readonly placeLetterService: PlaceLettersService, // private finishGameService: FinishGameService,
     ) {
         this.message = this.soloGameInformation.message;
+        /* TODO this.gameFinish = this.finishGameService.observableForGameFinished.subscribe(() => {
+            this.counterTimer.pause();
+        }); */
         this.setAttribute();
     }
 
@@ -103,9 +108,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     skipTurn() {
         this.textBox.send('!passer');
         this.textBox.isCommand('!passer');
-        this.textBox.commandSuccessful = false;
-        this.opponentSet = true;
-        this.soloOpponentPlays();
     }
 
     getNumberRemainingLetters() {
@@ -122,7 +124,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     finishCurrentGame() {
-        this.link.navigate(['']);
+        this.textBox.finishCurrentGame();
     }
 
     increaseFontSize() {
@@ -137,7 +139,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     getPlayerName() {
         if (this.turn !== this.turnTimeController.turn) {
             this.changedTurns = true;
-            if (this.turn === 0 && this.textBox.commandSuccessful) {
+            if (this.textBox.commandSuccessful) {
                 this.opponentSet = true;
                 this.textBox.commandSuccessful = false;
                 this.soloOpponentPlays();
@@ -151,9 +153,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
             counter.reset();
-            if (this.turn === 1) {
-                this.soloOpponentPlays();
-            }
         }
         this.changedTurns = false;
     }
@@ -167,6 +166,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
                 this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
                 this.changedTurns = true;
             }, TIME_TO_LOAD);
+            return;
         }
     }
 }
