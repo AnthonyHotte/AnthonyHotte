@@ -36,7 +36,7 @@ export class TextBox {
         private link: Router,
         private letterService: LetterService,
     ) {
-        this.word = { message: '', sender: '', debugSate: false };
+        this.word = { message: '', sender: '', debugState: false };
         this.inputs = [];
         this.character = false;
         this.buttonMessageState = 'ButtonMessageActivated';
@@ -119,7 +119,7 @@ export class TextBox {
                 text = 'Erreur de syntaxe...';
             }
         }
-        const message: MessagePlayer = { message: '', sender: 'Systeme', debugSate: false };
+        const message: MessagePlayer = { message: '', sender: 'Systeme', debugState: false };
         message.message = text;
         this.inputs.push(message);
     }

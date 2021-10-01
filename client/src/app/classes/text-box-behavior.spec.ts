@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MessagePlayer } from '@app/message';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
@@ -41,10 +42,10 @@ describe('TextBox', () => {
         // no need for both lines since logic was changed...
         // const isCommandSpy = spyOn(textBox, 'isCommand');
         const pushSpy = spyOn(textBox.inputs, 'push');
-        textBox.send('Hello');
+        textBox.send({ message: 'Hello', sender: '', debugState: true });
         expect(inputVerificationSpy).toHaveBeenCalledWith('Hello');
         // expect(isCommandSpy).toHaveBeenCalledWith('');
-        expect(pushSpy).toHaveBeenCalledWith('Hello');
+        expect(pushSpy).toHaveBeenCalledWith({ message: 'Hello', sender: '', debugState: true });
     });
     it('should validate input correctly', () => {
         textBox.inputVerification('Hello');
@@ -61,15 +62,14 @@ describe('TextBox', () => {
         expect(textBox.character).toBe(true);
     });
     it('should get word Hello', () => {
-        textBox.word = { message: '', sender: '' };
         textBox.word.message = 'Hello';
         expect(textBox.getWord()).toEqual('Hello');
     });
     it('should get inputs Hello, You, Man', () => {
-        const arr = [
-            { message: 'Hello', sender: '' },
-            { message: 'You', sender: '' },
-            { message: 'Man', sender: '' },
+        const arr: MessagePlayer[] = [
+            { message: 'Hello', sender: '', debugState: true },
+            { message: 'You', sender: '', debugState: true },
+            { message: 'Man', sender: '', debugState: true },
         ];
         textBox.inputs = arr;
         for (let i = 0; i < arr.length; i++) {
@@ -273,7 +273,7 @@ describe('TextBox', () => {
         // const isCommandSpy = spyOn(textBox, 'isCommand');
         const pushSpy = spyOn(textBox.inputs, 'push');
         textBox.character = true;
-        textBox.send('Hello');
+        textBox.send({ message: 'Hello', sender: '', debugState: true });
         expect(inputVerificationSpy).toHaveBeenCalledWith('Hello');
         // expect(isCommandSpy).toHaveBeenCalledWith('');
         expect(pushSpy).not.toHaveBeenCalled();

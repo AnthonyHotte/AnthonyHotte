@@ -156,7 +156,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         if (this.turnTimeController.turn === 1 && this.opponentSet) {
             this.opponentSet = false;
             const TIME_TO_LOAD = 3200;
-            const messagePlayer: MessagePlayer = { message: '', sender: '', debugSate: this.textBox.debugCommand };
+            const messagePlayer: MessagePlayer = { message: '', sender: '', debugState: this.textBox.debugCommand };
             messagePlayer.sender = 'Adversaire';
             setTimeout(() => {
                 this.soloOpponent.play();

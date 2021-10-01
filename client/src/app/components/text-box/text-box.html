@@ -3,7 +3,7 @@
 </div>
 <div id="DisplayZone">
     <div *ngFor="let word of array">
-        <p [class]="word.sender" *ngIf="word.sender==='Joueur' || (word.sender === 'Adversaire' && word.debugSate === true) || word.sender==='Systeme'">{{word.sender}}: {{word.message}} </p>
+        <p [class]="word.sender" *ngIf="word.sender==='Joueur' || (word.sender === 'Adversaire' && word.debugState === true) || word.sender==='Systeme'">{{word.sender}}: {{word.message}} </p>
     </div>
     <!-- <div>
         <p *ngFor="let wo of array"> Opposant: {{wo.message}}</p>

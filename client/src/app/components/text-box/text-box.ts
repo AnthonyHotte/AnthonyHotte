@@ -36,11 +36,11 @@ export class TextBoxComponent implements OnInit {
         this.debugCommand = false;
 
         this.messagesSoloOpponent = [];
-        this.message = { message: '', sender: 'Joueur', debugSate: false };
+        this.message = { message: '', sender: 'Joueur', debugState: false };
     }
 
     buttonDetect() {
-        const myMessage: MessagePlayer = { message: '', sender: 'Joueur', debugSate: false };
+        const myMessage: MessagePlayer = { message: '', sender: 'Joueur', debugState: false };
         myMessage.message = this.word;
         if (this.buttonCommandState === 'ButtonCommandActivated') {
             this.input.send(myMessage);
@@ -54,7 +54,6 @@ export class TextBoxComponent implements OnInit {
         }
         this.debugCommand = this.input.getDebugCommand();
         this.word = '';
-        this.input.scrollDown();
     }
 
     ngOnInit() {
