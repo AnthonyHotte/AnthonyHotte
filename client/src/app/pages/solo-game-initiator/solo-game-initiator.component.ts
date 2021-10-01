@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
+import { LetterService } from '@app/services/letter.service';
 
 @Component({
     selector: 'app-solo-game-initiator',
@@ -18,7 +19,7 @@ export class SoloGameInitiatorComponent {
     playTime: number;
     easyDifficulty: boolean = true;
 
-    constructor(private informations: SoloGameInformationService /* private toTextBox: CommunicationTextBoxSoloGameInitiatorService,*/) {
+    constructor(private informations: SoloGameInformationService, private letterService: LetterService) {
         this.message = [];
 
         this.temporaryName = 'Joueur';
@@ -70,12 +71,15 @@ export class SoloGameInitiatorComponent {
             switch (this.idNameOpponent) {
                 case 1:
                     this.opponentName = 'Daphne du Maurier';
+                    this.letterService.players[1].name = this.opponentName;
                     break;
                 case 2:
-                    this.opponentName = 'Jane Austen';
+                    this.opponentName = 'Jane Belmont';
+                    this.letterService.players[1].name = this.opponentName;
                     break;
                 default:
-                    this.opponentName = 'Haruki Murakami';
+                    this.opponentName = 'Haruki MacDonald';
+                    this.letterService.players[1].name = this.opponentName;
             }
         }
     }
@@ -83,6 +87,7 @@ export class SoloGameInitiatorComponent {
         this.verifyNames();
         if (this.nameIsValid) {
             this.name = this.temporaryName;
+            this.letterService.players[0].name = this.temporaryName;
         } else {
             this.name = 'Joueur';
         }

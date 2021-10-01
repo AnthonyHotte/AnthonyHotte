@@ -18,6 +18,7 @@ import { SidebarRightComponent } from './components/sidebar-right/sidebar-right.
 import { TextBoxComponent } from './components/text-box/text-box';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-game-initiator.component';
+import { FinishedGameComponent } from './components/finished-game/finished-game.component';
 
 /**
  * Main module that is used in main.ts.
@@ -38,6 +39,7 @@ import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-gam
         SidebarRightComponent,
         TextBoxComponent,
         LettersComponent,
+        FinishedGameComponent,
     ],
     imports: [
         AppMaterialModule,
