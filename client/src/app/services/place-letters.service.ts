@@ -102,7 +102,7 @@ export class PlaceLettersService {
                         this.removeLetterInGameState();
                         return 'Vous devez utiliser au moins une lettre de votre main pour créer un mot';
                     }
-                    if (this.gameState.lastLettersAdded.length === this.wordToPlace.length && !this.gameState.isBoardEmpty) {
+                    if (!this.gameState.isWordTouchingLetterOnBoard(this.wordToPlace, this.orientation)) {
                         this.removeLetterInGameState();
                         return 'Ce mot ne touche à aucune lettre déjà en jeu.';
                     }
