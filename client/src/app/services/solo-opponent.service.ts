@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { LetterPlacementPossibility } from '@app/classes/letter-placement-possibility';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
+import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { LetterService } from './letter.service';
 import { SoloPlayerService } from './solo-player.service';
@@ -32,7 +33,12 @@ export class SoloOpponentService {
     private messageSource = new BehaviorSubject('default message');
     private messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
-    constructor(private letters: LetterService, private timeManager: TimerTurnManagerService, private soloPlayer: SoloPlayerService) {
+    constructor(
+        private letters: LetterService,
+        private timeManager: TimerTurnManagerService,
+        private soloPlayer: SoloPlayerService,
+        public soloOpponent2: SoloOpponent2Service,
+    ) {
         this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.currentMessage = this.messageSource.asObservable();
         this.letters.players[1].addLetters(MAXLETTERINHAND);
@@ -56,8 +62,8 @@ export class SoloOpponentService {
             const SEVEN = 7;
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             if (PROBABILITY_OF_ACTION > TWENTY) {
-                this.lastCommandEntered = 'Solo Opponent joue un tour';
-                this.timeManager.endTurn();
+                this.lastCommandEntered = this.soloOpponent2.play();
+                // this.timeManager.endTurn();
             } else if (PROBABILITY_OF_ACTION <= TEN) {
                 this.skipTurn();
             } else {
