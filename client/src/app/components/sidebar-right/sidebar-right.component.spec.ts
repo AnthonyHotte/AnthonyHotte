@@ -140,13 +140,9 @@ describe('SidebarRightComponent', () => {
     });
 
     it('skipTurn should call soloOpponentPlays and set attributs commandSuccessful to false and opponentSet to true ', () => {
-        const spy = spyOn(component, 'soloOpponentPlays');
-        textBoxSpy.commandSuccessful = true;
-        component.opponentSet = false;
+        const spy = spyOn(component.textBox, 'isCommand');
         component.skipTurn();
         expect(spy).toHaveBeenCalled();
-        expect(textBoxSpy.commandSuccessful).toBe(false);
-        expect(component.opponentSet).toBe(true);
     });
 
     it('getNumberRemainingLetters should call sendLettersInSackNumber ', () => {
