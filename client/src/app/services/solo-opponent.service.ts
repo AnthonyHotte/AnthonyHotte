@@ -87,6 +87,8 @@ export class SoloOpponentService {
                 const THIRTEEN = 13;
                 const EIGHTEEN = 18;
                 if (!this.firstWordToPlay) {
+                    // eslint-disable-next-line no-console
+                    console.log('passe ici');
                     this.findValidPlacesOnBoard();
                     if (PROBABILITY_OF_POINTS <= FORTY) {
                         this.findWordsToPlay(0, SIX);
