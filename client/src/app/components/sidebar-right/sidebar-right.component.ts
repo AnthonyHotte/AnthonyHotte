@@ -113,12 +113,8 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         return this.messageLetterService;
     }
 
-    getNumberOfLettersForPlayer() {
-        return this.letterService.players[0].allLettersInHand.length;
-    }
-
-    getNumberOfLettersForOpponent() {
-        return this.letterService.players[1].allLettersInHand.length;
+    getNumberOfLettersForPlayer(indexPlayer: number) {
+        return this.letterService.players[indexPlayer].allLettersInHand.length;
     }
 
     getScorePlayer(index: number) {
