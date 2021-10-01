@@ -41,15 +41,15 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     changedTurns: boolean = false;
 
     constructor(
-        private soloGameInformation: SoloGameInformationService,
-        private turnTimeController: TimerTurnManagerService,
-        private soloPlayer: SoloPlayerService,
-        private soloOpponent: SoloOpponentService,
-        private letterService: LetterService,
-        private link: Router,
-        private textBox: TextBox,
-        private readonly gridService: GridService,
-        private readonly placeLetterService: PlaceLettersService,
+        public soloGameInformation: SoloGameInformationService,
+        public turnTimeController: TimerTurnManagerService,
+        public soloPlayer: SoloPlayerService,
+        public soloOpponent: SoloOpponentService,
+        public letterService: LetterService,
+        public link: Router,
+        public textBox: TextBox,
+        public gridService: GridService,
+        public placeLetterService: PlaceLettersService,
     ) {
         this.message = this.soloGameInformation.message;
         this.setAttribute();
@@ -113,12 +113,8 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         return this.messageLetterService;
     }
 
-    getNumberOfLettersForPlayer() {
-        return this.letterService.players[0].allLettersInHand.length;
-    }
-
-    getNumberOfLettersForOpponent() {
-        return this.letterService.players[1].allLettersInHand.length;
+    getNumberOfLettersForPlayer(indexPlayer: number) {
+        return this.letterService.players[indexPlayer].allLettersInHand.length;
     }
 
     getScorePlayer(index: number) {
