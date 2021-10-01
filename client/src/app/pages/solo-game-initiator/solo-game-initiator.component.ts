@@ -43,14 +43,15 @@ export class SoloGameInitiatorComponent {
         const NUMBER_OF_NAMES = 3;
         switch ((this.idNameOpponent = Math.floor(Math.random() * NUMBER_OF_NAMES) + 1)) {
             case 1:
-                this.opponentName = 'Haruki Murakami';
+                this.opponentName = 'Haruki MacDonald';
                 break;
             case 2:
                 this.opponentName = 'Daphne du Maurier';
                 break;
             default:
-                this.opponentName = 'Jane Austen';
+                this.opponentName = 'Jane Belmont';
         }
+        this.letterService.players[1].name = this.opponentName;
     }
 
     verifyNames() {
@@ -71,16 +72,16 @@ export class SoloGameInitiatorComponent {
             switch (this.idNameOpponent) {
                 case 1:
                     this.opponentName = 'Daphne du Maurier';
-                    this.letterService.players[1].name = this.opponentName;
+
                     break;
                 case 2:
                     this.opponentName = 'Jane Belmont';
-                    this.letterService.players[1].name = this.opponentName;
+
                     break;
                 default:
                     this.opponentName = 'Haruki MacDonald';
-                    this.letterService.players[1].name = this.opponentName;
             }
+            this.letterService.players[1].name = this.opponentName;
         }
     }
     setName() {
@@ -91,6 +92,7 @@ export class SoloGameInitiatorComponent {
         } else {
             this.name = 'Joueur';
         }
+        this.letterService.players[0].name = this.temporaryName;
     }
     nameValidityInChar() {
         if (this.nameIsValid) {
