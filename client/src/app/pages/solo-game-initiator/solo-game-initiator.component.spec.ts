@@ -111,7 +111,7 @@ describe('SoloGameInitiatorComponent', () => {
         component.opponentName = 'abcd';
         const temp = 'abcd';
         component.idNameOpponent = 2;
-        const retour = 'Jane Austen';
+        const retour = 'Jane Belmont';
         component.switchOpponentName(temp);
         expect(component.opponentName).toBe(retour);
     });
@@ -119,7 +119,7 @@ describe('SoloGameInitiatorComponent', () => {
         component.opponentName = 'abcd';
         const temp = 'abcd';
         component.idNameOpponent = 3;
-        const retour = 'Haruki Murakami';
+        const retour = 'Haruki MacDonald';
         component.switchOpponentName(temp);
         expect(component.opponentName).toBe(retour);
     });

@@ -140,7 +140,7 @@ describe('SidebarRightComponent', () => {
     });
 
     it('skipTurn should call soloOpponentPlays and set attributs commandSuccessful to false and opponentSet to true ', () => {
-        const spy = spyOn(component.textBox, 'isCommand');
+        const spy = spyOn(textBoxSpy, 'isCommand');
         component.skipTurn();
         expect(spy).toHaveBeenCalled();
     });
