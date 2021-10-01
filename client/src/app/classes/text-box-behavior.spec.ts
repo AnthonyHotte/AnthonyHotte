@@ -224,20 +224,61 @@ describe('TextBox', () => {
             expect(mySpy).toHaveBeenCalledWith(letter, 0);
         }
     });
-    it('verifySelectedLetters should call clear', () => {
+    it('verifySelectedLetters should call letterService.selectedLetters', () => {
         const word = 'wfwefw';
-        const playerHasLetters = false;
+        const playerHasLetters = true;
         const letters = word.substring('!échanger '.length, word.length);
-        const mySpy = spyOn(letterServiceSpy.players[0].selectedLettersForExchange, 'clear');
+        const mySpy = spyOn(letterServiceSpy, 'selectLetter');
+        const mySpy2 = spyOn(letters, 'charAt');
         textBox.verifySelectedLetters(playerHasLetters, word);
         for (let i = 0; i < letters.length; ++i) {
-            expect(mySpy).toHaveBeenCalled();
+            const letter = letters.charAt(i);
+            expect(mySpy2).toHaveBeenCalledWith(i);
+            expect(mySpy).toHaveBeenCalledWith(letter, 0);
         }
+    });
+    it('verifySelectedLetters should return false', () => {
+        const word = 'abandonner';
+        const playerHasLetters = false;
+        const mySpy = textBox.verifySelectedLetters(playerHasLetters, word);
+
+        expect(mySpy).toBe(true);
     });
     it('verifySelectedLetters should return true', () => {
         const word = 'wfwefw';
         const playerHasLetters = false;
         const retour = textBox.verifySelectedLetters(playerHasLetters, word);
         expect(retour).toBe(true);
+    });
+    it('getMessageSoloOpponent should ne inputSoloOpponent', () => {
+        const mySpy = textBox.getMessagesSoloOpponent();
+        expect(mySpy).toBe(textBox.inputsSoloOpponent);
+    });
+
+    it('isCommand should put debug at false', () => {
+        textBox.debugCommand = true;
+        timerTurnManagerServiceSpy.turn = 0;
+        const maChaine = '!debug';
+        textBox.isCommand(maChaine);
+        expect(textBox.debugCommand).toBe(false);
+    });
+    it('send shouldn t use push', () => {
+        const inputVerificationSpy = spyOn(textBox, 'inputVerification');
+        // no need for both lines since logic was changed...
+        // const isCommandSpy = spyOn(textBox, 'isCommand');
+        const pushSpy = spyOn(textBox.inputs, 'push');
+        textBox.character = true;
+        textBox.send('Hello');
+        expect(inputVerificationSpy).toHaveBeenCalledWith('Hello');
+        // expect(isCommandSpy).toHaveBeenCalledWith('');
+        expect(pushSpy).not.toHaveBeenCalled();
+    });
+
+    it('isCommand should call set false if text = mot bien placé', () => {
+        timerTurnManagerServiceSpy.turn = 0;
+        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('Mot placé avec succès.');
+        const maChaine = '!placer';
+        textBox.isCommand(maChaine);
+        expect(soloOpponentServiceSpy.firstWordToPlay).toBe(false);
     });
 });
