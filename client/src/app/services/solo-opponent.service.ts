@@ -72,6 +72,7 @@ export class SoloOpponentService {
         if (this.myTurn === true) {
             const HUNDRED = 100;
             const TWENTY = 20;
+            const TEN = 5;
             const SEVEN = 7;
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             if (PROBABILITY_OF_ACTION > TWENTY) {
@@ -102,28 +103,26 @@ export class SoloOpponentService {
                 let text = 'temporary message';
                 let i = 0;
                 while (i < this.allRetainedOptions.length) {
-                    if (this.isWordPlayable(this.possibleWords[i], this.allRetainedOptions[i])) {
-                        text = this.placeLetters.placeWord(
-                            this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
-                                (this.allRetainedOptions[i].column + 1) +
-                                this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
-                                ' ' +
-                                this.possibleWords[i],
-                        );
-                        this.lastCommandEntered =
-                            '!placer ' +
-                            this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
+                    text = this.placeLetters.placeWord(
+                        this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
                             (this.allRetainedOptions[i].column + 1) +
                             this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
                             ' ' +
-                            this.possibleWords[i] +
-                            ' placements alternatifs: ' +
-                            this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
-                            ' ' +
-                            this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
-                            ' ' +
-                            this.possibleWords[this.calculateProbability(this.possibleWords.length)];
-                    }
+                            this.possibleWords[i],
+                    );
+                    this.lastCommandEntered =
+                        '!placer ' +
+                        this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
+                        (this.allRetainedOptions[i].column + 1) +
+                        this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
+                        ' ' +
+                        this.possibleWords[i] +
+                        ' placements alternatifs: ' +
+                        this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
+                        ' ' +
+                        this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
+                        ' ' +
+                        this.possibleWords[this.calculateProbability(this.possibleWords.length)];
                     i++;
                     if (text === 'Mot placé avec succès.') {
                         i = this.allRetainedOptions.length;
@@ -137,17 +136,14 @@ export class SoloOpponentService {
                 } else {
                     this.skipTurn();
                 }
-            } else {
-                const FIVE = 5;
-                if (PROBABILITY_OF_ACTION <= FIVE) {
+            } else if (PROBABILITY_OF_ACTION <= TEN) {
+                this.skipTurn();
+            } else if (PROBABILITY_OF_ACTION <= TWENTY) {
+                const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
+                if (NUMBER_OF_LETTERS_TO_TRADE <= SEVEN) {
+                    this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
+                } else {
                     this.skipTurn();
-                } else if (PROBABILITY_OF_ACTION <= TWENTY) {
-                    const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
-                    if (NUMBER_OF_LETTERS_TO_TRADE <= SEVEN) {
-                        this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
-                    } else {
-                        this.skipTurn();
-                    }
                 }
             }
         }
@@ -215,8 +211,13 @@ export class SoloOpponentService {
         this.lastCommandEntered = '!échanger ' + numberOfLettersToTrade.toString();
     }
     findWordsToPlay(minPointValue: number, maxPointValue: number) {
-        // const allWords: string[] = this.placeLetters.getDictionary();
         const allWords: string[] = this.wordValidator.dictionnary;
+        const someWords: string[] = [];
+        const TWENTY_THOUSAND = 20;
+        let k = this.calculateProbability(allWords.length) - TWENTY_THOUSAND;
+        while (someWords.length < allWords.length / TWENTY_THOUSAND) {
+            someWords.push(allWords[k++]);
+        }
         let lettersInString = '';
         let otherLettersRow = '';
         let otherLettersColumn = '';
@@ -238,13 +239,11 @@ export class SoloOpponentService {
                     }
                 }
             }
-
-            const TWENTY = 10;
-
-            if (this.allRetainedOptions.length <= TWENTY) {
-                this.iterateWords(allWords, item, lettersInString, otherLettersRow, otherLettersColumn);
-                this.eliminateWordsToMatchScore(minPointValue, maxPointValue);
+            const MAX = 10;
+            if (this.allRetainedOptions.length <= MAX) {
+                this.iterateWords(someWords, item, lettersInString, otherLettersRow, otherLettersColumn);
             }
+            this.eliminateWordsToMatchScore(minPointValue, maxPointValue);
             otherLettersColumn = '';
             otherLettersRow = '';
         }
@@ -267,33 +266,36 @@ export class SoloOpponentService {
             }
         }
     }
-    // eslint-disable-next-line complexity
     iterateWords(allWords: string[], item: LetterPlacementPossibility, lettersInString: string, rowLetters: string, columnLetters: string) {
         const NOT_PRESENT = -1;
         for (const word of allWords) {
             let indexOfLetter = 0;
+            const MAX_POSSIBILITIES = 10;
+            if (this.allRetainedOptions.length >= MAX_POSSIBILITIES) {
+                return;
+            }
             if ((indexOfLetter = word.search(item.letter.toLowerCase())) !== NOT_PRESENT) {
                 let isRowsToPlace = item.column - indexOfLetter >= 0;
                 let isColumnToPlace = item.row - indexOfLetter >= 0;
                 let possibleWord = false;
                 let temporaryWordRow = word;
                 let temporaryWordColumn = word;
-                if (word.search(rowLetters) !== NOT_PRESENT) {
-                    temporaryWordRow = temporaryWordRow.replace(rowLetters, '');
+                temporaryWordRow = temporaryWordRow.replace(rowLetters, '');
+                if (temporaryWordRow !== word) {
                     isRowsToPlace &&= true;
                 }
-                if (word.search(columnLetters) !== NOT_PRESENT) {
-                    temporaryWordColumn = temporaryWordColumn.replace(columnLetters, '');
+                temporaryWordColumn = temporaryWordColumn.replace(columnLetters, '');
+                if (temporaryWordColumn !== word) {
                     isColumnToPlace &&= true;
                 }
                 for (let i = 0; i < lettersInString.length; i++) {
-                    if (temporaryWordRow.search(lettersInString.charAt(i)) !== NOT_PRESENT) {
-                        temporaryWordRow = temporaryWordRow.replace(lettersInString.charAt(i), '');
+                    temporaryWordRow = temporaryWordRow.replace(lettersInString.charAt(i), '');
+                    if (temporaryWordRow !== word) {
                         isRowsToPlace &&= true;
                         possibleWord = true;
                     }
-                    if (temporaryWordColumn.search(lettersInString.charAt(i)) !== NOT_PRESENT) {
-                        temporaryWordColumn = temporaryWordColumn.replace(lettersInString.charAt(i), '');
+                    temporaryWordColumn = temporaryWordColumn.replace(lettersInString.charAt(i), '');
+                    if (temporaryWordColumn !== word) {
                         isColumnToPlace &&= true;
                         possibleWord = true;
                     }
@@ -330,7 +332,9 @@ export class SoloOpponentService {
                 column: item.column,
                 placement: item.row - indexOfLetter === item.row ? PlacementValidity.HDown : PlacementValidity.HUp,
             };
-            this.addLetterAndWord(word, possibility);
+            if (this.isWordPlayable(word, possibility)) {
+                this.addLetterAndWord(word, possibility);
+            }
         }
     }
     addLetterAndWord(word: string, possibility: LetterPlacementPossibility) {

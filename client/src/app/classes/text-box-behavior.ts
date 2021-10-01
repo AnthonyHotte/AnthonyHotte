@@ -107,6 +107,8 @@ export class TextBox {
                 this.endTurn();
                 if (text === 'Mot placé avec succès.') {
                     this.soloOpponent.firstWordToPlay = false;
+                } else {
+                    this.verifyCommandPasser();
                 }
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
                 text = this.verifyCommandPasser();
@@ -138,7 +140,7 @@ export class TextBox {
     }
 
     finishCurrentGame() {
-        this.link.navigate(['']);
+        this.link.navigate(['/home']);
     }
 
     endTurn() {

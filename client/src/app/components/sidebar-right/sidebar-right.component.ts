@@ -186,6 +186,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
                     clearInterval(INTERVAL_SKIP);
                     this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
                     this.changedTurns = true;
+                    clearTimeout(TIMEOUT_PLAY);
                 }, 1);
             }, TIME_TO_LOAD);
         }
