@@ -21,13 +21,13 @@ export class SoloOpponent2Service {
         // private injectionService: Injector, //
         private readonly wordValidatorService: WordValidationService,
     ) {}
+
     play() {
         let tempword;
         const arrayHand: string[] = [];
         for (const letter of this.letterService.players[this.timeManagerService.turn].allLettersInHand) {
             arrayHand.push(letter.letter.toLowerCase());
         }
-
         if (this.firstTimeToPlay === true) {
             const wordToPlay = this.findValidWords(this.wordValidatorService.dictionnary, arrayHand);
             this.placeLetterService.placeWord('h8v ' + wordToPlay);

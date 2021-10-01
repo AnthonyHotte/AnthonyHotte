@@ -113,7 +113,6 @@ export class GridService {
             this.gridContext.lineTo(Constants.CASESIZE * i + Constants.CASESIZE / 2 + Constants.SIDESPACE, Constants.CASESIZE);
             this.gridContext.globalAlpha = 0;
             this.gridContext.stroke();
-
             this.gridContext.globalAlpha = 1;
             this.gridContext.textAlign = 'center';
             this.gridContext.font = '15px serif';

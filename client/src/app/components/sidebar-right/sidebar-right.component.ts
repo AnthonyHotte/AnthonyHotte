@@ -7,6 +7,7 @@ import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
+import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
@@ -45,6 +46,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         private turnTimeController: TimerTurnManagerService,
         private soloPlayer: SoloPlayerService,
         private soloOpponent: SoloOpponentService,
+        private soloOpponent2: SoloOpponent2Service,
         private letterService: LetterService,
         private link: Router,
         private textBox: TextBox,
@@ -163,31 +165,18 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     soloOpponentPlays() {
-        if (this.turnTimeController.turn === 1 && this.opponentSet) {
-            this.opponentSet = false;
-            let skipNeeded = false;
-            const TIME_TO_LOAD = 3200;
-            const INTERVAL_TIME = 17400;
-            setTimeout(() => {
-                const INTERVAL_SKIP = setInterval(() => {
-                    if (skipNeeded) {
-                        this.soloOpponent.skipTurn();
-                        this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
-                        this.changedTurns = true;
-                        skipNeeded = false;
-                        clearTimeout(TIMEOUT_PLAY);
-                    }
-                    clearInterval(INTERVAL_SKIP);
-                }, INTERVAL_TIME);
-                const TIMEOUT_PLAY = setTimeout(() => {
-                    skipNeeded = true;
-                    this.soloOpponent.play();
-                    skipNeeded = false;
-                    clearInterval(INTERVAL_SKIP);
-                    this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
-                    this.changedTurns = true;
-                }, 1);
-            }, TIME_TO_LOAD);
-        }
+        this.soloOpponent2.play();
+        // if (this.turnTimeController.turn === 1 && this.opponentSet) {
+        //     this.opponentSet = false;
+        // let skipNeeded = false;
+        // const TIME_TO_LOAD = 3200;
+        // setTimeout(() => {
+        // skipNeeded = true;
+        // skipNeeded = false;
+        // clearInterval(INTERVAL_SKIP);
+        // this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
+        //        this.changedTurns = true;
+        //   }, TIME_TO_LOAD);
+        // }
     }
 }
