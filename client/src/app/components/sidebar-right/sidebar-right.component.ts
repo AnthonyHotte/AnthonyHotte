@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { GridService } from '@app/services/grid.service';
@@ -11,6 +10,7 @@ import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
 import { Subscription } from 'rxjs';
+// import { FinishGameService } from '@app/services/finish-game.service';
 
 @Component({
     selector: 'app-sidebar-right',
@@ -18,6 +18,9 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./sidebar-right.component.scss'],
 })
 export class SidebarRightComponent implements OnInit, AfterViewInit {
+    /* @ViewChild('counter')
+    counterTimer: CountdownComponent;
+    gameFinish: Subscription;*/
     messagePlayer: string;
     opponentMessage: string;
     messageLetterService: string;
@@ -46,12 +49,14 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         private soloPlayer: SoloPlayerService,
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
-        private link: Router,
         private textBox: TextBox,
         private readonly gridService: GridService,
-        private readonly placeLetterService: PlaceLettersService,
+        private readonly placeLetterService: PlaceLettersService, // private finishGameService: FinishGameService,
     ) {
         this.message = this.soloGameInformation.message;
+        /* TODO this.gameFinish = this.finishGameService.observableForGameFinished.subscribe(() => {
+            this.counterTimer.pause();
+        }); */
         this.setAttribute();
     }
 
@@ -126,7 +131,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     finishCurrentGame() {
-        this.link.navigate(['']);
+        this.textBox.finishCurrentGame();
     }
 
     increaseFontSize() {
