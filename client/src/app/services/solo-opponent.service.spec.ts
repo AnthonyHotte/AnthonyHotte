@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SoloOpponentService } from './solo-opponent.service';
+// import { SoloOpponent2Service } from './solo-opponent2.service';
 // import { GameStateService } from './game-state.service';
 // import { LetterService } from './letter.service';
 // import { PlaceLettersService } from './place-letters.service';
@@ -8,6 +9,7 @@ import { SoloOpponentService } from './solo-opponent.service';
 
 describe('SoloOpponentService', () => {
     let service: SoloOpponentService;
+    // let soloOpponent2ServiceSpy: SoloOpponent2Service;
 
     // let letterServiceSpy: LetterService;
     // let timerTurnManagerServiceSpy: TimerTurnManagerService;
@@ -15,6 +17,26 @@ describe('SoloOpponentService', () => {
     // let gameStateServiceSpy: GameStateService;
     // let placeLettersServiceSpy: PlaceLettersService;
     // let WordValidationServiceSpy: WordValidationService;
+    /*
+    private letters: LetterService,
+        private timeManager: TimerTurnManagerService,
+        private soloPlayer: SoloPlayerService,
+        public soloOpponent2: SoloOpponent2Service,
+        */
+       /*
+    beforeEach(
+        waitForAsync(() => {
+            // letterServiceSpy = jasmine.createSpyObj('LetterService', ['getLettersForExchange']);
+            // timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['initiateGame']);
+            // gameStateServiceSpy = jasmine.createSpyObj('GameStateService', ['placeLetter']);
+            // placeLettersServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['checkInput']);
+            soloOpponent2ServiceSpy = jasmine.createSpyObj('SoloOpponent2Service', ['']);
+            TestBed.configureTestingModule({
+                providers: [{ provide: WordValidationService, useValue: wordValidationServiceSpy }],
+            }).compileComponents();
+        }),
+    );
+    */
 
     beforeEach(() => {
         TestBed.configureTestingModule({});

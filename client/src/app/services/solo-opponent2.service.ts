@@ -13,13 +13,13 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
 export class SoloOpponent2Service {
     firstTimeToPlay = true;
     constructor(
-        private letterService: LetterService,
-        private timeManagerService: TimerTurnManagerService,
-        //  private soloPlayerService: SoloPlayerService,
-        private gameStateService: GameStateService,
-        private placeLetterService: PlaceLettersService,
-        // private injectionService: Injector, //
-        private readonly wordValidatorService: WordValidationService,
+        public letterService: LetterService,
+        public timeManagerService: TimerTurnManagerService,
+        //  public soloPlayerService: SoloPlayerService,
+        public gameStateService: GameStateService,
+        public placeLetterService: PlaceLettersService,
+        // public injectionService: Injector, //
+        public wordValidatorService: WordValidationService,
     ) {}
 
     play(): string {
