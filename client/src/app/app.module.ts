@@ -17,7 +17,6 @@ import { AutosizeModule } from 'ngx-autosize';
 import { SidebarRightComponent } from './components/sidebar-right/sidebar-right.component';
 import { TextBoxComponent } from './components/text-box/text-box';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
-import { HighestScoresComponent } from './pages/highest-scores/highest-scores.component';
 import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-game-initiator.component';
 import { FinishedGameComponent } from './components/finished-game/finished-game.component';
 
@@ -35,7 +34,6 @@ import { FinishedGameComponent } from './components/finished-game/finished-game.
         MaterialPageComponent,
         PlayAreaComponent,
         SidebarComponent,
-        HighestScoresComponent,
         GameSelectionPageComponent,
         SoloGameInitiatorComponent,
         SidebarRightComponent,

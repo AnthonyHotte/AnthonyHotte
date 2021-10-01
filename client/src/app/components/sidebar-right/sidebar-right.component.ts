@@ -108,9 +108,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     skipTurn() {
         this.textBox.send('!passer');
         this.textBox.isCommand('!passer');
-        this.textBox.commandSuccessful = false;
-        this.opponentSet = true;
-        this.soloOpponentPlays();
     }
 
     getNumberRemainingLetters() {
@@ -118,12 +115,8 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         return this.messageLetterService;
     }
 
-    getNumberOfLettersForPlayer() {
-        return this.letterService.players[0].allLettersInHand.length;
-    }
-
-    getNumberOfLettersForOpponent() {
-        return this.letterService.players[1].allLettersInHand.length;
+    getNumberOfLettersForPlayer(indexPlayer: number) {
+        return this.letterService.players[indexPlayer].allLettersInHand.length;
     }
 
     getScorePlayer(index: number) {
@@ -146,7 +139,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     getPlayerName() {
         if (this.turn !== this.turnTimeController.turn) {
             this.changedTurns = true;
-            if (this.turn === 0 && this.textBox.commandSuccessful) {
+            if (this.textBox.commandSuccessful) {
                 this.opponentSet = true;
                 this.textBox.commandSuccessful = false;
                 this.soloOpponentPlays();
@@ -160,9 +153,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
             counter.reset();
-            if (this.turn === 1) {
-                this.soloOpponentPlays();
-            }
         }
         this.changedTurns = false;
     }
@@ -170,18 +160,13 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     soloOpponentPlays() {
         if (this.turnTimeController.turn === 1 && this.opponentSet) {
             this.opponentSet = false;
-            const TIME_TO_LOAD = 3500;
-            const INTERVAL_TIME = 17000;
+            const TIME_TO_LOAD = 3200;
             setTimeout(() => {
-                const INTERVAL = setInterval(() => {
-                    this.soloOpponent.skipTurn();
-                    this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
-                    clearInterval(INTERVAL);
-                }, INTERVAL_TIME);
                 this.soloOpponent.play();
                 this.textBox.inputsSoloOpponent.push(this.soloOpponent.lastCommandEntered);
                 this.changedTurns = true;
             }, TIME_TO_LOAD);
+            return;
         }
     }
 }

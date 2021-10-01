@@ -42,14 +42,14 @@
         <fieldset>
             <label> Nombre de lettres dans la réserve: {{ getNumberRemainingLetters() }} </label>
         </fieldset>
-        <fieldset *ngIf="getNumberOfLettersForPlayer() < 7 || getNumberOfLettersForOpponent() < 7">
+        <fieldset *ngIf="getNumberOfLettersForPlayer(0) < 7 || getNumberOfLettersForPlayer(1) < 7">
             <p>
-                <label *ngIf="getNumberOfLettersForPlayer() < 7">
-                    Nombre de lettres sur le chevalet pour le joueur: {{ getNumberOfLettersForPlayer() }}
+                <label *ngIf="getNumberOfLettersForPlayer(0) < 7">
+                    Nombre de lettres sur le chevalet pour le joueur: {{ getNumberOfLettersForPlayer(0) }}
                 </label>
             </p>
-            <label *ngIf="getNumberOfLettersForOpponent() < 7">
-                Nombre de lettres sur le chevalet pour l'adversaire: {{ getNumberOfLettersForOpponent() }}
+            <label *ngIf="getNumberOfLettersForPlayer(1) < 7">
+                Nombre de lettres sur le chevalet pour l'adversaire: {{ getNumberOfLettersForPlayer(1) }}
             </label>
         </fieldset>
         <fieldset>
