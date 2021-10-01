@@ -1,10 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-<<<<<<< HEAD
-import { SidebarRightComponent } from '@app/components/sidebar-right/sidebar-right.component';
-import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
-=======
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { SidebarRightComponent } from '@app/components/sidebar-right/sidebar-right.component';
@@ -17,9 +13,7 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
 
 // import { SoloPlayerService } from '@app/services/solo-player.service';
 // import { SoloGameInformationService } from '@app/services/solo-game-information.service';
->>>>>>> f8634b83b1e91515e2164a4a41b1f6462672f776
 
-class SoloStub extends SoloOpponent2Service {}
 describe('SidebarRightComponent', () => {
     let component: SidebarRightComponent;
     let fixture: ComponentFixture<SidebarRightComponent>;
@@ -52,10 +46,6 @@ describe('SidebarRightComponent', () => {
             */
 
             TestBed.configureTestingModule({
-<<<<<<< HEAD
-                declarations: [SidebarRightComponent],
-                providers: [{ provide: SoloOpponent2Service, useValue: SoloStub }],
-=======
                 declarations: [
                     SidebarRightComponent /*
                     TimerTurnManagerService,
@@ -84,7 +74,6 @@ describe('SidebarRightComponent', () => {
                 ],
                 */
 
->>>>>>> f8634b83b1e91515e2164a4a41b1f6462672f776
                 imports: [RouterTestingModule],
             }).compileComponents();
         }),

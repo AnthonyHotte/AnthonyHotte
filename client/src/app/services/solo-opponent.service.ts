@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { LetterPlacementPossibility } from '@app/classes/letter-placement-possibility';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
+import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { LetterService } from './letter.service';
 import { SoloPlayerService } from './solo-player.service';
@@ -32,7 +33,12 @@ export class SoloOpponentService {
     private messageSource = new BehaviorSubject('default message');
     private messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
-    constructor(private letters: LetterService, private timeManager: TimerTurnManagerService, private soloPlayer: SoloPlayerService) {
+    constructor(
+        private letters: LetterService,
+        private timeManager: TimerTurnManagerService,
+        private soloPlayer: SoloPlayerService,
+        public soloOpponent2: SoloOpponent2Service,
+    ) {
         this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.currentMessage = this.messageSource.asObservable();
         this.letters.players[1].addLetters(MAXLETTERINHAND);
@@ -56,77 +62,10 @@ export class SoloOpponentService {
             const SEVEN = 7;
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             if (PROBABILITY_OF_ACTION > TWENTY) {
-<<<<<<< HEAD
-                this.lastTurnWasASkip = false;
-                this.allRetainedOptions = [];
-                this.possibleWords = [];
-                this.placementPossibilities = [];
-                const PROBABILITY_OF_POINTS = this.calculateProbability(HUNDRED);
-                const FORTY = 40;
-                const SEVENTY = 70;
-                const SIX = 6;
-                const TWELVE = 12;
-                const THIRTEEN = 13;
-                const EIGHTEEN = 18;
-                if (!this.firstWordToPlay) {
-                    // eslint-disable-next-line no-console
-                    console.log('passe ici');
-                    this.findValidPlacesOnBoard();
-                    if (PROBABILITY_OF_POINTS <= FORTY) {
-                        this.findWordsToPlay(0, SIX);
-                    } else if (PROBABILITY_OF_POINTS <= SEVENTY) {
-                        this.findWordsToPlay(SEVEN, TWELVE);
-                    } else {
-                        this.findWordsToPlay(THIRTEEN, EIGHTEEN);
-                    }
-                } else {
-                    this.playFirstWordInGame();
-                    this.findWordsToPlay(0, EIGHTEEN);
-                }
-                let text = 'temporary message';
-                let i = 0;
-                while (i < this.allRetainedOptions.length) {
-                    if (this.isWordPlayable(this.possibleWords[i], this.allRetainedOptions[i])) {
-                        text = this.placeLetters.placeWord(
-                            this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
-                                (this.allRetainedOptions[i].column + 1) +
-                                this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
-                                ' ' +
-                                this.possibleWords[i],
-                        );
-                        this.lastCommandEntered =
-                            '!placer ' +
-                            this.soloOpponentFunctions.toChar(this.allRetainedOptions[i].row) +
-                            (this.allRetainedOptions[i].column + 1) +
-                            this.soloOpponentFunctions.enumToString(this.allRetainedOptions[i].placement) +
-                            ' ' +
-                            this.possibleWords[i] +
-                            ' placements alternatifs: ' +
-                            this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
-                            ' ' +
-                            this.possibleWords[this.calculateProbability(this.possibleWords.length)] +
-                            ' ' +
-                            this.possibleWords[this.calculateProbability(this.possibleWords.length)];
-                    }
-                    i++;
-                    if (text === 'Mot placé avec succès.') {
-                        i = this.allRetainedOptions.length;
-                    }
-                }
-                if (text === 'Mot placé avec succès.') {
-                    this.firstWordToPlay = false;
-                    this.myTurn = false;
-                    this.changeTurn(this.myTurn.toString());
-                    this.timeManager.endTurn();
-                } else {
-                    this.skipTurn();
-                }
-=======
-                this.lastCommandEntered = 'Solo Opponent joue un tour';
-                this.timeManager.endTurn();
+                this.lastCommandEntered = this.soloOpponent2.play();
+                // this.timeManager.endTurn();
             } else if (PROBABILITY_OF_ACTION <= TEN) {
                 this.skipTurn();
->>>>>>> f8634b83b1e91515e2164a4a41b1f6462672f776
             } else {
                 const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
                 if (NUMBER_OF_LETTERS_TO_TRADE <= SEVEN) {

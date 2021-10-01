@@ -22,7 +22,7 @@ export class SoloOpponent2Service {
         private readonly wordValidatorService: WordValidationService,
     ) {}
 
-    play() {
+    play(): string {
         let tempword;
         const arrayHand: string[] = [];
         for (const letter of this.letterService.players[this.timeManagerService.turn].allLettersInHand) {
@@ -71,6 +71,7 @@ export class SoloOpponent2Service {
             this.placeLetterService.placeWord(tempword);
         }
         this.timeManagerService.endTurn();
+        return '!placer' + tempword;
     }
     // return all the word that exist with the letters given;
     findValidWords(dict: string[], letters: string[]): string[] {
