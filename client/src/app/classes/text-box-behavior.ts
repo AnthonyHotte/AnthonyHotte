@@ -187,4 +187,10 @@ export class TextBox {
         }
         return true;
     }
+    scrollDown() {
+        const mondiv = document.getElementById('DisplayZone');
+        if (mondiv !== null) {
+            mondiv.scrollTo(0, mondiv.scrollHeight);
+        }
+    }
 }

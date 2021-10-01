@@ -49,11 +49,12 @@ export class TextBoxComponent implements OnInit {
             this.input.send(myMessage);
         }
         this.array = this.input.getArray();
-        this.scrollDown();
         if (this.input.getDebugCommand()) {
             this.messagesSoloOpponent = this.input.getMessagesSoloOpponent();
         }
         this.debugCommand = this.input.getDebugCommand();
+        this.word = '';
+        this.input.scrollDown();
     }
 
     ngOnInit() {
@@ -72,14 +73,6 @@ export class TextBoxComponent implements OnInit {
         this.buttonMessageState = 'ButtonMessageActivated';
         this.input.activateMessageButton();
     }
-
-    scrollDown() {
-        const mondiv = document.getElementById('DisplayZone');
-        if (mondiv !== null) {
-            mondiv.scrollTo(0, mondiv.scrollHeight);
-        }
-    }
-
     getInputs() {
         return this.input.getArray();
     }

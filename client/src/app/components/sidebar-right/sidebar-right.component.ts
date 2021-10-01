@@ -164,6 +164,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
                 this.textBox.inputs.push(messagePlayer);
                 this.changedTurns = true;
             }, TIME_TO_LOAD);
+            this.textBox.scrollDown();
             return;
         }
     }
