@@ -20,7 +20,13 @@ describe('SoloOpponent2Service', () => {
             // placeLettersServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['checkInput']);
             wordValidationServiceSpy = jasmine.createSpyObj('WordValidationService', ['isPartOfWordVertical']);
             TestBed.configureTestingModule({
-                providers: [{ provide: WordValidationService, useValue: wordValidationServiceSpy }],
+                providers: [
+                    { provide: WordValidationService, useValue: wordValidationServiceSpy },
+                    // { provide: LetterService, useValue: letterServiceSpy },
+                    // { provide: TimerTurnManager, useValue: timerTurnManagerSpy },
+                    // { provide: GameStateService, useValue: gameStateServiceSpy },
+                    // { provide: PlaceLettersService, useValue: placeLettersServiceSpy }
+                ],
             }).compileComponents();
         }),
     );
