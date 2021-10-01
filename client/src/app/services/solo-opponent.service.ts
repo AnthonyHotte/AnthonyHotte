@@ -72,7 +72,7 @@ export class SoloOpponentService {
         if (this.myTurn === true) {
             const HUNDRED = 100;
             const TWENTY = 20;
-            const TEN = 5;
+            const TEN = 10;
             const SEVEN = 7;
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             if (PROBABILITY_OF_ACTION > TWENTY) {
@@ -138,7 +138,7 @@ export class SoloOpponentService {
                 }
             } else if (PROBABILITY_OF_ACTION <= TEN) {
                 this.skipTurn();
-            } else if (PROBABILITY_OF_ACTION <= TWENTY) {
+            } else {
                 const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
                 if (NUMBER_OF_LETTERS_TO_TRADE <= SEVEN) {
                     this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
@@ -323,7 +323,9 @@ export class SoloOpponentService {
                 column: item.column - indexOfLetter,
                 placement: item.column - indexOfLetter === item.column ? PlacementValidity.Right : PlacementValidity.Left,
             };
-            this.addLetterAndWord(word, possibility);
+            if (this.isWordPlayable(word, possibility)) {
+                this.addLetterAndWord(word, possibility);
+            }
         }
         if (isColumnToPlace) {
             const possibility: LetterPlacementPossibility = {
