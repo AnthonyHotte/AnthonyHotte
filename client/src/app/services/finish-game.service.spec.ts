@@ -94,4 +94,9 @@ describe('FinishGameService', () => {
             'Fin de partie - lettres restantes' + '\n' + 'allo : A A A A A A A' + '\n' + 'bonjour : A A A A A A A' + '\n',
         );
     });
+
+    it('function navigate should be called ', () => {
+        service.goToHomeAndRefresh();
+        expect(linkSpy.navigate).toHaveBeenCalled();
+    });
 });
