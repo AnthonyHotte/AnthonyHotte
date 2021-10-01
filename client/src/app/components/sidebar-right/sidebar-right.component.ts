@@ -42,15 +42,15 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     changedTurns: boolean = false;
 
     constructor(
-        private soloGameInformation: SoloGameInformationService,
-        private turnTimeController: TimerTurnManagerService,
-        private soloPlayer: SoloPlayerService,
-        private soloOpponent: SoloOpponentService,
-        private letterService: LetterService,
-        private link: Router,
-        private textBox: TextBox,
-        private readonly gridService: GridService,
-        private readonly placeLetterService: PlaceLettersService,
+        public soloGameInformation: SoloGameInformationService,
+        public turnTimeController: TimerTurnManagerService,
+        public soloPlayer: SoloPlayerService,
+        public soloOpponent: SoloOpponentService,
+        public letterService: LetterService,
+        public link: Router,
+        public textBox: TextBox,
+        public gridService: GridService,
+        public placeLetterService: PlaceLettersService,
     ) {
         this.message = this.soloGameInformation.message;
         this.setAttribute();
@@ -103,9 +103,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     skipTurn() {
         this.textBox.isCommand('!passer');
-        this.textBox.commandSuccessful = false;
-        this.opponentSet = true;
-        this.soloOpponentPlays();
     }
 
     getNumberRemainingLetters() {
@@ -113,12 +110,8 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         return this.messageLetterService;
     }
 
-    getNumberOfLettersForPlayer() {
-        return this.letterService.players[0].allLettersInHand.length;
-    }
-
-    getNumberOfLettersForOpponent() {
-        return this.letterService.players[1].allLettersInHand.length;
+    getNumberOfLettersForPlayer(indexPlayer: number) {
+        return this.letterService.players[indexPlayer].allLettersInHand.length;
     }
 
     getScorePlayer(index: number) {
@@ -141,7 +134,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     getPlayerName() {
         if (this.turn !== this.turnTimeController.turn) {
             this.changedTurns = true;
-            if (this.turn === 0 && this.textBox.commandSuccessful) {
+            if (this.textBox.commandSuccessful) {
                 this.opponentSet = true;
                 this.textBox.commandSuccessful = false;
                 this.soloOpponentPlays();
@@ -155,9 +148,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         if (this.changedTurns === true) {
             this.time = parseInt(this.message[3], 10);
             counter.reset();
-            if (this.turn === 1) {
-                this.soloOpponentPlays();
-            }
         }
         this.changedTurns = false;
     }
@@ -165,33 +155,16 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     soloOpponentPlays() {
         if (this.turnTimeController.turn === 1 && this.opponentSet) {
             this.opponentSet = false;
-            let skipNeeded = false;
             const TIME_TO_LOAD = 3200;
-            const INTERVAL_TIME = 17400;
             const messagePlayer: MessagePlayer = { message: '', sender: '', debugSate: this.textBox.debugCommand };
             messagePlayer.sender = 'Adversaire';
             setTimeout(() => {
-                const INTERVAL_SKIP = setInterval(() => {
-                    if (skipNeeded) {
-                        this.soloOpponent.skipTurn();
-                        messagePlayer.message = this.soloOpponent.lastCommandEntered;
-                        this.textBox.inputs.push(messagePlayer);
-                        this.changedTurns = true;
-                        skipNeeded = false;
-                        clearTimeout(TIMEOUT_PLAY);
-                    }
-                    clearInterval(INTERVAL_SKIP);
-                }, INTERVAL_TIME);
-                const TIMEOUT_PLAY = setTimeout(() => {
-                    skipNeeded = true;
-                    this.soloOpponent.play();
-                    skipNeeded = false;
-                    clearInterval(INTERVAL_SKIP);
-                    messagePlayer.message = this.soloOpponent.lastCommandEntered;
-                    this.textBox.inputs.push(messagePlayer);
-                    this.changedTurns = true;
-                }, 1);
+                this.soloOpponent.play();
+                messagePlayer.message = this.soloOpponent.lastCommandEntered;
+                this.textBox.inputs.push(messagePlayer);
+                this.changedTurns = true;
             }, TIME_TO_LOAD);
+            return;
         }
     }
 }
