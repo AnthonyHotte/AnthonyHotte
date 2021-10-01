@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LetterService } from '@app/services/letter.service';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+// TODO import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -9,9 +9,9 @@ import { BehaviorSubject } from 'rxjs';
 export class FinishGameService {
     finalScore: number[] = [];
     isGameFinished: boolean = false;
-    observableForGameFinished = new BehaviorSubject('default message');
+    // TODO observableForGameFinished = new BehaviorSubject('default message');
     constructor(private letterService: LetterService, private link: Router) {
-        // this.observableForGameFinished.asObservable();
+        // TODO this.observableForGameFinished.asObservable();
     }
 
     scoreCalculator() {
