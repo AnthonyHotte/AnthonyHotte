@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { SoloOpponentService } from './solo-opponent.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
-fdescribe('SoloOpponentService', () => {
+describe('SoloOpponentService', () => {
     let service: SoloOpponentService;
     let timerTurnManagerServiceSpy: TimerTurnManagerService;
 
