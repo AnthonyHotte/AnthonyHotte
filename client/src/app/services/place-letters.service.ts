@@ -28,10 +28,6 @@ export class PlaceLettersService {
         private readonly timeManager: TimerTurnManagerService,
         private scoreCalculator: ScoreCalculatorService,
     ) {}
-    // TODO firstletter to place
-    // TODO input seperated by , ?
-    // TODO make sure that 2 " " back to back doesn't break the input
-    // this function verify that the input is the right length so that it can be separeted by the next function
     verifyTileNotOutOfBound(): boolean {
         if (this.orientation === 'h' && this.colomnNumber + this.wordToPlace.length > Constants.NUMBEROFCASE) {
             return false;
@@ -82,7 +78,6 @@ export class PlaceLettersService {
     }
 
     placeWord(commandrowInput: string): string {
-        // const checkArgumentlength: string = this.checkArgumentInputlength(commandrowInput);
         const checkInput = this.checkInput(commandrowInput);
         if (checkInput === 'ok') {
             if (!this.verifyTileNotOutOfBound()) {
@@ -120,7 +115,6 @@ export class PlaceLettersService {
                     return "Vous n'avez pas les lettres pour écrire ce mot";
                 }
             }
-            // if (can it be placed.service.chek() )//TODO add if the word exist and can be placed there
         } else {
             return 'Argument de commande invalide';
         }
@@ -136,7 +130,6 @@ export class PlaceLettersService {
         this.gameState.orientationOfLastWord = this.orientation;
         for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
             this.gameState.placeLetter(ytile, xtile, this.wordToPlace.charAt(i), this.lettersToPlace.charAt(i));
-            // TODO repplace with drawletterwithposition and integrate with position
             if (this.orientation === 'h') {
                 xtile++;
             } else if (this.orientation === 'v') {
@@ -156,7 +149,6 @@ export class PlaceLettersService {
         this.wordValidator.pointsForLastWord = 0;
         for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
             this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile);
-            // TODO repplace with drawletterwithposition and integrate with position
             if (this.orientation === 'h') {
                 xtile++;
             } else if (this.orientation === 'v') {
@@ -167,16 +159,12 @@ export class PlaceLettersService {
 
     validateWordPlaced() {
         if (!this.gameState.validateWordCreatedByNewLetters()) {
-            // TODO change logic so that it doesn't need +1. +1 is needed right now for the draw grid in grid service
-            // eslint-disable-next-line @typescript-eslint/no-shadow
             const delay = 3000;
             setTimeout(() => {
                 for (let i = 0; i < this.gameState.indexLastLetters.length; i += 2) {
                     this.gridService.drawtilebackground(this.gameState.indexLastLetters[i + 1] + 1, this.gameState.indexLastLetters[i] + 1);
                 }
                 this.removeLetterInGameState();
-                // console.log('sleep');
-                // And any other code that should run only after 5s
             }, delay);
             this.wordValidator.pointsForLastWord = 0;
             return false;
@@ -206,21 +194,6 @@ export class PlaceLettersService {
             }
         }
     }
-    /*
-    placeLetter(input: string){
-        const rowLetter: string = input.charAt(0).toUpperCase();
-        const colomnNumber: number = Number(input.charAt(0));
-        if (Constants.SIDELETTERS.includes(rowLetter) == false) {
-          // TODO display error message on console
-        }else if {colomnNumber != 1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9
-
-        }
-      row:number = this.rowLetterToNumbers(row_colomn.charAt(0));
-      colomn:number =row_colomn.charAt(1);
-      this.gridService.drawLetterwithposition()
-      
-    }
-    */
 
     wordContainsJoker() {
         let positionOfJoker = 0;
@@ -231,10 +204,6 @@ export class PlaceLettersService {
             positionOfJoker++;
         }
     }
-    /*
-    getDictionary() { //TODO remove, a get function is not usefull 
-        return this.wordValidator.dictionnary;
-    }*/
 
     removeUpperCaseFromString(index: number): string {
         const tempWord = this.wordToPlace.split('');

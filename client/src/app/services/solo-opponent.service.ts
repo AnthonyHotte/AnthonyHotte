@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { LetterPlacementPossibility } from '@app/classes/letter-placement-possibility';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
@@ -25,9 +24,6 @@ export class SoloOpponentService {
     score: number = 0;
     currentMessage: Observable<string>;
     lastTurnWasASkip: boolean = false;
-    possibleWords: string[] = [];
-    possibilityOfPlayWord: string[] = [];
-    allRetainedOptions: LetterPlacementPossibility[] = [];
     firstWordToPlay: boolean = false;
     lastCommandEntered: string = 'Bonjour joueur!';
     messageSource = new BehaviorSubject('default message');
@@ -63,7 +59,6 @@ export class SoloOpponentService {
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             if (PROBABILITY_OF_ACTION > TWENTY) {
                 this.lastCommandEntered = this.soloOpponent2.play();
-                // this.timeManager.endTurn();
             } else if (PROBABILITY_OF_ACTION <= TEN) {
                 this.skipTurn();
             } else {

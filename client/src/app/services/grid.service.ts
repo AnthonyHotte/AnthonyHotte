@@ -19,8 +19,6 @@ export class GridService {
 
     gridContext: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_WIDTH };
-    // constructor(private letterMap: LetterMap) {}
-    // injector = Injector.create([{ provide: PlaceLettersService }]);
     drawGrid() {
         // Place numbers at the top
         this.placeNumberTop();
@@ -41,20 +39,17 @@ export class GridService {
         // word x2 (pink)
         if (TileMap.gridMap.isDoubleWordTile(i, j)) {
             this.gridContext.fillStyle = 'pink';
-            // this.gridContext.fillStyle = '#f6b4aa;';
             if (i !== Constants.CENTERCASE && j !== Constants.CENTERCASE) {
                 textChoice = 0;
             }
         }
         // word x3 (red)
         else if (TileMap.gridMap.isTripleWordTile(i, j)) {
-            // this.gridContext.fillStyle = 'red';
             this.gridContext.fillStyle = '#fa644d';
             textChoice = 1;
         }
         // Letter x3 (dark blue)
         else if (TileMap.gridMap.isTripleLetterTile(i, j)) {
-            // this.gridContext.fillStyle = 'darkblue';
             this.gridContext.fillStyle = '#3fa1b4';
             textChoice = 2;
         }
@@ -63,8 +58,6 @@ export class GridService {
             this.gridContext.fillStyle = '#add8e6';
             textChoice = 3;
         } else {
-            // this.gridContext.fillStyle = 'grey';
-            // this.gridContext.fillStyle = '#FFE6AC';
             this.gridContext.fillStyle = '#c8c3a6';
         }
         this.gridContext.fillRect(
@@ -193,20 +186,6 @@ export class GridService {
     get height(): number {
         return this.canvasSize.y;
     }
-    // usefull for future mouse input
-    /*
-    drawLetter(word: string, x1: number, y1: number) {
-        // eslint-disable-next-line max-len
-        const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
-        const y: number = Math.floor(y1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
-        this.gridContext.strokeRect(x - 12.5, y - 12.5, 23.5, 23.5);
-        this.gridContext.fillStyle = 'white';
-        this.gridContext.fillRect(x - 12, y - 12, 23, 23);
-        this.gridContext.fillStyle = 'black';
-        this.gridContext.font = '20px system-ui';
-        this.gridContext.fillText(word, x, y);
-    }
-    */
     drawLetterwithpositionstring(word: string, x1: number, y1: number) {
         const offset = 8;
         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE;

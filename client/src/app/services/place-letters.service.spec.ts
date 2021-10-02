@@ -1,15 +1,11 @@
 import { fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
-// import { WordValidationService } from '@app/services/word-validation.service';
-// import { GridService } from '@app/services/grid.service';
 import { PlaceLettersService } from './place-letters.service';
 describe('PlaceLettersService', () => {
     let service: PlaceLettersService;
     let gameStateServiceSpy: GameStateService;
     let gridServiceSpy: GridService;
-    // let wordValidationServicespy: WordValidationService;
-    // let gridService: GridService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
@@ -21,19 +17,7 @@ describe('PlaceLettersService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
-    /*
-    it('validateHorizontalWord should create the right word ', () => {
-        const myBoard = [
-            ['a', 'f', 'y'],
-            ['', '', ''],
-            ['e', 'm', 'f'],
-        ];
-        const spyIsWordValid = spyOn(service, 'isWordValid');
-        service.validateHorizontalWord(0, 2, myBoard);
-        expect(scoreCalculatorService.calculateScoreForHorizontal).toHaveBeenCalledWith(0, 2, 0, 'afy');
-        expect(spyIsWordValid).toHaveBeenCalledWith('afy');
-    });
-    */
+
     it('verifyTileNotOutOfBound should return false when orientation h and colomn 15', () => {
         service.wordToPlace = 'testing';
         service.colomnNumber = 15;
@@ -100,14 +84,12 @@ describe('PlaceLettersService', () => {
     }));
     it('validateWordPlaced should return true when playerUsedAllLetters is true and validateWordCreatedByNewLetters is false ', fakeAsync(() => {
         const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(true);
-        // const mySpy2 = spyOn(gridServiceSpy, 'drawtilebackground');
         gameStateServiceSpy.indexLastLetters = [1, 2, 3];
         gameStateServiceSpy.playerUsedAllLetters = true;
         const returnvalue = service.validateWordPlaced();
         flush();
         expect(returnvalue).toBe(true);
         expect(mySpy).toHaveBeenCalled();
-        // expect(mySpy2).toHaveBeenCalled();
         gameStateServiceSpy.indexLastLetters = [];
     }));
     // verifyavailable tests
@@ -116,15 +98,12 @@ describe('PlaceLettersService', () => {
         const mySpy = spyOn(service, 'verifyAvailable');
         service.placeWord('a1v allo');
         expect(mySpy).toHaveBeenCalled();
-        // expect(returnmessage).toEqual(false);
     });
     // verifyCaseAvailable
     it('verifyAvailable should return false when the tile is not empty', () => {
-        // const mySpy = spyOn(service, 'verifyAvailable');
         gameStateServiceSpy.lettersOnBoard[0][0] = 'a';
         const returnvalue = service.verifyCaseAvailable(0, 0, 'z');
         expect(returnvalue).toBe(false);
-        // expect(returnmessage).toEqual(false);
     });
     // placeword function tests
     it("placeword should return 'Le mot dépasse du plateau de jeux.' for a word that goes beyond the board", () => {
@@ -140,7 +119,6 @@ describe('PlaceLettersService', () => {
         const mySpy = spyOn(service, 'verifyCaseAvailable').and.returnValue(false);
         service.placeWord('a1v allo');
         expect(mySpy).toHaveBeenCalled();
-        // expect(returnmessage).toEqual(false);
     });
     it("placeword should return 'Le premier mot doit toucher à la case h8' when the first word isn't placed on h8 tile", () => {
         const mySpy = spyOn(gameStateServiceSpy, 'isWordCreationPossibleWithRessources').and.returnValue(true);
@@ -198,15 +176,10 @@ describe('PlaceLettersService', () => {
 
     // wordContainsJoker
     it('wordContainsJoker should call removeUpperCaseFromString when there is atleast one uppercase letter', () => {
-        // const mySpy = spyOn(service, 'removeUpperCaseFromString');
         const mySpy = spyOn(service, 'removeUpperCaseFromString');
-        // const mySpy2 = spyOn(gridServiceSpy, 'drawLetterwithpositionstring');
-        // const mySpy = spyOn(gridServiceSpy, 'verifyCaseAvailable');
-        // gameStateServiceSpy.lettersOnBoard[0][0] = 'A';
         service.wordToPlace = 'Allo';
         service.wordContainsJoker();
         expect(mySpy).toHaveBeenCalled();
-        // expect(mySpy2).toHaveBeenCalled();
     });
 
     // removeUpperCaseFromString
@@ -214,13 +187,4 @@ describe('PlaceLettersService', () => {
         service.wordToPlace = 'Allo';
         service.removeUpperCaseFromString(0);
     });
-    // getDictionary
-    /*
-    it('getDictionary should return the dictionnary as a string', () => {
-        wordValidationServicespy.dictionnary = ['test'];
-        const returnvalue = service.getDictionary();
-        expect(returnvalue).toBe(wordValidationServicespy.dictionnary);
-        service.removeUpperCaseFromString(0);
-    });
-    */
 });
