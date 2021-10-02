@@ -1,17 +1,12 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import * as Constants from '@app/constants';
 import { GameStateService } from './game-state.service';
 import { PlaceLettersService } from './place-letters.service';
 import { SoloOpponent2Service } from './solo-opponent2.service';
-import { WordValidationService } from './word-validation.service';
 
 describe('SoloOpponent2Service', () => {
     let service: SoloOpponent2Service;
-    let wordValidationServiceSpy: WordValidationService;
     let placeLettersServiceSpy: PlaceLettersService;
     let gameStateServiceSpy: GameStateService;
-    // let timerTurnManagerServiceSpy: TimerTurnManager;
-    // let letterServiceSpy: LetterService;
 
     beforeEach(
         waitForAsync(() => {
@@ -57,22 +52,6 @@ describe('SoloOpponent2Service', () => {
     });
     it('should find place word for first word', () => {
         service.firstTimeToPlay = true;
-        const spy = spyOn(placeLettersServiceSpy, 'placeWord');
-        expect(spy).toHaveBeenCalled();
-        // expect(returnedvalue[0]).toBe('allo');
-    });
-    it('should call is word playable for a combination of letter', () => {
-        // const locallettersOnBoard: string[][] = [['a'], ['b']];
-        const locallettersOnBoard: string[][] = [['a'], ['b']];
-        for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
-            for (let j = 0; j < Constants.NUMBEROFCASE; j++) {
-                locallettersOnBoard[i][j] = '';
-            }
-        }
-        locallettersOnBoard[7][7] = 'a';
-        gameStateServiceSpy.lettersOnBoard = locallettersOnBoard;
-        const spy = spyOn(service, 'isWordPlayable');
-        service.firstTimeToPlay = false;
         service.play();
         expect(spy).toHaveBeenCalled();
         // expect(returnedvalue[0]).toBe('allo');
