@@ -8,6 +8,7 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
 import { FinishGameService } from '@app/services/finish-game.service';
 import { TextBox } from './text-box-behavior';
 import { RouterTestingModule } from '@angular/router/testing';
+import { PlayerLetterHand } from './player-letter-hand';
 
 describe('TextBox', () => {
     let textBox: TextBox;
@@ -280,5 +281,18 @@ describe('TextBox', () => {
         const maChaine = '!placer';
         textBox.isCommand(maChaine);
         expect(soloOpponentServiceSpy.firstWordToPlay).toBe(false);
+    });
+    it("Can't exchange when you dont have the letters in hand", () => {
+        spyOn(textBox, 'verifySelectedLetters').and.returnValue(false);
+        expect(textBox.verifyCommandEchanger('a')).toEqual('Erreur! Les lettres sélectionnées ne font pas partie de la main courante.');
+    });
+
+    it("Can't exchange when there isn't enough letters in the reserve", () => {
+        PlayerLetterHand.allLetters = [];
+        expect(textBox.verifyCommandEchanger('a')).toEqual('Commande impossible à réaliser! La réserve ne contient pas assez de lettres.');
+    });
+    it("Can't exchange when there isn't enough letters in the reserve", () => {
+        PlayerLetterHand.allLetters = [];
+        expect(textBox.verifyCommandEchanger('a')).toEqual('Commande impossible à réaliser! La réserve ne contient pas assez de lettres.');
     });
 });
