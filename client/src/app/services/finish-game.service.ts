@@ -55,17 +55,17 @@ export class FinishGameService {
     getCongratulation(): string {
         this.scoreCalculator();
         const winners = this.getWinner();
-        let congratulationMsg = 'Félicitation, ' + winners[0];
+        let congratulationMsg = 'Félicitation, ' + this.letterService.players[0].name;
         for (let i = 1; i < winners.length; i++) {
-            congratulationMsg += ' et ' + winners[i] + ',';
+            congratulationMsg += ' et ' + this.letterService.players[i].name + ',';
         }
-        congratulationMsg += ' vous Avez gagné!!!';
+        congratulationMsg += ' vous avez gagné!!!';
         this.finalScore = [];
 
         return congratulationMsg;
     }
     getMessageTextBox(): string {
-        let messageTextBox = 'Fin de partie - lettres restantes \n';
+        let messageTextBox = 'Fin de partie - lettres restantes\n';
         for (const player of this.letterService.players) {
             messageTextBox += player.name;
             messageTextBox += ' :';
