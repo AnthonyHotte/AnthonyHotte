@@ -23,7 +23,7 @@ describe('SoloOpponentService', () => {
         private soloPlayer: SoloPlayerService,
         public soloOpponent2: SoloOpponent2Service,
         */
-       /*
+    /*
     beforeEach(
         waitForAsync(() => {
             // letterServiceSpy = jasmine.createSpyObj('LetterService', ['getLettersForExchange']);
