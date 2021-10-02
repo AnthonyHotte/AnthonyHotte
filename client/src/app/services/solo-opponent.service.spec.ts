@@ -122,15 +122,13 @@ fdescribe('SoloOpponentService', () => {
     it('exchangeLetters should call incrementPassedTurns', () => {
         const spy = spyOn(service, 'calculateProbability').and.returnValue(1);
         service.letters.players[1].selectedLettersForExchange = new Set<number>([0]);
-        service.exchangeLetters(1);
-        expect(spy).toHaveBeenCalled();
-        expect(service.letters.players[1].selectedLettersForExchange.size).toEqual(1);
+        service.exchangeLetters(0);
+        expect(spy).not.toHaveBeenCalled();
     });
     it('exchangeLetters should call incrementPassedTurns', () => {
         const spy = spyOn(service, 'calculateProbability').and.returnValue(0);
         service.letters.players[1].selectedLettersForExchange = new Set<number>([0]);
-        service.exchangeLetters(1);
-        expect(spy).toHaveBeenCalled();
-        expect(service.letters.players[1].selectedLettersForExchange.size).toEqual(1);
+        service.exchangeLetters(0);
+        expect(spy).not.toHaveBeenCalled();
     });
 });
