@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { LetterPlacementPossibility } from '@app/classes/letter-placement-possibility';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
@@ -25,9 +24,6 @@ export class SoloOpponentService {
     score: number = 0;
     currentMessage: Observable<string>;
     lastTurnWasASkip: boolean = false;
-    possibleWords: string[] = [];
-    possibilityOfPlayWord: string[] = [];
-    allRetainedOptions: LetterPlacementPossibility[] = [];
     firstWordToPlay: boolean = false;
     lastCommandEntered: string = 'Bonjour joueur!';
     private messageSource = new BehaviorSubject('default message');
