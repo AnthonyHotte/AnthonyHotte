@@ -3,7 +3,7 @@ import { GameStateService } from './game-state.service';
 import { PlaceLettersService } from './place-letters.service';
 import { SoloOpponent2Service } from './solo-opponent2.service';
 
-fdescribe('SoloOpponent2Service', () => {
+describe('SoloOpponent2Service', () => {
     let service: SoloOpponent2Service;
     let placeLettersServiceSpy: PlaceLettersService;
     let gameStateServiceSpy: GameStateService;
