@@ -30,9 +30,9 @@ export class SoloOpponentService {
     allRetainedOptions: LetterPlacementPossibility[] = [];
     firstWordToPlay: boolean = false;
     lastCommandEntered: string = 'Bonjour joueur!';
-    private messageSource = new BehaviorSubject('default message');
-    private messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
-    private sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
+    messageSource = new BehaviorSubject('default message');
+    messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
+    sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
     constructor(
         public letters: LetterService,
         public timeManager: TimerTurnManagerService,

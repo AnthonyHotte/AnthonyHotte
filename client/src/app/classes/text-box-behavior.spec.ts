@@ -1,8 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-<<<<<<< HEAD
-=======
+
 import { MessagePlayer } from '@app/message';
->>>>>>> refs/remotes/origin/soloopponent3
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
@@ -11,10 +9,6 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
 import { FinishGameService } from '@app/services/finish-game.service';
 import { TextBox } from './text-box-behavior';
 import { RouterTestingModule } from '@angular/router/testing';
-<<<<<<< HEAD
-=======
-
->>>>>>> refs/remotes/origin/soloopponent3
 
 describe('TextBox', () => {
     let textBox: TextBox;
