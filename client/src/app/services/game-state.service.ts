@@ -136,7 +136,7 @@ export class GameStateService {
             return this.isWordTouchingVertical();
         }
     }
-    private isWordTouchingHorizontal(): boolean {
+    isWordTouchingHorizontal(): boolean {
         for (let i = 0; i < this.indexLastLetters.length; i += 2) {
             if (i === 0 && this.indexLastLetters[i + 1] !== 0) {
                 if (this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] - 1] !== '') {
@@ -167,7 +167,7 @@ export class GameStateService {
         return false;
     }
 
-    private isWordTouchingVertical(): boolean {
+    isWordTouchingVertical(): boolean {
         for (let i = 0; i < this.indexLastLetters.length; i += 2) {
             if (i === 0 && this.indexLastLetters[i] !== 0) {
                 if (this.lettersOnBoard[this.indexLastLetters[i] - 1][this.indexLastLetters[i + 1]] !== '') {

@@ -164,4 +164,111 @@ describe('GameStateService', () => {
         const result = service.isLetterOnh8();
         expect(result).toBe(false);
     });
+    it('expect verify if is word touching horizontal is called if the orientation is horizontal', () => {
+        service.lastLettersAdded = 'allo';
+        service.isBoardEmpty = false;
+        const spy = spyOn(service, 'isWordTouchingHorizontal');
+        service.isWordTouchingLetterOnBoard('allo', 'h');
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('horizontal word should tell word added is touching a letter on the left', () => {
+        const ten = 10;
+        const eleven = 11;
+        const twelve = 12;
+        service.indexLastLetters = [0, eleven, 0, twelve];
+        service.lettersOnBoard[0][ten] = 'a';
+        expect(service.isWordTouchingHorizontal()).toBe(true);
+    });
+    it('horizontal word should tell if word added is touching a letter on the right', () => {
+        const ten = 10;
+        const eleven = 11;
+        const twelve = 12;
+        service.indexLastLetters = [0, ten, 0, eleven];
+        service.lettersOnBoard[0][twelve] = 'a';
+        expect(service.isWordTouchingHorizontal()).toBe(true);
+    });
+
+    it('horizontal word should tell if word added is touching a letter under on row 1', () => {
+        const ten = 10;
+        const eleven = 11;
+        service.indexLastLetters = [0, ten, 0, eleven];
+        service.lettersOnBoard[1][ten] = 'a';
+        expect(service.isWordTouchingHorizontal()).toBe(true);
+    });
+
+    it('horizontal word should tell if word added is touching a letter over on row 15', () => {
+        const ten = 10;
+        const eleven = 11;
+        const thirteen = 13;
+        const fourteen = 14;
+        service.indexLastLetters = [fourteen, ten, fourteen, eleven];
+        service.lettersOnBoard[thirteen][ten] = 'a';
+        expect(service.isWordTouchingHorizontal()).toBe(true);
+    });
+
+    it('horizontal word should tell if word added is touching a letter over or under when word is added in the middle of the board', () => {
+        const ten = 10;
+        const eleven = 11;
+        service.indexLastLetters = [3, ten, 3, eleven];
+        service.lettersOnBoard[2][ten] = 'a';
+        expect(service.isWordTouchingHorizontal()).toBe(true);
+    });
+
+    it('horizontal word should tell if word is not touching to any letter on board', () => {
+        const ten = 10;
+        const eleven = 11;
+        service.indexLastLetters = [3, ten, 3, eleven];
+        expect(service.isWordTouchingHorizontal()).toBe(false);
+    });
+
+    it('vertical word should tell if word added is touching a letter over it', () => {
+        const ten = 10;
+        const eleven = 11;
+        const twelve = 12;
+        service.indexLastLetters = [eleven, 0, twelve, 0];
+        service.lettersOnBoard[ten][0] = 'a';
+        expect(service.isWordTouchingVertical()).toBe(true);
+    });
+    it('vertical word should tell if word added is touching a letter under it', () => {
+        const ten = 10;
+        const eleven = 11;
+        const twelve = 12;
+        service.indexLastLetters = [ten, 0, eleven, 0];
+        service.lettersOnBoard[twelve][0] = 'a';
+        expect(service.isWordTouchingVertical()).toBe(true);
+    });
+
+    it('vertical word on column 1 should tell if word added is touching a letter on the right', () => {
+        const ten = 10;
+        const eleven = 11;
+        service.indexLastLetters = [ten, 0, eleven, 0];
+        service.lettersOnBoard[ten][1] = 'a';
+        expect(service.isWordTouchingVertical()).toBe(true);
+    });
+
+    it('vertical word on column 1 should tell if word added is touching a letter on the left', () => {
+        const ten = 10;
+        const eleven = 11;
+        const thirteen = 13;
+        const fourteen = 14;
+        service.indexLastLetters = [ten, fourteen, eleven, fourteen];
+        service.lettersOnBoard[ten][thirteen] = 'a';
+        expect(service.isWordTouchingVertical()).toBe(true);
+    });
+
+    it('vertical word should tell if word added is touching a letter on right or left when word is added in the middle of the board', () => {
+        const ten = 10;
+        const eleven = 11;
+        service.indexLastLetters = [ten, 3, eleven, 3];
+        service.lettersOnBoard[ten][2] = 'a';
+        expect(service.isWordTouchingVertical()).toBe(true);
+    });
+
+    it('vertical word should tell if word is not touching to any letter on board', () => {
+        const ten = 10;
+        const eleven = 11;
+        service.indexLastLetters = [ten, 3, eleven, 3];
+        expect(service.isWordTouchingVertical()).toBe(false);
+    });
 });
