@@ -63,7 +63,6 @@ export class SoloOpponentService {
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             if (PROBABILITY_OF_ACTION > TWENTY) {
                 this.lastCommandEntered = this.soloOpponent2.play();
-                // this.timeManager.endTurn();
             } else if (PROBABILITY_OF_ACTION <= TEN) {
                 this.skipTurn();
             } else {

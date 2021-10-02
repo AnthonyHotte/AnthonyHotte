@@ -12,6 +12,4 @@ export class CommunicationTextBoxSoloGameInitiatorService {
     nomEstValide = true;
     tempsDeJeu = VALEUR_TEMPS_DEFAULT;
     difficulteFacile = true;
-
-    // constructor(router: Router) {}
 }

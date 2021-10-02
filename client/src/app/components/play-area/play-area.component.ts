@@ -3,11 +3,8 @@ import { Vec2 } from '@app/classes/vec2';
 import * as Constants from '@app/constants';
 import { GridService } from '@app/services/grid.service';
 
-// TODO : Avoir un fichier séparé pour les constantes!
 export const DEFAULT_WIDTH = Constants.DEFAULT_WIDTH;
 export const DEFAULT_HEIGHT = Constants.DEFAULT_WIDTH;
-
-// TODO : Déplacer ça dans un fichier séparé accessible par tous
 export enum MouseButton {
     Left = 0,
     Middle = 1,
@@ -49,12 +46,9 @@ export class PlayAreaComponent implements AfterViewInit {
         return this.canvasSize.y;
     }
 
-    // TODO : déplacer ceci dans un service de gestion de la souris!
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
             this.mousePosition = { x: event.offsetX, y: event.offsetY };
-            //    this.gridService.drawLetter(this.buttonPressed, this.mousePosition.x, this.mousePosition.y);
-            // this.gridService.drawLetterValue('2', this.mousePosition.x, this.mousePosition.y);
         }
     }
 }

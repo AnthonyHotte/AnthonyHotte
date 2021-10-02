@@ -38,7 +38,6 @@ export class SoloOpponentUsefulFunctions {
                 return 'h';
             case PlacementValidity.Left:
                 return 'h';
-            // case PlacementValidity.HUp:
             default:
                 return 'v';
         }

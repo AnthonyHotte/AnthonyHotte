@@ -43,11 +43,9 @@ describe('TextBox', () => {
     it('should send a word correctly', () => {
         const inputVerificationSpy = spyOn(textBox, 'inputVerification');
         // no need for both lines since logic was changed...
-        // const isCommandSpy = spyOn(textBox, 'isCommand');
         const pushSpy = spyOn(textBox.inputs, 'push');
         textBox.send({ message: 'Hello', sender: '', debugState: true });
         expect(inputVerificationSpy).toHaveBeenCalledWith('Hello');
-        // expect(isCommandSpy).toHaveBeenCalledWith('');
         expect(pushSpy).toHaveBeenCalledWith({ message: 'Hello', sender: '', debugState: true });
     });
     it('should validate input correctly', () => {
@@ -265,12 +263,10 @@ describe('TextBox', () => {
     it('send shouldn t use push', () => {
         const inputVerificationSpy = spyOn(textBox, 'inputVerification');
         // no need for both lines since logic was changed...
-        // const isCommandSpy = spyOn(textBox, 'isCommand');
         const pushSpy = spyOn(textBox.inputs, 'push');
         textBox.character = true;
         textBox.send({ message: 'Hello', sender: '', debugState: true });
         expect(inputVerificationSpy).toHaveBeenCalledWith('Hello');
-        // expect(isCommandSpy).toHaveBeenCalledWith('');
         expect(pushSpy).not.toHaveBeenCalled();
     });
 

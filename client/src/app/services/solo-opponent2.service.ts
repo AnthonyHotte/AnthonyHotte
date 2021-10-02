@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as Constants from '@app/constants';
-// import { Injectable, Injector } from '@angular/core';
 import { WordValidationService } from '@app/services/word-validation.service';
 import { GameStateService } from './game-state.service';
 import { LetterService } from './letter.service';
 import { PlaceLettersService } from './place-letters.service';
-// import { SoloPlayerService } from './solo-player.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 @Injectable({
     providedIn: 'root',
