@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
+import { MessagePlayer } from '@app/message';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
@@ -152,5 +153,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     soloOpponentPlays() {
         this.soloOpponent.play();
+        const message: MessagePlayer = { message: this.soloOpponent.lastCommandEntered, sender: 'Adversaire', debugState: false };
+        this.textBox.inputs.push(message);
     }
 }
