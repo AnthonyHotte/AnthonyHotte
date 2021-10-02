@@ -9,7 +9,7 @@ describe('FinishedGameComponent', () => {
     let spy: jasmine.SpyObj<FinishGameService>;
 
     beforeEach(async () => {
-        spy = jasmine.createSpyObj(FinishGameService, ['scoreCalculator']);
+        spy = jasmine.createSpyObj(FinishGameService, ['goToHomeAndRefresh', 'getCongratulation']);
         await TestBed.configureTestingModule({
             declarations: [FinishedGameComponent],
             providers: [{ provide: FinishGameService, useValue: spy }],
@@ -25,5 +25,21 @@ describe('FinishedGameComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('getter should be called congratulation', () => {
+        component.getMessageCongratulation();
+        expect(spy.getCongratulation).toHaveBeenCalled();
+    });
+
+    it('getter should be called getGameStatus', () => {
+        const tempSpy = spyOn(component, 'getGameStatus');
+        component.getGameStatus();
+        expect(tempSpy).toHaveBeenCalled();
+    });
+
+    it('getter should be called congratulation', () => {
+        component.quitGame();
+        expect(spy.goToHomeAndRefresh).toHaveBeenCalled();
     });
 });

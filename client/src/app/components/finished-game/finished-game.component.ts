@@ -10,7 +10,7 @@ export class FinishedGameComponent {
     isGameFinished: boolean = true;
     congratulation: string;
 
-    constructor(private finishGameService: FinishGameService) {}
+    constructor(public finishGameService: FinishGameService) {}
 
     getMessageCongratulation(): string {
         return this.finishGameService.getCongratulation();
