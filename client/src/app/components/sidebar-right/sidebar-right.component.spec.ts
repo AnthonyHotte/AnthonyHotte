@@ -144,12 +144,6 @@ describe('SidebarRightComponent', () => {
         component.skipTurn();
         expect(spy).toHaveBeenCalled();
     });
-
-    it('getNumberRemainingLetters should call sendLettersInSackNumber ', () => {
-        const spy = spyOn(PlayerLetterHand, 'sendLettersInSackNumber');
-        component.getNumberRemainingLetters();
-        expect(spy).toHaveBeenCalled();
-    });
     it('getNumberOfLettersForPlayer should return the number of letters ', () => {
         letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
         letterServiceSpy.players[0].allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
