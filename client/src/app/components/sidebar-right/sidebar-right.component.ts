@@ -68,7 +68,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         this.turn = this.turnTimeController.turn;
         this.letterService.reset();
         this.letterService.players[0].reset();
-        this.soloOpponent.reset();
+        this.soloOpponent.reset(1);
     }
     difficultyInCharacters() {
         if (this.easyDifficultyIsTrue === true) {
