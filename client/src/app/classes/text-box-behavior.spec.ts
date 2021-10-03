@@ -3,8 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { MessagePlayer } from '@app/message';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
-import { SoloOpponentService } from '@app/services/solo-opponent.service';
-import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { TextBox } from './text-box-behavior';
@@ -14,8 +12,6 @@ import { PlayerLetterHand } from './player-letter-hand';
 describe('TextBox', () => {
     let textBox: TextBox;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
-    let soloPlayerServiceSpy: jasmine.SpyObj<SoloPlayerService>;
-    let soloOpponentServiceSpy: jasmine.SpyObj<SoloOpponentService>;
     let placerLetterServiceSpy: jasmine.SpyObj<PlaceLettersService>;
     let timerTurnManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let finishGameServiceSpy: jasmine.SpyObj<FinishGameService>;
@@ -29,8 +25,6 @@ describe('TextBox', () => {
         TestBed.configureTestingModule({});
         textBox = TestBed.inject(TextBox);
         letterServiceSpy = TestBed.inject(LetterService) as jasmine.SpyObj<LetterService>;
-        soloPlayerServiceSpy = TestBed.inject(SoloPlayerService) as jasmine.SpyObj<SoloPlayerService>;
-        soloOpponentServiceSpy = TestBed.inject(SoloOpponentService) as jasmine.SpyObj<SoloOpponentService>;
         placerLetterServiceSpy = TestBed.inject(PlaceLettersService) as jasmine.SpyObj<PlaceLettersService>;
         timerTurnManagerServiceSpy = TestBed.inject(TimerTurnManagerService) as jasmine.SpyObj<TimerTurnManagerService>;
         finishGameServiceSpy = TestBed.inject(FinishGameService) as jasmine.SpyObj<FinishGameService>;
@@ -102,20 +96,11 @@ describe('TextBox', () => {
     });
     it('isCommand should call debugCommand', () => {
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
-        soloPlayerServiceSpy = jasmine.createSpyObj('SoloPlayerService', ['reset']);
-        soloOpponentServiceSpy = jasmine.createSpyObj('SoloOpponentService', ['reset']);
         placerLetterServiceSpy = jasmine.createSpyObj('PlacerLettersService', ['placeWord']);
         timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerServiceSpy', ['endTurn']);
         finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['goToHomeAndRefresh']);
 
-        textBox = new TextBox(
-            placerLetterServiceSpy,
-            soloPlayerServiceSpy,
-            soloOpponentServiceSpy,
-            timerTurnManagerServiceSpy,
-            letterServiceSpy,
-            finishGameServiceSpy,
-        );
+        textBox = new TextBox(placerLetterServiceSpy, timerTurnManagerServiceSpy, letterServiceSpy, finishGameServiceSpy);
 
         timerTurnManagerServiceSpy.turn = 0;
         const maChaine = '!debug';
@@ -161,94 +146,27 @@ describe('TextBox', () => {
     });
     it('verifyCommandPasser should call incrementPassedTurn', () => {
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
-        soloPlayerServiceSpy = jasmine.createSpyObj('SoloPlayerService', ['incrementPassedTurns']);
-        soloOpponentServiceSpy = jasmine.createSpyObj('SoloOpponentService', ['reset']);
         placerLetterServiceSpy = jasmine.createSpyObj('PlacerLettersService', ['placeWord']);
         timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerServiceSpy', ['endTurn']);
         finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['goToHomeAndRefresh']);
 
-        textBox = new TextBox(
-            placerLetterServiceSpy,
-            soloPlayerServiceSpy,
-            soloOpponentServiceSpy,
-            timerTurnManagerServiceSpy,
-            letterServiceSpy,
-            finishGameServiceSpy,
-        );
+        textBox = new TextBox(placerLetterServiceSpy, timerTurnManagerServiceSpy, letterServiceSpy, finishGameServiceSpy);
 
         textBox.verifyCommandPasser();
-        expect(soloPlayerServiceSpy.incrementPassedTurns).toHaveBeenCalled();
+        expect(0).toEqual(1);
     });
     it('verifyCommandPasser should call endTurn', () => {
         const mySpy = spyOn(textBox, 'endTurn');
 
         textBox.valueToEndGame = 0;
-        soloPlayerServiceSpy.maximumAllowedSkippedTurns = 10;
         textBox.verifyCommandPasser();
-        expect(mySpy).toHaveBeenCalled();
-    });
-    it('verifyCommandPasser should call clear', () => {
-        const mySpy = spyOn(textBox, 'finishCurrentGame');
-
-        textBox.valueToEndGame = 10;
-        soloPlayerServiceSpy.maximumAllowedSkippedTurns = 0;
-        textBox.verifyCommandPasser();
-        expect(mySpy).toHaveBeenCalled();
+        expect(mySpy).toEqual(1);
     });
 
     it('endTurn should call endTurn of timeManager', () => {
         const mySpy = spyOn(timerTurnManagerServiceSpy, 'endTurn');
-        textBox.endTurn();
-        expect(mySpy).toHaveBeenCalled();
-    });
-    it('endTurn should call changeTurn of opponent', () => {
-        const mySpy = spyOn(soloOpponentServiceSpy, 'changeTurn');
-        timerTurnManagerServiceSpy.turn = 0;
-        textBox.endTurn();
-        expect(mySpy).toHaveBeenCalledWith(textBox.turn.toString());
-    });
-    it('endTurn should call changeTurn of player', () => {
-        const mySpy = spyOn(soloPlayerServiceSpy, 'changeTurn');
-        timerTurnManagerServiceSpy.turn = 1;
-        textBox.endTurn();
-        expect(mySpy).toHaveBeenCalledWith(textBox.turn.toString());
-    });
-    it('verifySelectedLetters should call letterService.selectedLetters', () => {
-        const word = 'wfwefw';
-        const playerHasLetters = true;
-        const letters = word.substring('!échanger '.length, word.length);
-        const mySpy = spyOn(letterServiceSpy, 'selectLetter');
-        textBox.verifySelectedLetters(playerHasLetters, word);
-        for (let i = 0; i < letters.length; ++i) {
-            const letter = letters.charAt(i);
-            expect(mySpy).toHaveBeenCalledWith(letter, 0);
-        }
-    });
-    it('verifySelectedLetters should call letterService.selectedLetters', () => {
-        const word = 'wfwefw';
-        const playerHasLetters = true;
-        const letters = word.substring('!échanger '.length, word.length);
-        const mySpy = spyOn(letterServiceSpy, 'selectLetter');
-        const mySpy2 = spyOn(letters, 'charAt');
-        textBox.verifySelectedLetters(playerHasLetters, word);
-        for (let i = 0; i < letters.length; ++i) {
-            const letter = letters.charAt(i);
-            expect(mySpy2).toHaveBeenCalledWith(i);
-            expect(mySpy).toHaveBeenCalledWith(letter, 0);
-        }
-    });
-    it('verifySelectedLetters should return false', () => {
-        const word = 'abandonner';
-        const playerHasLetters = false;
-        const mySpy = textBox.verifySelectedLetters(playerHasLetters, word);
-
-        expect(mySpy).toBe(true);
-    });
-    it('verifySelectedLetters should return true', () => {
-        const word = 'wfwefw';
-        const playerHasLetters = false;
-        const retour = textBox.verifySelectedLetters(playerHasLetters, word);
-        expect(retour).toBe(true);
+        textBox.endTurn('place');
+        expect(mySpy).toEqual(1);
     });
     it('getMessageSoloOpponent should ne inputSoloOpponent', () => {
         const mySpy = textBox.getMessagesSoloOpponent();
@@ -277,10 +195,9 @@ describe('TextBox', () => {
         spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('Mot placé avec succès.');
         const maChaine = '!placer';
         textBox.isCommand(maChaine);
-        expect(soloOpponentServiceSpy.firstWordToPlay).toBe(false);
+        expect(0).toEqual(1);
     });
     it("Can't exchange when you dont have the letters in hand", () => {
-        spyOn(textBox, 'verifySelectedLetters').and.returnValue(false);
         expect(textBox.verifyCommandEchanger('a')).toEqual('Erreur! Les lettres sélectionnées ne font pas partie de la main courante.');
     });
 
