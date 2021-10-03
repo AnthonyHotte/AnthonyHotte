@@ -68,8 +68,6 @@ export class SoloPlayerService {
         this.changeTurn(this.myTurn.toString());
     }
 
-
-
     sendNumberOfSkippedTurn() {
         this.messageSource.next(this.valueToEndGame.toString());
     }

@@ -50,8 +50,7 @@ export class SoloOpponentService {
         this.myTurn = this.timeManager.turn === 1;
     }
     play() {
-        this.myTurn = this.timeManager.turn === 1;
-        if (this.myTurn === true) {
+        if (this.timeManager.turn === 1) {
             const HUNDRED = 100;
             const TWENTY = 20;
             const TEN = 10;
@@ -74,20 +73,7 @@ export class SoloOpponentService {
     calculateProbability(percentage: number) {
         return Math.floor(Math.random() * percentage);
     }
-    incrementPassedTurns() {
-        this.valueToEndGame = parseInt(this.messageFromSoloPlayer[0], 10);
-        this.lastTurnWasASkip = this.messageFromSoloPlayer[1] === 'true';
-        if (this.valueToEndGame < this.maximumAllowedSkippedTurns) {
-            if (this.lastTurnWasASkip) {
-                this.valueToEndGame++;
-            } else {
-                this.valueToEndGame = 1;
-                this.lastTurnWasASkip = true;
-            }
-            this.myTurn = false;
-            this.changeTurn(this.myTurn.toString());
-        }
-    }
+
     changeTurn(message: string) {
         this.messageSource.next(message);
         this.myTurn = parseInt(this.messageTimeManager, 10) === 1;
@@ -100,18 +86,13 @@ export class SoloOpponentService {
         this.valueToEndGame = 0;
         this.firstWordToPlay = true;
     }
-    getScore() {
-        return this.score;
-    }
+
     sendNumberOfSkippedTurn() {
         this.messageSource.next(this.valueToEndGame.toString());
     }
     skipTurn() {
-        this.myTurn = this.timeManager.turn === 1;
-        if (this.myTurn === true) {
-            this.incrementPassedTurns();
-            this.messageSoloPlayer.next([this.valueToEndGame.toString(), this.lastTurnWasASkip.toString()]);
-            this.timeManager.endTurn();
+        if (this.timeManager.turn === 1) {
+            this.timeManager.endTurn('skip');
             const numberOfLetters = 0;
             this.sourceMessageTextBox.next(['!passer', numberOfLetters.toString()]);
             this.lastCommandEntered = '!passer';
@@ -133,7 +114,7 @@ export class SoloOpponentService {
             lettersToExchange += this.letters.players[this.timeManager.turn].allLettersInHand[index];
         }
         this.letters.players[this.timeManager.turn].exchangeLetters(lettersToExchange);
-        this.timeManager.endTurn();
+        this.timeManager.endTurn('exchange');
         this.sourceMessageTextBox.next(['!échanger ', numberOfLettersToTrade.toString()]);
         this.lastCommandEntered = '!échanger ' + numberOfLettersToTrade.toString();
     }

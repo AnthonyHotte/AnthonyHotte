@@ -65,7 +65,7 @@ export class SoloOpponent2Service {
         if (tempword !== undefined) {
             this.placeLetterService.placeWord(tempword);
         }
-        this.timeManagerService.endTurn();
+        this.timeManagerService.endTurn('place');
         return '!placer ' + tempword;
     }
     // return all the word that exist with the letters given;

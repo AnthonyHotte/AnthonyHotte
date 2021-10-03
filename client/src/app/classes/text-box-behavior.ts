@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { MAX_CHARACTERS, PLACERCOMMANDLENGTH } from '@app/constants';
+import { MAX_CHARACTERS, PLACERCOMMANDLENGTH, MAX_NUMBER_SKIPPED_TURNS } from '@app/constants';
 import { MessagePlayer } from '@app/message';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
-import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PlayerLetterHand } from './player-letter-hand';
@@ -31,7 +30,6 @@ export class TextBox {
     sourceMessage = new BehaviorSubject('command is successful');
     constructor(
         private readonly placeLettersService: PlaceLettersService,
-        private soloPlayer: SoloPlayerService,
         private soloOpponent: SoloOpponentService,
         private timeManager: TimerTurnManagerService,
         private letterService: LetterService,
@@ -106,7 +104,7 @@ export class TextBox {
         } else if (this.timeManager.turn === 0) {
             if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 text = this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
-                this.endTurn();
+                this.endTurn('place');
                 if (text === 'Mot placé avec succès.') {
                     this.soloOpponent.firstWordToPlay = false;
                 } else {
@@ -133,9 +131,8 @@ export class TextBox {
     }
 
     verifyCommandPasser() {
-        this.soloPlayer.incrementPassedTurns(this.soloOpponent.valueToEndGame, this.soloOpponent.lastTurnWasASkip);
-        if (this.soloPlayer.valueToEndGame < this.soloPlayer.maximumAllowedSkippedTurns) {
-            this.endTurn();
+        if (this.timeManager.turnsSkippedInARow < MAX_NUMBER_SKIPPED_TURNS) {
+            this.endTurn('skip');
             return 'Tour passé avec succès.';
         } else {
             this.finishCurrentGame();
@@ -147,17 +144,14 @@ export class TextBox {
         this.finishGameService.isGameFinished = true;
     }
 
-    endTurn() {
-        this.timeManager.endTurn();
+    endTurn(reason: string) {
+        this.timeManager.endTurn(reason);
         this.commandSuccessful = true;
-        this.turn = this.timeManager.turn;
         if (this.letterService.players[this.timeManager.turn].allLettersInHand.length === 0) {
             this.finishCurrentGame();
         }
-        if (this.turn === 0) {
-            this.soloPlayer.changeTurn(this.turn.toString());
-        } else {
-            this.soloOpponent.changeTurn(this.turn.toString());
+        if (this.timeManager.turn === 1) {
+            this.soloOpponent.changeTurn(this.timeManager.turn.toString());
         }
     }
 
@@ -167,7 +161,7 @@ export class TextBox {
             const letters = word.substring('!échanger '.length, word.length);
             if (this.letterService.players[this.timeManager.turn].handContainLetters(letters)) {
                 this.letterService.players[this.timeManager.turn].exchangeLetters(letters);
-                this.endTurn();
+                this.endTurn('exchange');
                 return 'Échange de lettre avec succès.';
             } else {
                 return 'Erreur! Les lettres sélectionnées ne font pas partie de la main courante.';

@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class TimerTurnManagerService {
     turn: number = 0;
+    turnsSkippedInARow = 0;
     currentMessage: Observable<string>;
     messageSource = new BehaviorSubject('default message');
 
@@ -19,7 +20,12 @@ export class TimerTurnManagerService {
         this.turn = Math.floor(Math.random() * 2);
     }
 
-    endTurn() {
+    endTurn(reason: string) {
+        if (reason === 'skip') {
+            this.turnsSkippedInARow++;
+        } else {
+            this.turnsSkippedInARow = 0;
+        }
         if (this.turn === 0) {
             this.turn = 1;
         } else {
