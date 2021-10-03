@@ -1,7 +1,7 @@
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
 
-fdescribe('PlayerLetterHand', () => {
+describe('PlayerLetterHand', () => {
     let playerLetterHand: PlayerLetterHand;
 
     beforeEach(() => {
