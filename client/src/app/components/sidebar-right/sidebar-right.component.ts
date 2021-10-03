@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
+import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
@@ -16,20 +17,11 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./sidebar-right.component.scss'],
 })
 export class SidebarRightComponent implements OnInit, AfterViewInit {
-    opponentMessage: string;
-    messageLetterService: string;
-    messageTimeManager: string;
     messageTextBox: string;
-    subscriptionOpponent: Subscription;
-    subscriptionLetterService: Subscription;
-    subscriptionTimeManager: Subscription;
     subscriptionTextBox: Subscription;
     message: string[] = [];
     playerName: string[] = ['', ''];
     opponentSet: boolean = false;
-
-    numberOfSkippedTurns: number = 0;
-
     easyDifficultyIsTrue: boolean;
     time: number;
     turn: number;
@@ -43,7 +35,8 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         private letterService: LetterService,
         private textBox: TextBox,
         private readonly gridService: GridService,
-        private readonly placeLetterService: PlaceLettersService, // private finishGameService: FinishGameService,
+        private readonly placeLetterService: PlaceLettersService,
+        private finishGameService: FinishGameService,
     ) {
         this.message = this.soloGameInformation.message;
         this.setAttribute();
@@ -51,20 +44,12 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         if (this.turnTimeController.turn === 1) {
-            this.soloOpponent.firstWordToPlay = true;
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
     }
 
     ngOnInit() {
-        this.subscriptionOpponent = this.soloOpponent.currentMessage.subscribe((opponentMessage) => (this.opponentMessage = opponentMessage));
-        this.subscriptionLetterService = PlayerLetterHand.currentMessage.subscribe(
-            (messageLetterService) => (this.messageLetterService = messageLetterService),
-        );
-        this.subscriptionTimeManager = this.turnTimeController.currentMessage.subscribe(
-            (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
-        );
         this.subscriptionTextBox = this.textBox.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
     }
 
@@ -99,8 +84,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     getNumberRemainingLetters() {
-        PlayerLetterHand.sendLettersInSackNumber();
-        return this.messageLetterService;
+        return PlayerLetterHand.allLetters.length;
     }
 
     getNumberOfLettersForPlayer(indexPlayer: number) {
@@ -112,7 +96,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     finishCurrentGame() {
-        this.textBox.finishCurrentGame();
+        this.finishGameService.isGameFinished = true;
     }
 
     increaseFontSize() {

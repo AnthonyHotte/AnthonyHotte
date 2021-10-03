@@ -19,14 +19,14 @@ export class LetterService {
     }
 
     reset() {
-        for (let i = 0; i < 2; i++) {
-            this.players[i].reset();
-        }
         PlayerLetterHand.allLetters = [];
         LETTERS.forEach((letter) => {
             for (let i = 0; i < letter.quantity; i++) {
                 PlayerLetterHand.allLetters.push(letter);
             }
         });
+        for (let i = 0; i < 2; i++) {
+            this.players[i].reset();
+        }
     }
 }

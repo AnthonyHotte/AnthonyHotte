@@ -4,7 +4,6 @@ import { MAX_CHARACTERS, PLACERCOMMANDLENGTH, MAX_NUMBER_SKIPPED_TURNS } from '@
 import { MessagePlayer } from '@app/message';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
-import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PlayerLetterHand } from './player-letter-hand';
@@ -30,7 +29,6 @@ export class TextBox {
     sourceMessage = new BehaviorSubject('command is successful');
     constructor(
         private readonly placeLettersService: PlaceLettersService,
-        private soloOpponent: SoloOpponentService,
         private timeManager: TimerTurnManagerService,
         private letterService: LetterService,
         private finishGameService: FinishGameService,
@@ -105,9 +103,7 @@ export class TextBox {
             if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 text = this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
                 this.endTurn('place');
-                if (text === 'Mot placé avec succès.') {
-                    this.soloOpponent.firstWordToPlay = false;
-                } else {
+                if (text !== 'Mot placé avec succès.') {
                     this.verifyCommandPasser();
                 }
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
@@ -135,23 +131,16 @@ export class TextBox {
             this.endTurn('skip');
             return 'Tour passé avec succès.';
         } else {
-            this.finishCurrentGame();
+            this.finishGameService.isGameFinished = true;
         }
         return '';
-    }
-
-    finishCurrentGame() {
-        this.finishGameService.isGameFinished = true;
     }
 
     endTurn(reason: string) {
         this.timeManager.endTurn(reason);
         this.commandSuccessful = true;
         if (this.letterService.players[this.timeManager.turn].allLettersInHand.length === 0) {
-            this.finishCurrentGame();
-        }
-        if (this.timeManager.turn === 1) {
-            this.soloOpponent.changeTurn(this.timeManager.turn.toString());
+            this.finishGameService.isGameFinished = true;
         }
     }
 

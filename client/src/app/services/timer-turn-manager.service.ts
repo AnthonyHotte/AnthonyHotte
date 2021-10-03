@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -7,13 +6,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class TimerTurnManagerService {
     turn: number = 0;
     turnsSkippedInARow = 0;
-    currentMessage: Observable<string>;
-    messageSource = new BehaviorSubject('default message');
 
     constructor() {
         this.initiateGame();
-        this.currentMessage = this.messageSource.asObservable();
-        this.sendTurn();
     }
 
     initiateGame() {
@@ -31,10 +26,5 @@ export class TimerTurnManagerService {
         } else {
             this.turn = 0;
         }
-        this.sendTurn();
-    }
-
-    sendTurn() {
-        this.messageSource.next(this.turn.toString());
     }
 }

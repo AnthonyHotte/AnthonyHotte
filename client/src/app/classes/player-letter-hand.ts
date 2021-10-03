@@ -1,14 +1,10 @@
 import { MAXLETTERINHAND } from '@app/constants';
 import { Letter } from '@app/letter';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { LetterMap } from '@app/all-letters';
 
 export class PlayerLetterHand {
     static allLetters: Letter[] = []; // all letters in available in bank
-    static messageSource: BehaviorSubject<string> = new BehaviorSubject('default message');
-    static currentMessage: Observable<string> = PlayerLetterHand.messageSource.asObservable();
     allLettersInHand: Letter[];
-    numberLetterInHand: number;
     score: number;
     name: string;
     letterMap: LetterMap;
@@ -16,22 +12,17 @@ export class PlayerLetterHand {
     constructor() {
         this.allLettersInHand = [];
         this.name = '';
-        this.numberLetterInHand = 0;
         this.score = 0;
         this.letterMap = new LetterMap();
     }
-    static sendLettersInSackNumber() {
-        PlayerLetterHand.messageSource.next(PlayerLetterHand.allLetters.length.toString());
-    }
+
     addLetters(amount: number): void {
-        if (this.numberLetterInHand + amount <= MAXLETTERINHAND) {
-            this.numberLetterInHand += amount;
+        if (this.allLettersInHand.length + amount <= MAXLETTERINHAND) {
             for (let i = 0; i < amount; i++) {
                 const index: number = Math.floor(Math.random() * PlayerLetterHand.allLetters.length);
                 this.allLettersInHand.push(PlayerLetterHand.allLetters[index]);
                 PlayerLetterHand.allLetters.splice(index, 1);
             }
-            this.sendNumberOfLetters(this.numberLetterInHand.toString());
         }
     }
     exchangeLetters(letters: string) {
@@ -54,13 +45,10 @@ export class PlayerLetterHand {
             }
         }
     }
-    sendNumberOfLetters(message: string) {
-        PlayerLetterHand.messageSource.next(message);
-    }
+
     reset() {
         this.allLettersInHand = []; // array containing the "hand" of the player, the letters he possesses
         this.addLetters(MAXLETTERINHAND);
-        this.numberLetterInHand = 0;
     }
 
     handContainLetters(letters: string): boolean {

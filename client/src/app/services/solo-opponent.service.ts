@@ -1,41 +1,26 @@
 import { Injectable } from '@angular/core';
-import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { FinishGameService } from './finish-game.service';
 import { LetterService } from './letter.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
+
 @Injectable({
     providedIn: 'root',
 })
 export class SoloOpponentService {
-    message: string;
-    messageTimeManager: string;
-    subscription: Subscription;
-    subscriptionTimeManager: Subscription;
-    myTurn: boolean;
-    valueToEndGame: number = 0;
-    maximumAllowedSkippedTurns: number;
-    numberOfLetters: number = 0;
     messageTextBox: Observable<string[]>;
-    score: number = 0;
-    currentMessage: Observable<string>;
-    lastTurnWasASkip: boolean = false;
-    firstWordToPlay: boolean = false;
     lastCommandEntered: string = 'Bonjour joueur!';
-    messageSource = new BehaviorSubject('default message');
     sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
-    constructor(public letters: LetterService, public timeManager: TimerTurnManagerService, public soloOpponent2: SoloOpponent2Service) {
-        this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
-        this.currentMessage = this.messageSource.asObservable();
+    constructor(
+        public letters: LetterService,
+        public timeManager: TimerTurnManagerService,
+        public soloOpponent2: SoloOpponent2Service,
+        public finishGameService: FinishGameService,
+    ) {
         this.letters.players[1].addLetters(MAXLETTERINHAND);
-        this.numberOfLetters = parseInt(this.message, 10);
-        this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
-            (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
-        );
         this.messageTextBox = this.sourceMessageTextBox.asObservable();
-        this.maximumAllowedSkippedTurns = 6;
-        this.myTurn = this.timeManager.turn === 1;
     }
     play() {
         if (this.timeManager.turn === 1) {
@@ -46,12 +31,14 @@ export class SoloOpponentService {
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             if (PROBABILITY_OF_ACTION > TWENTY) {
                 this.lastCommandEntered = this.soloOpponent2.play();
+                this.endTurn('place');
             } else if (PROBABILITY_OF_ACTION <= TEN) {
                 this.skipTurn();
             } else {
                 const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
                 if (NUMBER_OF_LETTERS_TO_TRADE <= SEVEN) {
                     this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
+                    this.endTurn('exchange');
                 } else {
                     this.skipTurn();
                 }
@@ -62,32 +49,19 @@ export class SoloOpponentService {
         return Math.floor(Math.random() * percentage);
     }
 
-    changeTurn(message: string) {
-        this.messageSource.next(message);
-        this.myTurn = parseInt(this.messageTimeManager, 10) === 1;
-    }
     reset() {
         this.letters.players[1].allLettersInHand = [];
-        this.numberOfLetters = this.letters.players[1].numberLetterInHand = 0;
         this.letters.players[1].addLetters(MAXLETTERINHAND);
-        this.numberOfLetters = parseInt(this.message, 10);
-        this.valueToEndGame = 0;
-        this.firstWordToPlay = true;
     }
 
-    sendNumberOfSkippedTurn() {
-        this.messageSource.next(this.valueToEndGame.toString());
-    }
     skipTurn() {
         if (this.timeManager.turn === 1) {
-            this.timeManager.endTurn('skip');
-            const numberOfLetters = 0;
-            this.sourceMessageTextBox.next(['!passer', numberOfLetters.toString()]);
+            this.endTurn('skip');
+            this.sourceMessageTextBox.next(['!passer', '0']);
             this.lastCommandEntered = '!passer';
         }
     }
     exchangeLetters(numberOfLettersToTrade: number) {
-        this.lastTurnWasASkip = false;
         let i = 0;
         const indexLettersToExchange: number[] = [];
         while (i < numberOfLettersToTrade) {
@@ -102,8 +76,14 @@ export class SoloOpponentService {
             lettersToExchange += this.letters.players[this.timeManager.turn].allLettersInHand[index];
         }
         this.letters.players[this.timeManager.turn].exchangeLetters(lettersToExchange);
-        this.timeManager.endTurn('exchange');
         this.sourceMessageTextBox.next(['!échanger ', numberOfLettersToTrade.toString()]);
         this.lastCommandEntered = '!échanger ' + numberOfLettersToTrade.toString();
+    }
+
+    endTurn(reason: string) {
+        this.timeManager.endTurn(reason);
+        if (this.letters.players[this.timeManager.turn].allLettersInHand.length === 0) {
+            this.finishGameService.isGameFinished = true;
+        }
     }
 }

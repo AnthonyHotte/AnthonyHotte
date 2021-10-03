@@ -25,7 +25,7 @@ export class SoloOpponent2Service {
         for (const letter of this.letterService.players[this.timeManagerService.turn].allLettersInHand) {
             arrayHand.push(letter.letter.toLowerCase());
         }
-        if (this.firstTimeToPlay === true) {
+        if (this.firstTimeToPlay) {
             const wordToPlay = this.findValidWords(this.wordValidatorService.dictionnary, arrayHand);
             this.placeLetterService.placeWord('h8v ' + wordToPlay);
             this.firstTimeToPlay = false;
@@ -64,7 +64,6 @@ export class SoloOpponent2Service {
         if (tempword !== undefined) {
             this.placeLetterService.placeWord(tempword);
         }
-        this.timeManagerService.endTurn('place');
         return '!placer ' + tempword;
     }
     // return all the word that exist with the letters given;

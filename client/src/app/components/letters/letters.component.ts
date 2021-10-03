@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import * as Constants from '@app/constants';
 import { Letter } from '@app/letter';
 import { LetterService } from '@app/services/letter.service';
-import { SoloOpponentService } from '@app/services/solo-opponent.service';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-letters',
@@ -12,30 +9,21 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./letters.component.scss'],
 })
 export class LettersComponent implements OnInit {
-    message: string;
-    subscription: Subscription;
     letters: Letter[] = []; // the hand of the user
     maxLettersInHand: number;
     currentLetterNumber: number;
     letterSize: number;
 
-    constructor(private letterService: LetterService, private soloOpponent: SoloOpponentService) {}
+    constructor(private letterService: LetterService) {}
     // call only at the beginning
-    getNewLetters(amount: number): void {
-        if (this.currentLetterNumber + amount <= this.maxLettersInHand) {
-            this.letterService.players[0].reset();
-            this.soloOpponent.reset();
-            this.letters = this.letterService.players[0].allLettersInHand;
-            this.currentLetterNumber = parseInt(this.message, 10);
-        }
+    getNewLetters(): void {
+        this.letters = this.letterService.players[0].allLettersInHand;
     }
 
     ngOnInit(): void {
         this.letterService.reset();
         this.maxLettersInHand = Constants.MAXLETTERINHAND;
-        this.currentLetterNumber = this.letterService.players[0].numberLetterInHand;
         this.letterSize = Constants.CASESIZE;
-        this.getNewLetters(this.maxLettersInHand);
-        this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
+        this.getNewLetters();
     }
 }
