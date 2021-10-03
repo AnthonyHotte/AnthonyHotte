@@ -164,14 +164,12 @@ export class TextBox {
     verifyCommandEchanger(word: string) {
         const ALLOWED_NUMBER_OF_LETTERS = 7;
         if (PlayerLetterHand.allLetters.length >= ALLOWED_NUMBER_OF_LETTERS) {
-            let playerHasLetters = true;
-            playerHasLetters = this.verifySelectedLetters(playerHasLetters, word);
-            if (playerHasLetters) {
-                this.soloPlayer.exchangeLetters();
+            const letters = word.substring('!échanger '.length, word.length);
+            if (this.letterService.players[this.timeManager.turn].handContainLetters(letters)) {
+                this.letterService.players[this.timeManager.turn].exchangeLetters(letters);
                 this.endTurn();
                 return 'Échange de lettre avec succès.';
             } else {
-                this.letterService.players[0].selectedLettersForExchange.clear();
                 return 'Erreur! Les lettres sélectionnées ne font pas partie de la main courante.';
             }
         } else {

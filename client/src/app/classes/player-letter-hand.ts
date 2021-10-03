@@ -36,23 +36,25 @@ export class PlayerLetterHand {
             this.sendNumberOfLetters(this.numberLetterInHand.toString());
         }
     }
-    exchangeLetters() {
+    exchangeLetters(letters: string) {
         // only possible when at least 7 letters are there
-        // should it not be this.selectedLettersForExchange.length instead of MAXLETTERINHAND
-        if (PlayerLetterHand.allLetters.length >= MAXLETTERINHAND) {
-            for (const item of this.selectedLettersForExchange.values()) {
-                // put the letters in the bag
-                PlayerLetterHand.allLetters.push(this.allLettersInHand[item]);
+        if (PlayerLetterHand.allLetters.length >= MAXLETTERINHAND && this.handContainLetters(letters)) {
+            const numberToExchange = letters.length;
+            // removes letters from hand
+            for (const letter of letters) {
+                for (let i = 0; i < this.allLettersInHand.length; i++) {
+                    if (this.allLettersInHand[i].letter.toLowerCase() === letter) {
+                        this.allLettersInHand.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            for (let i = 0; i < numberToExchange; i++) {
                 const index: number = Math.floor(Math.random() * PlayerLetterHand.allLetters.length);
-                // remove letter in the player hand
-                this.allLettersInHand.splice(item, 1);
-                // put new letter in player hand
                 this.allLettersInHand.push(PlayerLetterHand.allLetters[index]);
-                // remove those letter from bag
                 PlayerLetterHand.allLetters.splice(index, 1);
             }
         }
-        this.selectedLettersForExchange.clear();
     }
     sendNumberOfLetters(message: string) {
         PlayerLetterHand.messageSource.next(message);
@@ -60,7 +62,24 @@ export class PlayerLetterHand {
     reset() {
         this.allLettersInHand = []; // array containing the "hand" of the player, the letters he possesses
         this.numberLetterInHand = 0;
-        this.selectedLettersForExchange.clear();
+    }
+
+    handContainLetters(letters: string): boolean {
+        const tempHand: string[] = [];
+        for (const letter of this.allLettersInHand) {
+            tempHand.push(letter.letter.toLowerCase());
+        }
+        let lettersAreThere = '';
+        for (const letter of letters) {
+            for (let i = 0; i < tempHand.length; i++) {
+                if (tempHand[i] === letter) {
+                    lettersAreThere += letter;
+                    tempHand.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        return lettersAreThere.length === letters.length;
     }
 
     removeLetters(lettersToRemove: string) {
