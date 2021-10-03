@@ -176,7 +176,7 @@ export class TextBox {
             return 'Commande impossible à réaliser! La réserve ne contient pas assez de lettres.';
         }
     }
-   
+
     scrollDown() {
         const mondiv = document.getElementById('DisplayZone');
         if (mondiv !== null) {

@@ -18,7 +18,6 @@ export class LetterService {
         });
     }
 
-
     reset() {
         for (let i = 0; i < 2; i++) {
             this.players[i].reset();
