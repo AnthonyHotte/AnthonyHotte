@@ -27,10 +27,11 @@ describe('SoloOpponentService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('play should not call calculate probability', () => {
+    it("play should not call calculate probability when it isn't the solo opponent's turn", () => {
         timerTurnManagerServiceSpy.turn = 0;
+        const spy = spyOn(service, 'calculateProbability');
         service.play();
-        expect(true).toBe(false);
+        expect(spy).not.toHaveBeenCalled();
     });
 
     it('play should call calculate probability and call skipTurn', () => {
@@ -66,14 +67,14 @@ describe('SoloOpponentService', () => {
         expect(false).toBe(true);
     });
 
-    it('exchangeLetters should call incrementPassedTurns', () => {
+    it('exchangeLetters should call', () => {
         const spy = spyOn(service, 'calculateProbability').and.returnValue(1);
         service.exchangeLetters(0);
-        expect(spy).not.toHaveBeenCalled();
+        expect(spy).toHaveBeenCalled();
     });
     it('exchangeLetters should call incrementPassedTurns', () => {
         const spy = spyOn(service, 'calculateProbability').and.returnValue(0);
         service.exchangeLetters(0);
-        expect(spy).not.toHaveBeenCalled();
+        expect(spy).toHaveBeenCalled();
     });
 });
