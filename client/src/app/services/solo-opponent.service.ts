@@ -4,7 +4,6 @@ import { MAXLETTERINHAND } from '@app/constants';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { LetterService } from './letter.service';
-import { SoloPlayerService } from './solo-player.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 @Injectable({
     providedIn: 'root',
@@ -13,9 +12,7 @@ export class SoloOpponentService {
     message: string;
     messageTimeManager: string;
     subscription: Subscription;
-    messageFromSoloPlayer: string[];
     subscriptionTimeManager: Subscription;
-    subscriptionSoloPlayer: Subscription;
     myTurn: boolean;
     valueToEndGame: number = 0;
     maximumAllowedSkippedTurns: number;
@@ -27,23 +24,14 @@ export class SoloOpponentService {
     firstWordToPlay: boolean = false;
     lastCommandEntered: string = 'Bonjour joueur!';
     messageSource = new BehaviorSubject('default message');
-    messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
-    constructor(
-        public letters: LetterService,
-        public timeManager: TimerTurnManagerService,
-        public soloPlayer: SoloPlayerService,
-        public soloOpponent2: SoloOpponent2Service,
-    ) {
+    constructor(public letters: LetterService, public timeManager: TimerTurnManagerService, public soloOpponent2: SoloOpponent2Service) {
         this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
         this.currentMessage = this.messageSource.asObservable();
         this.letters.players[1].addLetters(MAXLETTERINHAND);
         this.numberOfLetters = parseInt(this.message, 10);
         this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
             (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
-        );
-        this.subscriptionSoloPlayer = this.soloPlayer.currentMessageToSoloOpponent.subscribe(
-            (messageFromSoloPlayer) => (this.messageFromSoloPlayer = messageFromSoloPlayer),
         );
         this.messageTextBox = this.sourceMessageTextBox.asObservable();
         this.maximumAllowedSkippedTurns = 6;

@@ -4,7 +4,6 @@ import * as Constants from '@app/constants';
 import { Letter } from '@app/letter';
 import { LetterService } from '@app/services/letter.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
-import { SoloPlayerService } from '@app/services/solo-player.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -20,11 +19,11 @@ export class LettersComponent implements OnInit {
     currentLetterNumber: number;
     letterSize: number;
 
-    constructor(private letterService: LetterService, private soloPlayer: SoloPlayerService, private soloOpponent: SoloOpponentService) {}
+    constructor(private letterService: LetterService, private soloOpponent: SoloOpponentService) {}
     // call only at the beginning
     getNewLetters(amount: number): void {
         if (this.currentLetterNumber + amount <= this.maxLettersInHand) {
-            this.soloPlayer.reset();
+            this.letterService.players[0].reset();
             this.soloOpponent.reset();
             this.letters = this.letterService.players[0].allLettersInHand;
             this.currentLetterNumber = parseInt(this.message, 10);

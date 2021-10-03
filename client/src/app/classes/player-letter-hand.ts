@@ -59,6 +59,7 @@ export class PlayerLetterHand {
     }
     reset() {
         this.allLettersInHand = []; // array containing the "hand" of the player, the letters he possesses
+        this.addLetters(MAXLETTERINHAND);
         this.numberLetterInHand = 0;
     }
 

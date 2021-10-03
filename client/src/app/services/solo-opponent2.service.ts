@@ -13,7 +13,6 @@ export class SoloOpponent2Service {
     constructor(
         public letterService: LetterService,
         public timeManagerService: TimerTurnManagerService,
-        //  public soloPlayerService: SoloPlayerService,
         public gameStateService: GameStateService,
         public placeLetterService: PlaceLettersService,
         // public injectionService: Injector, //
