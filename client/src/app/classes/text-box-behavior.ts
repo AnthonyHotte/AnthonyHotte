@@ -176,19 +176,7 @@ export class TextBox {
             return 'Commande impossible à réaliser! La réserve ne contient pas assez de lettres.';
         }
     }
-
-    verifySelectedLetters(playerHasLetters: boolean, word: string) {
-        const letters = word.substring('!échanger '.length, word.length);
-        for (let i = 0; i < letters.length; i++) {
-            const letter = letters.charAt(i);
-            playerHasLetters = this.letterService.selectLetter(letter, 0) && playerHasLetters;
-            if (!playerHasLetters) {
-                this.letterService.players[0].selectedLettersForExchange.clear();
-                return false;
-            }
-        }
-        return true;
-    }
+   
     scrollDown() {
         const mondiv = document.getElementById('DisplayZone');
         if (mondiv !== null) {

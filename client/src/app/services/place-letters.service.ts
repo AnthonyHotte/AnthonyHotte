@@ -169,9 +169,6 @@ export class PlaceLettersService {
             this.wordValidator.pointsForLastWord = 0;
             return false;
         } else {
-            for (const letter of this.gameState.lastLettersAddedJoker) {
-                this.letterService.selectLetter(letter, this.timeManager.turn);
-            }
             this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
             if (this.gameState.playerUsedAllLetters) {
                 this.wordValidator.pointsForLastWord += 50;

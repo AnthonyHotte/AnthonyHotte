@@ -9,7 +9,6 @@ export class PlayerLetterHand {
     static currentMessage: Observable<string> = PlayerLetterHand.messageSource.asObservable();
     allLettersInHand: Letter[];
     numberLetterInHand: number;
-    selectedLettersForExchange: Set<number>;
     score: number;
     name: string;
     letterMap: LetterMap;
@@ -19,7 +18,6 @@ export class PlayerLetterHand {
         this.name = '';
         this.numberLetterInHand = 0;
         this.score = 0;
-        this.selectedLettersForExchange = new Set<number>();
         this.letterMap = new LetterMap();
     }
     static sendLettersInSackNumber() {
