@@ -49,9 +49,9 @@ export class SoloOpponentService {
         return Math.floor(Math.random() * percentage);
     }
 
-    reset() {
-        this.letters.players[1].allLettersInHand = [];
-        this.letters.players[1].addLetters(MAXLETTERINHAND);
+    reset(playerNumber: number) {
+        this.letters.players[playerNumber].allLettersInHand = [];
+        this.letters.players[playerNumber].addLetters(MAXLETTERINHAND);
     }
 
     skipTurn() {

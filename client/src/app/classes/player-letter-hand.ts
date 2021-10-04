@@ -18,10 +18,14 @@ export class PlayerLetterHand {
 
     addLetters(amount: number): void {
         if (this.allLettersInHand.length + amount <= MAXLETTERINHAND) {
-            for (let i = 0; i < amount; i++) {
+            // to make sure there are enough letters available
+            const numberLetterToAdd = Math.min(amount, PlayerLetterHand.allLetters.length);
+            let i = 0;
+            while (i < numberLetterToAdd) {
                 const index: number = Math.floor(Math.random() * PlayerLetterHand.allLetters.length);
                 this.allLettersInHand.push(PlayerLetterHand.allLetters[index]);
                 PlayerLetterHand.allLetters.splice(index, 1);
+                i++;
             }
         }
     }

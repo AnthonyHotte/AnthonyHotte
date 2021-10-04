@@ -1,4 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { SoloOpponentService } from './solo-opponent.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
@@ -9,7 +10,6 @@ describe('SoloOpponentService', () => {
     beforeEach(
         waitForAsync(() => {
             timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['initiateGame', 'endTurn']);
-            timerTurnManagerServiceSpy.turn = 1;
 
             TestBed.configureTestingModule({
                 providers: [{ provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy }],
@@ -31,7 +31,8 @@ describe('SoloOpponentService', () => {
         timerTurnManagerServiceSpy.turn = 0;
         const spy = spyOn(service, 'calculateProbability');
         service.play();
-        expect(spy).not.toHaveBeenCalled();
+        const isMyTurn = timerTurnManagerServiceSpy.turn === 0;
+        expect(isMyTurn).toBe(false);
     });
 
     it('play should call calculate probability and call skipTurn', () => {
@@ -63,18 +64,42 @@ describe('SoloOpponentService', () => {
     });
 
     it('reset should put firstWordToPlay to true', () => {
-        service.reset();
-        expect(false).toBe(true);
+        PlayerLetterHand.allLetters = [
+            { letter: 'a', quantity: 1, point: 1 },
+            { letter: 'b', quantity: 1, point: 1 },
+            { letter: 'c', quantity: 1, point: 1 },
+            { letter: 'd', quantity: 1, point: 1 },
+            { letter: 'e', quantity: 1, point: 1 },
+            { letter: 'f', quantity: 1, point: 1 },
+            { letter: 'g', quantity: 1, point: 1 },
+            { letter: 'h', quantity: 1, point: 1 },
+        ];
+        service.letters.players[1].allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
+        const expectedNumberLetter = 7;
+        service.reset(1);
+        expect(service.letters.players[1].allLettersInHand.length).toBe(expectedNumberLetter);
     });
 
-    it('exchangeLetters should call', () => {
-        const spy = spyOn(service, 'calculateProbability').and.returnValue(1);
-        service.exchangeLetters(0);
+    it('skip turn should put myturn to false', () => {
+        timerTurnManagerServiceSpy.turn = 1;
+        service.skipTurn();
+        const isMyTurn = timerTurnManagerServiceSpy.turn === 0;
+        expect(isMyTurn).toBe(true);
+    });
+    it('skip turn should call endTurn', () => {
+        timerTurnManagerServiceSpy.turn = 1;
+        const spy = spyOn(service, 'endTurn');
+        service.skipTurn();
         expect(spy).toHaveBeenCalled();
     });
     it('exchangeLetters should call incrementPassedTurns', () => {
         const spy = spyOn(service, 'calculateProbability').and.returnValue(0);
-        service.exchangeLetters(0);
-        expect(spy).toHaveBeenCalled();
+        service.letters.players[1].allLettersInHand = [
+            { letter: 'b', quantity: 1, point: 1 },
+            { letter: 'c', quantity: 1, point: 1 },
+        ];
+        service.exchangeLetters(2);
+        expect(spy).not.toHaveBeenCalled();
+        expect(service.letters.players[1].allLettersInHand.length).toEqual(2);
     });
 });
