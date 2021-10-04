@@ -31,8 +31,7 @@ describe('SoloOpponentService', () => {
         timerTurnManagerServiceSpy.turn = 0;
         const spy = spyOn(service, 'calculateProbability');
         service.play();
-        const isMyTurn = timerTurnManagerServiceSpy.turn === 0;
-        expect(isMyTurn).toBe(false);
+        expect(spy).not.toHaveBeenCalled();
     });
 
     it('play should call calculate probability and call skipTurn', () => {
