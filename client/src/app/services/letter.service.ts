@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { LETTERS } from '@app/all-letters';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { Letter } from '@app/letter';
 
 @Injectable({
     providedIn: 'root',
 })
 export class LetterService {
     players: PlayerLetterHand[]; // index 0 for the real player, index 1 for the computer
+    buttonPressed: string = ''; // the last button that was pressed by the user.
+    indexSelected: number; // the index of the letter that is currently selected in his hand
+    letterIsSelected: boolean;
 
     constructor() {
         this.players = [new PlayerLetterHand(), new PlayerLetterHand()];
@@ -68,10 +72,7 @@ export class LetterService {
             }
         }
         for (i; i < this.players[0].allLettersInHand.length; i++) {
-            if (
-                buttonPressed.toLowerCase() === this.players[0].allLettersInHand[i].letter.toLowerCase() &&
-                !this.players[0].selectedLettersForExchange.has(i)
-            ) {
+            if (buttonPressed.toLowerCase() === this.players[0].allLettersInHand[i].letter.toLowerCase()) {
                 this.indexSelected = i;
                 this.buttonPressed = buttonPressed;
                 letterIsThere = true;
@@ -83,10 +84,7 @@ export class LetterService {
         if (checkLowerHalf) {
             for (let j = 0; j < i; j++) {
                 if (typeof this.players[0].allLettersInHand[j].letter !== 'undefined') {
-                    if (
-                        buttonPressed.toLowerCase() === this.players[0].allLettersInHand[j].letter.toLowerCase() &&
-                        !this.players[0].selectedLettersForExchange.has(i)
-                    ) {
+                    if (buttonPressed.toLowerCase() === this.players[0].allLettersInHand[j].letter.toLowerCase()) {
                         this.indexSelected = j;
                         letterIsThere = true;
                         this.letterIsSelected = true;
