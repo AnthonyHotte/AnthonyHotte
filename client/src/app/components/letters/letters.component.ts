@@ -28,6 +28,6 @@ export class LettersComponent implements OnInit {
     }
 
     getIndexSelected(): number {
-        return 0;
+        return this.letterService.indexSelected;
     }
 }
