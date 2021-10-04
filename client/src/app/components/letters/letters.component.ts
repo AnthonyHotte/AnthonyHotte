@@ -26,4 +26,8 @@ export class LettersComponent implements OnInit {
         this.letterSize = Constants.CASESIZE;
         this.getNewLetters();
     }
+
+    getIndexSelected(): number {
+        return 0;
+    }
 }
