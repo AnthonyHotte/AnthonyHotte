@@ -33,6 +33,14 @@ export class PlayAreaComponent implements AfterViewInit {
         this.buttonPressed = event.key;
         this.letterService.setIndexSelected(event.key);
     }
+    @HostListener('mousewheel', ['$event'])
+    onWindowScroll(event: WheelEvent) {
+        if (event.deltaY > 0) {
+            this.letterService.setIndexSelected('ArrowLeft');
+        } else if (event.deltaY < 0) {
+            this.letterService.setIndexSelected('ArrowRight');
+        }
+    }
 
     ngAfterViewInit(): void {
         this.gridService.gridContext = this.gridCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
