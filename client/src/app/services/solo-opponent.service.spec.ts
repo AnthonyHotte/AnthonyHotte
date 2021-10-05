@@ -1,25 +1,44 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { FinishGameService } from './finish-game.service';
+import { LetterService } from './letter.service';
 import { SoloOpponentService } from './solo-opponent.service';
+import { SoloOpponent2Service } from './solo-opponent2.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
-describe('SoloOpponentService', () => {
+fdescribe('SoloOpponentService', () => {
     let service: SoloOpponentService;
     let timerTurnManagerServiceSpy: TimerTurnManagerService;
+    let letterServiceSpy: LetterService;
+    let soloOpponent2ServiceSpy: SoloOpponent2Service;
+    let finishGameServiceSpy: FinishGameService;
+    let routerSpy: Router;
 
     beforeEach(
         waitForAsync(() => {
-            timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['initiateGame', 'endTurn']);
+            timerTurnManagerServiceSpy = jasmine.createSpyObj('LetterService', ['initiateGame', 'endTurn']);
+            letterServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['reset']);
+            letterServiceSpy.players[1] = new PlayerLetterHand();
+            soloOpponent2ServiceSpy = jasmine.createSpyObj('SoloOpponent2Service', ['play']);
+            finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
+            routerSpy = jasmine.createSpyObj('Router', ['link']);
 
             TestBed.configureTestingModule({
-                providers: [{ provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy }],
+                providers: [
+                    { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
+                    { provide: LetterService, useValue: letterServiceSpy },
+                    { provide: SoloOpponent2Service, useValue: soloOpponent2ServiceSpy },
+                    { provide: FinishGameService, useValue: finishGameServiceSpy },
+                    { provide: Router, useValue: routerSpy },
+                ],
+                imports: [RouterTestingModule],
             }).compileComponents();
         }),
     );
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
-
         service = TestBed.inject(SoloOpponentService);
     });
 
@@ -36,6 +55,7 @@ describe('SoloOpponentService', () => {
 
     it('play should call calculate probability and call skipTurn', () => {
         timerTurnManagerServiceSpy.turn = 1;
+        service.lastCommandEntered = '';
         const returnValue = 5;
         const spy = spyOn(service, 'calculateProbability').and.returnValue(returnValue);
         const spy2 = spyOn(service, 'skipTurn');
