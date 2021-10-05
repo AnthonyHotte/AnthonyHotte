@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { MessagePlayer } from '@app/message';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
@@ -9,7 +8,7 @@ import { TextBox } from './text-box-behavior';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlayerLetterHand } from './player-letter-hand';
 
-fdescribe('TextBox', () => {
+describe('TextBox', () => {
     let textBox: TextBox;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let placerLetterServiceSpy: jasmine.SpyObj<PlaceLettersService>;
@@ -145,14 +144,6 @@ fdescribe('TextBox', () => {
         expect(mySpy).toHaveBeenCalled();
     });
     it('verifyCommandPasser should call incrementPassedTurn', () => {
-        /*
-        letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
-        placerLetterServiceSpy = jasmine.createSpyObj('PlacerLettersService', ['placeWord']);
-        timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerServiceSpy', ['endTurn']);
-        finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['goToHomeAndRefresh']);
-
-        textBox = new TextBox(placerLetterServiceSpy, timerTurnManagerServiceSpy, letterServiceSpy, finishGameServiceSpy);
-*/
         finishGameServiceSpy.isGameFinished = false;
         textBox.verifyCommandPasser();
         expect(finishGameServiceSpy.isGameFinished).toBe(true);

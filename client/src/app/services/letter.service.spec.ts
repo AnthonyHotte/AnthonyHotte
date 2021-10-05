@@ -39,7 +39,8 @@ describe('LetterService', () => {
                 PlayerLetterHand.allLetters.push(letter);
             }
         });
-        const expectedResult = 102;
+        // 102 letters in the bag but 14 were distributed to players so we expect 88
+        const expectedResult = 88;
         service.reset();
         expect(PlayerLetterHand.allLetters.length).toEqual(expectedResult);
     });
