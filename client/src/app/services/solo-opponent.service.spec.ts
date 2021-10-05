@@ -20,18 +20,18 @@ describe('SoloOpponentService', () => {
         waitForAsync(() => {
             timerTurnManagerServiceSpy = jasmine.createSpyObj('LetterService', ['initiateGame', 'endTurn']);
             letterServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['reset']);
-            letterServiceSpy.players[1] = new PlayerLetterHand();
+            letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
             soloOpponent2ServiceSpy = jasmine.createSpyObj('SoloOpponent2Service', ['play']);
             finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
-            routerSpy = jasmine.createSpyObj('Router', ['link']);
+            routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
             TestBed.configureTestingModule({
                 providers: [
+                    { provide: Router, useValue: routerSpy },
                     { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
                     { provide: LetterService, useValue: letterServiceSpy },
                     { provide: SoloOpponent2Service, useValue: soloOpponent2ServiceSpy },
                     { provide: FinishGameService, useValue: finishGameServiceSpy },
-                    { provide: Router, useValue: routerSpy },
                 ],
                 imports: [RouterTestingModule],
             }).compileComponents();
@@ -99,11 +99,10 @@ describe('SoloOpponentService', () => {
         expect(service.letters.players[1].allLettersInHand.length).toBe(expectedNumberLetter);
     });
 
-    it('skip turn should put myturn to false', () => {
-        timerTurnManagerServiceSpy.turn = 1;
+    it('skip turn should do nothing', () => {
+        timerTurnManagerServiceSpy.turn = 0;
         service.skipTurn();
-        const isMyTurn = timerTurnManagerServiceSpy.turn === 0;
-        expect(isMyTurn).toBe(true);
+        expect(timerTurnManagerServiceSpy.turn).toEqual(0);
     });
     it('skip turn should call endTurn', () => {
         timerTurnManagerServiceSpy.turn = 1;
@@ -112,6 +111,7 @@ describe('SoloOpponentService', () => {
         expect(spy).toHaveBeenCalled();
     });
     it('exchangeLetters should call incrementPassedTurns', () => {
+        timerTurnManagerServiceSpy.turn = 1;
         const spy = spyOn(service, 'calculateProbability').and.returnValue(0);
         service.letters.players[1].allLettersInHand = [
             { letter: 'b', quantity: 1, point: 1 },
