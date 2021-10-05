@@ -18,8 +18,8 @@ describe('SoloOpponentService', () => {
 
     beforeEach(
         waitForAsync(() => {
-            timerTurnManagerServiceSpy = jasmine.createSpyObj('LetterService', ['initiateGame', 'endTurn']);
-            letterServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['reset']);
+            letterServiceSpy = jasmine.createSpyObj('LetterService', ['initiateGame', 'endTurn']);
+            timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['reset']);
             letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
             soloOpponent2ServiceSpy = jasmine.createSpyObj('SoloOpponent2Service', ['play']);
             finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
@@ -109,16 +109,5 @@ describe('SoloOpponentService', () => {
         const spy = spyOn(service, 'endTurn');
         service.skipTurn();
         expect(spy).toHaveBeenCalled();
-    });
-    it('exchangeLetters should call incrementPassedTurns', () => {
-        timerTurnManagerServiceSpy.turn = 1;
-        const spy = spyOn(service, 'calculateProbability').and.returnValue(0);
-        service.letters.players[1].allLettersInHand = [
-            { letter: 'b', quantity: 1, point: 1 },
-            { letter: 'c', quantity: 1, point: 1 },
-        ];
-        service.exchangeLetters(2);
-        expect(spy).not.toHaveBeenCalled();
-        expect(service.letters.players[1].allLettersInHand.length).toEqual(2);
     });
 });
