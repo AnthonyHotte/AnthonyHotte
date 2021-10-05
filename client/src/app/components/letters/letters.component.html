@@ -11,7 +11,7 @@
                'border-color': indexOfElem === getIndexSelected() ? 'red' : 'black'
                }"
             >
-                <div>
+                <div (click)="selectLetterWithClick(letter.letter, indexOfElem)">
                 {{ letter.letter }}<sub>{{ letter.point }}</sub>
                 </div>
         </td>

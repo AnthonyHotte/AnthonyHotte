@@ -30,4 +30,10 @@ export class LettersComponent implements OnInit {
     getIndexSelected(): number {
         return this.letterService.indexSelected;
     }
+
+    selectLetterWithClick(letter: string, index: number) {
+        this.letterService.indexSelected = index;
+        this.letterService.letterIsSelected = true;
+        this.letterService.buttonPressed = letter.toLowerCase();
+    }
 }
