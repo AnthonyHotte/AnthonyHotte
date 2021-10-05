@@ -140,7 +140,7 @@ export class LetterService {
             }
         } else {
             this.indexSelectedExchange.push(index);
-            this.lettersSelectedExchange += letter;
+            this.lettersSelectedExchange += letter.toLowerCase();
             if (this.lettersSelectedExchange.length !== 0) {
                 this.areLetterSelectedExchange = true;
             }

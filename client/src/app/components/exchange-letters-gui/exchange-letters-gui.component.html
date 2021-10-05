@@ -1,0 +1,6 @@
+<fieldset *ngIf = "isPlayerTurn() && areLettersSelected() && areThereEnoughLettersInBank()">
+    <p>Échanger les lettres sélectionnées?</p>
+    <button (click)="this.exchangeLetters()">Échanger</button>
+    <button (click)="this.cancelSelection()">Annuler</button>
+</fieldset>
+    
