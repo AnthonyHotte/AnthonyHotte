@@ -112,10 +112,6 @@ describe('SidebarRightComponent', () => {
         expect(expectedResult).toMatch('Expert');
     });
 
-    it('skipTurn should call soloOpponentPlays and set attributs commandSuccessful to false and opponentSet to true ', () => {
-        component.skipTurn();
-        expect(textBoxSpy.isCommand).toHaveBeenCalled();
-    });
     it('getNumberOfLettersForPlayer should return the number of letters ', () => {
         letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
         letterServiceSpy.players[0].allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
@@ -190,10 +186,5 @@ describe('SidebarRightComponent', () => {
         component.verifyChangedTurns(counterSpy);
         expect(counterSpy.reset).toHaveBeenCalled();
         expect(component.changedTurns).toBe(false);
-    });
-
-    it('soloOpponentPlays should call play method', () => {
-        component.soloOpponentPlays();
-        expect(soloOpponentServiceSpy.play).toHaveBeenCalled();
     });
 });
