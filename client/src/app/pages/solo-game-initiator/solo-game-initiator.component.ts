@@ -99,8 +99,8 @@ export class SoloGameInitiatorComponent {
             return 'valide';
         } else return 'invalide';
     }
-    setDifficulte(easy: boolean) {
-        this.easyDifficulty = easy;
+    setRandomBonus(activated: boolean) {
+        this.easyDifficulty = activated;
     }
     getDifficulte() {
         if (this.easyDifficulty === true) {

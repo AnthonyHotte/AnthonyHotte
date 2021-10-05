@@ -84,21 +84,6 @@ describe('SoloGameInitiatorComponent', () => {
         const val = 'invalide';
         expect(retour).toBe(val);
     });
-    it('setDIfficulte should set easyDifficulty at false', () => {
-        const easy = false;
-        component.setDifficulte(easy);
-        expect(component.easyDifficulty).toBe(easy);
-    });
-    it('getDIfficulte should return Débutant', () => {
-        component.easyDifficulty = true;
-        const easy = component.getDifficulte();
-        expect(easy).toBe('Débutant');
-    });
-    it('getDIfficulte should return Expert', () => {
-        component.easyDifficulty = false;
-        const easy = component.getDifficulte();
-        expect(easy).toBe('Expert');
-    });
     it('switchOpponentName should enter in case 1', () => {
         component.opponentName = 'abcd';
         const temp = 'abcd';

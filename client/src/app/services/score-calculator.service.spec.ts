@@ -78,7 +78,6 @@ describe('ScoreCalculatorService', () => {
         const rowPosition = 3;
         const firstIndex = 0;
         const secondIndex = 1;
-        spyOn(service.tileMap, 'isDoubleLetterTile').and.returnValues(true);
         const result = service.calculateScoreForHorizontal(firstIndex, secondIndex, rowPosition, 'aa');
         expect(result).toEqual(expectedScore);
     });
@@ -87,7 +86,6 @@ describe('ScoreCalculatorService', () => {
         const rowPosition = 5;
         const firstIndex = 1;
         const secondIndex = 4;
-        spyOn(service.tileMap, 'isTripleLetterTile').and.returnValues(true);
         const result = service.calculateScoreForHorizontal(firstIndex, secondIndex, rowPosition, 'aber');
         expect(result).toEqual(expectedScore);
     });
@@ -96,7 +94,6 @@ describe('ScoreCalculatorService', () => {
         const rowPosition = 1;
         const firstIndex = 1;
         const secondIndex = 4;
-        spyOn(service.tileMap, 'isDoubleWordTile').and.returnValues(true);
         const result = service.calculateScoreForHorizontal(firstIndex, secondIndex, rowPosition, 'aber');
         expect(result).toEqual(expectedScore);
     });
@@ -105,7 +102,6 @@ describe('ScoreCalculatorService', () => {
         const rowPosition = 0;
         const firstIndex = 0;
         const secondIndex = 1;
-        spyOn(service.tileMap, 'isTripleWordTile').and.returnValues(true);
         const result = service.calculateScoreForHorizontal(firstIndex, secondIndex, rowPosition, 'aa');
         expect(result).toEqual(expectedScore);
     });
@@ -119,7 +115,6 @@ describe('ScoreCalculatorService', () => {
         const colPosition = 0;
         const firstIndex = 3;
         const secondIndex = 4;
-        spyOn(service.tileMap, 'isDoubleLetterTile').and.returnValues(true);
         const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'aa');
         expect(result).toEqual(expectedScore);
     });
@@ -128,7 +123,6 @@ describe('ScoreCalculatorService', () => {
         const colPosition = 1;
         const firstIndex = 5;
         const secondIndex = 8;
-        spyOn(service.tileMap, 'isTripleLetterTile').and.returnValues(true);
         const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'aber');
         expect(result).toEqual(expectedScore);
     });
@@ -137,7 +131,6 @@ describe('ScoreCalculatorService', () => {
         const colPosition = 1;
         const firstIndex = 1;
         const secondIndex = 4;
-        spyOn(service.tileMap, 'isDoubleWordTile').and.returnValues(true);
         const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'aber');
         expect(result).toEqual(expectedScore);
     });
@@ -146,7 +139,6 @@ describe('ScoreCalculatorService', () => {
         const colPosition = 0;
         const firstIndex = 0;
         const secondIndex = 1;
-        spyOn(service.tileMap, 'isTripleWordTile').and.returnValues(true);
         const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'aa');
         expect(result).toEqual(expectedScore);
     });
@@ -155,7 +147,6 @@ describe('ScoreCalculatorService', () => {
         const colPosition = 7;
         const firstIndex = 12;
         const secondIndex = 14;
-        spyOn(service.tileMap, 'isTripleWordTile').and.returnValues(true);
         const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'nos');
         expect(result).toEqual(expectedScore);
     });
