@@ -53,6 +53,15 @@ describe('PlayerLetterHand', () => {
         expect(spySplice).toHaveBeenCalledTimes(expectedCallTime);
     });
     it('addLetters should call push method', () => {
+        // we need to add seven letters so we have at least the equal number of letters to that of the minimum amount which is seven
+        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'b', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'c', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'd', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'f', quantity: 1, point: 1 });
+        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
+        playerLetterHand.allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
         const spyPush = spyOn(playerLetterHand.allLettersInHand, 'push');
         const letterToAdd = 4;
         playerLetterHand.addLetters(letterToAdd);
