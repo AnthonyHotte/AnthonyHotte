@@ -8,7 +8,7 @@ import { SoloOpponentService } from './solo-opponent.service';
 import { SoloOpponent2Service } from './solo-opponent2.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
-fdescribe('SoloOpponentService', () => {
+describe('SoloOpponentService', () => {
     let service: SoloOpponentService;
     let timerTurnManagerServiceSpy: TimerTurnManagerService;
     let letterServiceSpy: LetterService;

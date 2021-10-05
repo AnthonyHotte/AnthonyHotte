@@ -9,7 +9,7 @@ import { TextBox } from './text-box-behavior';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlayerLetterHand } from './player-letter-hand';
 
-describe('TextBox', () => {
+fdescribe('TextBox', () => {
     let textBox: TextBox;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let placerLetterServiceSpy: jasmine.SpyObj<PlaceLettersService>;
@@ -145,28 +145,30 @@ describe('TextBox', () => {
         expect(mySpy).toHaveBeenCalled();
     });
     it('verifyCommandPasser should call incrementPassedTurn', () => {
+        /*
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
         placerLetterServiceSpy = jasmine.createSpyObj('PlacerLettersService', ['placeWord']);
         timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerServiceSpy', ['endTurn']);
         finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['goToHomeAndRefresh']);
 
         textBox = new TextBox(placerLetterServiceSpy, timerTurnManagerServiceSpy, letterServiceSpy, finishGameServiceSpy);
-
+*/
+        finishGameServiceSpy.isGameFinished = false;
         textBox.verifyCommandPasser();
-        expect(0).toEqual(1);
+        expect(finishGameServiceSpy.isGameFinished).toBe(true);
     });
     it('verifyCommandPasser should call endTurn', () => {
         const mySpy = spyOn(textBox, 'endTurn');
 
         textBox.valueToEndGame = 0;
         textBox.verifyCommandPasser();
-        expect(mySpy).toEqual(1);
+        expect(mySpy).toHaveBeenCalled();
     });
 
     it('endTurn should call endTurn of timeManager', () => {
         const mySpy = spyOn(timerTurnManagerServiceSpy, 'endTurn');
         textBox.endTurn('place');
-        expect(mySpy).toEqual(1);
+        expect(mySpy).toHaveBeenCalled();
     });
     it('getMessageSoloOpponent should ne inputSoloOpponent', () => {
         const mySpy = textBox.getMessagesSoloOpponent();
@@ -192,19 +194,24 @@ describe('TextBox', () => {
 
     it('isCommand should call set false if text = mot bien placé', () => {
         timerTurnManagerServiceSpy.turn = 0;
-        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('Mot placé avec succès.');
+        const mySpyPlaceWord = spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('Mot placé avec succès.');
+        const mySpyEndTurn = spyOn(textBox, 'endTurn');
         const maChaine = '!placer';
         textBox.isCommand(maChaine);
-        expect(0).toEqual(1);
+        expect(mySpyPlaceWord).toHaveBeenCalled();
+        expect(mySpyEndTurn).toHaveBeenCalled();
     });
     it("Can't exchange when you dont have the letters in hand", () => {
-        expect(textBox.verifyCommandEchanger('a')).toEqual('Erreur! Les lettres sélectionnées ne font pas partie de la main courante.');
+        timerTurnManagerServiceSpy.turn = 0;
+        letterServiceSpy.players[timerTurnManagerServiceSpy.turn].allLettersInHand = [];
+        expect(textBox.verifyCommandEchanger('!échanger a')).toEqual('Erreur! Les lettres sélectionnées ne font pas partie de la main courante.');
+    });
+    it('Can exchange when you have the letters in hand', () => {
+        timerTurnManagerServiceSpy.turn = 0;
+        letterServiceSpy.players[timerTurnManagerServiceSpy.turn].allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
+        expect(textBox.verifyCommandEchanger('!échanger a')).toEqual('Échange de lettre avec succès.');
     });
 
-    it("Can't exchange when there isn't enough letters in the reserve", () => {
-        PlayerLetterHand.allLetters = [];
-        expect(textBox.verifyCommandEchanger('a')).toEqual('Commande impossible à réaliser! La réserve ne contient pas assez de lettres.');
-    });
     it("Can't exchange when there isn't enough letters in the reserve", () => {
         PlayerLetterHand.allLetters = [];
         expect(textBox.verifyCommandEchanger('a')).toEqual('Commande impossible à réaliser! La réserve ne contient pas assez de lettres.');
