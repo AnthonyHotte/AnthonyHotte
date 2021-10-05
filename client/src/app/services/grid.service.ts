@@ -39,9 +39,7 @@ export class GridService {
         // word x2 (pink)
         if (TileMap.gridMap.isDoubleWordTile(i, j)) {
             this.gridContext.fillStyle = 'pink';
-            if (i !== Constants.CENTERCASE && j !== Constants.CENTERCASE) {
-                textChoice = 0;
-            }
+            textChoice = 0;
         }
         // word x3 (red)
         else if (TileMap.gridMap.isTripleWordTile(i, j)) {
@@ -59,6 +57,9 @@ export class GridService {
             textChoice = 3;
         } else {
             this.gridContext.fillStyle = '#c8c3a6';
+        }
+        if (i === Constants.CENTERCASE && j === Constants.CENTERCASE) {
+            textChoice = Constants.NOTEXT;
         }
         this.gridContext.fillRect(
             Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,

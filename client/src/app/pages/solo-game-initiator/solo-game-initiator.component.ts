@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { LetterService } from '@app/services/letter.service';
+import { TileScramblerService } from '@app/services/tile-scrambler.service';
 
 @Component({
     selector: 'app-solo-game-initiator',
@@ -17,9 +18,10 @@ export class SoloGameInitiatorComponent {
     idNameOpponent: number;
     nameIsValid: boolean;
     playTime: number;
+    isBonusRandom = false;
     easyDifficulty: boolean = true;
 
-    constructor(private informations: SoloGameInformationService, private letterService: LetterService) {
+    constructor(private informations: SoloGameInformationService, private letterService: LetterService, private tileScrambler: TileScramblerService) {
         this.message = [];
 
         this.temporaryName = 'Joueur';
@@ -100,13 +102,11 @@ export class SoloGameInitiatorComponent {
         } else return 'invalide';
     }
     setRandomBonus(activated: boolean) {
-        this.easyDifficulty = activated;
+        this.isBonusRandom = activated;
     }
-    getDifficulte() {
-        if (this.easyDifficulty === true) {
-            return 'Débutant';
-        } else {
-            return 'Expert';
+    scrambleBonus() {
+        if (this.isBonusRandom) {
+            this.tileScrambler.scrambleTiles();
         }
     }
 }
