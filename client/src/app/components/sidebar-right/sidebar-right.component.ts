@@ -2,12 +2,12 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
+import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
-import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
 import { Subscription } from 'rxjs';
@@ -18,22 +18,11 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./sidebar-right.component.scss'],
 })
 export class SidebarRightComponent implements OnInit, AfterViewInit {
-    messagePlayer: string;
-    opponentMessage: string;
-    messageLetterService: string;
-    messageTimeManager: string;
     messageTextBox: string;
-    subscriptionPlayer: Subscription;
-    subscriptionOpponent: Subscription;
-    subscriptionLetterService: Subscription;
-    subscriptionTimeManager: Subscription;
     subscriptionTextBox: Subscription;
     message: string[] = [];
     playerName: string[] = ['', ''];
     opponentSet: boolean = false;
-
-    numberOfSkippedTurns: number = 0;
-
     easyDifficultyIsTrue: boolean;
     time: number;
     turn: number;
@@ -43,12 +32,12 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     constructor(
         private soloGameInformation: SoloGameInformationService,
         private turnTimeController: TimerTurnManagerService,
-        private soloPlayer: SoloPlayerService,
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
         private textBox: TextBox,
         private readonly gridService: GridService,
-        private readonly placeLetterService: PlaceLettersService, // private finishGameService: FinishGameService,
+        private readonly placeLetterService: PlaceLettersService,
+        private finishGameService: FinishGameService,
     ) {
         this.message = this.soloGameInformation.message;
         this.setAttribute();
@@ -56,21 +45,12 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         if (this.turnTimeController.turn === 1) {
-            this.soloOpponent.firstWordToPlay = true;
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
     }
 
     ngOnInit() {
-        this.subscriptionPlayer = this.soloPlayer.currentMessage.subscribe((messagePlayer) => (this.messagePlayer = messagePlayer));
-        this.subscriptionOpponent = this.soloOpponent.currentMessage.subscribe((opponentMessage) => (this.opponentMessage = opponentMessage));
-        this.subscriptionLetterService = PlayerLetterHand.currentMessage.subscribe(
-            (messageLetterService) => (this.messageLetterService = messageLetterService),
-        );
-        this.subscriptionTimeManager = this.turnTimeController.currentMessage.subscribe(
-            (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
-        );
         this.subscriptionTextBox = this.textBox.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
     }
 
@@ -88,8 +68,8 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         this.turnTimeController.initiateGame();
         this.turn = this.turnTimeController.turn;
         this.letterService.reset();
-        this.soloPlayer.reset();
-        this.soloOpponent.reset();
+        this.letterService.players[0].reset();
+        this.soloOpponent.reset(1);
     }
     difficultyInCharacters() {
         if (this.easyDifficultyIsTrue === true) {
@@ -105,8 +85,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     getNumberRemainingLetters() {
-        PlayerLetterHand.sendLettersInSackNumber();
-        return this.messageLetterService;
+        return PlayerLetterHand.allLetters.length;
     }
 
     getNumberOfLettersForPlayer(indexPlayer: number) {
@@ -118,7 +97,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     finishCurrentGame() {
-        this.textBox.finishCurrentGame();
+        this.finishGameService.isGameFinished = true;
     }
 
     increaseFontSize() {

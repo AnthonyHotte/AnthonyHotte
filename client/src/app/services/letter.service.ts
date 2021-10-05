@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
 import { LETTERS } from '@app/all-letters';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { Letter } from '@app/letter';
 
 @Injectable({
     providedIn: 'root',
 })
 export class LetterService {
     players: PlayerLetterHand[]; // index 0 for the real player, index 1 for the computer
+    buttonPressed: string = ''; // the last button that was pressed by the user.
+    indexSelectedSwapping: number; // the index of the letter that is currently selected in his hand
+    isLetterSelectedSwapping: boolean;
+    indexSelectedExchange: number[];
+    lettersSelectedExchange = '';
+    areLetterSelectedExchange: boolean;
 
     constructor() {
         this.players = [new PlayerLetterHand(), new PlayerLetterHand()];
@@ -16,41 +23,144 @@ export class LetterService {
                 PlayerLetterHand.allLetters.push(letter);
             }
         });
-    }
-
-    getLettersForExchange() {
-        const lettersForReturn: Set<string> = new Set<string>();
-        for (const item of this.players[0].selectedLettersForExchange.values()) {
-            lettersForReturn.add(this.players[0].allLettersInHand[item].letter);
-        }
-        return lettersForReturn;
+        this.isLetterSelectedSwapping = false;
+        this.areLetterSelectedExchange = false;
+        this.indexSelectedExchange = [];
     }
 
     reset() {
-        for (let i = 0; i < 2; i++) {
-            this.players[i].reset();
-        }
         PlayerLetterHand.allLetters = [];
         LETTERS.forEach((letter) => {
             for (let i = 0; i < letter.quantity; i++) {
                 PlayerLetterHand.allLetters.push(letter);
             }
         });
+        for (let i = 0; i < 2; i++) {
+            this.players[i].reset();
+        }
     }
 
-    selectLetter(letter: string, indexPlayer: number) {
-        const NOT_PRESENT = -1;
-        let index = NOT_PRESENT;
-        for (let i = 0; i < this.players[indexPlayer].allLettersInHand.length; i++) {
-            if (
-                this.players[indexPlayer].allLettersInHand[i].letter.toLowerCase() === letter.toLowerCase() &&
-                !this.players[indexPlayer].selectedLettersForExchange.has(i)
-            ) {
-                index = i;
-                i = this.players[indexPlayer].allLettersInHand.length;
-                this.players[indexPlayer].selectedLettersForExchange.add(index);
+    swapLetters(index1: number, index2: number): void {
+        const tempLetter: Letter = this.players[0].allLettersInHand[index1];
+        this.players[0].allLettersInHand[index1] = this.players[0].allLettersInHand[index2];
+        this.players[0].allLettersInHand[index2] = tempLetter;
+    }
+
+    moveLetterRight() {
+        if (this.indexSelectedSwapping === this.players[0].allLettersInHand.length - 1) {
+            this.swapLetters(this.indexSelectedSwapping, 0);
+            this.indexSelectedSwapping = 0;
+        } else {
+            this.swapLetters(this.indexSelectedSwapping, this.indexSelectedSwapping + 1);
+            this.indexSelectedSwapping++;
+        }
+    }
+
+    moveLetterLeft() {
+        if (this.indexSelectedSwapping === 0) {
+            this.swapLetters(this.players[0].allLettersInHand.length - 1, 0);
+            this.indexSelectedSwapping = this.players[0].allLettersInHand.length - 1;
+        } else {
+            this.swapLetters(this.indexSelectedSwapping, this.indexSelectedSwapping - 1);
+            this.indexSelectedSwapping--;
+        }
+    }
+
+    selectIndexSwapping(buttonPressed: string): boolean {
+        let i = 0;
+        let checkLowerHalf = true;
+        let letterIsThere = false;
+        if (this.buttonPressed.toLowerCase() === buttonPressed.toLowerCase()) {
+            if (this.indexSelectedSwapping === this.players[0].allLettersInHand.length - 1) {
+                i = 0;
+            } else {
+                i = this.indexSelectedSwapping + 1;
             }
         }
-        return index !== NOT_PRESENT;
+        for (i; i < this.players[0].allLettersInHand.length; i++) {
+            if (buttonPressed.toLowerCase() === this.players[0].allLettersInHand[i].letter.toLowerCase()) {
+                this.indexSelectedSwapping = i;
+                this.buttonPressed = buttonPressed;
+                letterIsThere = true;
+                this.isLetterSelectedSwapping = true;
+                checkLowerHalf = false;
+                break;
+            }
+        }
+        if (checkLowerHalf) {
+            for (let j = 0; j < i; j++) {
+                if (typeof this.players[0].allLettersInHand[j].letter !== 'undefined') {
+                    if (buttonPressed.toLowerCase() === this.players[0].allLettersInHand[j].letter.toLowerCase()) {
+                        this.indexSelectedSwapping = j;
+                        letterIsThere = true;
+                        this.isLetterSelectedSwapping = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return letterIsThere;
+    }
+
+    setIndexSelectedSwapping(buttonPressed: string): void {
+        if (buttonPressed === 'ArrowRight' && typeof this.indexSelectedSwapping !== 'undefined' && this.isLetterSelectedSwapping) {
+            this.removeAttributesExchange();
+            this.moveLetterRight();
+        } else if (buttonPressed === 'ArrowLeft' && typeof this.indexSelectedSwapping !== 'undefined' && this.isLetterSelectedSwapping) {
+            this.removeAttributesExchange();
+            this.moveLetterLeft();
+        } else {
+            const playerHasLetter = this.selectIndexSwapping(buttonPressed);
+            if (!playerHasLetter) {
+                this.buttonPressed = '';
+                this.isLetterSelectedSwapping = false;
+                this.indexSelectedSwapping = -1;
+            } else {
+                this.removeAttributesExchange();
+            }
+        }
+    }
+    leftClickOnLetter(letter: string, index: number) {
+        this.indexSelectedSwapping = index;
+        this.isLetterSelectedSwapping = true;
+        this.buttonPressed = letter.toLowerCase();
+    }
+
+    rightClickOnLetter(letter: string, index: number) {
+        if (this.indexSelectedExchange.includes(index)) {
+            for (let i = 0; i < this.indexSelectedExchange.length; i++) {
+                if (this.indexSelectedExchange[i] === index) {
+                    this.lettersSelectedExchange = this.removeCharFromString(this.lettersSelectedExchange, i);
+                    this.indexSelectedExchange.splice(i, 1);
+                    break;
+                }
+            }
+            if (this.lettersSelectedExchange.length === 0) {
+                this.areLetterSelectedExchange = false;
+            }
+        } else {
+            this.indexSelectedExchange.push(index);
+            this.lettersSelectedExchange += letter.toLowerCase();
+            if (this.lettersSelectedExchange.length !== 0) {
+                this.areLetterSelectedExchange = true;
+            }
+        }
+    }
+
+    removeAttributesSwapping() {
+        this.indexSelectedSwapping = -1;
+        this.isLetterSelectedSwapping = false;
+        this.buttonPressed = '';
+    }
+    removeAttributesExchange() {
+        this.indexSelectedExchange = [];
+        this.areLetterSelectedExchange = false;
+        this.lettersSelectedExchange = '';
+    }
+
+    private removeCharFromString(letters: string, index: number): string {
+        const temp = letters.split(''); // convert to an array
+        temp.splice(index, 1);
+        return temp.join(''); // reconstruct the string
     }
 }

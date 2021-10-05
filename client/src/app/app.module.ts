@@ -19,6 +19,7 @@ import { TextBoxComponent } from './components/text-box/text-box';
 import { GameSelectionPageComponent } from './pages/game-selection-page/game-selection-page.component';
 import { SoloGameInitiatorComponent } from './pages/solo-game-initiator/solo-game-initiator.component';
 import { FinishedGameComponent } from './components/finished-game/finished-game.component';
+import { ExchangeLettersGUIComponent } from './components/exchange-letters-gui/exchange-letters-gui.component';
 
 /**
  * Main module that is used in main.ts.
@@ -40,6 +41,7 @@ import { FinishedGameComponent } from './components/finished-game/finished-game.
         TextBoxComponent,
         LettersComponent,
         FinishedGameComponent,
+        ExchangeLettersGUIComponent,
     ],
     imports: [
         AppMaterialModule,

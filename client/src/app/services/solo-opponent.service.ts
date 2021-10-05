@@ -1,57 +1,29 @@
 import { Injectable } from '@angular/core';
-import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { FinishGameService } from './finish-game.service';
 import { LetterService } from './letter.service';
-import { SoloPlayerService } from './solo-player.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
+
 @Injectable({
     providedIn: 'root',
 })
 export class SoloOpponentService {
-    message: string;
-    messageTimeManager: string;
-    subscription: Subscription;
-    messageFromSoloPlayer: string[];
-    subscriptionTimeManager: Subscription;
-    subscriptionSoloPlayer: Subscription;
-    myTurn: boolean;
-    valueToEndGame: number = 0;
-    maximumAllowedSkippedTurns: number;
-    numberOfLetters: number = 0;
     messageTextBox: Observable<string[]>;
-    score: number = 0;
-    currentMessage: Observable<string>;
-    lastTurnWasASkip: boolean = false;
-    firstWordToPlay: boolean = false;
     lastCommandEntered: string = 'Bonjour joueur!';
-    messageSource = new BehaviorSubject('default message');
-    messageSoloPlayer = new BehaviorSubject(['turn', 'last turn was a skip']);
     sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
     constructor(
         public letters: LetterService,
         public timeManager: TimerTurnManagerService,
-        public soloPlayer: SoloPlayerService,
         public soloOpponent2: SoloOpponent2Service,
+        public finishGameService: FinishGameService,
     ) {
-        this.subscription = PlayerLetterHand.currentMessage.subscribe((message) => (this.message = message));
-        this.currentMessage = this.messageSource.asObservable();
         this.letters.players[1].addLetters(MAXLETTERINHAND);
-        this.numberOfLetters = parseInt(this.message, 10);
-        this.subscriptionTimeManager = this.timeManager.currentMessage.subscribe(
-            (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
-        );
-        this.subscriptionSoloPlayer = this.soloPlayer.currentMessageToSoloOpponent.subscribe(
-            (messageFromSoloPlayer) => (this.messageFromSoloPlayer = messageFromSoloPlayer),
-        );
         this.messageTextBox = this.sourceMessageTextBox.asObservable();
-        this.maximumAllowedSkippedTurns = 6;
-        this.myTurn = this.timeManager.turn === 1;
     }
     play() {
-        this.myTurn = this.timeManager.turn === 1;
-        if (this.myTurn === true) {
+        if (this.timeManager.turn === 1) {
             const HUNDRED = 100;
             const TWENTY = 20;
             const TEN = 10;
@@ -59,12 +31,14 @@ export class SoloOpponentService {
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             if (PROBABILITY_OF_ACTION > TWENTY) {
                 this.lastCommandEntered = this.soloOpponent2.play();
+                this.endTurn('place');
             } else if (PROBABILITY_OF_ACTION <= TEN) {
                 this.skipTurn();
             } else {
                 const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
                 if (NUMBER_OF_LETTERS_TO_TRADE <= SEVEN) {
                     this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
+                    this.endTurn('exchange');
                 } else {
                     this.skipTurn();
                 }
@@ -74,62 +48,42 @@ export class SoloOpponentService {
     calculateProbability(percentage: number) {
         return Math.floor(Math.random() * percentage);
     }
-    incrementPassedTurns() {
-        this.valueToEndGame = parseInt(this.messageFromSoloPlayer[0], 10);
-        this.lastTurnWasASkip = this.messageFromSoloPlayer[1] === 'true';
-        if (this.valueToEndGame < this.maximumAllowedSkippedTurns) {
-            if (this.lastTurnWasASkip) {
-                this.valueToEndGame++;
-            } else {
-                this.valueToEndGame = 1;
-                this.lastTurnWasASkip = true;
-            }
-            this.myTurn = false;
-            this.changeTurn(this.myTurn.toString());
-        }
+
+    reset(playerNumber: number) {
+        this.letters.players[playerNumber].allLettersInHand = [];
+        this.letters.players[playerNumber].addLetters(MAXLETTERINHAND);
     }
-    changeTurn(message: string) {
-        this.messageSource.next(message);
-        this.myTurn = parseInt(this.messageTimeManager, 10) === 1;
-    }
-    reset() {
-        this.letters.players[1].allLettersInHand = [];
-        this.numberOfLetters = this.letters.players[1].numberLetterInHand = 0;
-        this.letters.players[1].addLetters(MAXLETTERINHAND);
-        this.numberOfLetters = parseInt(this.message, 10);
-        this.valueToEndGame = 0;
-        this.firstWordToPlay = true;
-    }
-    getScore() {
-        return this.score;
-    }
-    sendNumberOfSkippedTurn() {
-        this.messageSource.next(this.valueToEndGame.toString());
-    }
+
     skipTurn() {
-        this.myTurn = this.timeManager.turn === 1;
-        if (this.myTurn === true) {
-            this.incrementPassedTurns();
-            this.messageSoloPlayer.next([this.valueToEndGame.toString(), this.lastTurnWasASkip.toString()]);
-            this.timeManager.endTurn();
-            const numberOfLetters = 0;
-            this.sourceMessageTextBox.next(['!passer', numberOfLetters.toString()]);
+        if (this.timeManager.turn === 1) {
+            this.endTurn('skip');
+            this.sourceMessageTextBox.next(['!passer', '0']);
             this.lastCommandEntered = '!passer';
         }
     }
     exchangeLetters(numberOfLettersToTrade: number) {
-        this.lastTurnWasASkip = false;
         let i = 0;
+        const indexLettersToExchange: number[] = [];
         while (i < numberOfLettersToTrade) {
-            const INDEX_OF_LETTER_TO_TRADE = this.calculateProbability(this.letters.players[1].numberLetterInHand);
-            if (!this.letters.players[1].selectedLettersForExchange.has(INDEX_OF_LETTER_TO_TRADE)) {
-                this.letters.players[1].selectedLettersForExchange.add(INDEX_OF_LETTER_TO_TRADE);
+            const INDEX_OF_LETTER_TO_TRADE = this.calculateProbability(this.letters.players[this.timeManager.turn].allLettersInHand.length);
+            if (!indexLettersToExchange.includes(INDEX_OF_LETTER_TO_TRADE)) {
+                indexLettersToExchange.push(INDEX_OF_LETTER_TO_TRADE);
                 i++;
             }
         }
-        this.letters.players[1].exchangeLetters();
-        this.timeManager.endTurn();
+        let lettersToExchange = '';
+        for (const index of indexLettersToExchange) {
+            lettersToExchange += this.letters.players[this.timeManager.turn].allLettersInHand[index];
+        }
+        this.letters.players[this.timeManager.turn].exchangeLetters(lettersToExchange);
         this.sourceMessageTextBox.next(['!échanger ', numberOfLettersToTrade.toString()]);
         this.lastCommandEntered = '!échanger ' + numberOfLettersToTrade.toString();
+    }
+
+    endTurn(reason: string) {
+        this.timeManager.endTurn(reason);
+        if (this.letters.players[this.timeManager.turn].allLettersInHand.length === 0) {
+            this.finishGameService.isGameFinished = true;
+        }
     }
 }

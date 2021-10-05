@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@
 import { Vec2 } from '@app/classes/vec2';
 import * as Constants from '@app/constants';
 import { GridService } from '@app/services/grid.service';
+import { LetterService } from '@app/services/letter.service';
 
 export const DEFAULT_WIDTH = Constants.DEFAULT_WIDTH;
 export const DEFAULT_HEIGHT = Constants.DEFAULT_WIDTH;
@@ -25,11 +26,20 @@ export class PlayAreaComponent implements AfterViewInit {
     buttonPressed = '';
     private canvasSize = { x: DEFAULT_WIDTH, y: DEFAULT_HEIGHT };
 
-    constructor(private readonly gridService: GridService) {}
+    constructor(private readonly gridService: GridService, private letterService: LetterService) {}
 
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         this.buttonPressed = event.key;
+        this.letterService.setIndexSelectedSwapping(event.key);
+    }
+    @HostListener('mousewheel', ['$event'])
+    onWindowScroll(event: WheelEvent) {
+        if (event.deltaY > 0) {
+            this.letterService.setIndexSelectedSwapping('ArrowLeft');
+        } else if (event.deltaY < 0) {
+            this.letterService.setIndexSelectedSwapping('ArrowRight');
+        }
     }
 
     ngAfterViewInit(): void {

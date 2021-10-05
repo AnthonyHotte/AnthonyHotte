@@ -56,3 +56,4 @@ export const MAXLETTERINHAND = 7;
 
 export const MAX_CHARACTERS = 512;
 export const ENTER_ASCII = 69;
+export const MAX_NUMBER_SKIPPED_TURNS = 6;
