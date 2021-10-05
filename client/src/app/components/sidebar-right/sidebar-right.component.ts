@@ -131,5 +131,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     soloOpponentPlays() {
         this.soloOpponent.play();
+        const message: MessagePlayer = { message: this.soloOpponent.lastCommandEntered, sender: 'Adversaire', debugState: false };
+        this.textBox.inputs.push(message);
     }
 }
