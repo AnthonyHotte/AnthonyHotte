@@ -27,13 +27,21 @@ export class LettersComponent implements OnInit {
         this.getNewLetters();
     }
 
-    getIndexSelected(): number {
-        return this.letterService.indexSelected;
+    getIndexSelectedSwapping(): number {
+        return this.letterService.indexSelectedSwapping;
     }
 
-    selectLetterWithClick(letter: string, index: number) {
-        this.letterService.indexSelected = index;
-        this.letterService.letterIsSelected = true;
-        this.letterService.buttonPressed = letter.toLowerCase();
+    getIndexSelectedExchange(): number[] {
+        return this.letterService.indexSelectedExchange;
+    }
+
+    selectLetterWithLeftClick(letter: string, index: number) {
+        this.letterService.removeAttributesExchange();
+        this.letterService.leftClickOnLetter(letter, index);
+    }
+
+    selectLetterWithRightClick(letter: string, index: number) {
+        this.letterService.removeAttributesSwapping();
+        this.letterService.rightClickOnLetter(letter, index);
     }
 }

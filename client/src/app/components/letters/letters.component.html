@@ -8,10 +8,11 @@
                   'text-align': 'center',
                 'width.px': letterSize,
                'height.px': letterSize,
-               'border-color': indexOfElem === getIndexSelected() ? 'red' : 'black'
+               'border-color': indexOfElem === getIndexSelectedSwapping() ? 'red' : 'black',
+               'background-color': getIndexSelectedExchange().includes(indexOfElem) ? 'green' : 'white'
                }"
             >
-                <div (click)="selectLetterWithClick(letter.letter, indexOfElem)">
+                <div (click)="selectLetterWithLeftClick(letter.letter, indexOfElem)" (contextmenu)="selectLetterWithRightClick(letter.letter, indexOfElem)">
                 {{ letter.letter }}<sub>{{ letter.point }}</sub>
                 </div>
         </td>

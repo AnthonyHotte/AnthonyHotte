@@ -31,14 +31,14 @@ export class PlayAreaComponent implements AfterViewInit {
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         this.buttonPressed = event.key;
-        this.letterService.setIndexSelected(event.key);
+        this.letterService.setIndexSelectedSwapping(event.key);
     }
     @HostListener('mousewheel', ['$event'])
     onWindowScroll(event: WheelEvent) {
         if (event.deltaY > 0) {
-            this.letterService.setIndexSelected('ArrowLeft');
+            this.letterService.setIndexSelectedSwapping('ArrowLeft');
         } else if (event.deltaY < 0) {
-            this.letterService.setIndexSelected('ArrowRight');
+            this.letterService.setIndexSelectedSwapping('ArrowRight');
         }
     }
 
