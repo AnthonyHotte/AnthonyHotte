@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { VALEUR_TEMPS_DEFAULT } from '@app/constants';
 
 @Injectable({
     providedIn: 'root',
@@ -6,6 +7,7 @@ import { Injectable } from '@angular/core';
 export class TimerTurnManagerService {
     turn: number = 0;
     turnsSkippedInARow = 0;
+    timePerTurn = VALEUR_TEMPS_DEFAULT;
 
     constructor() {
         this.initiateGame();
