@@ -6,7 +6,6 @@ import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
-import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
@@ -30,7 +29,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     changedTurns: boolean = false;
 
     constructor(
-        private soloGameInformation: SoloGameInformationService,
         private turnTimeController: TimerTurnManagerService,
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
@@ -39,7 +37,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         private readonly placeLetterService: PlaceLettersService,
         private finishGameService: FinishGameService,
     ) {
-        this.message = this.soloGameInformation.message;
         this.setAttribute();
     }
 
@@ -55,18 +52,9 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     setAttribute() {
-        if (this.message.length !== 0) {
-            this.playerName[0] = this.message[0];
-            this.playerName[1] = this.message[1];
-            this.easyDifficultyIsTrue = this.message[2] === 'true';
-            this.time = parseInt(this.message[3], 10);
-            this.turn = this.turnTimeController.turn;
-        } else {
-            // if page is refreshed
-            this.finishCurrentGame();
-        }
-        this.turnTimeController.initiateGame();
+        this.time = this.turnTimeController.timePerTurn;
         this.turn = this.turnTimeController.turn;
+        this.turnTimeController.initiateGame();
         this.letterService.reset();
         this.letterService.players[0].reset();
         this.soloOpponent.reset(1);
@@ -108,8 +96,11 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         this.gridService.decreasePoliceSize();
         this.placeLetterService.policeSizeChanged();
     }
+    getPlayerName(player: number) {
+        return this.letterService.players[player].name;
+    }
 
-    getPlayerName() {
+    getPlayerNameAndVerifyTurn() {
         if (this.turn !== this.turnTimeController.turn) {
             this.changedTurns = true;
             if (this.textBox.commandSuccessful) {
@@ -119,12 +110,11 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
             }
             this.turn = this.turnTimeController.turn;
         }
-        return this.playerName[this.turn];
+        return this.letterService.players[this.turn].name;
     }
 
     verifyChangedTurns(counter: CountdownComponent) {
         if (this.changedTurns === true) {
-            this.time = parseInt(this.message[3], 10);
             counter.reset();
         }
         this.changedTurns = false;

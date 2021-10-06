@@ -23,16 +23,15 @@ export class PlayAreaComponent implements AfterViewInit {
     @ViewChild('gridCanvas', { static: false }) private gridCanvas!: ElementRef<HTMLCanvasElement>;
 
     mousePosition: Vec2 = { x: 0, y: 0 };
-    buttonPressed = '';
     private canvasSize = { x: DEFAULT_WIDTH, y: DEFAULT_HEIGHT };
 
     constructor(private readonly gridService: GridService, private letterService: LetterService) {}
 
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
-        this.buttonPressed = event.key;
         this.letterService.setIndexSelectedSwapping(event.key);
     }
+
     @HostListener('mousewheel', ['$event'])
     onWindowScroll(event: WheelEvent) {
         if (event.deltaY > 0) {
