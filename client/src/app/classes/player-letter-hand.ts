@@ -7,13 +7,11 @@ export class PlayerLetterHand {
     allLettersInHand: Letter[];
     score: number;
     name: string;
-    letterMap: LetterMap;
 
     constructor() {
         this.allLettersInHand = [];
         this.name = '';
         this.score = 0;
-        this.letterMap = new LetterMap();
     }
 
     addLetters(amount: number): void {
@@ -110,7 +108,7 @@ export class PlayerLetterHand {
         const TIME_OUT_TIME = 3000;
         setTimeout(() => {
             for (const letter of word) {
-                const tempLetter = this.letterMap.letterMap.get(letter) as Letter;
+                const tempLetter = LetterMap.letterMap.letterMap.get(letter) as Letter;
                 this.allLettersInHand.push(tempLetter);
             }
         }, TIME_OUT_TIME);

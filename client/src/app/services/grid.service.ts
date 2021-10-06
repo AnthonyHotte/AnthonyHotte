@@ -8,7 +8,6 @@ import { Letter } from '@app/letter';
     providedIn: 'root',
 })
 export class GridService {
-    letters = new LetterMap();
     minpolicesizelettervalue = Constants.LETTERVALUEMINPOLICESIZE;
     policesizelettervalue = Constants.LETTERVALUEDEFAULTPOLICESIZE;
     maxpolicesizelettervalue = Constants.LETTERVALUEMAXPOLICESIZE;
@@ -198,7 +197,7 @@ export class GridService {
         this.gridContext.fillStyle = 'black';
         this.gridContext.font = String(this.policesizeletter) + 'px system-ui';
         this.gridContext.fillText(word, x + Constants.CASESIZE / 2, y + Constants.CASESIZE / 2);
-        const lettervalue = this.letters.letterMap.get(word) as Letter;
+        const lettervalue = LetterMap.letterMap.letterMap.get(word) as Letter;
         this.drawLetterValuewithposition(lettervalue, x1, y1);
     }
     drawLetterValuewithposition(word: Letter, x1: number, y1: number) {

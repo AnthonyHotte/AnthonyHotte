@@ -7,7 +7,6 @@ import { Letter } from '@app/letter';
     providedIn: 'root',
 })
 export class ScoreCalculatorService {
-    letters = new LetterMap();
     indexLastLetters: number[] = [];
     indexJoker: number[] = [];
 
@@ -17,7 +16,7 @@ export class ScoreCalculatorService {
         let charIndex = 0;
         for (let index = beginIndex; index <= endIndex; index++) {
             if (!this.isLetterAJoker(row, index)) {
-                const tempLetter = this.letters.letterMap.get(word.charAt(charIndex++)) as Letter;
+                const tempLetter = LetterMap.letterMap.letterMap.get(word.charAt(charIndex++)) as Letter;
                 if (TileMap.gridMap.isDoubleLetterTile(index + 1, row + 1) && !this.isLetterAlreadyOnBoard(row, index)) {
                     wordPoints += tempLetter.point * 2;
                 } else if (TileMap.gridMap.isTripleLetterTile(index + 1, row + 1) && !this.isLetterAlreadyOnBoard(row, index)) {
@@ -41,7 +40,7 @@ export class ScoreCalculatorService {
         let charIndex = 0;
         for (let index = beginIndex; index <= endIndex; index++) {
             if (!this.isLetterAJoker(index, column)) {
-                const tempLetter = this.letters.letterMap.get(word.charAt(charIndex++)) as Letter;
+                const tempLetter = LetterMap.letterMap.letterMap.get(word.charAt(charIndex++)) as Letter;
                 if (TileMap.gridMap.isDoubleLetterTile(column + 1, index + 1) && !this.isLetterAlreadyOnBoard(index, column)) {
                     wordPoints += tempLetter.point * 2;
                 } else if (TileMap.gridMap.isTripleLetterTile(column + 1, index + 1) && !this.isLetterAlreadyOnBoard(index, column)) {
