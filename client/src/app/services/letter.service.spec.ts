@@ -14,7 +14,6 @@ describe('LetterService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
-        expect(PlayerLetterHand.allLetters.length).toBeGreaterThan(0);
     });
 
     it('reset should call player.reset method', () => {

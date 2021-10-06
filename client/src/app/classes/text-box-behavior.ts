@@ -6,8 +6,8 @@ import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { PlayerLetterHand } from './player-letter-hand';
 import { FinishGameService } from '@app/services/finish-game.service';
+import { LetterBankService } from '@app/services/letter-bank.service';
 
 @Injectable({
     providedIn: 'root',
@@ -32,6 +32,7 @@ export class TextBox {
         private timeManager: TimerTurnManagerService,
         private letterService: LetterService,
         private finishGameService: FinishGameService,
+        private letterBankService: LetterBankService,
     ) {
         this.word = { message: '', sender: '', debugState: false };
         this.inputs = [];
@@ -146,7 +147,7 @@ export class TextBox {
 
     verifyCommandEchanger(word: string) {
         const ALLOWED_NUMBER_OF_LETTERS = 7;
-        if (PlayerLetterHand.allLetters.length >= ALLOWED_NUMBER_OF_LETTERS) {
+        if (this.letterBankService.letterBank.length >= ALLOWED_NUMBER_OF_LETTERS) {
             const letters = word.substring('!échanger '.length, word.length);
             if (this.letterService.players[this.timeManager.turn].handContainLetters(letters)) {
                 this.letterService.players[this.timeManager.turn].exchangeLetters(letters);
