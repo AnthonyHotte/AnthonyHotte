@@ -31,6 +31,7 @@ export const LETTERS: Letter[] = [
 ];
 
 export class LetterMap {
+    static letterMap = new LetterMap();
     letterMap: Map<string, Letter>;
     constructor() {
         this.letterMap = new Map<string, Letter>();
