@@ -9,7 +9,6 @@ import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
-import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { Observable } from 'rxjs';
 import { FinishGameService } from '@app/services/finish-game.service';
@@ -28,7 +27,6 @@ describe('SidebarRightComponent', () => {
     let placeLettersServiceSpy: jasmine.SpyObj<PlaceLettersService>;
     let routerSpy: jasmine.SpyObj<Router>;
     let counterSpy: jasmine.SpyObj<CountdownComponent>;
-    let soloGameInformationServiceSpy: jasmine.SpyObj<SoloGameInformationService>;
     beforeEach(
         waitForAsync(() => {
             timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn', 'initiateGame']);
@@ -42,8 +40,6 @@ describe('SidebarRightComponent', () => {
             placeLettersServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['policeSizeChanged']);
             routerSpy = jasmine.createSpyObj('Router', ['navigate']);
             counterSpy = jasmine.createSpyObj('CountdownComponent', ['reset']);
-            soloGameInformationServiceSpy = jasmine.createSpyObj('SoloGameInformationService', ['getMessage']);
-            soloGameInformationServiceSpy.message = [''];
             finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
             TestBed.configureTestingModule({
                 declarations: [SidebarRightComponent],
@@ -57,7 +53,6 @@ describe('SidebarRightComponent', () => {
                     { provide: PlaceLettersService, useValue: placeLettersServiceSpy },
                     { provide: Router, useValue: routerSpy },
                     { provide: CountdownComponent, useValue: counterSpy },
-                    { provide: SoloGameInformationService, useValue: soloGameInformationServiceSpy },
                     { provide: FinishGameService, useValue: finishGameServiceSpy },
                 ],
 
@@ -75,29 +70,6 @@ describe('SidebarRightComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
-    });
-
-    it('setAttribute should receive the message correctly', () => {
-        component.message = ['firstName', 'name', 'true', '30'];
-        const expectedTime = 30;
-        component.playerName[0] = '';
-        component.playerName[1] = '';
-        component.easyDifficultyIsTrue = false;
-        component.time = 0;
-        component.setAttribute();
-        expect(component.playerName[0]).toMatch('firstName');
-        expect(component.playerName[1]).toMatch('name');
-        expect(component.easyDifficultyIsTrue).toBe(true);
-        expect(component.time).toEqual(expectedTime);
-        expect(soloOpponentServiceSpy.reset).toHaveBeenCalled();
-    });
-
-    it('setAttribute should finishCurrentGame when no message received', () => {
-        component.message = [];
-        const spy = spyOn(component, 'finishCurrentGame');
-        component.setAttribute();
-        expect(spy).toHaveBeenCalled();
-        expect(soloOpponentServiceSpy.reset).toHaveBeenCalled();
     });
 
     it('difficultyInCharacters should return Débutant ', () => {
@@ -140,15 +112,15 @@ describe('SidebarRightComponent', () => {
     it('getPlayerName should return the name when there is no changes in turn ', () => {
         component.turn = 0;
         timerTurnManagerServiceSpy.turn = 0;
-        component.playerName[component.turn] = 'antho';
-        const name = component.getPlayerName();
+        letterServiceSpy.players[0].name = 'antho';
+        const name = component.getPlayerNameAndVerifyTurn();
         expect(name).toMatch('antho');
     });
     it('getPlayerName should return the name when there is changes in turn ', () => {
         component.turn = 1;
         timerTurnManagerServiceSpy.turn = 0;
-        component.playerName[0] = 'antho';
-        const name = component.getPlayerName();
+        letterServiceSpy.players[0].name = 'antho';
+        const name = component.getPlayerNameAndVerifyTurn();
         expect(component.turn).toEqual(0);
         expect(name).toMatch('antho');
     });
@@ -157,8 +129,8 @@ describe('SidebarRightComponent', () => {
         timerTurnManagerServiceSpy.turn = 1;
         textBoxSpy.commandSuccessful = true;
         const spy = spyOn(component, 'soloOpponentPlays');
-        component.playerName[1] = 'antho';
-        const name = component.getPlayerName();
+        letterServiceSpy.players[1].name = 'antho';
+        const name = component.getPlayerNameAndVerifyTurn();
         expect(spy).toHaveBeenCalled();
         expect(component.turn).toEqual(1);
         expect(name).toMatch('antho');
@@ -168,8 +140,8 @@ describe('SidebarRightComponent', () => {
         component.turn = 0;
         timerTurnManagerServiceSpy.turn = 1;
         textBoxSpy.commandSuccessful = false;
-        component.playerName[1] = 'antho';
-        const name = component.getPlayerName();
+        letterServiceSpy.players[1].name = 'antho';
+        const name = component.getPlayerNameAndVerifyTurn();
         expect(component.turn).toEqual(1);
         expect(name).toMatch('antho');
     });
