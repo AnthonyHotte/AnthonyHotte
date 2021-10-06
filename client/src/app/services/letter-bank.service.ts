@@ -14,4 +14,19 @@ export class LetterBankService {
             }
         });
     }
+
+    getLettersInBank(): string {
+        let lettersInBank = '';
+        LETTERS.forEach((letter) => {
+            lettersInBank += '\n' + letter.letter + ' : ';
+            let numberOfLetter = 0;
+            for (const letterInBank of this.letterBank) {
+                if (letterInBank.letter === letter.letter) {
+                    numberOfLetter++;
+                }
+            }
+            lettersInBank += numberOfLetter;
+        });
+        return lettersInBank;
+    }
 }
