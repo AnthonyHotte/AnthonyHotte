@@ -12,7 +12,7 @@ import { WordValidationService } from '@app/services/word-validation.service';
 export class PlaceLettersService {
     row: number;
     colomnNumber: number;
-    orientation: string;
+    orientation: string = 'h';
     wordToPlace: string;
     lettersToPlace: string;
     spaceIndexInput: number;
@@ -143,6 +143,19 @@ export class PlaceLettersService {
             this.gameState.removeLetter(this.gameState.indexLastLetters[i], this.gameState.indexLastLetters[i + 1]);
         }
     }
+    placeLetter(letter: string) {
+        this.gridService.drawLetterwithpositionstring(letter, this.row, this.colomnNumber);
+        // TODO isma, we need to talk about how to implement drawletter
+        // this.gamestate.placeletter() ?
+        if (this.orientation === 'h' && this.colomnNumber < Constants.NUMBEROFCASE) {
+            this.colomnNumber = this.colomnNumber + 1;
+        } else if (this.orientation === 'v' && this.row < Constants.NUMBEROFCASE) {
+            this.row = this.row + 1;
+        }
+        this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+        // TODO delete last arrow after word is validited
+    }
+
     drawWord() {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
@@ -162,7 +175,7 @@ export class PlaceLettersService {
             const delay = 3000;
             setTimeout(() => {
                 for (let i = 0; i < this.gameState.indexLastLetters.length; i += 2) {
-                    this.gridService.drawtilebackground(this.gameState.indexLastLetters[i + 1] + 1, this.gameState.indexLastLetters[i] + 1);
+                    this.gridService.drawtilebackground(this.gameState.indexLastLetters[i + 1], this.gameState.indexLastLetters[i]);
                 }
                 this.removeLetterInGameState();
             }, delay);
@@ -209,5 +222,35 @@ export class PlaceLettersService {
         tempLetters[index] = '*';
         this.lettersToPlace = tempLetters.join('');
         return tempWord.join(''); // reconstruct the string
+    }
+    rawXYPositionToCasePosition(xorYPos: number): number {
+        const pos = Math.floor(xorYPos / Constants.CASESIZE) - 1; // we offset by one because we want the tile A1 to be the
+        // position pos[0] [0] to simplify the code.
+        return pos; // only one value is returned, as the value is the same wether is this the x or y axis as the board is symetric.
+    }
+    caseSelected(xPos: number, yPos: number) {
+        const tempColumn = this.rawXYPositionToCasePosition(yPos);
+        const tempRow = this.rawXYPositionToCasePosition(xPos);
+        // if(){
+        if (tempRow === this.row && tempColumn === this.colomnNumber) {
+            this.changeorientation();
+            // todo isma discussion ici
+            this.gridService.drawtilebackground(this.row, this.colomnNumber);
+        } else {
+            this.orientation = 'h';
+            this.colomnNumber = tempColumn; // pas de -1 ici je crois
+            // this.colomnNumber = tempColumn -1;
+            // this.row = tempRow - 1;
+            this.row = tempRow;
+        }
+        this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+        // }
+    }
+    changeorientation() {
+        if (this.orientation === 'h') {
+            this.orientation = 'v';
+        } else {
+            this.orientation = 'h';
+        }
     }
 }

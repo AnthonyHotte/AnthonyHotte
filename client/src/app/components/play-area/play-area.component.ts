@@ -3,6 +3,7 @@ import { Vec2 } from '@app/classes/vec2';
 import * as Constants from '@app/constants';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
+import { PlaceLettersService } from '@app/services/place-letters.service';
 
 export const DEFAULT_WIDTH = Constants.DEFAULT_WIDTH;
 export const DEFAULT_HEIGHT = Constants.DEFAULT_WIDTH;
@@ -25,11 +26,12 @@ export class PlayAreaComponent implements AfterViewInit {
     mousePosition: Vec2 = { x: 0, y: 0 };
     private canvasSize = { x: DEFAULT_WIDTH, y: DEFAULT_HEIGHT };
 
-    constructor(private readonly gridService: GridService, private letterService: LetterService) {}
+    constructor(private readonly gridService: GridService, private letterService: LetterService, private placeLettersService: PlaceLettersService) {}
 
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         this.letterService.setIndexSelectedSwapping(event.key);
+        this.placeLettersService.placeLetter(event.key);
     }
 
     @HostListener('mousewheel', ['$event'])
@@ -58,6 +60,9 @@ export class PlayAreaComponent implements AfterViewInit {
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
             this.mousePosition = { x: event.offsetX, y: event.offsetY };
+            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+            // this.gridService.drawarrow('v', 5, 5);
+            this.placeLettersService.caseSelected(this.mousePosition.x, this.mousePosition.y);
         }
     }
 }
