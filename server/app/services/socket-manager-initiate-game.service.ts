@@ -7,7 +7,12 @@ export class SocketManagerInitiateGame {
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
     }
-    handleSockets(): void {}
+    handleSockets(): void {
+        this.sio.on('connexion', (socket) => {
+            // eslint-disable-next-line no-console
+            console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
+        });
+    }
 
     /*
     public handleSockets(): void {
