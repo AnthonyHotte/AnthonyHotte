@@ -16,6 +16,10 @@ export class PlaceLettersService {
     wordToPlace: string;
     lettersToPlace: string;
     spaceIndexInput: number;
+    wordPlacedWithClick = '';
+    initialClickRow: number;
+    initialClickColumn: number;
+    isTileSelected = false;
 
     // policesize
     // policesize: number = 25;
@@ -144,16 +148,33 @@ export class PlaceLettersService {
         }
     }
     placeLetter(letter: string) {
-        this.gridService.drawLetterwithpositionstring(letter, this.row, this.colomnNumber);
-        // TODO isma, we need to talk about how to implement drawletter
-        // this.gamestate.placeletter() ?
-        if (this.orientation === 'h' && this.colomnNumber < Constants.NUMBEROFCASE) {
-            this.colomnNumber = this.colomnNumber + 1;
-        } else if (this.orientation === 'v' && this.row < Constants.NUMBEROFCASE) {
-            this.row = this.row + 1;
+        if (letter === 'Backspace' && this.wordPlacedWithClick.length !== 0) {
+            this.removeLetterWithBackspace();
+        } else if (letter === 'Enter' && this.wordPlacedWithClick.length !== 0) {
+            this.placeWord(this.transformIntoCommand());
+        } else if (!this.letterService.players[0].handContainLetters(letter) && this.gameState.lettersOnBoard[this.row][this.colomnNumber] === '') {
+            // TODO this happens when the case is empty but you want to place a letter you dont have in hand
+        } else if (
+            this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== letter &&
+            this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== ''
+        ) {
+            // TODO this happens when player wants to put a letter on a case with a different letter already on it
+        } else {
+            this.gridService.drawLetterwithpositionstring(letter, this.row, this.colomnNumber);
+            // this.gamestate.placeletter() ?
+            if (this.orientation === 'h' && this.colomnNumber < Constants.NUMBEROFCASE) {
+                this.colomnNumber = this.colomnNumber + 1;
+            } else if (this.orientation === 'v' && this.row < Constants.NUMBEROFCASE) {
+                this.row = this.row + 1;
+            }
+            this.wordPlacedWithClick += letter;
+            this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+            // TODO delete last arrow after word is validated
         }
-        this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
-        // TODO delete last arrow after word is validited
+    }
+
+    removeLetterWithBackspace() {
+        return; // TODO
     }
 
     drawWord() {
@@ -233,7 +254,7 @@ export class PlaceLettersService {
         const tempRow = this.rawXYPositionToCasePosition(xPos);
         // if(){
         if (tempRow === this.row && tempColumn === this.colomnNumber) {
-            this.changeorientation();
+            this.changeOrientation();
             // todo isma discussion ici
             this.gridService.drawtilebackground(this.row, this.colomnNumber);
         } else {
@@ -244,13 +265,24 @@ export class PlaceLettersService {
             this.row = tempRow;
         }
         this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+        this.isTileSelected = true;
+        this.initialClickRow = this.row;
+        this.initialClickColumn = this.colomnNumber;
         // }
     }
-    changeorientation() {
+    changeOrientation() {
         if (this.orientation === 'h') {
             this.orientation = 'v';
         } else {
             this.orientation = 'h';
         }
+    }
+    transformIntoCommand(): string {
+        let command = '!placer ';
+        command += String.fromCharCode(this.initialClickRow + Constants.SIDELETTERS_TO_ASCII);
+        command += (this.initialClickColumn + 1).toString();
+        command += this.orientation + ' ';
+        command += this.wordPlacedWithClick;
+        return command;
     }
 }

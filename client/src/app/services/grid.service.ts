@@ -198,7 +198,7 @@ export class GridService {
         let arrowHeadXpos = 0;
         let arrowtailYpos = 0;
         let arrowtailXpos = 0;
-        if (orientation === 'v') {
+        if (orientation === 'h') {
             arrowHeadYpos = Constants.CASESIZE * (column + arrowOffset) + Constants.CASESIZE;
             arrowHeadXpos = Constants.CASESIZE * (row + 1) + Constants.CASESIZE;
             arrowtailYpos = arrowHeadYpos; // since the arrow is horizontal y doesn't change
