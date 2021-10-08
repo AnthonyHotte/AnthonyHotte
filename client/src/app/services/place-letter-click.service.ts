@@ -52,7 +52,7 @@ export class PlaceLetterClickService {
             if (tempRow === this.row && tempColumn === this.colomnNumber) {
                 this.changeOrientation();
                 // todo isma discussion ici
-                this.gridService.drawtilebackground(this.row, this.colomnNumber);
+                this.gridService.drawtilebackground(this.colomnNumber, this.row);
             } else {
                 this.orientation = 'h';
                 this.colomnNumber = tempColumn; // pas de -1 ici je crois
@@ -98,7 +98,7 @@ export class PlaceLetterClickService {
 
     removeArrowIfNeeded(row: number, column: number) {
         if (this.wordPlacedWithClick.length === 0 || this.lastKeyPressed === 'Backspace') {
-            this.gridService.drawtilebackground(row, column);
+            this.gridService.drawtilebackground(column, row);
         }
     }
 }
