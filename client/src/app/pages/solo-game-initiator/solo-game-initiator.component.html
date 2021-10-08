@@ -21,8 +21,8 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         <label> Nom du joueur : </label>
                         <input [(ngModel)]="temporaryName" type="string" />
                         <p>Nom du joueur: {{ this.name }}</p>
-                        <p>{{ "Nom de l'adversaire: " + opponentName }}</p>
-                        <button class="button" (click)="setName()">Validation de l'identifiant</button>
+                        <p *ngIf="getTypeGame()==='solo'">{{ "Nom de l'adversaire: " + opponentName }}</p>
+                        <button *ngIf="getTypeGame()==='solo'" class="button" (click)="setName()">Validation de l'identifiant</button>
                     </fieldset>
                 </div>
                 <div>
