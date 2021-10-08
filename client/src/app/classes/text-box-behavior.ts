@@ -8,7 +8,6 @@ import { PlaceLettersService } from '@app/services/place-letters.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-
 @Injectable({
     providedIn: 'root',
 })
@@ -34,7 +33,7 @@ export class TextBox {
         private finishGameService: FinishGameService,
         private letterBankService: LetterBankService,
     ) {
-        this.word = { message: '', sender: '', debugState: false };
+        this.word = { message: '', sender: '' };
         this.inputs = [];
         this.character = false;
         this.buttonMessageState = 'ButtonMessageActivated';
@@ -111,11 +110,13 @@ export class TextBox {
                 text = this.verifyCommandPasser();
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
                 text = this.verifyCommandEchanger(myWord);
+            } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!réserver') {
+                this.activateReserver();
             } else {
                 text = 'Erreur de syntaxe...';
             }
         }
-        const message: MessagePlayer = { message: '', sender: 'Systeme', debugState: false };
+        const message: MessagePlayer = { message: '', sender: 'Systeme' };
         message.message = text;
         this.inputs.push(message);
     }
@@ -135,6 +136,10 @@ export class TextBox {
             this.finishGameService.isGameFinished = true;
         }
         return '';
+    }
+
+    activateReserver() {
+        return true;
     }
 
     endTurn(reason: string) {

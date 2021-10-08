@@ -14,7 +14,6 @@ export class TextBoxComponent implements OnInit {
     messageSoloOpponent: string[];
     messageSoloInfo: string[];
     word: string;
-    array: MessagePlayer[];
     messagesSoloOpponent: string[];
     buttonCommandState: string;
     buttonMessageState: string;
@@ -36,11 +35,11 @@ export class TextBoxComponent implements OnInit {
         this.debugCommand = false;
 
         this.messagesSoloOpponent = [];
-        this.message = { message: '', sender: 'Joueur', debugState: false };
+        this.message = { message: '', sender: 'Joueur' };
     }
 
     buttonDetect() {
-        const myMessage: MessagePlayer = { message: '', sender: 'Joueur', debugState: false };
+        const myMessage: MessagePlayer = { message: '', sender: 'Joueur' };
         myMessage.message = this.word;
         if (this.buttonCommandState === 'ButtonCommandActivated') {
             this.input.send(myMessage);
@@ -48,7 +47,6 @@ export class TextBoxComponent implements OnInit {
         } else {
             this.input.send(myMessage);
         }
-        this.array = this.input.getArray();
         if (this.input.getDebugCommand()) {
             this.messagesSoloOpponent = this.input.getMessagesSoloOpponent();
         }
