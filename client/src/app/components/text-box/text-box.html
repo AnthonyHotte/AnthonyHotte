@@ -2,11 +2,8 @@
     <h1 class="title">Boite de communication</h1>
 </div>
 <div id="DisplayZone">
-    <div *ngFor="let word of array">
-        <p [class]="word.sender" *ngIf="word.message !== '' 
-        && (word.sender==='Joueur'
-        || (word.sender === 'Adversaire' && word.debugState === true)
-        || word.sender==='Systeme')">{{word.sender}}: {{word.message}} </p>
+    <div *ngFor="let word of this.input.inputs">
+        <p [class]="word.sender" *ngIf="word.message !== ''"> {{word.sender}}: {{word.message}} </p>
     </div>
 </div>
 <div *ngIf="input.character">
