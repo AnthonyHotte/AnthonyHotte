@@ -35,6 +35,9 @@ describe('SidebarRightComponent', () => {
             soloOpponentServiceSpy = jasmine.createSpyObj('SoloOpponentService', ['reset', 'play']);
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['getLettersForExchange', 'reset']);
             letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
+            for (let i = 0; i < 3; i++) {
+                letterBankServiceSpy.letterBank.push({ letter: 'A', quantity: 9, point: 1 });
+            }
             textBoxSpy = jasmine.createSpyObj('TextBox', ['send', 'isCommand']);
             textBoxSpy.currentMessage = new Observable();
             gridServiceSpy = jasmine.createSpyObj('GridService', ['increasePoliceSize']);

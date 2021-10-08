@@ -8,7 +8,7 @@ import { TextBox } from './text-box-behavior';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LetterBankService } from '@app/services/letter-bank.service';
 
-fdescribe('TextBox', () => {
+describe('TextBox', () => {
     let textBox: TextBox;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let placerLetterServiceSpy: jasmine.SpyObj<PlaceLettersService>;

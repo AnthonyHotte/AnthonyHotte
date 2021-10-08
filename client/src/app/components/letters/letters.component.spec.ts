@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { LettersComponent } from '@app/components/letters/letters.component';
+import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 
@@ -12,12 +13,14 @@ describe('LettersComponent', () => {
     let routerSpy: jasmine.SpyObj<Router>;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let soloOpponentServiceSpy: jasmine.SpyObj<SoloOpponentService>;
+    let letterBankServiceSpy: LetterBankService;
 
     beforeEach(
         waitForAsync(() => {
             routerSpy = jasmine.createSpyObj('Router', ['navigate']);
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
-            letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
+            letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+            letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
             soloOpponentServiceSpy = jasmine.createSpyObj('SoloOpponentService', ['reset']);
             TestBed.configureTestingModule({
                 declarations: [LettersComponent],

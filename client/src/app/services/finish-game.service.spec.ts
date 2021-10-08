@@ -4,17 +4,20 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 
 import { FinishGameService } from './finish-game.service';
+import { LetterBankService } from './letter-bank.service';
 import { LetterService } from './letter.service';
 
 describe('FinishGameService', () => {
     let service: FinishGameService;
     let letterServiceSpy: LetterService;
+    let letterBankServiceSpy: LetterBankService;
     let linkSpy: Router;
 
     beforeEach(
         waitForAsync(() => {
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
-            letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
+            letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+            letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
             letterServiceSpy.players[0].allLettersInHand = [
                 { letter: 'A', quantity: 1, point: 1 },
                 { letter: 'A', quantity: 1, point: 1 },
