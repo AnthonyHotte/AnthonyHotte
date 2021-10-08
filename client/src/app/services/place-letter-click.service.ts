@@ -24,7 +24,7 @@ export class PlaceLetterClickService {
             if (letter === 'Backspace' && this.wordPlacedWithClick.length !== 0) {
                 this.removeLetterWithBackspace();
             } else if (this.letterService.players[0].handContainLetters(letter)) {
-                this.gridService.drawLetterwithpositionstring(letter, this.colomnNumber, this.row);
+                this.gridService.drawLetterwithpositionstring(letter, this.colomnNumber, this.row, 'red');
                 this.wordPlacedWithClick += letter;
                 this.handleRowAndColumnAfterLetter();
                 this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);

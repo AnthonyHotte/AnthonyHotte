@@ -182,11 +182,11 @@ export class GridService {
         }
     }
     // TODO add test for this function
-    drawLetterwithRawXYcoordinate(word: string, x1: number, y1: number) {
-        const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
-        const y: number = Math.floor(y1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
-        this.drawLetterwithpositionstring(word, x, y);
-    }
+    // drawLetterwithRawXYcoordinate(word: string, x1: number, y1: number) {
+    //      const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
+    //     const y: number = Math.floor(y1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
+    //     this.drawLetterwithpositionstring(word, x, y);
+    //  }
     // code pulled from https://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
 
     drawarrow(orientation: string, row: number, column: number) {
@@ -232,16 +232,16 @@ export class GridService {
     }
 
     canvasArrow(fromx: number, fromy: number, tox: number, toy: number) {
-        const value6 = 6;
         const headlen = 10; // length of head in pixels
         const dx = tox - fromx;
         const dy = toy - fromy;
         const angle = Math.atan2(dy, dx);
         this.gridContext.moveTo(fromx, fromy);
         this.gridContext.lineTo(tox, toy);
-        this.gridContext.lineTo(tox - headlen * Math.cos(angle - Math.PI / value6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        const six = 6;
+        this.gridContext.lineTo(tox - headlen * Math.cos(angle - Math.PI / six), toy - headlen * Math.sin(angle - Math.PI / six));
         this.gridContext.moveTo(tox, toy);
-        this.gridContext.lineTo(tox - headlen * Math.cos(angle + Math.PI / value6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        this.gridContext.lineTo(tox - headlen * Math.cos(angle + Math.PI / six), toy - headlen * Math.sin(angle + Math.PI / six));
     }
     get width(): number {
         return this.canvasSize.x;
@@ -250,15 +250,22 @@ export class GridService {
     get height(): number {
         return this.canvasSize.y;
     }
-    drawLetterwithpositionstring(word: string, x1: number, y1: number) {
+    drawLetterwithpositionstring(word: string, x1: number, y1: number, color: string) {
+        // color must be either black or red
         const offset = 8;
         // TODO isma discussion ici;
         this.drawtilebackground(x1, y1);
         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE;
         const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE;
-        // const x: number = x1 * Constants.CASESIZE;
-        // const y: number = y1 * Constants.CASESIZE;
-        this.gridContext.strokeStyle = 'black';
+        const linewidth = 6;
+        this.gridContext.strokeStyle = color;
+        if (color === 'red') {
+            this.gridContext.lineWidth = linewidth;
+            this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+            this.gridContext.lineWidth = 1; // 1 is the default value;
+        } else {
+            this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+        }
         this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
         this.gridContext.fillStyle = 'white';
         this.gridContext.fillRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);

@@ -155,7 +155,7 @@ export class PlaceLettersService {
         let ytile: number = this.row;
         this.wordValidator.pointsForLastWord = 0;
         for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
-            this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile);
+            this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile, 'black');
             if (this.orientation === 'h') {
                 xtile++;
             } else if (this.orientation === 'v') {
@@ -193,7 +193,7 @@ export class PlaceLettersService {
         for (let i = 0; i <= Constants.NUMBEROFCASE - 1; i++) {
             for (let j = 0; j <= Constants.NUMBEROFCASE - 1; j++) {
                 if (testing[i][j] !== '') {
-                    this.gridService.drawLetterwithpositionstring(this.gameState.lettersOnBoard[i][j], j, i);
+                    this.gridService.drawLetterwithpositionstring(this.gameState.lettersOnBoard[i][j], j, i, 'black');
                 }
             }
         }

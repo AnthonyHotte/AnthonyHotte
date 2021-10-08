@@ -45,12 +45,12 @@ export class SoloOpponent2Service {
                                     // eslint-disable-next-line eqeqeq
                                     if (letteronbord[i][j] == word2.charAt(k)) {
                                         if (this.isWordPlayable(word2, i - k, j, 'h')) {
-                                            const rowstring = String.fromCharCode(i + k + Constants.SIDELETTERS_TO_ASCII);
+                                            const rowstring = String.fromCharCode(i - k + Constants.SIDELETTERS_TO_ASCII);
                                             tempword = rowstring + (j + 1).toString() + 'h' + ' ' + word2;
                                             break;
                                         } else if (this.isWordPlayable(word2, i, j - k, 'v')) {
                                             const rowstring = String.fromCharCode(i + Constants.SIDELETTERS_TO_ASCII);
-                                            tempword = rowstring + (j + 1).toString() + 'v' + ' ' + word2;
+                                            tempword = rowstring + (j - k + 1).toString() + 'v' + ' ' + word2;
                                             break;
                                         }
                                     }
