@@ -250,7 +250,7 @@ export class GridService {
     get height(): number {
         return this.canvasSize.y;
     }
-    drawLetterwithpositionstring(word: string, y1: number, x1: number) {
+    drawLetterwithpositionstring(word: string, x1: number, y1: number) {
         const offset = 8;
         // TODO isma discussion ici;
         this.drawtilebackground(x1, y1);

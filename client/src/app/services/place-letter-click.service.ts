@@ -15,53 +15,56 @@ export class PlaceLetterClickService {
     orientation: string;
     isTileSelected = false;
     wordPlacedWithClick = '';
+    lastKeyPressed = '';
 
     constructor(private gridService: GridService, private letterService: LetterService, private gameState: GameStateService) {}
     placeLetter(letter: string) {
-        if (letter === 'Backspace' && this.wordPlacedWithClick.length !== 0) {
-            this.removeLetterWithBackspace();
-        } else if (letter === 'Enter' && this.wordPlacedWithClick.length !== 0) {
-            // TODO
-        } else if (!this.letterService.players[0].handContainLetters(letter) && this.gameState.lettersOnBoard[this.row][this.colomnNumber] === '') {
-            // TODO this happens when the case is empty but you want to place a letter you dont have in hand
-        } else if (
-            this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== letter &&
-            this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== ''
-        ) {
-            // TODO this happens when player wants to put a letter on a case with a different letter already on it
-        } else {
-            this.gridService.drawLetterwithpositionstring(letter, this.row, this.colomnNumber);
-            // this.gamestate.placeletter() ?
-            if (this.orientation === 'h' && this.colomnNumber < Constants.NUMBEROFCASE) {
-                this.colomnNumber++;
-            } else if (this.orientation === 'v' && this.row < Constants.NUMBEROFCASE) {
-                this.row++;
+        if (this.isTileSelected) {
+            this.lastKeyPressed = letter;
+            if (letter === 'Backspace' && this.wordPlacedWithClick.length !== 0) {
+                this.removeLetterWithBackspace();
+            } else if (
+                this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== letter &&
+                this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== ''
+            ) {
+                // TODO this happens when player wants to put a letter on a case with a different letter already on it
+            } else if (this.letterService.players[0].handContainLetters(letter)) {
+                this.gridService.drawLetterwithpositionstring(letter, this.colomnNumber, this.row);
+                // this.gamestate.placeletter() ?
+                if (this.orientation === 'h' && this.colomnNumber < Constants.NUMBEROFCASE) {
+                    this.colomnNumber++;
+                } else if (this.orientation === 'v' && this.row < Constants.NUMBEROFCASE) {
+                    this.row++;
+                }
+                this.wordPlacedWithClick += letter;
+                this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+                // TODO delete last arrow after word is validated
             }
-            this.wordPlacedWithClick += letter;
-            this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
-            // TODO delete last arrow after word is validated
         }
     }
     caseSelected(xPos: number, yPos: number) {
-        const tempColumn = this.rawXYPositionToCasePosition(yPos);
-        const tempRow = this.rawXYPositionToCasePosition(xPos);
-        // if(){
-        if (tempRow === this.row && tempColumn === this.colomnNumber) {
-            this.changeOrientation();
-            // todo isma discussion ici
-            this.gridService.drawtilebackground(this.row, this.colomnNumber);
-        } else {
-            this.orientation = 'h';
-            this.colomnNumber = tempColumn; // pas de -1 ici je crois
-            // this.colomnNumber = tempColumn -1;
-            // this.row = tempRow - 1;
-            this.row = tempRow;
+        const tempColumn = this.rawXYPositionToCasePosition(xPos);
+        const tempRow = this.rawXYPositionToCasePosition(yPos);
+        if (this.isTileSelected) {
+            this.removeArrowIfNeeded(this.initialClickRow, this.initialClickColumn);
         }
-        this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
-        this.isTileSelected = true;
-        this.initialClickRow = this.row;
-        this.initialClickColumn = this.colomnNumber;
-        // }
+        if (this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
+            if (tempRow === this.row && tempColumn === this.colomnNumber) {
+                this.changeOrientation();
+                // todo isma discussion ici
+                this.gridService.drawtilebackground(this.row, this.colomnNumber);
+            } else {
+                this.orientation = 'h';
+                this.colomnNumber = tempColumn; // pas de -1 ici je crois
+                // this.colomnNumber = tempColumn -1;
+                // this.row = tempRow - 1;
+                this.row = tempRow;
+            }
+            this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+            this.isTileSelected = true;
+            this.initialClickRow = this.row;
+            this.initialClickColumn = this.colomnNumber;
+        }
     }
     transformIntoCommand(): string {
         let command = '!placer ';
@@ -69,6 +72,13 @@ export class PlaceLetterClickService {
         command += (this.initialClickColumn + 1).toString();
         command += this.orientation + ' ';
         command += this.wordPlacedWithClick;
+        this.isTileSelected = false;
+        this.wordPlacedWithClick = '';
+        this.row = -1;
+        this.colomnNumber = -1;
+        this.orientation = '';
+        this.initialClickColumn = -1;
+        this.initialClickRow = -1;
         return command;
     }
 
@@ -84,5 +94,11 @@ export class PlaceLetterClickService {
 
     removeLetterWithBackspace() {
         return; // TODO
+    }
+
+    removeArrowIfNeeded(row: number, column: number) {
+        if (this.wordPlacedWithClick.length === 0 || this.lastKeyPressed === 'Backspace') {
+            this.gridService.drawtilebackground(row, column);
+        }
     }
 }
