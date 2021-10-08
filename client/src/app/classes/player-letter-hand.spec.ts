@@ -1,12 +1,22 @@
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
+import { LetterBankService } from '@app/services/letter-bank.service';
 
 describe('PlayerLetterHand', () => {
     let playerLetterHand: PlayerLetterHand;
-
+    let letterBankServiceSpy: LetterBankService;
+    beforeEach(
+        waitForAsync(() => {
+            letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+            TestBed.configureTestingModule({
+                providers: [{ provide: LetterBankService, useValue: letterBankServiceSpy }],
+            }).compileComponents();
+        }),
+    );
     beforeEach(() => {
-        playerLetterHand = new PlayerLetterHand();
-        PlayerLetterHand.allLetters = [];
+        TestBed.configureTestingModule({});
+        playerLetterHand = new PlayerLetterHand(letterBankServiceSpy);
     });
 
     it('should be created', () => {
@@ -20,13 +30,13 @@ describe('PlayerLetterHand', () => {
 
     it('exchangeLetters should call push and slice method', () => {
         // we need to add seven letters so we have at least the equal number of letters to that of the minimum amount which is seven
-        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'b', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'c', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'd', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'f', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'b', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'c', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'd', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'f', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
 
         playerLetterHand.allLettersInHand = [
             { letter: 'a', quantity: 1, point: 1 },
@@ -40,7 +50,7 @@ describe('PlayerLetterHand', () => {
         expect(spySplice).toHaveBeenCalledTimes(expectedCallTime);
     });
     it('exchangeLetters is not possible when the bag has less than 7 letters', () => {
-        PlayerLetterHand.allLetters = [];
+        letterBankServiceSpy.letterBank = [];
         playerLetterHand.allLettersInHand = [
             { letter: 'a', quantity: 1, point: 1 },
             { letter: 'e', quantity: 1, point: 1 },
@@ -54,13 +64,13 @@ describe('PlayerLetterHand', () => {
     });
     it('addLetters should call push method', () => {
         // we need to add seven letters so we have at least the equal number of letters to that of the minimum amount which is seven
-        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'b', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'c', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'd', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'f', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'b', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'c', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'd', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'f', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
         playerLetterHand.allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
         const spyPush = spyOn(playerLetterHand.allLettersInHand, 'push');
         const letterToAdd = 4;
@@ -75,13 +85,13 @@ describe('PlayerLetterHand', () => {
     });
     it('removeLetters should change letter when at least 7 letters available', () => {
         // we need to add seven letters so we have at least the equal number of letters to that of the minimum amount which is seven
-        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'b', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'c', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'd', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'f', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'b', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'c', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'd', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'f', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
         playerLetterHand.allLettersInHand = [
             { letter: 'b', quantity: 1, point: 1 },
             { letter: 'o', quantity: 1, point: 1 },
@@ -92,15 +102,15 @@ describe('PlayerLetterHand', () => {
             { letter: 'r', quantity: 1, point: 1 },
         ];
         const lettersToRemove = 'bon';
-        const expectedLetterInBag = PlayerLetterHand.allLetters.length - lettersToRemove.length;
+        const expectedLetterInBag = letterBankServiceSpy.letterBank.length - lettersToRemove.length;
         playerLetterHand.removeLetters(lettersToRemove);
         expect(playerLetterHand.allLettersInHand.length).toEqual(MAXLETTERINHAND);
-        expect(PlayerLetterHand.allLetters.length).toEqual(expectedLetterInBag);
+        expect(letterBankServiceSpy.letterBank.length).toEqual(expectedLetterInBag);
     });
     it('removeLetters should change letter for exchange when less then 7 letters available', () => {
-        PlayerLetterHand.allLetters.push({ letter: 'a', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'b', quantity: 1, point: 1 });
-        PlayerLetterHand.allLetters.push({ letter: 'c', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'b', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'c', quantity: 1, point: 1 });
         playerLetterHand.allLettersInHand = [
             { letter: 'b', quantity: 1, point: 1 },
             { letter: 'o', quantity: 1, point: 1 },
@@ -113,10 +123,10 @@ describe('PlayerLetterHand', () => {
 
         const lettersToRemove = 'bonj';
         const expectedLetterInBag = 0;
-        const expectedLetterInHand = playerLetterHand.allLettersInHand.length - lettersToRemove.length + PlayerLetterHand.allLetters.length;
+        const expectedLetterInHand = playerLetterHand.allLettersInHand.length - lettersToRemove.length + letterBankServiceSpy.letterBank.length;
         playerLetterHand.removeLetters(lettersToRemove);
         expect(playerLetterHand.allLettersInHand.length).toEqual(expectedLetterInHand);
-        expect(PlayerLetterHand.allLetters.length).toEqual(expectedLetterInBag);
+        expect(letterBankServiceSpy.letterBank.length).toEqual(expectedLetterInBag);
     });
     // Need to talk to the group for this one
     it('removeLettersForThreeSeconds should call push and slice 4 times', () => {
