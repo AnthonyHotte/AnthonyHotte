@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-
-import { MAX_CHARACTERS, PLACERCOMMANDLENGTH, MAX_NUMBER_SKIPPED_TURNS } from '@app/constants';
+import { MAX_CHARACTERS, MAX_NUMBER_SKIPPED_TURNS, PLACERCOMMANDLENGTH } from '@app/constants';
 import { MessagePlayer } from '@app/message';
+import { FinishGameService } from '@app/services/finish-game.service';
+import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { FinishGameService } from '@app/services/finish-game.service';
-import { LetterBankService } from '@app/services/letter-bank.service';
+
 
 @Injectable({
     providedIn: 'root',
@@ -164,7 +164,7 @@ export class TextBox {
     scrollDown() {
         const mondiv = document.getElementById('DisplayZone');
         if (mondiv !== null) {
-            mondiv.scrollTo(0, mondiv.scrollHeight);
+            mondiv.scrollTo(0, mondiv.scrollHeight + 1);
         }
     }
 }
