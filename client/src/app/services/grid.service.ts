@@ -199,13 +199,13 @@ export class GridService {
         let arrowtailYpos = 0;
         let arrowtailXpos = 0;
         if (orientation === 'h') {
-            arrowHeadYpos = Constants.CASESIZE * (column + arrowOffset) + Constants.CASESIZE;
-            arrowHeadXpos = Constants.CASESIZE * (row + 1) + Constants.CASESIZE;
+            arrowHeadYpos = Constants.CASESIZE * (row + arrowOffset) + Constants.CASESIZE;
+            arrowHeadXpos = Constants.CASESIZE * (column + 1) + Constants.CASESIZE;
             arrowtailYpos = arrowHeadYpos; // since the arrow is horizontal y doesn't change
             arrowtailXpos = arrowHeadXpos - arrowlength;
         } else {
-            arrowHeadYpos = Constants.CASESIZE * (column + 1) + Constants.CASESIZE;
-            arrowHeadXpos = Constants.CASESIZE * (row + arrowOffset) + Constants.CASESIZE;
+            arrowHeadYpos = Constants.CASESIZE * (row + 1) + Constants.CASESIZE;
+            arrowHeadXpos = Constants.CASESIZE * (column + arrowOffset) + Constants.CASESIZE;
             arrowtailYpos = arrowHeadYpos - arrowlength;
             arrowtailXpos = arrowHeadXpos; // since the arrow is horizontal x doesn't change
         }
@@ -250,7 +250,7 @@ export class GridService {
     get height(): number {
         return this.canvasSize.y;
     }
-    drawLetterwithpositionstring(word: string, x1: number, y1: number) {
+    drawLetterwithpositionstring(word: string, y1: number, x1: number) {
         const offset = 8;
         // TODO isma discussion ici;
         this.drawtilebackground(x1, y1);
