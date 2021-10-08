@@ -29,7 +29,6 @@ export class TextBoxComponent implements OnInit {
 
     constructor(private timeManager: TimerTurnManagerService, public input: TextBox) {
         this.word = '';
-        this.array = [];
         this.buttonCommandState = 'ButtonCommandReleased';
         this.buttonMessageState = 'ButtonMessageActivated';
         this.debugCommand = false;
