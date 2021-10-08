@@ -3,6 +3,7 @@ import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { LetterService } from '@app/services/letter.service';
 import { InitiateGameTypeService } from '@app/services/initiate-game-type.service';
+import { SocketService } from '@app/services/socket.service';
 
 @Component({
     selector: 'app-solo-game-initiator',
@@ -19,12 +20,14 @@ export class SoloGameInitiatorComponent {
     nameIsValid: boolean;
     playTime: number;
     easyDifficulty: boolean;
+    // can be either solo or multi player
     modeGame: string;
 
     constructor(
         private informations: SoloGameInformationService,
         private letterService: LetterService,
         private initiateTypeGame: InitiateGameTypeService,
+        private socketService: SocketService,
     ) {
         this.message = [];
         this.temporaryName = 'Joueur';
@@ -42,6 +45,9 @@ export class SoloGameInitiatorComponent {
     }
     getIsNewGame() {
         return this.initiateTypeGame.isMultiNewGame;
+    }
+    sendTime() {
+        this.socketService.sendInitiateGameInformation(this.playTime);
     }
 
     sendMessage(): void {

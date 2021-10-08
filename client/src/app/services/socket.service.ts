@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
+import { io } from 'socket.io-client';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SocketService {
-    socket: Socket;
+    socket = io('http://localhost:5020');
+
     configureBaseSocketFeatures() {
         // Afficher l'identifiant du Socket dans l'interface
         this.socket.on('connect', () => {
@@ -13,4 +14,12 @@ export class SocketService {
             console.log('connected!');
         });
     }
+    sendInitiateGameInformation(playTime: number) {
+        this.socket.emit('playTime', playTime);
+    }
 }
+// à envoyer
+// tableau lettre
+// gestion du temps
+// reserve lettre
+// validation cote serveur
