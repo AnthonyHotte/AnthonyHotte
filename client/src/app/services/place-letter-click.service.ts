@@ -23,49 +23,61 @@ export class PlaceLetterClickService {
             this.lastKeyPressed = letter;
             if (letter === 'Backspace' && this.wordPlacedWithClick.length !== 0) {
                 this.removeLetterWithBackspace();
-            } else if (
-                this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== letter &&
-                this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== ''
-            ) {
-                // TODO this happens when player wants to put a letter on a case with a different letter already on it
             } else if (this.letterService.players[0].handContainLetters(letter)) {
                 this.gridService.drawLetterwithpositionstring(letter, this.colomnNumber, this.row);
-                // this.gamestate.placeletter() ?
-                if (this.orientation === 'h' && this.colomnNumber < Constants.NUMBEROFCASE) {
-                    this.colomnNumber++;
-                } else if (this.orientation === 'v' && this.row < Constants.NUMBEROFCASE) {
-                    this.row++;
-                }
                 this.wordPlacedWithClick += letter;
+                this.handleRowAndColumnAfterLetter();
                 this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
                 // TODO delete last arrow after word is validated
             }
         }
     }
     caseSelected(xPos: number, yPos: number) {
-        const tempColumn = this.rawXYPositionToCasePosition(xPos);
-        const tempRow = this.rawXYPositionToCasePosition(yPos);
-        if (this.isTileSelected) {
-            this.removeArrowIfNeeded(this.initialClickRow, this.initialClickColumn);
-        }
-        if (this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
-            if (tempRow === this.row && tempColumn === this.colomnNumber) {
-                this.changeOrientation();
-                // todo isma discussion ici
-                this.gridService.drawtilebackground(this.colomnNumber, this.row);
-            } else {
-                this.orientation = 'h';
-                this.colomnNumber = tempColumn; // pas de -1 ici je crois
-                // this.colomnNumber = tempColumn -1;
-                // this.row = tempRow - 1;
-                this.row = tempRow;
+        if (this.wordPlacedWithClick.length === 0) {
+            const tempColumn = this.rawXYPositionToCasePosition(xPos);
+            const tempRow = this.rawXYPositionToCasePosition(yPos);
+            if (this.isTileSelected && this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
+                this.removeArrowIfNeeded(this.initialClickRow, this.initialClickColumn);
             }
-            this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
-            this.isTileSelected = true;
-            this.initialClickRow = this.row;
-            this.initialClickColumn = this.colomnNumber;
+            if (this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
+                if (tempRow === this.row && tempColumn === this.colomnNumber) {
+                    this.changeOrientation();
+                    // todo isma discussion ici
+                    this.gridService.drawtilebackground(this.colomnNumber, this.row);
+                } else {
+                    this.orientation = 'h';
+                    this.colomnNumber = tempColumn; // pas de -1 ici je crois
+                    // this.colomnNumber = tempColumn -1;
+                    // this.row = tempRow - 1;
+                    this.row = tempRow;
+                }
+                this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+                this.isTileSelected = true;
+                this.initialClickRow = this.row;
+                this.initialClickColumn = this.colomnNumber;
+            }
         }
     }
+    handleRowAndColumnAfterLetter() {
+        let isLetterAtEdge = false;
+        do {
+            if (this.orientation === 'h' && this.colomnNumber < Constants.NUMBEROFCASE) {
+                this.colomnNumber++;
+                if (this.colomnNumber === Constants.NUMBEROFCASE - 1) {
+                    isLetterAtEdge = true;
+                }
+            } else if (this.orientation === 'v' && this.row < Constants.NUMBEROFCASE) {
+                this.row++;
+                if (this.row === Constants.NUMBEROFCASE - 1) {
+                    isLetterAtEdge = true;
+                }
+            }
+            if (this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== '') {
+                this.wordPlacedWithClick += this.gameState.lettersOnBoard[this.row][this.colomnNumber];
+            }
+        } while (this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== '' && !isLetterAtEdge);
+    }
+
     transformIntoCommand(): string {
         let command = '!placer ';
         command += String.fromCharCode(this.initialClickRow + Constants.SIDELETTERS_TO_ASCII);
@@ -93,7 +105,23 @@ export class PlaceLetterClickService {
     }
 
     removeLetterWithBackspace() {
-        return; // TODO
+        this.gridService.drawtilebackground(this.colomnNumber, this.row);
+        if (this.orientation === 'h' && this.colomnNumber >= 0) {
+            this.colomnNumber--;
+        } else if (this.orientation === 'v' && this.row >= 0) {
+            this.row--;
+        }
+        while (this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== '') {
+            if (this.orientation === 'h' && this.colomnNumber >= 0) {
+                this.colomnNumber--;
+            } else if (this.orientation === 'v' && this.row >= 0) {
+                this.row--;
+            }
+            this.wordPlacedWithClick = this.wordPlacedWithClick.substr(0, this.wordPlacedWithClick.length - 1);
+        }
+        this.wordPlacedWithClick = this.wordPlacedWithClick.substr(0, this.wordPlacedWithClick.length - 1);
+        this.gridService.drawtilebackground(this.colomnNumber, this.row);
+        this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
     }
 
     removeArrowIfNeeded(row: number, column: number) {
