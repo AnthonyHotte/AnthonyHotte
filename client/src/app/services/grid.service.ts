@@ -28,11 +28,14 @@ export class GridService {
         // create this.gridContext
         for (let i = 1; i <= Constants.NUMBEROFCASE; i++) {
             for (let j = 1; j <= Constants.NUMBEROFCASE; j++) {
-                this.drawtilebackground(i, j);
+                this.drawtilebackground(i - 1, j - 1);
             }
         }
     }
     drawtilebackground(i: number, j: number) {
+        i = i + 1;
+        j = j + 1;
+
         // for the case style
         let textChoice = -1;
         // word x2 (pink)
@@ -178,7 +181,68 @@ export class GridService {
             this.gridContext.fillText(word[i], startPosition.x + step * i, startPosition.y);
         }
     }
+    // TODO add test for this function
+    drawLetterwithRawXYcoordinate(word: string, x1: number, y1: number) {
+        const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
+        const y: number = Math.floor(y1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
+        this.drawLetterwithpositionstring(word, x, y);
+    }
+    // code pulled from https://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
 
+    drawarrow(orientation: string, row: number, column: number) {
+        const arrowOffset = 0.125;
+        const tileSizeArrowLength = 3;
+        const arrowlength = Constants.CASESIZE / tileSizeArrowLength;
+        // TODO discuter ISMA
+        let arrowHeadYpos = 0;
+        let arrowHeadXpos = 0;
+        let arrowtailYpos = 0;
+        let arrowtailXpos = 0;
+        if (orientation === 'h') {
+            arrowHeadYpos = Constants.CASESIZE * (row + arrowOffset) + Constants.CASESIZE;
+            arrowHeadXpos = Constants.CASESIZE * (column + 1) + Constants.CASESIZE;
+            arrowtailYpos = arrowHeadYpos; // since the arrow is horizontal y doesn't change
+            arrowtailXpos = arrowHeadXpos - arrowlength;
+        } else {
+            arrowHeadYpos = Constants.CASESIZE * (row + 1) + Constants.CASESIZE;
+            arrowHeadXpos = Constants.CASESIZE * (column + arrowOffset) + Constants.CASESIZE;
+            arrowtailYpos = arrowHeadYpos - arrowlength;
+            arrowtailXpos = arrowHeadXpos; // since the arrow is horizontal x doesn't change
+        }
+        this.gridContext.strokeStyle = 'black';
+        this.gridContext.beginPath();
+        this.canvasArrow(arrowtailXpos, arrowtailYpos, arrowHeadXpos, arrowHeadYpos);
+
+        /*
+        if (orientation === 'h') {
+            const arrowHeadYpos = Constants.TILESIZE * (column + arrowOffset);
+            const arrowHeadXpos = Constants.TILESIZE * (row + 1);
+            const arrowtailYpos = arrowHeadYpos; // since the arrow is horizontal y doesn't change
+            const arrowtailXpos = arrowHeadXpos - arrowlength;
+        } else {
+            const arrowHeadYpos = Constants.TILESIZE * (column + 1);
+            const arrowHeadXpos = Constants.TILESIZE * (row + arrowOffset);
+            const arrowtailYpos = arrowHeadYpos - arrowlength;
+            const arrowtailXpos = arrowHeadXpos; // since the arrow is horizontal x doesn't change
+        }
+        this.gridContext.beginPath();
+        this.canvasArrow(arrowtailXpos, arrowtailYpos, arrowHeadXpos, arrowHeadYpos);
+        */
+        this.gridContext.stroke();
+    }
+
+    canvasArrow(fromx: number, fromy: number, tox: number, toy: number) {
+        const value6 = 6;
+        const headlen = 10; // length of head in pixels
+        const dx = tox - fromx;
+        const dy = toy - fromy;
+        const angle = Math.atan2(dy, dx);
+        this.gridContext.moveTo(fromx, fromy);
+        this.gridContext.lineTo(tox, toy);
+        this.gridContext.lineTo(tox - headlen * Math.cos(angle - Math.PI / value6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        this.gridContext.moveTo(tox, toy);
+        this.gridContext.lineTo(tox - headlen * Math.cos(angle + Math.PI / value6), toy - headlen * Math.sin(angle + Math.PI / 6));
+    }
     get width(): number {
         return this.canvasSize.x;
     }
@@ -188,8 +252,12 @@ export class GridService {
     }
     drawLetterwithpositionstring(word: string, x1: number, y1: number) {
         const offset = 8;
+        // TODO isma discussion ici;
+        this.drawtilebackground(x1, y1);
         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE;
         const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE;
+        // const x: number = x1 * Constants.CASESIZE;
+        // const y: number = y1 * Constants.CASESIZE;
         this.gridContext.strokeStyle = 'black';
         this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
         this.gridContext.fillStyle = 'white';

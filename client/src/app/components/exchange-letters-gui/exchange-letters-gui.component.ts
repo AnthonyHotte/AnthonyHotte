@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { LetterService } from '@app/services/letter.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { MAXLETTERINHAND } from '@app/constants';
+import { LetterBankService } from '@app/services/letter-bank.service';
 
 @Component({
     selector: 'app-exchange-letters-gui',
@@ -10,7 +10,7 @@ import { MAXLETTERINHAND } from '@app/constants';
     styleUrls: ['./exchange-letters-gui.component.scss'],
 })
 export class ExchangeLettersGUIComponent {
-    constructor(private timeManager: TimerTurnManagerService, private letterService: LetterService) {}
+    constructor(private timeManager: TimerTurnManagerService, private letterService: LetterService, private letterBankService: LetterBankService) {}
     isPlayerTurn(): boolean {
         return this.timeManager.turn === 0;
     }
@@ -18,7 +18,7 @@ export class ExchangeLettersGUIComponent {
         return this.letterService.areLetterSelectedExchange;
     }
     areThereEnoughLettersInBank(): boolean {
-        return PlayerLetterHand.allLetters.length >= MAXLETTERINHAND;
+        return this.letterBankService.letterBank.length >= MAXLETTERINHAND;
     }
 
     exchangeLetters() {

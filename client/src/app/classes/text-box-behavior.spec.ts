@@ -6,7 +6,7 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
 import { FinishGameService } from '@app/services/finish-game.service';
 import { TextBox } from './text-box-behavior';
 import { RouterTestingModule } from '@angular/router/testing';
-import { PlayerLetterHand } from './player-letter-hand';
+import { LetterBankService } from '@app/services/letter-bank.service';
 
 describe('TextBox', () => {
     let textBox: TextBox;
@@ -14,6 +14,7 @@ describe('TextBox', () => {
     let placerLetterServiceSpy: jasmine.SpyObj<PlaceLettersService>;
     let timerTurnManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let finishGameServiceSpy: jasmine.SpyObj<FinishGameService>;
+    let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [RouterTestingModule],
@@ -27,6 +28,7 @@ describe('TextBox', () => {
         placerLetterServiceSpy = TestBed.inject(PlaceLettersService) as jasmine.SpyObj<PlaceLettersService>;
         timerTurnManagerServiceSpy = TestBed.inject(TimerTurnManagerService) as jasmine.SpyObj<TimerTurnManagerService>;
         finishGameServiceSpy = TestBed.inject(FinishGameService) as jasmine.SpyObj<FinishGameService>;
+        letterBankServiceSpy = TestBed.inject(LetterBankService) as jasmine.SpyObj<LetterBankService>;
     });
 
     it('should create an instance', () => {
@@ -99,7 +101,7 @@ describe('TextBox', () => {
         timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerServiceSpy', ['endTurn']);
         finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['goToHomeAndRefresh']);
 
-        textBox = new TextBox(placerLetterServiceSpy, timerTurnManagerServiceSpy, letterServiceSpy, finishGameServiceSpy);
+        textBox = new TextBox(placerLetterServiceSpy, timerTurnManagerServiceSpy, letterServiceSpy, finishGameServiceSpy, letterBankServiceSpy);
 
         timerTurnManagerServiceSpy.turn = 0;
         const maChaine = '!debug';
@@ -204,7 +206,7 @@ describe('TextBox', () => {
     });
 
     it("Can't exchange when there isn't enough letters in the reserve", () => {
-        PlayerLetterHand.allLetters = [];
+        letterBankServiceSpy.letterBank = [];
         expect(textBox.verifyCommandEchanger('a')).toEqual('Commande impossible à réaliser! La réserve ne contient pas assez de lettres.');
     });
 });

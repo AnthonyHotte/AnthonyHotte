@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { LETTERS } from '@app/all-letters';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { Letter } from '@app/letter';
+import { LetterBankService } from '@app/services/letter-bank.service';
 
 @Injectable({
     providedIn: 'root',
@@ -15,24 +16,18 @@ export class LetterService {
     lettersSelectedExchange = '';
     areLetterSelectedExchange: boolean;
 
-    constructor() {
-        this.players = [new PlayerLetterHand(), new PlayerLetterHand()];
-        PlayerLetterHand.allLetters = [];
-        LETTERS.forEach((letter) => {
-            for (let i = 0; i < letter.quantity; i++) {
-                PlayerLetterHand.allLetters.push(letter);
-            }
-        });
+    constructor(private letterBankService: LetterBankService) {
+        this.players = [new PlayerLetterHand(letterBankService), new PlayerLetterHand(letterBankService)];
         this.isLetterSelectedSwapping = false;
         this.areLetterSelectedExchange = false;
         this.indexSelectedExchange = [];
     }
 
     reset() {
-        PlayerLetterHand.allLetters = [];
+        this.letterBankService.letterBank = [];
         LETTERS.forEach((letter) => {
             for (let i = 0; i < letter.quantity; i++) {
-                PlayerLetterHand.allLetters.push(letter);
+                this.letterBankService.letterBank.push(letter);
             }
         });
         for (let i = 0; i < 2; i++) {

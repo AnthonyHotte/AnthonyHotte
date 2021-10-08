@@ -1,14 +1,14 @@
 import { MAXLETTERINHAND } from '@app/constants';
 import { Letter } from '@app/letter';
 import { LetterMap } from '@app/all-letters';
+import { LetterBankService } from '@app/services/letter-bank.service';
 
 export class PlayerLetterHand {
-    static allLetters: Letter[] = []; // all letters in available in bank
     allLettersInHand: Letter[];
     score: number;
     name: string;
 
-    constructor() {
+    constructor(private letterBankService: LetterBankService) {
         this.allLettersInHand = [];
         this.name = '';
         this.score = 0;
@@ -17,19 +17,19 @@ export class PlayerLetterHand {
     addLetters(amount: number): void {
         if (this.allLettersInHand.length + amount <= MAXLETTERINHAND) {
             // to make sure there are enough letters available
-            const numberLetterToAdd = Math.min(amount, PlayerLetterHand.allLetters.length);
+            const numberLetterToAdd = Math.min(amount, this.letterBankService.letterBank.length);
             let i = 0;
             while (i < numberLetterToAdd) {
-                const index: number = Math.floor(Math.random() * PlayerLetterHand.allLetters.length);
-                this.allLettersInHand.push(PlayerLetterHand.allLetters[index]);
-                PlayerLetterHand.allLetters.splice(index, 1);
+                const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
+                this.allLettersInHand.push(this.letterBankService.letterBank[index]);
+                this.letterBankService.letterBank.splice(index, 1);
                 i++;
             }
         }
     }
     exchangeLetters(letters: string) {
         // only possible when at least 7 letters are there
-        if (PlayerLetterHand.allLetters.length >= MAXLETTERINHAND && this.handContainLetters(letters)) {
+        if (this.letterBankService.letterBank.length >= MAXLETTERINHAND && this.handContainLetters(letters)) {
             const numberToExchange = letters.length;
             // removes letters from hand
             for (const letter of letters) {
@@ -41,9 +41,9 @@ export class PlayerLetterHand {
                 }
             }
             for (let i = 0; i < numberToExchange; i++) {
-                const index: number = Math.floor(Math.random() * PlayerLetterHand.allLetters.length);
-                this.allLettersInHand.push(PlayerLetterHand.allLetters[index]);
-                PlayerLetterHand.allLetters.splice(index, 1);
+                const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
+                this.allLettersInHand.push(this.letterBankService.letterBank[index]);
+                this.letterBankService.letterBank.splice(index, 1);
             }
         }
     }
@@ -83,15 +83,15 @@ export class PlayerLetterHand {
         }
         // add the letters according to what's bigger 7 or the number of remaining letters
         let replaceAmount: number;
-        if (lettersToRemove.length > PlayerLetterHand.allLetters.length) {
-            replaceAmount = PlayerLetterHand.allLetters.length;
+        if (lettersToRemove.length > this.letterBankService.letterBank.length) {
+            replaceAmount = this.letterBankService.letterBank.length;
         } else {
             replaceAmount = lettersToRemove.length;
         }
         for (let i = 0; i < replaceAmount; i++) {
-            const index: number = Math.floor(Math.random() * PlayerLetterHand.allLetters.length);
-            this.allLettersInHand.push(PlayerLetterHand.allLetters[index]);
-            PlayerLetterHand.allLetters.splice(index, 1);
+            const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
+            this.allLettersInHand.push(this.letterBankService.letterBank[index]);
+            this.letterBankService.letterBank.splice(index, 1);
         }
     }
 

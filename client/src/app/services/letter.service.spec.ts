@@ -1,12 +1,21 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LetterService } from '@app/services/letter.service';
-import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { LETTERS } from '@app/all-letters';
+import { LetterBankService } from './letter-bank.service';
 
 describe('LetterService', () => {
     let service: LetterService;
+    let letterBankServiceSpy: LetterBankService;
 
+    beforeEach(
+        waitForAsync(() => {
+            letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+            TestBed.configureTestingModule({
+                providers: [{ provide: LetterBankService, useValue: letterBankServiceSpy }],
+            }).compileComponents();
+        }),
+    );
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(LetterService);
@@ -14,7 +23,6 @@ describe('LetterService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
-        expect(PlayerLetterHand.allLetters.length).toBeGreaterThan(0);
     });
 
     it('reset should call player.reset method', () => {
@@ -36,12 +44,12 @@ describe('LetterService', () => {
     it('reset should reinitialize PlayerLetterHand.allLetters', () => {
         LETTERS.forEach((letter) => {
             for (let i = 0; i < letter.quantity; i++) {
-                PlayerLetterHand.allLetters.push(letter);
+                letterBankServiceSpy.letterBank.push(letter);
             }
         });
         // 102 letters in the bag but 14 were distributed to players so we expect 88
         const expectedResult = 88;
         service.reset();
-        expect(PlayerLetterHand.allLetters.length).toEqual(expectedResult);
+        expect(letterBankServiceSpy.letterBank.length).toEqual(expectedResult);
     });
 });

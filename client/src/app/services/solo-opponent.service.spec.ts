@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { FinishGameService } from './finish-game.service';
+import { LetterBankService } from './letter-bank.service';
 import { LetterService } from './letter.service';
 import { SoloOpponentService } from './solo-opponent.service';
 import { SoloOpponent2Service } from './solo-opponent2.service';
@@ -14,13 +15,14 @@ describe('SoloOpponentService', () => {
     let letterServiceSpy: LetterService;
     let soloOpponent2ServiceSpy: SoloOpponent2Service;
     let finishGameServiceSpy: FinishGameService;
+    let letterBankServiceSpy: LetterBankService;
     let routerSpy: Router;
 
     beforeEach(
         waitForAsync(() => {
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['initiateGame', 'endTurn']);
             timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['reset']);
-            letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
+            letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
             soloOpponent2ServiceSpy = jasmine.createSpyObj('SoloOpponent2Service', ['play']);
             finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
             routerSpy = jasmine.createSpyObj('Router', ['navigate']);
@@ -32,6 +34,7 @@ describe('SoloOpponentService', () => {
                     { provide: LetterService, useValue: letterServiceSpy },
                     { provide: SoloOpponent2Service, useValue: soloOpponent2ServiceSpy },
                     { provide: FinishGameService, useValue: finishGameServiceSpy },
+                    { provide: LetterBankService, useValue: letterBankServiceSpy },
                 ],
                 imports: [RouterTestingModule],
             }).compileComponents();
@@ -83,7 +86,7 @@ describe('SoloOpponentService', () => {
     });
 
     it('reset should put firstWordToPlay to true', () => {
-        PlayerLetterHand.allLetters = [
+        letterBankServiceSpy.letterBank = [
             { letter: 'a', quantity: 1, point: 1 },
             { letter: 'b', quantity: 1, point: 1 },
             { letter: 'c', quantity: 1, point: 1 },

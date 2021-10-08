@@ -12,6 +12,7 @@ import { CountdownComponent } from '@ciri/ngx-countdown';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { Observable } from 'rxjs';
 import { FinishGameService } from '@app/services/finish-game.service';
+import { LetterBankService } from '@app/services/letter-bank.service';
 
 describe('SidebarRightComponent', () => {
     let component: SidebarRightComponent;
@@ -19,7 +20,7 @@ describe('SidebarRightComponent', () => {
 
     let timerTurnManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let soloOpponentServiceSpy: jasmine.SpyObj<SoloOpponentService>;
-
+    let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let textBoxSpy: jasmine.SpyObj<TextBox>;
     let finishGameServiceSpy: jasmine.SpyObj<FinishGameService>;
@@ -33,7 +34,10 @@ describe('SidebarRightComponent', () => {
             timerTurnManagerServiceSpy.turn = 0;
             soloOpponentServiceSpy = jasmine.createSpyObj('SoloOpponentService', ['reset', 'play']);
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['getLettersForExchange', 'reset']);
-            letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
+            letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
+            for (let i = 0; i < 3; i++) {
+                letterBankServiceSpy.letterBank.push({ letter: 'A', quantity: 9, point: 1 });
+            }
             textBoxSpy = jasmine.createSpyObj('TextBox', ['send', 'isCommand']);
             textBoxSpy.currentMessage = new Observable();
             gridServiceSpy = jasmine.createSpyObj('GridService', ['increasePoliceSize']);
@@ -54,6 +58,7 @@ describe('SidebarRightComponent', () => {
                     { provide: Router, useValue: routerSpy },
                     { provide: CountdownComponent, useValue: counterSpy },
                     { provide: FinishGameService, useValue: finishGameServiceSpy },
+                    { provide: LetterBankService, useValue: letterBankServiceSpy },
                 ],
 
                 imports: [RouterTestingModule],
@@ -85,7 +90,7 @@ describe('SidebarRightComponent', () => {
     });
 
     it('getNumberOfLettersForPlayer should return the number of letters ', () => {
-        letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
+        letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
         letterServiceSpy.players[0].allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
         const expectedResult = 1;
         const result = component.getNumberOfLettersForPlayer(0);
@@ -93,7 +98,7 @@ describe('SidebarRightComponent', () => {
     });
     it('getScorePlayer should return the score ', () => {
         const expectedResult = 1;
-        letterServiceSpy.players = [new PlayerLetterHand(), new PlayerLetterHand()];
+        letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
         letterServiceSpy.players[0].score = expectedResult;
         const result = component.getScorePlayer(0);
         expect(result).toEqual(expectedResult);
