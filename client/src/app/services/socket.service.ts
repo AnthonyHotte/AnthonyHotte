@@ -15,6 +15,7 @@ export class SocketService {
         });
     }
     sendInitiateGameInformation(playTime: number) {
+        this.socket.emit('joinRoom');
         this.socket.emit('playTime', playTime);
     }
 }

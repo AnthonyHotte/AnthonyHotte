@@ -3,9 +3,15 @@ import * as http from 'http';
 
 export class SocketManager {
     private sio: io.Server;
+    private rooms: string[];
     // private room: string = 'serverRoom';
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
+        this.rooms = [];
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        for (let i = 0; i < 50; i++) {
+            this.rooms.push('room number ' + i);
+        }
     }
 
     handleSockets(): void {
@@ -16,6 +22,11 @@ export class SocketManager {
         this.sio.on('playTime', (socket) => {
             // eslint-disable-next-line no-console
             console.log(`reception du temps: ${socket}`);
+        });
+        this.sio.on('joinRoom', (socket) => {
+            socket.join(this.rooms[0]);
+            // eslint-disable-next-line no-console
+            console.log(`${socket.id} joining room 0`);
         });
         this.sio.on('disconnect', (socket) => {
             // eslint-disable-next-line no-console
