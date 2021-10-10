@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MAXLETTERINHAND } from '@app/constants';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { FinishGameService } from './finish-game.service';
 import { LetterService } from './letter.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
@@ -10,9 +9,7 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
     providedIn: 'root',
 })
 export class SoloOpponentService {
-    messageTextBox: Observable<string[]>;
     lastCommandEntered: string = 'Bonjour joueur!';
-    sourceMessageTextBox = new BehaviorSubject([' ', ' ']);
     constructor(
         public letters: LetterService,
         public timeManager: TimerTurnManagerService,
@@ -20,7 +17,6 @@ export class SoloOpponentService {
         public finishGameService: FinishGameService,
     ) {
         this.letters.players[1].addLetters(MAXLETTERINHAND);
-        this.messageTextBox = this.sourceMessageTextBox.asObservable();
     }
     play() {
         if (this.timeManager.turn === 1) {
@@ -57,7 +53,6 @@ export class SoloOpponentService {
     skipTurn() {
         if (this.timeManager.turn === 1) {
             this.endTurn('skip');
-            this.sourceMessageTextBox.next(['!passer', '0']);
             this.lastCommandEntered = '!passer';
         }
     }
@@ -76,7 +71,6 @@ export class SoloOpponentService {
             lettersToExchange += this.letters.players[this.timeManager.turn].allLettersInHand[index];
         }
         this.letters.players[this.timeManager.turn].exchangeLetters(lettersToExchange);
-        this.sourceMessageTextBox.next(['!échanger ', numberOfLettersToTrade.toString()]);
         this.lastCommandEntered = '!échanger ' + numberOfLettersToTrade.toString();
     }
 

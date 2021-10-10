@@ -30,7 +30,11 @@ export class ExchangeLettersGUIComponent {
 
     exchangeLetters() {
         this.letterService.players[this.timeManager.turn].exchangeLetters(this.letterService.lettersSelectedExchange);
-        const message: MessagePlayer = { message: 'échanger ' + this.letterService.lettersSelectedExchange, sender: 'Joueur' };
+        const message: MessagePlayer = {
+            message: 'échanger ' + this.letterService.lettersSelectedExchange,
+            sender: this.letterService.players[0].name,
+            role: 'Joueur',
+        };
         this.textBox.inputs.push(message);
         this.cancelSelection();
         this.timeManager.endTurn('exchange');
