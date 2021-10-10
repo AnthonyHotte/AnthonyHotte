@@ -11,16 +11,13 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
     providedIn: 'root',
 })
 export class TextBox {
-    word: MessagePlayer;
     inputs: MessagePlayer[] = [];
     inputsSoloOpponent: string[];
     character: boolean = false;
     buttonMessageState: string = 'ButtonMessageActivated';
     buttonCommandState: string = 'ButtonCommandReleased';
     debugCommand: boolean = false;
-    returnMessage: string;
     valueToEndGame: number;
-    turn: number;
 
     commandSuccessful: boolean = false;
     constructor(
@@ -30,14 +27,12 @@ export class TextBox {
         private finishGameService: FinishGameService,
         private letterBankService: LetterBankService,
     ) {
-        this.word = { message: '', sender: '' };
         this.inputs = [];
         this.character = false;
         this.buttonMessageState = 'ButtonMessageActivated';
         this.buttonCommandState = 'ButtonCommandReleased';
         this.debugCommand = false;
         this.valueToEndGame = 0;
-        this.turn = this.timeManager.turn;
         this.inputsSoloOpponent = [];
     }
     send(myWord: MessagePlayer) {
@@ -52,10 +47,6 @@ export class TextBox {
         } else {
             this.character = false;
         }
-    }
-
-    getWord() {
-        return this.word.message;
     }
 
     getArray() {
@@ -106,7 +97,7 @@ export class TextBox {
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
                 text = this.verifyCommandEchanger(myWord);
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
-                this.activateReserver();
+                this.activateReserve();
             } else {
                 text = 'Erreur de syntaxe...';
             }
@@ -129,7 +120,7 @@ export class TextBox {
         return '';
     }
 
-    activateReserver() {
+    activateReserve() {
         return true;
     }
 
