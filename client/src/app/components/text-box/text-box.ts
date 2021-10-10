@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
+import { LetterService } from '@app/services/letter.service';
 @Component({
     selector: 'app-text-box',
     templateUrl: './text-box.html',
@@ -15,16 +16,16 @@ export class TextBoxComponent {
     text: string;
     message: MessagePlayer;
 
-    constructor(public input: TextBox) {
+    constructor(public input: TextBox, private letterService: LetterService) {
         this.word = '';
         this.buttonCommandState = 'ButtonCommandReleased';
         this.buttonMessageState = 'ButtonMessageActivated';
         this.debugCommand = false;
-        this.message = { message: '', sender: 'Joueur' };
+        this.message = { message: '', sender: this.letterService.players[0].name, role: 'Joueur' };
     }
 
     buttonDetect() {
-        const myMessage: MessagePlayer = { message: '', sender: 'Joueur' };
+        const myMessage: MessagePlayer = { message: '', sender: this.letterService.players[0].name, role: 'Joueur' };
         myMessage.message = this.word;
         if (this.buttonCommandState === 'ButtonCommandActivated') {
             this.input.send(myMessage);

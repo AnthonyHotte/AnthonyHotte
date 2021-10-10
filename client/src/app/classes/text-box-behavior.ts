@@ -102,7 +102,7 @@ export class TextBox {
                 text = 'Erreur de syntaxe...';
             }
         }
-        const message: MessagePlayer = { message: '', sender: 'Systeme' };
+        const message: MessagePlayer = { message: '', sender: 'Systeme', role: 'Systeme' };
         message.message = text;
         this.inputs.push(message);
     }

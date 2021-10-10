@@ -118,9 +118,9 @@ export class SidebarRightComponent implements AfterViewInit {
         this.soloOpponent.play();
         let message: MessagePlayer;
         if (this.textBox.debugCommand) {
-            message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name };
+            message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name, role: 'Adversaire' };
         } else {
-            message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name };
+            message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name, role: 'Adversaire' };
         }
         this.textBox.inputs.push(message);
         this.textBox.scrollDown();
