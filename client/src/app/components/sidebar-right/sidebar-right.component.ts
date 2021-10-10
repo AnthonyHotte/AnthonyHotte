@@ -16,7 +16,6 @@ import { CountdownComponent } from '@ciri/ngx-countdown';
     styleUrls: ['./sidebar-right.component.scss'],
 })
 export class SidebarRightComponent implements AfterViewInit {
-    messageTextBox: string;
     message: string[] = [];
     playerName: string[] = ['', ''];
     opponentSet: boolean = false;

@@ -105,7 +105,7 @@ export class TextBox {
                 text = this.verifyCommandPasser();
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
                 text = this.verifyCommandEchanger(myWord);
-            } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!réserver') {
+            } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
                 this.activateReserver();
             } else {
                 text = 'Erreur de syntaxe...';
