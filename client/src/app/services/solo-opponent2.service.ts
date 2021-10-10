@@ -9,7 +9,6 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
     providedIn: 'root',
 })
 export class SoloOpponent2Service {
-    firstTimeToPlay = true;
     constructor(
         public letterService: LetterService,
         public timeManagerService: TimerTurnManagerService,
@@ -25,10 +24,11 @@ export class SoloOpponent2Service {
         for (const letter of this.letterService.players[this.timeManagerService.turn].allLettersInHand) {
             arrayHand.push(letter.letter.toLowerCase());
         }
-        if (this.firstTimeToPlay) {
+        if (this.gameStateService.isBoardEmpty) {
             const wordToPlay = this.findValidWords(this.wordValidatorService.dictionnary, arrayHand);
-            this.placeLetterService.placeWord('h8v ' + wordToPlay);
-            this.firstTimeToPlay = false;
+            if (wordToPlay.length > 0) {
+                tempword = 'h8v ' + wordToPlay[0];
+            }
         } else {
             const letteronbord = this.gameStateService.lettersOnBoard;
             for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
@@ -39,11 +39,10 @@ export class SoloOpponent2Service {
                         const temparrayHand = arrayHand;
                         temparrayHand.push(letteronbord[i][j]); // add the letter on board with the letter in hand
                         const wordToPlay = this.findValidWords(this.wordValidatorService.dictionnary, temparrayHand);
-                        if (wordToPlay !== undefined) {
+                        if (wordToPlay.length > 0) {
                             for (const word2 of wordToPlay) {
                                 for (let k = 0; k < word2.length; k++) {
-                                    // eslint-disable-next-line eqeqeq
-                                    if (letteronbord[i][j] == word2.charAt(k)) {
+                                    if (letteronbord[i][j] === word2.charAt(k)) {
                                         if (this.isWordPlayable(word2, i - k, j, 'h')) {
                                             const rowstring = String.fromCharCode(i + k + Constants.SIDELETTERS_TO_ASCII);
                                             tempword = rowstring + (j + 1).toString() + 'h' + ' ' + word2;
@@ -63,8 +62,10 @@ export class SoloOpponent2Service {
         }
         if (tempword !== undefined) {
             this.placeLetterService.placeWord(tempword);
+            return '!placer ' + tempword;
+        } else {
+            return '!placer ' + tempword;
         }
-        return '!placer ' + tempword;
     }
     // return all the word that exist with the letters given;
     findValidWords(dict: string[], letters: string[]): string[] {
