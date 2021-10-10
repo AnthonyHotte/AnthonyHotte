@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
 import { FinishGameService } from '@app/services/finish-game.service';
@@ -9,16 +9,14 @@ import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-sidebar-right',
     templateUrl: './sidebar-right.component.html',
     styleUrls: ['./sidebar-right.component.scss'],
 })
-export class SidebarRightComponent implements OnInit, AfterViewInit {
+export class SidebarRightComponent implements AfterViewInit {
     messageTextBox: string;
-    subscriptionTextBox: Subscription;
     message: string[] = [];
     playerName: string[] = ['', ''];
     opponentSet: boolean = false;
@@ -46,10 +44,6 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
-    }
-
-    ngOnInit() {
-        this.subscriptionTextBox = this.textBox.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
     }
 
     setAttribute() {

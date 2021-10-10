@@ -6,7 +6,6 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
-import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -20,12 +19,10 @@ export class TextBox {
     buttonCommandState: string = 'ButtonCommandReleased';
     debugCommand: boolean = false;
     returnMessage: string;
-    currentMessage: Observable<string>;
     valueToEndGame: number;
     turn: number;
 
     commandSuccessful: boolean = false;
-    sourceMessage = new BehaviorSubject('command is successful');
     constructor(
         private readonly placeLettersService: PlaceLettersService,
         private timeManager: TimerTurnManagerService,
@@ -39,8 +36,6 @@ export class TextBox {
         this.buttonMessageState = 'ButtonMessageActivated';
         this.buttonCommandState = 'ButtonCommandReleased';
         this.debugCommand = false;
-        this.currentMessage = this.sourceMessage.asObservable();
-        this.sendExecutedCommand();
         this.valueToEndGame = 0;
         this.turn = this.timeManager.turn;
         this.inputsSoloOpponent = [];
@@ -122,10 +117,6 @@ export class TextBox {
     }
     getDebugCommand() {
         return this.debugCommand;
-    }
-    sendExecutedCommand() {
-        this.sourceMessage.next(this.commandSuccessful.toString());
-        this.commandSuccessful = false;
     }
 
     verifyCommandPasser() {
