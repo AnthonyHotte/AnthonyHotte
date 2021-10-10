@@ -83,11 +83,10 @@ export class PlayerLetterHand {
         }
         // add the letters according to what's bigger 7 or the number of remaining letters
         let replaceAmount: number;
-        if (lettersToRemove.length > this.letterBankService.letterBank.length) {
-            replaceAmount = this.letterBankService.letterBank.length;
-        } else {
-            replaceAmount = lettersToRemove.length;
-        }
+        replaceAmount =
+            lettersToRemove.length > this.letterBankService.letterBank.length
+                ? (replaceAmount = this.letterBankService.letterBank.length)
+                : (replaceAmount = lettersToRemove.length);
         for (let i = 0; i < replaceAmount; i++) {
             const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
             this.allLettersInHand.push(this.letterBankService.letterBank[index]);

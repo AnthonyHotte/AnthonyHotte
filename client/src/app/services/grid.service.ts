@@ -239,9 +239,9 @@ export class GridService {
         const angle = Math.atan2(dy, dx);
         this.gridContext.moveTo(fromx, fromy);
         this.gridContext.lineTo(tox, toy);
-        this.gridContext.lineTo(tox - headlen * Math.cos(angle - Math.PI / value6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        this.gridContext.lineTo(tox - headlen * Math.cos(angle - Math.PI / value6), toy - headlen * Math.sin(angle - Math.PI / Constants.SIX));
         this.gridContext.moveTo(tox, toy);
-        this.gridContext.lineTo(tox - headlen * Math.cos(angle + Math.PI / value6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        this.gridContext.lineTo(tox - headlen * Math.cos(angle + Math.PI / value6), toy - headlen * Math.sin(angle + Math.PI / Constants.SIX));
     }
     get width(): number {
         return this.canvasSize.x;
