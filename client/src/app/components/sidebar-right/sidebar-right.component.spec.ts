@@ -10,7 +10,6 @@ import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
-import { Observable } from 'rxjs';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 
@@ -39,7 +38,6 @@ describe('SidebarRightComponent', () => {
                 letterBankServiceSpy.letterBank.push({ letter: 'A', quantity: 9, point: 1 });
             }
             textBoxSpy = jasmine.createSpyObj('TextBox', ['send', 'isCommand']);
-            textBoxSpy.currentMessage = new Observable();
             gridServiceSpy = jasmine.createSpyObj('GridService', ['increasePoliceSize']);
             placeLettersServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['policeSizeChanged']);
             routerSpy = jasmine.createSpyObj('Router', ['navigate']);

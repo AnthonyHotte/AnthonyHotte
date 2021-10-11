@@ -6,26 +6,20 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
-import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TextBox {
-    word: MessagePlayer;
     inputs: MessagePlayer[] = [];
     inputsSoloOpponent: string[];
     character: boolean = false;
     buttonMessageState: string = 'ButtonMessageActivated';
     buttonCommandState: string = 'ButtonCommandReleased';
     debugCommand: boolean = false;
-    returnMessage: string;
-    currentMessage: Observable<string>;
     valueToEndGame: number;
-    turn: number;
 
     commandSuccessful: boolean = false;
-    sourceMessage = new BehaviorSubject('command is successful');
     constructor(
         private readonly placeLettersService: PlaceLettersService,
         private timeManager: TimerTurnManagerService,
@@ -33,16 +27,12 @@ export class TextBox {
         private finishGameService: FinishGameService,
         private letterBankService: LetterBankService,
     ) {
-        this.word = { message: '', sender: '' };
         this.inputs = [];
         this.character = false;
         this.buttonMessageState = 'ButtonMessageActivated';
         this.buttonCommandState = 'ButtonCommandReleased';
         this.debugCommand = false;
-        this.currentMessage = this.sourceMessage.asObservable();
-        this.sendExecutedCommand();
         this.valueToEndGame = 0;
-        this.turn = this.timeManager.turn;
         this.inputsSoloOpponent = [];
     }
     send(myWord: MessagePlayer) {
@@ -57,10 +47,6 @@ export class TextBox {
         } else {
             this.character = false;
         }
-    }
-
-    getWord() {
-        return this.word.message;
     }
 
     getArray() {
@@ -110,22 +96,18 @@ export class TextBox {
                 text = this.verifyCommandPasser();
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
                 text = this.verifyCommandEchanger(myWord);
-            } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!réserver') {
-                this.activateReserver();
+            } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
+                this.activateReserve();
             } else {
                 text = 'Erreur de syntaxe...';
             }
         }
-        const message: MessagePlayer = { message: '', sender: 'Systeme' };
+        const message: MessagePlayer = { message: '', sender: 'Systeme', role: 'Systeme' };
         message.message = text;
         this.inputs.push(message);
     }
     getDebugCommand() {
         return this.debugCommand;
-    }
-    sendExecutedCommand() {
-        this.sourceMessage.next(this.commandSuccessful.toString());
-        this.commandSuccessful = false;
     }
 
     verifyCommandPasser() {
@@ -138,7 +120,7 @@ export class TextBox {
         return '';
     }
 
-    activateReserver() {
+    activateReserve() {
         return true;
     }
 
