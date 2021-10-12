@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { LetterService } from '@app/services/letter.service';
 import { InitiateGameTypeService } from '@app/services/initiate-game-type.service';
@@ -12,6 +12,8 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
     styleUrls: ['./solo-game-initiator.component.scss'],
 })
 export class SoloGameInitiatorComponent {
+    @ViewChild('container justified') divPage!: HTMLDivElement;
+    @ViewChild('waiting') waitingRoom!: HTMLDivElement;
     temporaryName: string;
     name: string;
     opponentName: string;
@@ -19,14 +21,12 @@ export class SoloGameInitiatorComponent {
     nameIsValid: boolean;
     playTime: number;
     easyDifficulty: boolean;
-    // can be either solo or multi player
-    modeGame: string;
 
     isBonusRandom = false;
 
     constructor(
         // private informations: SoloGameInformationService,
-        private initiateTypeGame: InitiateGameTypeService,
+        public initiateTypeGame: InitiateGameTypeService,
         private socketService: SocketService,
         private letterService: LetterService,
         private tileScrambler: TileScramblerService,
@@ -39,16 +39,19 @@ export class SoloGameInitiatorComponent {
         this.nameIsValid = true;
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
-        this.modeGame = 'solo';
         // this.message = [];
     }
+    startGame() {
+        this.setName();
+        this.setTime();
+        this.scrambleBonus();
+        this.sendTime();
+    }
+    showWaitingRoom() {
+        this.divPage.style.display = 'none';
+        this.waitingRoom.style.display = 'block';
+    }
 
-    getTypeGame() {
-        return this.initiateTypeGame.gameType;
-    }
-    getIsNewGame() {
-        return this.initiateTypeGame.isMultiNewGame;
-    }
     sendTime() {
         this.socketService.sendInitiateGameInformation(this.playTime);
     }
