@@ -124,7 +124,7 @@ describe('GridService', () => {
         const lineToSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
         const fillSpy = spyOn(service.gridContext, 'fillRect').and.callThrough();
         const spy = spyOn(service, 'drawLetterValuewithposition');
-        service.drawLetterwithpositionstring('a', 0, 0);
+        service.drawLetterwithpositionstring('a', 0, 0, 'black');
         expect(strokeSpy).toHaveBeenCalledTimes(expectedCallStrokeRectTimes);
         expect(lineToSpy).toHaveBeenCalledTimes(expectedCallFillTextTimes);
         expect(fillSpy).toHaveBeenCalledTimes(expectedCallFillRectTimes);

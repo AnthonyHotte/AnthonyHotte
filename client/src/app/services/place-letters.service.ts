@@ -35,9 +35,9 @@ export class PlaceLettersService {
         private placeLetterClick: PlaceLetterClickService,
     ) {}
     verifyTileNotOutOfBound(): boolean {
-        if (this.orientation === 'h' && this.colomnNumber + this.wordToPlace.length > Constants.NUMBEROFCASE) {
+        if ((this.orientation === 'h' && this.colomnNumber + this.wordToPlace.length > Constants.NUMBEROFCASE) || this.colomnNumber < 0) {
             return false;
-        } else if (this.orientation === 'v' && this.row + this.wordToPlace.length > Constants.NUMBEROFCASE) {
+        } else if ((this.orientation === 'v' && this.row + this.wordToPlace.length > Constants.NUMBEROFCASE) || this.row < 0) {
             return false;
         } else {
             return true;
@@ -62,7 +62,7 @@ export class PlaceLettersService {
     verifyAvailable(): boolean {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
-        for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
+        for (let i = 0; i < this.wordToPlace.length; i++) {
             if (!this.verifyCaseAvailable(ytile, xtile, this.wordToPlace.charAt(i))) {
                 return false;
             }
@@ -76,7 +76,8 @@ export class PlaceLettersService {
     }
 
     verifyCaseAvailable(i: number, j: number, letter: string): boolean {
-        if (this.gameState.lettersOnBoard[i][j] === '' || this.gameState.lettersOnBoard[i][j] === letter) {
+        const locallettersonBoard = this.gameState.lettersOnBoard;
+        if (locallettersonBoard[i][j] === '' || locallettersonBoard[i][j] === letter) {
             return true;
         } else {
             return false;

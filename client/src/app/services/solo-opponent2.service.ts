@@ -9,6 +9,7 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
     providedIn: 'root',
 })
 export class SoloOpponent2Service {
+    tempword: string;
     constructor(
         public letterService: LetterService,
         public timeManagerService: TimerTurnManagerService,
@@ -19,7 +20,7 @@ export class SoloOpponent2Service {
     ) {}
 
     play(): string {
-        let tempword;
+        let tempword: string | undefined;
         const arrayHand: string[] = [];
         for (const letter of this.letterService.players[this.timeManagerService.turn].allLettersInHand) {
             arrayHand.push(letter.letter.toLowerCase());
@@ -30,9 +31,9 @@ export class SoloOpponent2Service {
                 tempword = 'h8v ' + wordToPlay[0];
             }
         } else {
+            // const wordfound = false;
             const letteronbord = this.gameStateService.lettersOnBoard;
-            for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
-                // all line of letter on board
+            loop1: for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
                 for (let j = 0; j < Constants.NUMBEROFCASE; j++) {
                     // all colomn of letter on board
                     if (letteronbord[i][j] !== '') {
@@ -43,14 +44,17 @@ export class SoloOpponent2Service {
                             for (const word2 of wordToPlay) {
                                 for (let k = 0; k < word2.length; k++) {
                                     if (letteronbord[i][j] === word2.charAt(k)) {
-                                        if (this.isWordPlayable(word2, i - k, j, 'h')) {
-                                            const rowstring = String.fromCharCode(i - k + Constants.SIDELETTERS_TO_ASCII);
-                                            tempword = rowstring + (j + 1).toString() + 'h' + ' ' + word2;
-                                            break;
-                                        } else if (this.isWordPlayable(word2, i, j - k, 'v')) {
+                                        // find which position is the letter on board in the word
+                                        if (this.isWordPlayable(word2, i, j - k, 'h')) {
                                             const rowstring = String.fromCharCode(i + Constants.SIDELETTERS_TO_ASCII);
-                                            tempword = rowstring + (j - k + 1).toString() + 'v' + ' ' + word2;
-                                            break;
+                                            tempword = rowstring + (j - k + 1).toString() + 'h' + ' ' + word2;
+                                            //  wordfound = true;
+                                            break loop1;
+                                        } else if (this.isWordPlayable(word2, i - k, j, 'v')) {
+                                            const rowstring = String.fromCharCode(i - k + Constants.SIDELETTERS_TO_ASCII);
+                                            tempword = rowstring + (j + 1).toString() + 'v' + ' ' + word2;
+                                            //  wordfound = true;
+                                            break loop1;
                                         }
                                     }
                                 }
@@ -61,7 +65,12 @@ export class SoloOpponent2Service {
             }
         }
         if (tempword !== undefined) {
-            this.placeLetterService.placeWord(tempword);
+            this.tempword = tempword;
+            // const TIME_OUT_TIME = 3000; // TODO debug this
+            // setTimeout(() => {
+            this.placeLetterService.placeWord(this.tempword);
+            // }, TIME_OUT_TIME);
+
             return '!placer ' + tempword;
         } else {
             return '!placer ' + tempword;
@@ -128,9 +137,9 @@ export class SoloOpponent2Service {
             } else {
                 isPlayable = false;
             }
+            this.placeLetterService.removeLetterInGameState();
         }
 
-        this.placeLetterService.removeLetterInGameState();
         return isPlayable;
     }
 }

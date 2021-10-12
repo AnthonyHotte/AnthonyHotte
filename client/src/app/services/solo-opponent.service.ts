@@ -23,7 +23,7 @@ export class SoloOpponentService {
             const HUNDRED = 100;
             const TWENTY = 20;
             const TEN = 10;
-            const SEVEN = 7;
+            const SIX = 6;
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             if (PROBABILITY_OF_ACTION > TWENTY) {
                 this.lastCommandEntered = this.soloOpponent2.play();
@@ -31,9 +31,9 @@ export class SoloOpponentService {
             } else if (PROBABILITY_OF_ACTION <= TEN) {
                 this.skipTurn();
             } else {
-                const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length);
-                if (NUMBER_OF_LETTERS_TO_TRADE <= SEVEN) {
-                    this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE);
+                const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length) - 1;
+                if (NUMBER_OF_LETTERS_TO_TRADE <= SIX) {
+                    this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE + 1);
                     this.endTurn('exchange');
                 } else {
                     this.skipTurn();
