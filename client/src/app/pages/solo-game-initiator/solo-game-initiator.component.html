@@ -2,7 +2,7 @@
 https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%20let%20a%20user%20select%20only%20one,group%20can%20be%20selected%20at%20the%20same%20time.-->
 <body ng-app="app" style="text-align: Center">
     <div class="container justified">
-        <h1 class="header-item">Bienvenue dans le mode {{ getTypeGame() }}!</h1>
+        <h1 class="header-item">Bienvenue dans le mode {{ initiateTypeGame.gameType }}!</h1>
         <div class="justified">
             <article class="forecast">
                 <h2>Entrez votre identifiant. Les règles à suivre:</h2>
@@ -21,8 +21,8 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         <label> Nom du joueur : </label>
                         <input [(ngModel)]="temporaryName" type="string" />
                         <p>Nom du joueur: {{ this.name }}</p>
-                        <p *ngIf="getTypeGame()==='solo'">{{ "Nom de l'adversaire: " + opponentName }}</p>
-                        <button *ngIf="getTypeGame()==='solo'" class="button" (click)="setName()">Validation de l'identifiant</button>
+                        <p *ngIf="initiateTypeGame.gameType==='solo'">{{ "Nom de l'adversaire: " + opponentName }}</p>
+                        <button *ngIf="initiateTypeGame.gameType==='solo'" class="button" (click)="setName()">Validation de l'identifiant</button>
                     </fieldset>
                 </div>
                 <div>
@@ -43,10 +43,16 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         </form>
                     </fieldset>
                 </div>
-                <p><button *ngIf="nameIsValid && modeGame==='solo'" (click)="setName()" (click)="sendTime()" (click)="scrambleBonus()" (click)="setTime()" routerLink="/game">Démarrer la partie {{getTypeGame()}}!</button>
-                    <button *ngIf="nameIsValid && modeGame==='multi player'" (click)="setName()" (click)="sendTime()" (click)="scrambleBonus()" (click)="setTime()" routerLink="/game">Démarrer la partie!</button></p>
+                <p><button *ngIf="nameIsValid && initiateTypeGame.gameType==='solo'" (click)="startGame()" routerLink="/game">Démarrer la partie {{initiateTypeGame.gameType}}!</button>
+                    <button *ngIf="nameIsValid && initiateTypeGame.gameType==='multi player'" (click)="showWaitingRoom()">Démarrer la partie!</button></p>
                 <button class="button" routerLink="/selection">Revenir en arrière</button>
             </article>
         </div>
     </div>
+    <div id="waiting">
+        <!--
+        <app-waiting-room></app-waiting-room>
+        -->
+    </div>
+   
 </body>
