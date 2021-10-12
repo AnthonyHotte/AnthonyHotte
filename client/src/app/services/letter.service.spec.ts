@@ -1,12 +1,21 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LetterService } from '@app/services/letter.service';
-import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { LETTERS } from '@app/all-letters';
+import { LetterBankService } from './letter-bank.service';
 
 describe('LetterService', () => {
     let service: LetterService;
+    let letterBankServiceSpy: LetterBankService;
 
+    beforeEach(
+        waitForAsync(() => {
+            letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+            TestBed.configureTestingModule({
+                providers: [{ provide: LetterBankService, useValue: letterBankServiceSpy }],
+            }).compileComponents();
+        }),
+    );
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(LetterService);
@@ -14,7 +23,6 @@ describe('LetterService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
-        expect(PlayerLetterHand.allLetters.length).toBeGreaterThan(0);
     });
 
     it('reset should call player.reset method', () => {
@@ -33,37 +41,15 @@ describe('LetterService', () => {
         expect(mySpy2).toHaveBeenCalled();
     });
 
-    it('getLettersForExchange should swap letters correctly', () => {
-        service.players[0].allLettersInHand = [
-            { letter: 'a', quantity: 1, point: 1 },
-            { letter: 'i', quantity: 1, point: 1 },
-        ];
-        service.players[0].selectedLettersForExchange = new Set<number>([0, 1]);
-        const result = service.getLettersForExchange();
-        expect(result.has('i')).toBe(true);
-        expect(result.has('a')).toBe(true);
-    });
     it('reset should reinitialize PlayerLetterHand.allLetters', () => {
         LETTERS.forEach((letter) => {
             for (let i = 0; i < letter.quantity; i++) {
-                PlayerLetterHand.allLetters.push(letter);
+                letterBankServiceSpy.letterBank.push(letter);
             }
         });
-        const expectedResult = 102;
+        // 102 letters in the bag but 14 were distributed to players so we expect 88
+        const expectedResult = 88;
         service.reset();
-        expect(PlayerLetterHand.allLetters.length).toEqual(expectedResult);
-    });
-    it('selectLetter should return true when letter is present in hand and not in exchange letters', () => {
-        service.players[0].allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
-        const result = service.selectLetter('a', 0);
-        expect(service.players[0].selectedLettersForExchange.has(0)).toBe(true);
-        expect(result).toBe(true);
-    });
-    it('selectLetter should return false when letter is present in hand and in exchange letters', () => {
-        service.players[0].allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
-        service.players[0].selectedLettersForExchange.add(0);
-        const result = service.selectLetter('a', 0);
-        expect(service.players[0].selectedLettersForExchange.has(0)).toBe(true);
-        expect(result).toBe(false);
+        expect(letterBankServiceSpy.letterBank.length).toEqual(expectedResult);
     });
 });

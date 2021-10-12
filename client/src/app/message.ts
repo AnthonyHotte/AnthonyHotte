@@ -1,5 +1,5 @@
 export type MessagePlayer = {
     message: string;
     sender: string;
-    debugState: boolean;
+    role: string;
 };

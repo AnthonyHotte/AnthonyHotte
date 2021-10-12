@@ -28,26 +28,23 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 </div>
                 <div>
                     <fieldset>
-                        <legend>Choisissez votre difficulté</legend>
-
-                        <input type="radio" id="facile" name="difficulte" (click)="setDifficulte(true)" checked/>
-                        <label for="facile">Débutant</label><br />
-                        <input type="radio" id="difficile" name="difficulte" (click)="setDifficulte(false)" />
-                        <label for="difficile">Expert</label><br />
-                        <p>Difficulté: {{ getDifficulte() }}</p>
+                        <legend>Bonus aléatoire</legend>
+                        <input type="radio" id="activated" name="randomBonus" (click)="setRandomBonus(false)" checked/>
+                        <label for="facile">Désactivé</label><br />
+                        <input type="radio" id="deactivated" name="randomBonus" (click)="setRandomBonus(true)" />
+                        <label for="difficile">Activé</label><br />
                     </fieldset>
                 </div>
                 <div>
                     <fieldset>
                         <legend>Choisissez le temps par tour de jeu</legend>
                         <form oninput="tempsDeJeu = Math.max(parseInt(barre.value),parseInt(increment.value))">
-                            <input [(ngModel)]="playTime" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" /> ou
-                            <input [(ngModel)]="playTime" type="number" id="increment" name="inc" step="30" min="30" max="300" value="60" /> =
+                            <input [(ngModel)]="playTime" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" /> 
                             <output name="temps" for="tempsDeJeu">{{ playTime }}</output> secondes par tour de jeu
                         </form>
                     </fieldset>
                 </div>
-                <p><button *ngIf="nameIsValid" (click)="setName()" (click)="sendMessage()" routerLink="/game">Démarrer la partie!</button></p>
+                <p><button *ngIf="nameIsValid" (click)="scrambleBonus()" (click)="setName()" (click)="setTime()" routerLink="/game">Démarrer la partie!</button></p>
                 <button class="button" routerLink="/selection">Revenir en arrière</button>
             </article>
         </div>

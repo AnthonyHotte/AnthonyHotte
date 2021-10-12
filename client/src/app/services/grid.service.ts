@@ -8,7 +8,6 @@ import { Letter } from '@app/letter';
     providedIn: 'root',
 })
 export class GridService {
-    letters = new LetterMap();
     minpolicesizelettervalue = Constants.LETTERVALUEMINPOLICESIZE;
     policesizelettervalue = Constants.LETTERVALUEDEFAULTPOLICESIZE;
     maxpolicesizelettervalue = Constants.LETTERVALUEMAXPOLICESIZE;
@@ -29,19 +28,20 @@ export class GridService {
         // create this.gridContext
         for (let i = 1; i <= Constants.NUMBEROFCASE; i++) {
             for (let j = 1; j <= Constants.NUMBEROFCASE; j++) {
-                this.drawtilebackground(i, j);
+                this.drawtilebackground(i - 1, j - 1);
             }
         }
     }
     drawtilebackground(i: number, j: number) {
+        i = i + 1;
+        j = j + 1;
+
         // for the case style
         let textChoice = -1;
         // word x2 (pink)
         if (TileMap.gridMap.isDoubleWordTile(i, j)) {
             this.gridContext.fillStyle = 'pink';
-            if (i !== Constants.CENTERCASE && j !== Constants.CENTERCASE) {
-                textChoice = 0;
-            }
+            textChoice = 0;
         }
         // word x3 (red)
         else if (TileMap.gridMap.isTripleWordTile(i, j)) {
@@ -59,6 +59,9 @@ export class GridService {
             textChoice = 3;
         } else {
             this.gridContext.fillStyle = '#c8c3a6';
+        }
+        if (i === Constants.CENTERCASE && j === Constants.CENTERCASE) {
+            textChoice = Constants.NOTEXT;
         }
         this.gridContext.fillRect(
             Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
@@ -178,7 +181,68 @@ export class GridService {
             this.gridContext.fillText(word[i], startPosition.x + step * i, startPosition.y);
         }
     }
+    // TODO add test for this function
+    // drawLetterwithRawXYcoordinate(word: string, x1: number, y1: number) {
+    //      const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
+    //     const y: number = Math.floor(y1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
+    //     this.drawLetterwithpositionstring(word, x, y);
+    //  }
+    // code pulled from https://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
 
+    drawarrow(orientation: string, row: number, column: number) {
+        const arrowOffset = 0.125;
+        const tileSizeArrowLength = 3;
+        const arrowlength = Constants.CASESIZE / tileSizeArrowLength;
+        // TODO discuter ISMA
+        let arrowHeadYpos = 0;
+        let arrowHeadXpos = 0;
+        let arrowtailYpos = 0;
+        let arrowtailXpos = 0;
+        if (orientation === 'h') {
+            arrowHeadYpos = Constants.CASESIZE * (row + arrowOffset) + Constants.CASESIZE;
+            arrowHeadXpos = Constants.CASESIZE * (column + 1) + Constants.CASESIZE;
+            arrowtailYpos = arrowHeadYpos; // since the arrow is horizontal y doesn't change
+            arrowtailXpos = arrowHeadXpos - arrowlength;
+        } else {
+            arrowHeadYpos = Constants.CASESIZE * (row + 1) + Constants.CASESIZE;
+            arrowHeadXpos = Constants.CASESIZE * (column + arrowOffset) + Constants.CASESIZE;
+            arrowtailYpos = arrowHeadYpos - arrowlength;
+            arrowtailXpos = arrowHeadXpos; // since the arrow is horizontal x doesn't change
+        }
+        this.gridContext.strokeStyle = 'black';
+        this.gridContext.beginPath();
+        this.canvasArrow(arrowtailXpos, arrowtailYpos, arrowHeadXpos, arrowHeadYpos);
+
+        /*
+        if (orientation === 'h') {
+            const arrowHeadYpos = Constants.TILESIZE * (column + arrowOffset);
+            const arrowHeadXpos = Constants.TILESIZE * (row + 1);
+            const arrowtailYpos = arrowHeadYpos; // since the arrow is horizontal y doesn't change
+            const arrowtailXpos = arrowHeadXpos - arrowlength;
+        } else {
+            const arrowHeadYpos = Constants.TILESIZE * (column + 1);
+            const arrowHeadXpos = Constants.TILESIZE * (row + arrowOffset);
+            const arrowtailYpos = arrowHeadYpos - arrowlength;
+            const arrowtailXpos = arrowHeadXpos; // since the arrow is horizontal x doesn't change
+        }
+        this.gridContext.beginPath();
+        this.canvasArrow(arrowtailXpos, arrowtailYpos, arrowHeadXpos, arrowHeadYpos);
+        */
+        this.gridContext.stroke();
+    }
+
+    canvasArrow(fromx: number, fromy: number, tox: number, toy: number) {
+        const headlen = 10; // length of head in pixels
+        const dx = tox - fromx;
+        const dy = toy - fromy;
+        const angle = Math.atan2(dy, dx);
+        this.gridContext.moveTo(fromx, fromy);
+        this.gridContext.lineTo(tox, toy);
+        const six = 6;
+        this.gridContext.lineTo(tox - headlen * Math.cos(angle - Math.PI / six), toy - headlen * Math.sin(angle - Math.PI / six));
+        this.gridContext.moveTo(tox, toy);
+        this.gridContext.lineTo(tox - headlen * Math.cos(angle + Math.PI / six), toy - headlen * Math.sin(angle + Math.PI / six));
+    }
     get width(): number {
         return this.canvasSize.x;
     }
@@ -186,18 +250,29 @@ export class GridService {
     get height(): number {
         return this.canvasSize.y;
     }
-    drawLetterwithpositionstring(word: string, x1: number, y1: number) {
+    drawLetterwithpositionstring(word: string, x1: number, y1: number, color: string) {
+        // color must be either black or red
         const offset = 8;
+        // TODO isma discussion ici;
+        this.drawtilebackground(x1, y1);
         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE;
         const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE;
-        this.gridContext.strokeStyle = 'black';
+        const linewidth = 6;
+        this.gridContext.strokeStyle = color;
+        if (color === 'red') {
+            this.gridContext.lineWidth = linewidth;
+            this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+            this.gridContext.lineWidth = 1; // 1 is the default value;
+        } else {
+            this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+        }
         this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
         this.gridContext.fillStyle = 'white';
         this.gridContext.fillRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
         this.gridContext.fillStyle = 'black';
         this.gridContext.font = String(this.policesizeletter) + 'px system-ui';
         this.gridContext.fillText(word, x + Constants.CASESIZE / 2, y + Constants.CASESIZE / 2);
-        const lettervalue = this.letters.letterMap.get(word) as Letter;
+        const lettervalue = LetterMap.letterMap.letterMap.get(word) as Letter;
         this.drawLetterValuewithposition(lettervalue, x1, y1);
     }
     drawLetterValuewithposition(word: Letter, x1: number, y1: number) {

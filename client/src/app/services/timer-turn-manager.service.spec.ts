@@ -23,26 +23,14 @@ describe('TimerTurnManager', () => {
         service.initiateGame();
         expect(floorSpy).toHaveBeenCalled();
     });
-    it('send turn should call next', () => {
-        const nextSpy = spyOn(service.messageSource, 'next');
-        service.turn = 0;
-        const argNext = '0';
-        service.sendTurn();
-        expect(nextSpy).toHaveBeenCalledWith(argNext);
-    });
-    it('end turn should call sendTurn', () => {
-        const sendTurnSpy = spyOn(service, 'sendTurn');
-        service.endTurn();
-        expect(sendTurnSpy).toHaveBeenCalled();
-    });
     it('end turn should change turn to 0', () => {
         service.turn = 1;
-        service.endTurn();
+        service.endTurn('place');
         expect(service.turn).toEqual(0);
     });
     it('end turn should change turn to 1', () => {
         service.turn = 0;
-        service.endTurn();
+        service.endTurn('place');
         expect(service.turn).toEqual(1);
     });
 });

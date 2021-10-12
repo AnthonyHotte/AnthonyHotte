@@ -1,39 +1,24 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { AfterViewInit, Component } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
+import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
+import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
-import { SoloGameInformationService } from '@app/services/solo-game-information.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
-import { SoloPlayerService } from '@app/services/solo-player.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-sidebar-right',
     templateUrl: './sidebar-right.component.html',
     styleUrls: ['./sidebar-right.component.scss'],
 })
-export class SidebarRightComponent implements OnInit, AfterViewInit {
-    messagePlayer: string;
-    opponentMessage: string;
-    messageLetterService: string;
-    messageTimeManager: string;
-    messageTextBox: string;
-    subscriptionPlayer: Subscription;
-    subscriptionOpponent: Subscription;
-    subscriptionLetterService: Subscription;
-    subscriptionTimeManager: Subscription;
-    subscriptionTextBox: Subscription;
+export class SidebarRightComponent implements AfterViewInit {
     message: string[] = [];
     playerName: string[] = ['', ''];
     opponentSet: boolean = false;
-
-    numberOfSkippedTurns: number = 0;
-
     easyDifficultyIsTrue: boolean;
     time: number;
     turn: number;
@@ -41,55 +26,32 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     changedTurns: boolean = false;
 
     constructor(
-        private soloGameInformation: SoloGameInformationService,
         private turnTimeController: TimerTurnManagerService,
-        private soloPlayer: SoloPlayerService,
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
         private textBox: TextBox,
         private readonly gridService: GridService,
-        private readonly placeLetterService: PlaceLettersService, // private finishGameService: FinishGameService,
+        private readonly placeLetterService: PlaceLettersService,
+        private finishGameService: FinishGameService,
+        private letterBankService: LetterBankService,
     ) {
-        this.message = this.soloGameInformation.message;
         this.setAttribute();
     }
 
     ngAfterViewInit() {
         if (this.turnTimeController.turn === 1) {
-            this.soloOpponent.firstWordToPlay = true;
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
     }
 
-    ngOnInit() {
-        this.subscriptionPlayer = this.soloPlayer.currentMessage.subscribe((messagePlayer) => (this.messagePlayer = messagePlayer));
-        this.subscriptionOpponent = this.soloOpponent.currentMessage.subscribe((opponentMessage) => (this.opponentMessage = opponentMessage));
-        this.subscriptionLetterService = PlayerLetterHand.currentMessage.subscribe(
-            (messageLetterService) => (this.messageLetterService = messageLetterService),
-        );
-        this.subscriptionTimeManager = this.turnTimeController.currentMessage.subscribe(
-            (messageTimeManager) => (this.messageTimeManager = messageTimeManager),
-        );
-        this.subscriptionTextBox = this.textBox.currentMessage.subscribe((messageTextBox) => (this.messageTextBox = messageTextBox));
-    }
-
     setAttribute() {
-        if (this.message.length !== 0) {
-            this.playerName[0] = this.message[0];
-            this.playerName[1] = this.message[1];
-            this.easyDifficultyIsTrue = this.message[2] === 'true';
-            this.time = parseInt(this.message[3], 10);
-            this.turn = this.turnTimeController.turn;
-        } else {
-            // if page is refreshed
-            this.finishCurrentGame();
-        }
-        this.turnTimeController.initiateGame();
+        this.time = this.turnTimeController.timePerTurn;
         this.turn = this.turnTimeController.turn;
+        this.turnTimeController.initiateGame();
         this.letterService.reset();
-        this.soloPlayer.reset();
-        this.soloOpponent.reset();
+        this.letterService.players[0].reset();
+        this.soloOpponent.reset(1);
     }
     difficultyInCharacters() {
         if (this.easyDifficultyIsTrue === true) {
@@ -105,8 +67,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     getNumberRemainingLetters() {
-        PlayerLetterHand.sendLettersInSackNumber();
-        return this.messageLetterService;
+        return this.letterBankService.letterBank.length;
     }
 
     getNumberOfLettersForPlayer(indexPlayer: number) {
@@ -118,7 +79,7 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
     }
 
     finishCurrentGame() {
-        this.textBox.finishCurrentGame();
+        this.finishGameService.isGameFinished = true;
     }
 
     increaseFontSize() {
@@ -129,8 +90,11 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
         this.gridService.decreasePoliceSize();
         this.placeLetterService.policeSizeChanged();
     }
+    getPlayerName(player: number) {
+        return this.letterService.players[player].name;
+    }
 
-    getPlayerName() {
+    getPlayerNameAndVerifyTurn() {
         if (this.turn !== this.turnTimeController.turn) {
             this.changedTurns = true;
             if (this.textBox.commandSuccessful) {
@@ -140,12 +104,11 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
             }
             this.turn = this.turnTimeController.turn;
         }
-        return this.playerName[this.turn];
+        return this.letterService.players[this.turn].name;
     }
 
     verifyChangedTurns(counter: CountdownComponent) {
         if (this.changedTurns === true) {
-            this.time = parseInt(this.message[3], 10);
             counter.reset();
         }
         this.changedTurns = false;
@@ -153,7 +116,13 @@ export class SidebarRightComponent implements OnInit, AfterViewInit {
 
     soloOpponentPlays() {
         this.soloOpponent.play();
-        const message: MessagePlayer = { message: this.soloOpponent.lastCommandEntered, sender: 'Adversaire', debugState: false };
+        let message: MessagePlayer;
+        if (this.textBox.debugCommand) {
+            message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name, role: 'Adversaire' };
+        } else {
+            message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name, role: 'Adversaire' };
+        }
         this.textBox.inputs.push(message);
+        this.textBox.scrollDown();
     }
 }

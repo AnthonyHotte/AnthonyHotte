@@ -46,13 +46,4 @@ describe('PlayAreaComponent', () => {
         expect(component.mousePosition).not.toEqual({ x: mouseEvent.offsetX, y: mouseEvent.offsetY });
         expect(component.mousePosition).toEqual(expectedPosition);
     });
-
-    it('buttonDetect should modify the buttonPressed variable', () => {
-        const expectedKey = 'a';
-        const buttonEvent = {
-            key: expectedKey,
-        } as KeyboardEvent;
-        component.buttonDetect(buttonEvent);
-        expect(component.buttonPressed).toEqual(expectedKey);
-    });
 });
