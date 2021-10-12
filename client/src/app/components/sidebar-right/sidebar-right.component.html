@@ -5,10 +5,10 @@
             <table>
                 <tr>
                     <th>
-                        <h2>{{ playerName[0] }}</h2>
+                        <h2>{{ getPlayerName(0) }}</h2>
                     </th>
                     <th>
-                        <h2>{{ playerName[1] }}</h2>
+                        <h2>{{ getPlayerName(1) }}</h2>
                     </th>
                 </tr>
                 <tr>
@@ -22,7 +22,7 @@
             </table>
         </fieldset>
         <fieldset>
-            <h1>C'est le tour de {{ getPlayerName() }}</h1>
+            <h1>C'est le tour de {{ getPlayerNameAndVerifyTurn() }}</h1>
             <h2>Temps restant au tour:</h2>
             <div class="Counter">
                 <ngx-countdown
@@ -59,8 +59,7 @@
         <fieldset>
             <button class="buttonsurrender" (click)="this.finishCurrentGame()">Terminer la partie courante</button>
         </fieldset>
-        <fieldset>
             <app-finished-game></app-finished-game>
-        </fieldset>
+            <app-exchange-letters-gui></app-exchange-letters-gui>
     </body>
 </div>

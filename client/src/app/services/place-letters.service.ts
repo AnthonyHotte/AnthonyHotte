@@ -6,16 +6,21 @@ import { LetterService } from '@app/services/letter.service';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { WordValidationService } from '@app/services/word-validation.service';
+import { PlaceLetterClickService } from './place-letter-click.service';
 @Injectable({
     providedIn: 'root',
 })
 export class PlaceLettersService {
     row: number;
     colomnNumber: number;
-    orientation: string;
+    orientation: string = 'h';
     wordToPlace: string;
     lettersToPlace: string;
     spaceIndexInput: number;
+    wordPlacedWithClick = '';
+    initialClickRow: number;
+    initialClickColumn: number;
+    isTileSelected = false;
 
     // policesize
     // policesize: number = 25;
@@ -27,11 +32,12 @@ export class PlaceLettersService {
         private letterService: LetterService,
         private readonly timeManager: TimerTurnManagerService,
         private scoreCalculator: ScoreCalculatorService,
+        private placeLetterClick: PlaceLetterClickService,
     ) {}
     verifyTileNotOutOfBound(): boolean {
-        if (this.orientation === 'h' && this.colomnNumber + this.wordToPlace.length > Constants.NUMBEROFCASE) {
+        if ((this.orientation === 'h' && this.colomnNumber + this.wordToPlace.length > Constants.NUMBEROFCASE) || this.colomnNumber < 0) {
             return false;
-        } else if (this.orientation === 'v' && this.row + this.wordToPlace.length > Constants.NUMBEROFCASE) {
+        } else if ((this.orientation === 'v' && this.row + this.wordToPlace.length > Constants.NUMBEROFCASE) || this.row < 0) {
             return false;
         } else {
             return true;
@@ -56,7 +62,7 @@ export class PlaceLettersService {
     verifyAvailable(): boolean {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
-        for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
+        for (let i = 0; i < this.wordToPlace.length; i++) {
             if (!this.verifyCaseAvailable(ytile, xtile, this.wordToPlace.charAt(i))) {
                 return false;
             }
@@ -70,7 +76,8 @@ export class PlaceLettersService {
     }
 
     verifyCaseAvailable(i: number, j: number, letter: string): boolean {
-        if (this.gameState.lettersOnBoard[i][j] === '' || this.gameState.lettersOnBoard[i][j] === letter) {
+        const locallettersonBoard = this.gameState.lettersOnBoard;
+        if (locallettersonBoard[i][j] === '' || locallettersonBoard[i][j] === letter) {
             return true;
         } else {
             return false;
@@ -143,12 +150,13 @@ export class PlaceLettersService {
             this.gameState.removeLetter(this.gameState.indexLastLetters[i], this.gameState.indexLastLetters[i + 1]);
         }
     }
+
     drawWord() {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
         this.wordValidator.pointsForLastWord = 0;
         for (let i = 0; i <= this.wordToPlace.length - 1; i++) {
-            this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile);
+            this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile, 'black');
             if (this.orientation === 'h') {
                 xtile++;
             } else if (this.orientation === 'v') {
@@ -162,16 +170,13 @@ export class PlaceLettersService {
             const delay = 3000;
             setTimeout(() => {
                 for (let i = 0; i < this.gameState.indexLastLetters.length; i += 2) {
-                    this.gridService.drawtilebackground(this.gameState.indexLastLetters[i + 1] + 1, this.gameState.indexLastLetters[i] + 1);
+                    this.gridService.drawtilebackground(this.gameState.indexLastLetters[i + 1], this.gameState.indexLastLetters[i]);
                 }
                 this.removeLetterInGameState();
             }, delay);
             this.wordValidator.pointsForLastWord = 0;
             return false;
         } else {
-            for (const letter of this.gameState.lastLettersAddedJoker) {
-                this.letterService.selectLetter(letter, this.timeManager.turn);
-            }
             this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
             if (this.gameState.playerUsedAllLetters) {
                 this.wordValidator.pointsForLastWord += 50;
@@ -189,7 +194,7 @@ export class PlaceLettersService {
         for (let i = 0; i <= Constants.NUMBEROFCASE - 1; i++) {
             for (let j = 0; j <= Constants.NUMBEROFCASE - 1; j++) {
                 if (testing[i][j] !== '') {
-                    this.gridService.drawLetterwithpositionstring(this.gameState.lettersOnBoard[i][j], j, i);
+                    this.gridService.drawLetterwithpositionstring(this.gameState.lettersOnBoard[i][j], j, i, 'black');
                 }
             }
         }
@@ -212,5 +217,11 @@ export class PlaceLettersService {
         tempLetters[index] = '*';
         this.lettersToPlace = tempLetters.join('');
         return tempWord.join(''); // reconstruct the string
+    }
+
+    submitWordMadeClick(buttonPressed: string) {
+        if (buttonPressed === 'Enter') {
+            this.placeWord(this.placeLetterClick.transformIntoCommand());
+        }
     }
 }
