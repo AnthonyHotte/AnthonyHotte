@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { LetterService } from '@app/services/letter.service';
+import { InitiateGameTypeService } from '@app/services/initiate-game-type.service';
+import { SocketService } from '@app/services/socket.service';
 import { TileScramblerService } from '@app/services/tile-scrambler.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 
@@ -16,10 +18,20 @@ export class SoloGameInitiatorComponent {
     idNameOpponent: number;
     nameIsValid: boolean;
     playTime: number;
-    isBonusRandom = false;
-    easyDifficulty: boolean = true;
+    easyDifficulty: boolean;
+    // can be either solo or multi player
+    modeGame: string;
 
-    constructor(private letterService: LetterService, private tileScrambler: TileScramblerService, private timeManager: TimerTurnManagerService) {
+    isBonusRandom = false;
+
+    constructor(
+        // private informations: SoloGameInformationService,
+        private initiateTypeGame: InitiateGameTypeService,
+        private socketService: SocketService,
+        private letterService: LetterService,
+        private tileScrambler: TileScramblerService,
+        private timeManager: TimerTurnManagerService,
+    ) {
         this.temporaryName = 'Joueur';
         this.name = 'Joueur';
         this.opponentName = '';
@@ -27,6 +39,18 @@ export class SoloGameInitiatorComponent {
         this.nameIsValid = true;
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
+        this.modeGame = 'solo';
+        // this.message = [];
+    }
+
+    getTypeGame() {
+        return this.initiateTypeGame.gameType;
+    }
+    getIsNewGame() {
+        return this.initiateTypeGame.isMultiNewGame;
+    }
+    sendTime() {
+        this.socketService.sendInitiateGameInformation(this.playTime);
     }
 
     assignOpponentName() {
