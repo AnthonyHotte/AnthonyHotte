@@ -1,16 +1,17 @@
 import * as io from 'socket.io';
 import * as http from 'http';
+import { Room } from '@app/classes/room';
 
 export class SocketManager {
     private sio: io.Server;
-    private rooms: string[];
+    private rooms: Room[];
     // private room: string = 'serverRoom';
     constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.rooms = [];
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         for (let i = 0; i < 50; i++) {
-            this.rooms.push('room number ' + i);
+            this.rooms.push(new Room('room number' + i));
         }
     }
 
@@ -18,12 +19,14 @@ export class SocketManager {
         this.sio.on('connection', (socket) => {
             // eslint-disable-next-line no-console
             console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
-            socket.on('startingInfo', (message) => {
+            socket.on('startingNewGameInfo', (message) => {
+                socket.join(this.rooms[0].roomName);
+                this.rooms[0].setStartingInfo(message.time, message.name, message.bonusOn, message.gameType);
                 // eslint-disable-next-line no-console
                 console.log(`reception du temps: ${message.time}`);
             });
             socket.on('joinRoom', () => {
-                socket.join(this.rooms[0]);
+                socket.join(this.rooms[0].roomName);
                 // eslint-disable-next-line no-console
                 console.log(`${socket.id} joining room 0`);
             });

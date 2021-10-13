@@ -38,21 +38,15 @@ export class SoloGameInitiatorComponent {
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
     }
-    startGame() {
+    startNewGame() {
         this.setName();
         this.setTime();
         this.scrambleBonus();
-        this.sendStartInfo();
+        this.sendNewGameStartInfo();
     }
 
-    sendStartInfo() {
-        this.socketService.sendInitiateGameInformation(
-            this.playTime,
-            this.isBonusRandom,
-            this.name,
-            this.initiateTypeGame.gameType,
-            this.initiateTypeGame.isMultiNewGame,
-        );
+    sendNewGameStartInfo() {
+        this.socketService.sendInitiateGameInformation(this.playTime, this.isBonusRandom, this.name, this.initiateTypeGame.gameType);
     }
 
     assignOpponentName() {
