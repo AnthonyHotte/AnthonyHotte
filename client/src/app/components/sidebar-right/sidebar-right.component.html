@@ -29,7 +29,7 @@
                     #counter
                     [time]="time * 1000"
                     format="ss"
-                    [autoStart]="true"
+                    [autoStart]="false"
                     (finish)="skipTurn()"
                     (finish)="counter.start()"
                     (tick)="this.verifyChangedTurns(counter)"

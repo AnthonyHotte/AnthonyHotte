@@ -14,9 +14,11 @@ export class SocketService {
             console.log('connected!');
         });
     }
-    sendInitiateGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {
-        // this.socket.emit('joinRoom');
+    sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {
         this.socket.emit('startingNewGameInfo', { time: playTime, bonusOn: isBonusRandom, namePlayer: name, mode: gameType });
+    }
+    sendJoinGameInfo(name: string) {
+        this.socket.emit('joinGame', name);
     }
 }
 // à envoyer

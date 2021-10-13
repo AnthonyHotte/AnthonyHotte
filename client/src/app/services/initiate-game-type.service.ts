@@ -8,9 +8,9 @@ export class InitiateGameTypeService {
     // attribut representing the mode of the game can be either solo or multi player
     gameType: string;
     // attribut true if player create new game, false if joining
-    isMultiNewGame: boolean;
-    setGameType(gameType: string, isMultiNewGame: boolean) {
+    isNewGame: boolean;
+    setGameType(gameType: string, isNewGame: boolean) {
         this.gameType = gameType;
-        this.isMultiNewGame = isMultiNewGame;
+        this.isNewGame = isNewGame;
     }
 }

@@ -25,7 +25,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         <button *ngIf="initiateTypeGame.gameType==='solo'" class="button" (click)="setName()">Validation de l'identifiant</button>
                     </fieldset>
                 </div>
-                <div>
+                <div *ngIf="initiateTypeGame.isNewGame">
                     <fieldset>
                         <legend>Bonus aléatoire</legend>
                         <input type="radio" id="activated" name="randomBonus" (click)="setRandomBonus(false)" checked/>
@@ -34,7 +34,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         <label for="difficile">Activé</label><br />
                     </fieldset>
                 </div>
-                <div>
+                <div *ngIf="initiateTypeGame.isNewGame">
                     <fieldset>
                         <legend>Choisissez le temps par tour de jeu</legend>
                         <form oninput="tempsDeJeu = Math.max(parseInt(barre.value),parseInt(increment.value))">
@@ -44,8 +44,8 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     </fieldset>
                 </div>
                 <p><button *ngIf="nameIsValid && initiateTypeGame.gameType==='solo'" (click)="startNewGame()" routerLink="/game">Démarrer la partie {{initiateTypeGame.gameType}}!</button>
-                    <button *ngIf="nameIsValid && initiateTypeGame.gameType==='multi player' && initiateTypeGame.isMultiNewGame" (click)="startNewGame()" routerLink="/game">Démarrer la partie!</button>
-                    <button *ngIf="nameIsValid && initiateTypeGame.gameType==='multi player' && !initiateTypeGame.isMultiNewGame">Démarrer la partie!</button></p>
+                    <button *ngIf="nameIsValid && initiateTypeGame.gameType==='multi player' && initiateTypeGame.isNewGame" (click)="startNewGame()" routerLink="/game">Démarrer la partie!</button>
+                    <button *ngIf="nameIsValid && initiateTypeGame.gameType==='multi player' && !initiateTypeGame.isNewGame">Démarrer la partie!</button></p>
                 <button class="button" routerLink="/selection">Revenir en arrière</button>
             </article>
         </div>

@@ -10,25 +10,25 @@ export class GameSelectionPageComponent {
     // attribut representing the mode of the game
     gameType: string;
     // attribut true if player create new game, false if joining
-    isMultiNewGame: boolean;
+    isNewGame: boolean;
     constructor(private initiateGameType: InitiateGameTypeService) {
         this.gameType = 'solo';
-        this.isMultiNewGame = false;
+        this.isNewGame = false;
     }
 
     setSoloType() {
         this.gameType = 'solo';
-        this.isMultiNewGame = false;
-        this.initiateGameType.setGameType(this.gameType, this.isMultiNewGame);
+        this.isNewGame = true;
+        this.initiateGameType.setGameType(this.gameType, this.isNewGame);
     }
     setCreateMultiPlayerGame() {
         this.gameType = 'multi player';
-        this.isMultiNewGame = true;
-        this.initiateGameType.setGameType(this.gameType, this.isMultiNewGame);
+        this.isNewGame = true;
+        this.initiateGameType.setGameType(this.gameType, this.isNewGame);
     }
     setJoinMultiPayerGame() {
         this.gameType = 'multi player';
-        this.isMultiNewGame = false;
-        this.initiateGameType.setGameType(this.gameType, this.isMultiNewGame);
+        this.isNewGame = false;
+        this.initiateGameType.setGameType(this.gameType, this.isNewGame);
     }
 }

@@ -25,8 +25,9 @@ export class SocketManager {
                 // eslint-disable-next-line no-console
                 console.log(`reception du temps: ${message.time}`);
             });
-            socket.on('joinRoom', () => {
+            socket.on('joinGame', (name) => {
                 socket.join(this.rooms[0].roomName);
+                this.rooms[0].playerName.push(name);
                 // eslint-disable-next-line no-console
                 console.log(`${socket.id} joining room 0`);
             });
