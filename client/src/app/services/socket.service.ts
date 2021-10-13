@@ -5,7 +5,7 @@ import { io } from 'socket.io-client';
     providedIn: 'root',
 })
 export class SocketService {
-    socket = io('http://localhost:5020');
+    socket = io('http://localhost:3000');
 
     configureBaseSocketFeatures() {
         // Afficher l'identifiant du Socket dans l'interface
@@ -14,9 +14,11 @@ export class SocketService {
             console.log('connected!');
         });
     }
-    sendInitiateGameInformation(playTime: number) {
-        this.socket.emit('joinRoom');
-        this.socket.emit('playTime', playTime);
+    sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {
+        this.socket.emit('startingNewGameInfo', { time: playTime, bonusOn: isBonusRandom, namePlayer: name, mode: gameType });
+    }
+    sendJoinGameInfo(name: string) {
+        this.socket.emit('joinGame', name);
     }
 }
 // à envoyer

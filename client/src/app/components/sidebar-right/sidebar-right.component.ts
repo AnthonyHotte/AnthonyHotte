@@ -16,6 +16,8 @@ import { CountdownComponent } from '@ciri/ngx-countdown';
     styleUrls: ['./sidebar-right.component.scss'],
 })
 export class SidebarRightComponent implements AfterViewInit {
+    // will be useful
+    // @ViewChild('counter') counter: CountdownComponent;
     message: string[] = [];
     playerName: string[] = ['', ''];
     opponentSet: boolean = false;
@@ -39,6 +41,8 @@ export class SidebarRightComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
+        // will be usefull
+        // this.counter.pause();
         if (this.turnTimeController.turn === 1) {
             this.opponentSet = true;
             this.soloOpponentPlays();

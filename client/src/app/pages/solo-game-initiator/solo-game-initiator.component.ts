@@ -19,14 +19,12 @@ export class SoloGameInitiatorComponent {
     nameIsValid: boolean;
     playTime: number;
     easyDifficulty: boolean;
-    // can be either solo or multi player
-    modeGame: string;
 
     isBonusRandom = false;
 
     constructor(
         // private informations: SoloGameInformationService,
-        private initiateTypeGame: InitiateGameTypeService,
+        public initiateTypeGame: InitiateGameTypeService,
         private socketService: SocketService,
         private letterService: LetterService,
         private tileScrambler: TileScramblerService,
@@ -39,18 +37,20 @@ export class SoloGameInitiatorComponent {
         this.nameIsValid = true;
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
-        this.modeGame = 'solo';
-        // this.message = [];
+    }
+    joinGame() {
+        this.setName();
+        this.socketService.sendJoinGameInfo(this.name);
+    }
+    startNewGame() {
+        this.setName();
+        this.setTime();
+        this.scrambleBonus();
+        this.sendNewGameStartInfo();
     }
 
-    getTypeGame() {
-        return this.initiateTypeGame.gameType;
-    }
-    getIsNewGame() {
-        return this.initiateTypeGame.isMultiNewGame;
-    }
-    sendTime() {
-        this.socketService.sendInitiateGameInformation(this.playTime);
+    sendNewGameStartInfo() {
+        this.socketService.sendInitiateNewGameInformation(this.playTime, this.isBonusRandom, this.name, this.initiateTypeGame.gameType);
     }
 
     assignOpponentName() {
