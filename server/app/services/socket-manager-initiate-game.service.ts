@@ -18,9 +18,9 @@ export class SocketManager {
         this.sio.on('connection', (socket) => {
             // eslint-disable-next-line no-console
             console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
-            socket.on('playTime', (message) => {
+            socket.on('startingInfo', (message) => {
                 // eslint-disable-next-line no-console
-                console.log(`reception du temps: ${message}`);
+                console.log(`reception du temps: ${message.time}`);
             });
             socket.on('joinRoom', () => {
                 socket.join(this.rooms[0]);

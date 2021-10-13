@@ -12,10 +12,6 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
     styleUrls: ['./solo-game-initiator.component.scss'],
 })
 export class SoloGameInitiatorComponent {
-    // @ViewChild('container justified') divPage!: HTMLDivElement;
-    // @ViewChild('waiting') waitingRoom!: HTMLDivElement;
-    // waitingRoomDisplay: string;
-    // divPageDisplay: string;
     temporaryName: string;
     name: string;
     opponentName: string;
@@ -41,24 +37,22 @@ export class SoloGameInitiatorComponent {
         this.nameIsValid = true;
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
-        // this.waitingRoomDisplay = 'none';
-        // this.divPageDisplay = 'block';
-        // this.message = [];
     }
     startGame() {
         this.setName();
         this.setTime();
         this.scrambleBonus();
-        this.sendTime();
+        this.sendStartInfo();
     }
-    /*
-    showWaitingRoom() {
-        this.divPageDisplay = 'none';
-        this.waitingRoomDisplay = 'block';
-    }*/
 
-    sendTime() {
-        this.socketService.sendInitiateGameInformation(this.playTime);
+    sendStartInfo() {
+        this.socketService.sendInitiateGameInformation(
+            this.playTime,
+            this.isBonusRandom,
+            this.name,
+            this.initiateTypeGame.gameType,
+            this.initiateTypeGame.isMultiNewGame,
+        );
     }
 
     assignOpponentName() {
@@ -133,9 +127,4 @@ export class SoloGameInitiatorComponent {
             this.tileScrambler.scrambleTiles();
         }
     }
-    /*
-    ngAfterViewInit() {
-        this.divPage.style.display = this.divPageDisplay;
-        this.waitingRoom.style.display = this.waitingRoomDisplay;
-    }*/
 }
