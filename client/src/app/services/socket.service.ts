@@ -5,7 +5,7 @@ import { io } from 'socket.io-client';
     providedIn: 'root',
 })
 export class SocketService {
-    socket = io('http://localhost:5020');
+    socket = io('http://localhost:3000');
 
     configureBaseSocketFeatures() {
         // Afficher l'identifiant du Socket dans l'interface

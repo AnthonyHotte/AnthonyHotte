@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { LetterService } from '@app/services/letter.service';
 import { InitiateGameTypeService } from '@app/services/initiate-game-type.service';
@@ -11,11 +11,11 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
     templateUrl: './solo-game-initiator.component.html',
     styleUrls: ['./solo-game-initiator.component.scss'],
 })
-export class SoloGameInitiatorComponent implements AfterViewInit {
-    @ViewChild('container justified') divPage!: HTMLDivElement;
-    @ViewChild('waiting') waitingRoom!: HTMLDivElement;
-    waitingRoomDisplay: string;
-    divPageDisplay: string;
+export class SoloGameInitiatorComponent {
+    // @ViewChild('container justified') divPage!: HTMLDivElement;
+    // @ViewChild('waiting') waitingRoom!: HTMLDivElement;
+    // waitingRoomDisplay: string;
+    // divPageDisplay: string;
     temporaryName: string;
     name: string;
     opponentName: string;
@@ -41,8 +41,8 @@ export class SoloGameInitiatorComponent implements AfterViewInit {
         this.nameIsValid = true;
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
-        this.waitingRoomDisplay = 'none';
-        this.divPageDisplay = 'block';
+        // this.waitingRoomDisplay = 'none';
+        // this.divPageDisplay = 'block';
         // this.message = [];
     }
     startGame() {
@@ -51,10 +51,11 @@ export class SoloGameInitiatorComponent implements AfterViewInit {
         this.scrambleBonus();
         this.sendTime();
     }
+    /*
     showWaitingRoom() {
         this.divPageDisplay = 'none';
         this.waitingRoomDisplay = 'block';
-    }
+    }*/
 
     sendTime() {
         this.socketService.sendInitiateGameInformation(this.playTime);
@@ -132,8 +133,9 @@ export class SoloGameInitiatorComponent implements AfterViewInit {
             this.tileScrambler.scrambleTiles();
         }
     }
+    /*
     ngAfterViewInit() {
         this.divPage.style.display = this.divPageDisplay;
         this.waitingRoom.style.display = this.waitingRoomDisplay;
-    }
+    }*/
 }
