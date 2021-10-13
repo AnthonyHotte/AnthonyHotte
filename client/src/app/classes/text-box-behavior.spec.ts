@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { MessagePlayer } from '@app/message';
+import { FinishGameService } from '@app/services/finish-game.service';
+import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
-import { FinishGameService } from '@app/services/finish-game.service';
 import { TextBox } from './text-box-behavior';
-import { RouterTestingModule } from '@angular/router/testing';
-import { LetterBankService } from '@app/services/letter-bank.service';
 
 describe('TextBox', () => {
     let textBox: TextBox;
@@ -41,9 +41,10 @@ describe('TextBox', () => {
         const inputVerificationSpy = spyOn(textBox, 'inputVerification');
         // no need for both lines since logic was changed...
         const pushSpy = spyOn(textBox.inputs, 'push');
-        textBox.send({ message: 'Hello', sender: '', debugState: true });
+        const message: MessagePlayer = { message: 'test', sender: 'Systeme', role: 'Systeme' };
+        textBox.send(message);
         expect(inputVerificationSpy).toHaveBeenCalledWith('Hello');
-        expect(pushSpy).toHaveBeenCalledWith({ message: 'Hello', sender: '', debugState: true });
+        expect(pushSpy).toHaveBeenCalledWith(message);
     });
     it('should validate input correctly', () => {
         textBox.inputVerification('Hello');
@@ -59,15 +60,17 @@ describe('TextBox', () => {
         textBox.inputVerification(myInvalidString);
         expect(textBox.character).toBe(true);
     });
+
     it('should get word Hello', () => {
-        textBox.word.message = 'Hello';
-        expect(textBox.getWord()).toEqual('Hello');
+        textBox.inputs[0] = { message: 'test', sender: 'Systeme', role: 'Systeme' };
+        expect(textBox.getArray()[0]).toEqual({ message: 'test', sender: 'Systeme', role: 'Systeme' });
     });
+
     it('should get inputs Hello, You, Man', () => {
         const arr: MessagePlayer[] = [
-            { message: 'Hello', sender: '', debugState: true },
-            { message: 'You', sender: '', debugState: true },
-            { message: 'Man', sender: '', debugState: true },
+            { message: 'Hello', sender: '', role: 'Systeme' },
+            { message: 'You', sender: '', role: 'Systeme' },
+            { message: 'Man', sender: '', role: 'Systeme' },
         ];
         textBox.inputs = arr;
         for (let i = 0; i < arr.length; i++) {
@@ -139,12 +142,16 @@ describe('TextBox', () => {
         textBox.isCommand(maChaine);
         expect(mySpy).toHaveBeenCalled();
     });
+    // function doesn't exist anymore, can probably be removed.
+    // removed for now as test are crashing and blocking other test developpement
+    /* 
     it('sendExecuteCommand should call next', () => {
         const mySpy = spyOn(textBox.sourceMessage, 'next');
 
         textBox.sendExecutedCommand();
         expect(mySpy).toHaveBeenCalled();
     });
+    */
     it('verifyCommandPasser should call incrementPassedTurn', () => {
         finishGameServiceSpy.isGameFinished = false;
         textBox.verifyCommandPasser();
@@ -180,7 +187,7 @@ describe('TextBox', () => {
         // no need for both lines since logic was changed...
         const pushSpy = spyOn(textBox.inputs, 'push');
         textBox.character = true;
-        textBox.send({ message: 'Hello', sender: '', debugState: true });
+        textBox.send({ message: 'Hello', sender: '', role: 'Systeme' });
         expect(inputVerificationSpy).toHaveBeenCalledWith('Hello');
         expect(pushSpy).not.toHaveBeenCalled();
     });
