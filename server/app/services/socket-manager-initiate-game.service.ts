@@ -18,19 +18,21 @@ export class SocketManager {
         this.sio.on('connection', (socket) => {
             // eslint-disable-next-line no-console
             console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
-        });
-        this.sio.on('playTime', (socket) => {
-            // eslint-disable-next-line no-console
-            console.log(`reception du temps: ${socket}`);
-        });
-        this.sio.on('joinRoom', (socket) => {
-            socket.join(this.rooms[0]);
-            // eslint-disable-next-line no-console
-            console.log(`${socket.id} joining room 0`);
-        });
-        this.sio.on('disconnect', (socket) => {
-            // eslint-disable-next-line no-console
-            console.log(`déconnexion par l'utilisateur avec id : ${socket.id}`);
+            this.sio.on('playTime', (message) => {
+                // eslint-disable-next-line no-console
+                console.log('yeah');
+                // eslint-disable-next-line no-console
+                console.log(`reception du temps: ${message}`);
+            });
+            this.sio.on('joinRoom', () => {
+                socket.join(this.rooms[0]);
+                // eslint-disable-next-line no-console
+                console.log(`${socket.id} joining room 0`);
+            });
+            this.sio.on('disconnect', () => {
+                // eslint-disable-next-line no-console
+                console.log(`déconnexion par l'utilisateur avec id : ${socket.id}`);
+            });
         });
     }
 }
