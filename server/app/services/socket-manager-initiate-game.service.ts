@@ -12,7 +12,7 @@ export class SocketManager {
         this.rooms = [];
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         for (let i = 0; i < 50; i++) {
-            this.rooms.push(new Room('room number' + i));
+            this.rooms.push(new Room('room number' + i, i));
         }
     }
 
@@ -23,15 +23,12 @@ export class SocketManager {
             socket.on('startingNewGameInfo', (message) => {
                 socket.join(this.rooms[0].roomName);
                 this.rooms[0].setStartingInfo(message.time, message.namePlayer, socket.id, message.bonusOn, message.gameType);
-                // eslint-disable-next-line no-console
-                console.log(`reception du temps: ${message.time}`);
             });
             socket.on('joinGame', (name) => {
                 socket.join(this.rooms[0].roomName);
                 this.rooms[0].playerNames.push(name);
                 this.rooms[0].socketsId.push(socket.id);
-                // eslint-disable-next-line no-console
-                console.log(`${socket.id} joining room 0`);
+                socket.emit('startMultiGame', this.rooms[0]);
             });
             socket.on('disconnect', () => {
                 const index = this.rooms[0].socketsId.indexOf(socket.id);
@@ -39,51 +36,7 @@ export class SocketManager {
                     this.rooms[0].socketsId.splice(index, 1);
                     this.rooms[0].playerNames.splice(index, 1);
                 }
-                // eslint-disable-next-line no-console
-                console.log(`déconnexion par l'utilisateur avec id : ${socket.id}`);
             });
         });
     }
 }
-/*
-        this.sio.on('connection', (socket) => {
-            console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
-            // message initial
-            socket.emit('hello', 'Hello World!');
-
-            socket.on('message', (message: string) => {
-                console.log(message);
-            });
-            socket.on('validate', (word: string) => {
-                const isValid = word.length > 5;
-                socket.emit('wordValidated', isValid);
-            });
-
-            socket.on('broadcastAll', (message: string) => {
-                this.sio.sockets.emit('massMessage', `${socket.id} : ${message}`);
-            });
-
-            socket.on('joinRoom', () => {
-                socket.join(this.room);
-            });
-
-            socket.on('roomMessage', (message: string) => {
-                this.sio.to(this.room).emit('roomMessage', `${socket.id} : ${message}`);
-            });
-
-            socket.on('disconnect', (reason) => {
-                console.log(`Deconnexion par l'utilisateur avec id : ${socket.id}`);
-                console.log(`Raison de deconnexion : ${reason}`);
-            });
-        });
-
-        setInterval(() => {
-            this.emitTime();
-        }, 1000);
-    }
-    
-
-    private emitTime() {
-        this.sio.sockets.emit('clock', new Date().toLocaleTimeString());
-    }
-*/

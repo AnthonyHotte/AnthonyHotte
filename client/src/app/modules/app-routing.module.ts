@@ -5,6 +5,7 @@ import { GameSelectionPageComponent } from '@app/pages/game-selection-page/game-
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { MaterialPageComponent } from '@app/pages/material-page/material-page.component';
 import { SoloGameInitiatorComponent } from '@app/pages/solo-game-initiator/solo-game-initiator.component';
+import { WaitingRoomComponent } from '@app/pages/waiting-room/waiting-room.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -13,6 +14,7 @@ const routes: Routes = [
     { path: 'material', component: MaterialPageComponent },
     { path: 'selection', component: GameSelectionPageComponent },
     { path: 'soloInitiator', component: SoloGameInitiatorComponent },
+    { path: 'waiting', component: WaitingRoomComponent },
     { path: '**', redirectTo: '/home' },
 ];
 

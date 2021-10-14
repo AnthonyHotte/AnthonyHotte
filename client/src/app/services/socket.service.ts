@@ -7,11 +7,19 @@ import { io } from 'socket.io-client';
 export class SocketService {
     socket = io('http://localhost:3000');
 
+    constructor() {
+        this.configureBaseSocketFeatures();
+    }
+
     configureBaseSocketFeatures() {
         // Afficher l'identifiant du Socket dans l'interface
         this.socket.on('connect', () => {
             // eslint-disable-next-line no-console
             console.log('connected!');
+        });
+        this.socket.on('startMultiGame', () => {
+            // eslint-disable-next-line no-console
+            console.log('yeah');
         });
     }
     sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {
