@@ -28,7 +28,7 @@ export class SocketManager {
                 socket.join(this.rooms[0].roomName);
                 this.rooms[0].playerNames.push(name);
                 this.rooms[0].socketsId.push(socket.id);
-                this.sio.sockets.emit('startMultiGame', this.rooms[0]);
+                this.sio.to(this.rooms[0].roomName).emit('startMultiGame', this.rooms[0]);
             });
             socket.on('disconnect', () => {
                 const index = this.rooms[0].socketsId.indexOf(socket.id);

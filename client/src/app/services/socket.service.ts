@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { io } from 'socket.io-client';
+import { StartCounterService } from './start-counter.service';
 
 @Injectable({
     providedIn: 'root',
@@ -8,7 +9,7 @@ import { io } from 'socket.io-client';
 export class SocketService {
     socket = io('http://localhost:3000');
 
-    constructor(private link: Router) {
+    constructor(private link: Router, private startCounterService: StartCounterService) {
         this.configureBaseSocketFeatures();
     }
 
@@ -19,7 +20,10 @@ export class SocketService {
             console.log('connected!');
         });
         this.socket.on('startMultiGame', () => {
+            // eslint-disable-next-line no-console
+            console.log('yeah!!!');
             this.link.navigate(['/game']);
+            this.startCounterService.startGame();
         });
     }
     sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
 import { FinishGameService } from '@app/services/finish-game.service';
@@ -7,6 +7,7 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
+import { StartCounterService } from '@app/services/start-counter.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
 
@@ -16,15 +17,13 @@ import { CountdownComponent } from '@ciri/ngx-countdown';
     styleUrls: ['./sidebar-right.component.scss'],
 })
 export class SidebarRightComponent implements AfterViewInit {
-    // will be useful
-    // @ViewChild('counter') counter: CountdownComponent;
+    @ViewChild('counter') counter: CountdownComponent;
     message: string[] = [];
     playerName: string[] = ['', ''];
     opponentSet: boolean = false;
     easyDifficultyIsTrue: boolean;
     time: number;
     turn: number;
-
     changedTurns: boolean = false;
 
     constructor(
@@ -36,17 +35,23 @@ export class SidebarRightComponent implements AfterViewInit {
         private readonly placeLetterService: PlaceLettersService,
         private finishGameService: FinishGameService,
         private letterBankService: LetterBankService,
+        private startCounterService: StartCounterService,
     ) {
         this.setAttribute();
     }
 
     ngAfterViewInit() {
-        // will be usefull
-        // this.counter.pause();
         if (this.turnTimeController.turn === 1) {
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
+        this.startCounterService.gameStartingInfo.subscribe((isGameStarted) => {
+            if (isGameStarted) {
+                this.counter.start();
+            } else {
+                this.counter.pause();
+            }
+        });
     }
 
     setAttribute() {
