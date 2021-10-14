@@ -45,7 +45,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 </div>
                 <p><button *ngIf="nameIsValid && initiateTypeGame.gameType==='solo'" (click)="startNewGame()" routerLink="/game">Démarrer la partie {{initiateTypeGame.gameType}}!</button>
                     <button *ngIf="nameIsValid && initiateTypeGame.gameType==='multi player' && initiateTypeGame.isNewGame" (click)="startNewGame()" routerLink="/waiting">Démarrer la partie!</button>
-                    <button *ngIf="nameIsValid && initiateTypeGame.gameType==='multi player' && !initiateTypeGame.isNewGame" (click)="joinGame()" routerLink="/game">Démarrer la partie!</button></p>
+                    <button *ngIf="nameIsValid && initiateTypeGame.gameType==='multi player' && !initiateTypeGame.isNewGame" (click)="joinGame()">Démarrer la partie!</button></p>
                 <button class="button" routerLink="/selection">Revenir en arrière</button>
             </article>
         </div>
