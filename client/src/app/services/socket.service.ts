@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { io } from 'socket.io-client';
+import { LetterService } from './letter.service';
 import { MessageService } from './message.service';
 
 @Injectable({
@@ -9,7 +9,7 @@ import { MessageService } from './message.service';
 export class SocketService {
     socket = io('http://localhost:3000');
 
-    constructor(private link: Router, private messageService: MessageService) {
+    constructor(private messageService: MessageService, private letterService: LetterService) {
         this.configureBaseSocketFeatures();
     }
 
@@ -19,8 +19,9 @@ export class SocketService {
             // eslint-disable-next-line no-console
             console.log('connected!');
         });
-        this.socket.on('startGame', () => {
-            this.link.navigate(['/game']);
+        this.socket.on('startGame', (info) => {
+            this.letterService.players[0].name = info.room.playerNames[0];
+            this.letterService.players[1].name = info.room.playerNames[1];
             this.messageService.startGame();
         });
     }

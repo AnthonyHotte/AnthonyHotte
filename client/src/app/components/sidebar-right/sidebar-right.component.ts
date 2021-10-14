@@ -7,7 +7,7 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
-import { MessageService } from '@app/services/message.service';
+// import { MessageService } from '@app/services/message.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
 
@@ -18,8 +18,6 @@ import { CountdownComponent } from '@ciri/ngx-countdown';
 })
 export class SidebarRightComponent implements AfterViewInit {
     @ViewChild('counter') counter: CountdownComponent;
-    message: string[] = [];
-    playerName: string[] = ['', ''];
     opponentSet: boolean = false;
     easyDifficultyIsTrue: boolean;
     time: number;
@@ -34,17 +32,13 @@ export class SidebarRightComponent implements AfterViewInit {
         private readonly gridService: GridService,
         private readonly placeLetterService: PlaceLettersService,
         private finishGameService: FinishGameService,
-        private letterBankService: LetterBankService,
-        private messageService: MessageService,
+        private letterBankService: LetterBankService, // private messageService: MessageService,
     ) {
         this.setAttribute();
     }
 
     ngAfterViewInit() {
-        if (this.turnTimeController.turn === 1) {
-            this.opponentSet = true;
-            this.soloOpponentPlays();
-        }
+        /*
         this.messageService.gameStartingInfo.subscribe((isGameStarted) => {
             if (isGameStarted) {
                 this.counter.start();
@@ -52,6 +46,11 @@ export class SidebarRightComponent implements AfterViewInit {
                 this.counter.pause();
             }
         });
+        */
+        if (this.turnTimeController.turn === 1) {
+            this.opponentSet = true;
+            this.soloOpponentPlays();
+        }
     }
 
     setAttribute() {

@@ -67,7 +67,6 @@ describe('SidebarRightComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(SidebarRightComponent);
         component = fixture.componentInstance;
-        component.message = ['Jaque', 'Dupont', 'true', '10'];
         fixture.detectChanges();
     });
 

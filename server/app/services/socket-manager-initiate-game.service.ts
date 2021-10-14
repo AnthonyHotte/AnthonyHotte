@@ -23,10 +23,10 @@ export class SocketManager {
             socket.on('startingNewGameInfo', (message) => {
                 socket.join(this.rooms[this.indexNextRoom].roomName);
                 // set the room parameters
-                this.rooms[0].setStartingInfo(message.time, message.namePlayer, socket.id, message.bonusOn, message.mode);
+                this.rooms[this.indexNextRoom].setStartingInfo(message.time, message.namePlayer, socket.id, message.bonusOn, message.mode);
                 // start game if in solo mode
                 if (message.mode === 'solo') {
-                    socket.emit('startGame');
+                    socket.emit('startGame', { room: this.rooms[this.indexNextRoom], playerNumber: 0 });
                 } else {
                     // put the room in the waiting room list
                     this.listRoomWaiting.push(this.rooms[this.indexNextRoom]);
@@ -38,14 +38,17 @@ export class SocketManager {
                 // join the oldest game in the waiting room
                 socket.join(this.rooms[this.listRoomWaiting[0].index].roomName);
                 // adding player name to the room
-                this.rooms[this.listRoomWaiting[0].index].playerNames.push(name);
+                this.rooms[this.listRoomWaiting[0].index].playerNames[1] = name;
                 // adding socket id to the room
-                this.rooms[this.listRoomWaiting[0].index].socketsId.push(socket.id);
+                this.rooms[this.listRoomWaiting[0].index].socketsId[1] = socket.id;
                 // start game for everyone in the room
-                this.sio.to(this.rooms[this.listRoomWaiting[0].index].roomName).emit('startGame', this.rooms[this.indexNextRoom]);
+                this.sio
+                    .to(this.rooms[this.listRoomWaiting[0].index].roomName)
+                    .emit('startGame', { room: this.rooms[this.listRoomWaiting[0].index], playerNumber: 1 });
                 // take of the room from waiting room
                 this.listRoomWaiting.splice(0, 1);
             });
+            // To change
             socket.on('disconnect', () => {
                 const index = this.rooms[this.indexNextRoom].socketsId.indexOf(socket.id);
                 if (index !== ERRORCODE) {

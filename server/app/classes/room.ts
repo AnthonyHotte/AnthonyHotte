@@ -14,7 +14,7 @@ export class Room {
         this.time = 0;
         this.bonusOn = false;
         this.gameSolo = true;
-        this.playerNames = [];
+        this.playerNames = ['joueur1', 'JoueurVirtuel'];
         this.socketsId = [];
         this.index = index;
     }
