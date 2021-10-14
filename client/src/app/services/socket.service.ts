@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { io } from 'socket.io-client';
 import { LetterService } from './letter.service';
 import { MessageService } from './message.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 @Injectable({
     providedIn: 'root',
@@ -9,7 +10,11 @@ import { MessageService } from './message.service';
 export class SocketService {
     socket = io('http://localhost:3000');
 
-    constructor(private messageService: MessageService, private letterService: LetterService) {
+    constructor(
+        private messageService: MessageService,
+        private letterService: LetterService,
+        private timerTurnManagerService: TimerTurnManagerService,
+    ) {
         this.configureBaseSocketFeatures();
     }
 
@@ -22,6 +27,7 @@ export class SocketService {
         this.socket.on('startGame', (info) => {
             this.letterService.players[0].name = info.room.playerNames[0];
             this.letterService.players[1].name = info.room.playerNames[1];
+            this.timerTurnManagerService.turn = info.indexPlayerStart;
             this.messageService.startGame();
         });
     }

@@ -2,13 +2,14 @@ import * as io from 'socket.io';
 import * as http from 'http';
 import { Room } from '@app/classes/room';
 import { ERRORCODE, NUMBEROFROOMS } from '@app/constants';
+import { TimerTurnManagerService } from './turn-manager.service';
 
 export class SocketManager {
     private sio: io.Server;
     private rooms: Room[];
     private listRoomWaiting: Room[];
     private indexNextRoom: number;
-    constructor(server: http.Server) {
+    constructor(server: http.Server, private turnManager: TimerTurnManagerService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.rooms = [];
         this.listRoomWaiting = [];
@@ -26,7 +27,11 @@ export class SocketManager {
                 this.rooms[this.indexNextRoom].setStartingInfo(message.time, message.namePlayer, socket.id, message.bonusOn, message.mode);
                 // start game if in solo mode
                 if (message.mode === 'solo') {
-                    socket.emit('startGame', { room: this.rooms[this.indexNextRoom], playerNumber: 0 });
+                    socket.emit('startGame', {
+                        room: this.rooms[this.indexNextRoom],
+                        playerNumber: 0,
+                        indexPlayerStart: this.turnManager.turn,
+                    });
                 } else {
                     // put the room in the waiting room list
                     this.listRoomWaiting.push(this.rooms[this.indexNextRoom]);
@@ -42,9 +47,11 @@ export class SocketManager {
                 // adding socket id to the room
                 this.rooms[this.listRoomWaiting[0].index].socketsId[1] = socket.id;
                 // start game for everyone in the room
-                this.sio
-                    .to(this.rooms[this.listRoomWaiting[0].index].roomName)
-                    .emit('startGame', { room: this.rooms[this.listRoomWaiting[0].index], playerNumber: 1 });
+                this.sio.to(this.rooms[this.listRoomWaiting[0].index].roomName).emit('startGame', {
+                    room: this.rooms[this.listRoomWaiting[0].index],
+                    playerNumber: 1,
+                    indexPlayerStart: this.turnManager.turn,
+                });
                 // take of the room from waiting room
                 this.listRoomWaiting.splice(0, 1);
             });
