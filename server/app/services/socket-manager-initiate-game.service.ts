@@ -2,14 +2,13 @@ import * as io from 'socket.io';
 import * as http from 'http';
 import { Room } from '@app/classes/room';
 import { ERRORCODE, NUMBEROFROOMS } from '@app/constants';
-import { TimerTurnManagerService } from './turn-manager.service';
 
 export class SocketManager {
     private sio: io.Server;
     private rooms: Room[];
     private listRoomWaiting: Room[];
     private indexNextRoom: number;
-    constructor(server: http.Server, private turnManager: TimerTurnManagerService) {
+    constructor(server: http.Server) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.rooms = [];
         this.listRoomWaiting = [];
@@ -30,7 +29,7 @@ export class SocketManager {
                     socket.emit('startGame', {
                         room: this.rooms[this.indexNextRoom],
                         playerNumber: 0,
-                        indexPlayerStart: this.turnManager.turn,
+                        indexPlayerStart: this.rooms[this.indexNextRoom].turn,
                     });
                 } else {
                     // put the room in the waiting room list
@@ -50,7 +49,7 @@ export class SocketManager {
                 this.sio.to(this.rooms[this.listRoomWaiting[0].index].roomName).emit('startGame', {
                     room: this.rooms[this.listRoomWaiting[0].index],
                     playerNumber: 1,
-                    indexPlayerStart: this.turnManager.turn,
+                    indexPlayerStart: this.rooms[this.listRoomWaiting[0].index].turn,
                 });
                 // take of the room from waiting room
                 this.listRoomWaiting.splice(0, 1);
