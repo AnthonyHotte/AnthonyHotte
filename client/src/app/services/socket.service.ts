@@ -19,9 +19,7 @@ export class SocketService {
             // eslint-disable-next-line no-console
             console.log('connected!');
         });
-        this.socket.on('startMultiGame', () => {
-            // eslint-disable-next-line no-console
-            console.log('yeah!!!');
+        this.socket.on('startGame', () => {
             this.link.navigate(['/game']);
             this.startCounterService.startGame();
         });

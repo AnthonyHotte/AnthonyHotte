@@ -18,17 +18,20 @@ export class SocketManager {
 
     handleSockets(): void {
         this.sio.on('connection', (socket) => {
-            // eslint-disable-next-line no-console
-            console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
             socket.on('startingNewGameInfo', (message) => {
                 socket.join(this.rooms[0].roomName);
-                this.rooms[0].setStartingInfo(message.time, message.namePlayer, socket.id, message.bonusOn, message.gameType);
+                this.rooms[0].setStartingInfo(message.time, message.namePlayer, socket.id, message.bonusOn, message.mode);
+                // start game if in solo mode
+                if (message.mode === 'solo') {
+                    socket.emit('startGame');
+                }
             });
+
             socket.on('joinGame', (name) => {
                 socket.join(this.rooms[0].roomName);
                 this.rooms[0].playerNames.push(name);
                 this.rooms[0].socketsId.push(socket.id);
-                this.sio.to(this.rooms[0].roomName).emit('startMultiGame', this.rooms[0]);
+                this.sio.to(this.rooms[0].roomName).emit('startGame', this.rooms[0]);
             });
             socket.on('disconnect', () => {
                 const index = this.rooms[0].socketsId.indexOf(socket.id);
