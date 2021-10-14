@@ -14,7 +14,8 @@ export class CommunicationService {
     constructor(private readonly http: HttpClient) {}
 
     basicGet(): Observable<Message> {
-        return this.http.get<Message>(`${this.baseUrl}/example`).pipe(catchError(this.handleError<Message>('basicGet')));
+        const roomIndex = 0;
+        return this.http.get<Message>(`${this.baseUrl}/turn?index=${roomIndex}`).pipe(catchError(this.handleError<Message>('basicGet')));
     }
 
     basicPost(message: Message): Observable<void> {
