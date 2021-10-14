@@ -4,12 +4,10 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
     providedIn: 'root',
 })
-export class StartCounterService {
+export class MessageService {
     gameStartingInfo: BehaviorSubject<boolean>;
-    // startingInfoObservable: Observable<boolean>;
     constructor() {
         this.gameStartingInfo = new BehaviorSubject<boolean>(false);
-        // this.startingInfoObservable = this.gameStartingInfo.asObservable();
     }
     startGame() {
         this.gameStartingInfo.next(true);

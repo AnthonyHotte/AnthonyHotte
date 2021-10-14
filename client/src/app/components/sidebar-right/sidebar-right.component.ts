@@ -7,7 +7,7 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
-import { StartCounterService } from '@app/services/start-counter.service';
+import { MessageService } from '@app/services/message.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
 
@@ -35,7 +35,7 @@ export class SidebarRightComponent implements AfterViewInit {
         private readonly placeLetterService: PlaceLettersService,
         private finishGameService: FinishGameService,
         private letterBankService: LetterBankService,
-        private startCounterService: StartCounterService,
+        private messageService: MessageService,
     ) {
         this.setAttribute();
     }
@@ -45,7 +45,7 @@ export class SidebarRightComponent implements AfterViewInit {
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
-        this.startCounterService.gameStartingInfo.subscribe((isGameStarted) => {
+        this.messageService.gameStartingInfo.subscribe((isGameStarted) => {
             if (isGameStarted) {
                 this.counter.start();
             } else {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { io } from 'socket.io-client';
-import { StartCounterService } from './start-counter.service';
+import { MessageService } from './message.service';
 
 @Injectable({
     providedIn: 'root',
@@ -9,7 +9,7 @@ import { StartCounterService } from './start-counter.service';
 export class SocketService {
     socket = io('http://localhost:3000');
 
-    constructor(private link: Router, private startCounterService: StartCounterService) {
+    constructor(private link: Router, private messageService: MessageService) {
         this.configureBaseSocketFeatures();
     }
 
@@ -21,7 +21,7 @@ export class SocketService {
         });
         this.socket.on('startGame', () => {
             this.link.navigate(['/game']);
-            this.startCounterService.startGame();
+            this.messageService.startGame();
         });
     }
     sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {

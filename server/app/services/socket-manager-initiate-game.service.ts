@@ -26,7 +26,6 @@ export class SocketManager {
                     socket.emit('startGame');
                 }
             });
-
             socket.on('joinGame', (name) => {
                 socket.join(this.rooms[0].roomName);
                 this.rooms[0].playerNames.push(name);
