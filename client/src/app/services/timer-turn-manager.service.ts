@@ -2,16 +2,19 @@ import { Injectable } from '@angular/core';
 
 import { VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { CommunicationService } from './communication.service';
+import { InitiateGameTypeService } from './initiate-game-type.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TimerTurnManagerService {
-    turn: number = 0;
+    // signal error, initiation  of the game should change it to 0 or 1
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    turn: number = -1;
     turnsSkippedInARow = 0;
     timePerTurn = VALEUR_TEMPS_DEFAULT;
 
-    constructor(private comunicationService: CommunicationService) {
+    constructor(private comunicationService: CommunicationService, private initiateGameTypeService: InitiateGameTypeService) {
         this.initiateGame();
     }
 
@@ -31,9 +34,13 @@ export class TimerTurnManagerService {
             this.turn = 0;
         }
     }
-    getTurn(indexRoom: number) {
-        this.comunicationService.getTurnServer(indexRoom).subscribe((turn) => {
-            return parseInt(turn.body, 10);
+    // should return 0 or 1, if there is an error it returns -1
+    // necessary even if turn is public, because it updates turn before returning it
+    getTurn(): number {
+        // get the turn from server
+        this.comunicationService.getTurnServer(this.initiateGameTypeService.roomNumber).subscribe((turn) => {
+            this.turn = parseInt(turn.body, 10);
         });
+        return this.turn;
     }
 }

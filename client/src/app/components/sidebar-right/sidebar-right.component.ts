@@ -47,7 +47,7 @@ export class SidebarRightComponent implements AfterViewInit {
             }
         });
         */
-        if (this.turnTimeController.turn === 1) {
+        if (this.turnTimeController.getTurn() === 1) {
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
@@ -55,7 +55,7 @@ export class SidebarRightComponent implements AfterViewInit {
 
     setAttribute() {
         this.time = this.turnTimeController.timePerTurn;
-        this.turn = this.turnTimeController.turn;
+        this.turn = this.turnTimeController.getTurn();
         this.turnTimeController.initiateGame();
         this.letterService.reset();
         this.letterService.players[0].reset();

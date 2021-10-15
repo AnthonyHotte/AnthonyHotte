@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Message } from '@app/classes/message';
 import { CommunicationService } from '@app/services/communication.service';
 import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+// import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-main-page',
