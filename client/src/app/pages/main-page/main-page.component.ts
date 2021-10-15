@@ -23,7 +23,7 @@ export class MainPageComponent {
         // Important de ne pas oublier "subscribe" ou l'appel ne sera jamais lancé puisque personne l'observe
         this.communicationService.basicPost(newTimeMessage).subscribe();
     }
-
+    /*
     getMessagesFromServer(): void {
         this.communicationService
             .basicGet()
@@ -35,4 +35,5 @@ export class MainPageComponent {
             )
             .subscribe(this.message);
     }
+    */
 }

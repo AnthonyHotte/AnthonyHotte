@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+
 import { VALEUR_TEMPS_DEFAULT } from '@app/constants';
+import { CommunicationService } from './communication.service';
 
 @Injectable({
     providedIn: 'root',
@@ -9,7 +11,7 @@ export class TimerTurnManagerService {
     turnsSkippedInARow = 0;
     timePerTurn = VALEUR_TEMPS_DEFAULT;
 
-    constructor() {
+    constructor(private comunicationService: CommunicationService) {
         this.initiateGame();
     }
 
@@ -28,5 +30,10 @@ export class TimerTurnManagerService {
         } else {
             this.turn = 0;
         }
+    }
+    getTurn(indexRoom: number) {
+        this.comunicationService.getTurnServer(indexRoom).subscribe((turn) => {
+            return parseInt(turn.body, 10);
+        });
     }
 }
