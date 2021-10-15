@@ -12,7 +12,7 @@ export class TurnService {
         // roomsService is undefined??? why
         const stringBody = this.roomsService.rooms[indexRoom].turn.toString();
         return {
-            title: 'turn to play',
+            title: 'turn',
             body: stringBody,
         };
     }

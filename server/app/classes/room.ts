@@ -46,4 +46,13 @@ export class Room {
             this.turn = 0;
         }
     }
+    cleanRoom() {
+        this.timePerTurn = VALEUR_TEMPS_DEFAULT;
+        this.bonusOn = false;
+        this.gameSolo = true;
+        this.playerNames = ['joueur1', 'JoueurVirtuel'];
+        this.socketsId = [];
+        this.turn = Math.floor(Math.random() * 2);
+        this.turnsSkippedInARow = 0;
+    }
 }

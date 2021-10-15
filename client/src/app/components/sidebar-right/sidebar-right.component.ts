@@ -7,7 +7,6 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
-// import { MessageService } from '@app/services/message.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
 
@@ -32,22 +31,13 @@ export class SidebarRightComponent implements AfterViewInit {
         private readonly gridService: GridService,
         private readonly placeLetterService: PlaceLettersService,
         private finishGameService: FinishGameService,
-        private letterBankService: LetterBankService, // private messageService: MessageService,
+        private letterBankService: LetterBankService,
     ) {
         this.setAttribute();
     }
 
     ngAfterViewInit() {
-        /*
-        this.messageService.gameStartingInfo.subscribe((isGameStarted) => {
-            if (isGameStarted) {
-                this.counter.start();
-            } else {
-                this.counter.pause();
-            }
-        });
-        */
-        if (this.turnTimeController.getTurn() === 1) {
+        if (this.turnTimeController.turn === 1) {
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
@@ -55,8 +45,7 @@ export class SidebarRightComponent implements AfterViewInit {
 
     setAttribute() {
         this.time = this.turnTimeController.timePerTurn;
-        this.turn = this.turnTimeController.getTurn();
-        this.turnTimeController.initiateGame();
+        this.turn = this.turnTimeController.turn;
         this.letterService.reset();
         this.letterService.players[0].reset();
         this.soloOpponent.reset(1);

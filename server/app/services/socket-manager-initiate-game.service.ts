@@ -1,6 +1,6 @@
 import * as io from 'socket.io';
 import * as http from 'http';
-import { ERRORCODE, NUMBEROFROOMS } from '@app/constants';
+import { NUMBEROFROOMS } from '@app/constants';
 import { RoomsService } from './rooms.service';
 import { Service } from 'typedi';
 
@@ -14,6 +14,8 @@ export class SocketManager {
     handleSockets(): void {
         this.sio.on('connection', (socket) => {
             socket.on('startingNewGameInfo', (message) => {
+                // some clean up
+                this.roomsService.rooms[this.roomsService.indexNextRoom].cleanRoom();
                 socket.join(this.roomsService.rooms[this.roomsService.indexNextRoom].roomName);
                 // set the room parameters
                 this.roomsService.rooms[this.roomsService.indexNextRoom].setStartingInfo(
@@ -52,14 +54,6 @@ export class SocketManager {
                 });
                 // take of the room from waiting room
                 this.roomsService.listRoomWaiting.splice(0, 1);
-            });
-            // To change
-            socket.on('disconnect', () => {
-                const index = this.roomsService.rooms[this.roomsService.indexNextRoom].socketsId.indexOf(socket.id);
-                if (index !== ERRORCODE) {
-                    this.roomsService.rooms[this.roomsService.indexNextRoom].socketsId.splice(index, 1);
-                    this.roomsService.rooms[this.roomsService.indexNextRoom].playerNames.splice(index, 1);
-                }
             });
         });
     }
