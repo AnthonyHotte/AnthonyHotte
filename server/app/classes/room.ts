@@ -31,8 +31,8 @@ export class Room {
         this.timePerTurn = time;
         this.bonusOn = bonusOn;
         this.gameSolo = gameSolo;
-        this.playerNames.push(name);
-        this.playerNames.push(socketId);
+        this.playerNames[0] = name;
+        this.socketsId.push(socketId);
     }
     endTurn(reason: string) {
         if (reason === 'skip') {
