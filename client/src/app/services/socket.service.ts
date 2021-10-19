@@ -29,7 +29,9 @@ export class SocketService {
         this.socket.on('startGame', (info) => {
             this.initiateGameTypeService.roomNumber = info.room.index;
             this.letterService.players[0].name = info.room.playerNames[0];
-            this.letterService.players[1].name = info.room.playerNames[1];
+            if (this.initiateGameTypeService.gameType === 'multi player') {
+                this.letterService.players[1].name = info.room.playerNames[1];
+            }
             this.timerTurnManagerService.turn = info.indexPlayerStart;
             this.messageService.startGame();
         });
