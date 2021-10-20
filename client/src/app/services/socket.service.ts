@@ -10,6 +10,7 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
 })
 export class SocketService {
     socket = io('http://localhost:3000');
+    gameLists: string[][] = [[]];
 
     constructor(
         private messageService: MessageService,
@@ -35,12 +36,22 @@ export class SocketService {
             this.timerTurnManagerService.turn = info.indexPlayerStart;
             this.messageService.startGame();
         });
+        this.socket.on('sendGamesInformation', (games) => {
+            for (let i = 0; i < games.length; i++) {
+                this.gameLists[i][0] = games[i][0]; // player name of who is the game initiator
+                this.gameLists[i][1] = games[i][1]; // is random bonus on
+                this.gameLists[i][2] = games[i][2]; // time per turn
+            }
+        });
     }
     sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {
         this.socket.emit('startingNewGameInfo', { time: playTime, bonusOn: isBonusRandom, namePlayer: name, mode: gameType });
     }
     sendJoinGameInfo(name: string) {
         this.socket.emit('joinGame', name);
+    }
+    sendGameListNeededNotification() {
+        this.socket.emit('returnListOfGames');
     }
 }
 // à envoyer

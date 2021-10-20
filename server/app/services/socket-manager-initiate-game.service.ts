@@ -6,7 +6,9 @@ import { Service } from 'typedi';
 
 @Service()
 export class SocketManager {
+    games: string[][] = new Array(new Array());
     private sio: io.Server;
+
     constructor(server: http.Server, private roomsService: RoomsService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
     }
@@ -54,6 +56,17 @@ export class SocketManager {
                 });
                 // take of the room from waiting room
                 this.roomsService.listRoomWaiting.splice(0, 1);
+            });
+            socket.on('returnListOfGames', () => {
+                this.games = new Array(new Array());
+                for (let i = 0; i < this.roomsService.indexNextRoom; i++) {
+                    if (!this.roomsService.rooms !== undefined || this.games !== undefined) {
+                        this.games[i][0] = this.roomsService.rooms[i].playerNames[0];
+                        this.games[i][1] = this.roomsService.rooms[i].bonusOn.toString();
+                        this.games[i][2] = this.roomsService.rooms[i].timePerTurn.toString();
+                    }
+                }
+                socket.emit('sendGamesInformation', this.games);
             });
         });
     }
