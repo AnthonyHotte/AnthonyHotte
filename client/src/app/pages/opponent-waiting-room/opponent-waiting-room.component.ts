@@ -52,6 +52,4 @@ export class OpponentWaitingRoomComponent implements OnInit {
         this.socketInformation.sendGameListNeededNotification();
         this.fillGamesList();
     }
-    
-
 }
