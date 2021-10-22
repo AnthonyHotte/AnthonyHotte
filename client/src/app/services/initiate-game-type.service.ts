@@ -9,6 +9,8 @@ export class InitiateGameTypeService {
     gameType: string;
     // attribut true if player create new game, false if joining
     isNewGame: boolean;
+    // room number of the current game
+    roomNumber: number;
     setGameType(gameType: string, isNewGame: boolean) {
         this.gameType = gameType;
         this.isNewGame = isNewGame;

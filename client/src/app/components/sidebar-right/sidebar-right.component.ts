@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
 import { FinishGameService } from '@app/services/finish-game.service';
@@ -16,15 +16,11 @@ import { CountdownComponent } from '@ciri/ngx-countdown';
     styleUrls: ['./sidebar-right.component.scss'],
 })
 export class SidebarRightComponent implements AfterViewInit {
-    // will be useful
-    // @ViewChild('counter') counter: CountdownComponent;
-    message: string[] = [];
-    playerName: string[] = ['', ''];
+    @ViewChild('counter') counter: CountdownComponent;
     opponentSet: boolean = false;
     easyDifficultyIsTrue: boolean;
     time: number;
     turn: number;
-
     changedTurns: boolean = false;
 
     constructor(
@@ -41,8 +37,6 @@ export class SidebarRightComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        // will be usefull
-        // this.counter.pause();
         if (this.turnTimeController.turn === 1) {
             this.opponentSet = true;
             this.soloOpponentPlays();
@@ -52,7 +46,6 @@ export class SidebarRightComponent implements AfterViewInit {
     setAttribute() {
         this.time = this.turnTimeController.timePerTurn;
         this.turn = this.turnTimeController.turn;
-        this.turnTimeController.initiateGame();
         this.letterService.reset();
         this.letterService.players[0].reset();
         this.soloOpponent.reset(1);

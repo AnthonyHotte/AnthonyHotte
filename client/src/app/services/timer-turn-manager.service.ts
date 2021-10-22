@@ -1,22 +1,30 @@
 import { Injectable } from '@angular/core';
-import { VALEUR_TEMPS_DEFAULT } from '@app/constants';
+
+import { ERRORCODE, VALEUR_TEMPS_DEFAULT } from '@app/constants';
+// import { CommunicationService } from './communication.service';
+// import { InitiateGameTypeService } from './initiate-game-type.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TimerTurnManagerService {
-    turn: number = 0;
+    // signal error, initiation  of the game should change it to 0 or 1
+    turn: number;
     turnsSkippedInARow = 0;
     timePerTurn = VALEUR_TEMPS_DEFAULT;
 
     constructor() {
-        this.initiateGame();
+        // private comunicationService: CommunicationService, private initiateGameTypeService: InitiateGameTypeService) {
+        // turn is initialize when game start
+        this.turn = ERRORCODE;
+        /*
+        this.comunicationService.getTurnServer(this.initiateGameTypeService.roomNumber).subscribe((turnServer) => {
+            this.turn = parseInt(turnServer.body, 10);
+        });
+        */
     }
 
-    initiateGame() {
-        this.turn = Math.floor(Math.random() * 2);
-    }
-
+    // will be move on server
     endTurn(reason: string) {
         if (reason === 'skip') {
             this.turnsSkippedInARow++;

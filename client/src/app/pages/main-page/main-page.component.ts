@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Message } from '@app/classes/message';
 import { CommunicationService } from '@app/services/communication.service';
 import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+// import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-main-page',
@@ -23,7 +23,7 @@ export class MainPageComponent {
         // Important de ne pas oublier "subscribe" ou l'appel ne sera jamais lancé puisque personne l'observe
         this.communicationService.basicPost(newTimeMessage).subscribe();
     }
-
+    /*
     getMessagesFromServer(): void {
         this.communicationService
             .basicGet()
@@ -35,4 +35,5 @@ export class MainPageComponent {
             )
             .subscribe(this.message);
     }
+    */
 }

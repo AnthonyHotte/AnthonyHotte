@@ -19,6 +19,7 @@ export class SoloGameInitiatorComponent {
     nameIsValid: boolean;
     playTime: number;
     easyDifficulty: boolean;
+    startingNewGame = false;
 
     isBonusRandom = false;
 
@@ -32,7 +33,7 @@ export class SoloGameInitiatorComponent {
     ) {
         this.temporaryName = 'Joueur';
         this.name = 'Joueur';
-        this.opponentName = '';
+        this.assignOpponentName();
         this.idNameOpponent = 0;
         this.nameIsValid = true;
         this.playTime = VALEUR_TEMPS_DEFAULT;
@@ -43,6 +44,7 @@ export class SoloGameInitiatorComponent {
         this.socketService.sendJoinGameInfo(this.name);
     }
     startNewGame() {
+        this.startingNewGame = true;
         this.setName();
         this.setTime();
         this.scrambleBonus();
@@ -71,8 +73,10 @@ export class SoloGameInitiatorComponent {
     verifyNames() {
         const EXPRESSION = /^[A-Za-z]+$/;
         const temp: string = this.temporaryName.split(' ').join('').toLocaleLowerCase();
-        this.assignOpponentName();
-        this.switchOpponentName(temp);
+        if (!this.startingNewGame) {
+            this.assignOpponentName();
+            this.switchOpponentName(temp);
+        }
         if (temp.length > LONGUEURNOMMAX || temp === '') {
             this.nameIsValid = false;
         } else if (EXPRESSION.test(temp)) {

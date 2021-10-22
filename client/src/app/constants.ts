@@ -61,3 +61,5 @@ export const NUMBER_DOUBLE_WORD = 17;
 export const NUMBER_TRIPLE_WORD = 8;
 export const NUMBER_DOUBLE_LETTER = 24;
 export const NUMBER_TRIPLE_LETTER = 12;
+
+export const ERRORCODE = -1;
