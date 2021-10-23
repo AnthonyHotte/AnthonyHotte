@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { ExchangeLettersGUIComponent } from './exchange-letters-gui.component';
 
@@ -9,6 +10,7 @@ describe('ExchangeLettersGUIComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [ExchangeLettersGUIComponent],
+            imports: [RouterTestingModule],
         }).compileComponents();
     });
 

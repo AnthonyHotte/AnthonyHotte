@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { OpponentWaitingRoomComponent } from './opponent-waiting-room.component';
 
@@ -9,6 +10,7 @@ describe('OpponentWaitingRoomComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [OpponentWaitingRoomComponent],
+            imports: [RouterTestingModule],
         }).compileComponents();
     });
 
