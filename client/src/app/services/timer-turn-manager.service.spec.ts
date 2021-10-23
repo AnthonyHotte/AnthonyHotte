@@ -13,16 +13,6 @@ describe('TimerTurnManager', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
-    it('turn should be one or zero', () => {
-        service.initiateGame();
-        const boolValue = service.turn === 1 || service.turn === 0;
-        expect(boolValue).toBe(true);
-    });
-    it('floor should be called', () => {
-        const floorSpy = spyOn(Math, 'floor');
-        service.initiateGame();
-        expect(floorSpy).toHaveBeenCalled();
-    });
     it('end turn should change turn to 0', () => {
         service.turn = 1;
         service.endTurn('place');

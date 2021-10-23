@@ -17,11 +17,6 @@ export class TimerTurnManagerService {
         // private comunicationService: CommunicationService, private initiateGameTypeService: InitiateGameTypeService) {
         // turn is initialize when game start
         this.turn = ERRORCODE;
-        /*
-        this.comunicationService.getTurnServer(this.initiateGameTypeService.roomNumber).subscribe((turnServer) => {
-            this.turn = parseInt(turnServer.body, 10);
-        });
-        */
     }
 
     // will be move on server
