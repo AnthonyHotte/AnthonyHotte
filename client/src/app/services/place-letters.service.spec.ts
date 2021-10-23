@@ -1,17 +1,38 @@
 import { fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
+import { LetterBankService } from './letter-bank.service';
+import { LetterService } from './letter.service';
 import { PlaceLettersService } from './place-letters.service';
-describe('PlaceLettersService', () => {
+import { MAXLETTERINHAND } from '@app/constants';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
+fdescribe('PlaceLettersService', () => {
     let service: PlaceLettersService;
     let gameStateServiceSpy: GameStateService;
     let gridServiceSpy: GridService;
+    let letterServiceSpy: LetterService;
+    let letterBankServiceSpy: LetterBankService;
+    let timeManagerSpy: TimerTurnManagerService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(PlaceLettersService);
         gameStateServiceSpy = TestBed.inject(GameStateService) as jasmine.SpyObj<GameStateService>;
         gridServiceSpy = TestBed.inject(GridService) as jasmine.SpyObj<GridService>;
+        letterServiceSpy = TestBed.inject(LetterService) as jasmine.SpyObj<LetterService>;
+        letterBankServiceSpy = TestBed.inject(LetterBankService) as jasmine.SpyObj<LetterBankService>;
+        timeManagerSpy = TestBed.inject(TimerTurnManagerService) as jasmine.SpyObj<TimerTurnManagerService>;
+        timeManagerSpy.turn = 0;
+        const player1 = new PlayerLetterHand(letterBankServiceSpy);
+        for (let i = 0; i < MAXLETTERINHAND; i++) {
+            player1.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+        }
+        const player2 = new PlayerLetterHand(letterBankServiceSpy);
+        for (let i = 0; i < MAXLETTERINHAND; i++) {
+            player2.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+        }
+        letterServiceSpy.players = [player1, player2];
     });
 
     it('should be created', () => {
