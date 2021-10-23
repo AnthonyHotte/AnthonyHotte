@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GameSelectionPageComponent } from './game-selection-page.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('GameSelectionPageComponent', () => {
     let component: GameSelectionPageComponent;
@@ -9,6 +10,7 @@ describe('GameSelectionPageComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [GameSelectionPageComponent],
+            imports: [RouterTestingModule],
         }).compileComponents();
     });
 

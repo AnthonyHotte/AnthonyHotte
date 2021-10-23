@@ -115,11 +115,11 @@ describe('GridService', () => {
         expect(lineToSpy).toHaveBeenCalledTimes(expectedCallLineToTimes);
         expect(fillSpy).toHaveBeenCalledTimes(expectedCallFillTimes);
     });
-    it(' drawLetterwithpositionstring should call strokeRect, drawLetterValuewithposition, fillRect, fillText 1, 3, 3, 3  times', () => {
+    it(' drawLetterwithpositionstring should call strokeRect, drawLetterValuewithposition, fillRect, fillText 1, 3, 2, 3  times', () => {
         const expectedCallFillTextTimes = 3;
         // called 2 times in the function and one time by drawtilebackground
         const expectedCallStrokeRectTimes = 3;
-        const expectedCallFillRectTimes = 3;
+        const expectedCallFillRectTimes = 2;
         const expectedDrawLetterValueWithPosition = 1;
         const strokeSpy = spyOn(service.gridContext, 'strokeRect').and.callThrough();
         const lineToSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
