@@ -24,10 +24,12 @@ describe('SoloGameInitiatorComponent', () => {
         socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendJoinGameInfo']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
         const player1 = new PlayerLetterHand(letterBankServiceSpy);
+        player1.allLettersInHand = [];
         for (let i = 0; i < MAXLETTERINHAND; i++) {
             player1.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
         }
         const player2 = new PlayerLetterHand(letterBankServiceSpy);
+        player2.allLettersInHand = [];
         for (let i = 0; i < MAXLETTERINHAND; i++) {
             player2.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
         }
