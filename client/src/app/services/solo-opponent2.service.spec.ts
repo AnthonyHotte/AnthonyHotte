@@ -2,14 +2,23 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { GameStateService } from './game-state.service';
 import { PlaceLettersService } from './place-letters.service';
 import { SoloOpponent2Service } from './solo-opponent2.service';
+import { LetterService } from '@app/services/letter.service';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { LetterBankService } from '@app/services/letter-bank.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
+import { NUMBEROFCASE, MAXLETTERINHAND } from '@app/constants';
 
-fdescribe('SoloOpponent2Service', () => {
+describe('SoloOpponent2Service', () => {
     let service: SoloOpponent2Service;
     let placeLettersServiceSpy: PlaceLettersService;
     let gameStateServiceSpy: GameStateService;
-
+    let lettersServiceSpy: LetterService;
+    let letterBankServiceSpy: LetterBankService;
+    let timeManagerServiceSpy: TimerTurnManagerService;
     beforeEach(
         waitForAsync(() => {
+            timeManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
+            timeManagerServiceSpy.turn = 0;
             gameStateServiceSpy = jasmine.createSpyObj('GameStateService', [
                 'placeLetter',
                 'isWordCreationPossibleWithRessources',
@@ -17,6 +26,24 @@ fdescribe('SoloOpponent2Service', () => {
                 'isWordTouchingLetterOnBoard',
                 'validateWordCreatedByNewLetters',
             ]);
+            gameStateServiceSpy.lettersOnBoard = [];
+            for (let i = 0; i < NUMBEROFCASE; i++) {
+                gameStateServiceSpy.lettersOnBoard[i] = [];
+                for (let j = 0; j < NUMBEROFCASE; j++) {
+                    gameStateServiceSpy.lettersOnBoard[i][j] = '';
+                }
+            }
+            letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+            lettersServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
+            const player1 = new PlayerLetterHand(letterBankServiceSpy);
+            for (let i = 0; i < MAXLETTERINHAND; i++) {
+                player1.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+            }
+            const player2 = new PlayerLetterHand(letterBankServiceSpy);
+            for (let i = 0; i < MAXLETTERINHAND; i++) {
+                player2.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+            }
+            lettersServiceSpy.players = [player1, player2];
             placeLettersServiceSpy = jasmine.createSpyObj('PlaceLettersService', [
                 'placeWord',
                 'removeLetterInGameState',
@@ -28,6 +55,9 @@ fdescribe('SoloOpponent2Service', () => {
                 providers: [
                     { provide: GameStateService, useValue: gameStateServiceSpy },
                     { provide: PlaceLettersService, useValue: placeLettersServiceSpy },
+                    { provide: LetterService, useValue: lettersServiceSpy },
+                    { provide: LetterBankService, useValue: letterBankServiceSpy },
+                    { provide: TimerTurnManagerService, useValue: timeManagerServiceSpy },
                 ],
             }).compileComponents();
         }),
