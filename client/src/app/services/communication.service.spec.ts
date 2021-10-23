@@ -55,9 +55,9 @@ describe('CommunicationService', () => {
         // actually send the request
         req.flush(sentMessage);
     });
-    /*
+
     it('should handle http error safely', () => {
-        service.basicGet({ title: 'titre', body: 'contenu' }).subscribe((response: Message) => {
+        service.basicGet().subscribe((response: Message) => {
             expect(response).toBeUndefined();
         }, fail);
 
@@ -65,5 +65,4 @@ describe('CommunicationService', () => {
         expect(req.request.method).toBe('GET');
         req.error(new ErrorEvent('Random error occurred'));
     });
-    */
 });
