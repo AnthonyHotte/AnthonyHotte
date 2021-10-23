@@ -7,7 +7,7 @@ import { LetterService } from './letter.service';
 import { PlaceLettersService } from './place-letters.service';
 import { MAXLETTERINHAND } from '@app/constants';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
-fdescribe('PlaceLettersService', () => {
+describe('PlaceLettersService', () => {
     let service: PlaceLettersService;
     let gameStateServiceSpy: GameStateService;
     let gridServiceSpy: GridService;
