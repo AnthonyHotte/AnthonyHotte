@@ -10,7 +10,7 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
 import { PlayerLetterHand } from './player-letter-hand';
 import { TextBox } from './text-box-behavior';
 
-fdescribe('TextBox', () => {
+describe('TextBox', () => {
     let textBox: TextBox;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let placerLetterServiceSpy: jasmine.SpyObj<PlaceLettersService>;
