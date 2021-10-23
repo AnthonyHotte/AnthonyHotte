@@ -3,7 +3,7 @@ import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
 import { DEFAULT_WIDTH } from '@app/constants';
 import { GridService } from '@app/services/grid.service';
 
-fdescribe('GridService', () => {
+describe('GridService', () => {
     let service: GridService;
     let ctxStub: CanvasRenderingContext2D;
 
