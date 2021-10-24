@@ -46,6 +46,12 @@ export class SocketService {
                 this.gameLists[i][2] = games[i][2]; // time per turn
             }
         });
+        this.socket.on('joinPlayerTurn', () => {
+            // start join turn
+        });
+        this.socket.on('createrPlayerTurn', () => {
+            // start creater turn
+        });
     }
     sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {
         this.socket.emit('startingNewGameInfo', { time: playTime, bonusOn: isBonusRandom, namePlayer: name, mode: gameType });
@@ -63,8 +69,3 @@ export class SocketService {
         this.socket.emit('createrPlayerTurn', this.initiateGameTypeService.roomNumber);
     }
 }
-// à envoyer
-// tableau lettre
-// gestion du temps
-// reserve lettre
-// validation cote serveur

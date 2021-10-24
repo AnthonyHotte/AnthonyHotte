@@ -32,7 +32,7 @@ export class SocketManager {
                     socket.emit('startGame', {
                         room: this.roomsService.rooms[this.roomsService.indexNextRoom],
                         playerNumber: 0,
-                        indexPlayerStart: this.roomsService.rooms[this.roomsService.indexNextRoom].turn,
+                        indexPlayerStart: this.roomsService.rooms[this.roomsService.indexNextRoom].startTurn,
                     });
                 } else {
                     // put the room in the waiting room list
@@ -52,7 +52,7 @@ export class SocketManager {
                 this.sio.to(this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].roomName).emit('startGame', {
                     room: this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index],
                     playerNumber: 1,
-                    indexPlayerStart: this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].turn,
+                    indexPlayerStart: this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].startTurn,
                 });
                 // take of the room from waiting room
                 this.roomsService.listRoomWaiting.splice(0, 1);
@@ -67,6 +67,12 @@ export class SocketManager {
                     }
                 }
                 socket.emit('sendGamesInformation', this.games);
+            });
+            socket.on('joinPLayerTurn', (roomNumber) => {
+                this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('joinPlayerTurn');
+            });
+            socket.on('createrPlayerTurn', (roomNumber) => {
+                this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('createrPlayerTurn');
             });
         });
     }
