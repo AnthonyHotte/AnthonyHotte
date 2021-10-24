@@ -18,6 +18,8 @@ export class TimerTurnManagerService {
     }
 
     endTurn(reason: string) {
+        //  const TIME_OUT_TIME = 3000; // TODO debug this
+        //  setTimeout(() => {
         if (reason === 'skip') {
             this.turnsSkippedInARow++;
         } else {
@@ -28,5 +30,6 @@ export class TimerTurnManagerService {
         } else {
             this.turn = 0;
         }
+        // }, TIME_OUT_TIME);
     }
 }

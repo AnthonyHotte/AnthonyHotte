@@ -165,6 +165,14 @@ export class PlaceLettersService {
         }
     }
 
+    drawWordwiththreeseconddelay() {
+        // this.tempword = tempword;
+        const TIME_OUT_TIME = 3000; // TODO debug this
+        setTimeout(() => {
+            this.drawWord();
+            // this.placeLetterService.placeWord(this.tempword);
+        }, TIME_OUT_TIME);
+    }
     validateWordPlaced() {
         if (!this.gameState.validateWordCreatedByNewLetters()) {
             const delay = 3000;
