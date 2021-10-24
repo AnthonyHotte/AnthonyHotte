@@ -4,6 +4,8 @@ import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { FinishGameService } from './finish-game.service';
 import { LetterService } from './letter.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
+import { GameStatus } from '@app/game-status';
+import { EmitToServer } from './emit-to-server.service';
 
 @Injectable({
     providedIn: 'root',
@@ -15,30 +17,39 @@ export class SoloOpponentService {
         public timeManager: TimerTurnManagerService,
         public soloOpponent2: SoloOpponent2Service,
         public finishGameService: FinishGameService,
+        private emitToServer: EmitToServer,
     ) {
         this.letters.players[1].addLetters(MAXLETTERINHAND);
     }
     play() {
-        if (this.timeManager.turn === 1) {
-            const HUNDRED = 100;
-            const TWENTY = 20;
-            const TEN = 10;
-            const SIX = 6;
-            const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
-            if (PROBABILITY_OF_ACTION > TWENTY) {
-                this.lastCommandEntered = this.soloOpponent2.play();
-                this.endTurn('place');
-            } else if (PROBABILITY_OF_ACTION <= TEN) {
-                this.skipTurn();
-            } else {
-                const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length) - 1;
-                if (NUMBER_OF_LETTERS_TO_TRADE <= SIX) {
-                    this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE + 1);
-                    this.endTurn('exchange');
-                } else {
+        if (this.timeManager.gameStatus === GameStatus.SoloPlayer) {
+            if (this.timeManager.turn === 1) {
+                const HUNDRED = 100;
+                const TWENTY = 20;
+                const TEN = 10;
+                const SIX = 6;
+                const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
+                if (PROBABILITY_OF_ACTION > TWENTY) {
+                    this.lastCommandEntered = this.soloOpponent2.play();
+                    this.endTurn('place');
+                } else if (PROBABILITY_OF_ACTION <= TEN) {
                     this.skipTurn();
+                } else {
+                    const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length) - 1;
+                    if (NUMBER_OF_LETTERS_TO_TRADE <= SIX) {
+                        this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE + 1);
+                        this.endTurn('exchange');
+                    } else {
+                        this.skipTurn();
+                    }
                 }
             }
+        } else if (this.timeManager.gameStatus === GameStatus.CreaterPlayer) {
+            // emit join Player turn
+            this.emitToServer.sendJoinPlayerTurn();
+        } else {
+            // emit creater turn
+            this.emitToServer.sendCreaterPlayerTurn();
         }
     }
     calculateProbability(percentage: number) {

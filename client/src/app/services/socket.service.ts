@@ -56,6 +56,12 @@ export class SocketService {
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
     }
+    sendJoinPlayerTurn() {
+        this.socket.emit('joinPLayerTurn', this.initiateGameTypeService.roomNumber);
+    }
+    sendCreaterPlayerTurn() {
+        this.socket.emit('createrPlayerTurn', this.initiateGameTypeService.roomNumber);
+    }
 }
 // à envoyer
 // tableau lettre
