@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { InitiateGameTypeService } from '@app/services/initiate-game-type.service';
+import { SocketService } from '@app/services/socket.service';
 
 @Component({
     selector: 'app-game-selection-page',
@@ -11,7 +12,7 @@ export class GameSelectionPageComponent {
     gameType: string;
     // attribut true if player create new game, false if joining
     isNewGame: boolean;
-    constructor(private initiateGameType: InitiateGameTypeService) {
+    constructor(private initiateGameType: InitiateGameTypeService, private socket: SocketService) {
         this.gameType = 'solo';
         this.isNewGame = false;
     }
@@ -30,5 +31,6 @@ export class GameSelectionPageComponent {
         this.gameType = 'multi player';
         this.isNewGame = false;
         this.initiateGameType.setGameType(this.gameType, this.isNewGame);
+        this.socket.sendGameListNeededNotification();
     }
 }

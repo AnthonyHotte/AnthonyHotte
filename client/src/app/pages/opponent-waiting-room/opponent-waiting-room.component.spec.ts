@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { GameSelectionPageComponent } from './game-selection-page.component';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('GameSelectionPageComponent', () => {
-    let component: GameSelectionPageComponent;
-    let fixture: ComponentFixture<GameSelectionPageComponent>;
+import { OpponentWaitingRoomComponent } from './opponent-waiting-room.component';
+
+describe('OpponentWaitingRoomComponent', () => {
+    let component: OpponentWaitingRoomComponent;
+    let fixture: ComponentFixture<OpponentWaitingRoomComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [GameSelectionPageComponent],
+            declarations: [OpponentWaitingRoomComponent],
             imports: [RouterTestingModule],
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(GameSelectionPageComponent);
+        fixture = TestBed.createComponent(OpponentWaitingRoomComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
