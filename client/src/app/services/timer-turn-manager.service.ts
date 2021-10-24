@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { ERRORCODE, VALEUR_TEMPS_DEFAULT } from '@app/constants';
-// import { CommunicationService } from './communication.service';
-// import { InitiateGameTypeService } from './initiate-game-type.service';
 
 @Injectable({
     providedIn: 'root',
@@ -14,7 +12,6 @@ export class TimerTurnManagerService {
     timePerTurn = VALEUR_TEMPS_DEFAULT;
 
     constructor() {
-        // private comunicationService: CommunicationService, private initiateGameTypeService: InitiateGameTypeService) {
         // turn is initialize when game start
         this.turn = ERRORCODE;
     }
