@@ -27,11 +27,11 @@ export class Room {
         this.turn = Math.floor(Math.random() * 2);
         this.turnsSkippedInARow = 0;
     }
-    setStartingInfo(time: number, name: string, socketId: string, bonusOn: boolean = false, gameSolo: boolean = false) {
+    setStartingInfo(time: number, namePlayer: string, socketId: string, bonusOn: boolean = false, gameSolo: boolean = false) {
         this.timePerTurn = time;
         this.bonusOn = bonusOn;
         this.gameSolo = gameSolo;
-        this.playerNames[0] = name;
+        this.playerNames[0] = namePlayer;
         this.socketsId.push(socketId);
     }
     endTurn(reason: string) {

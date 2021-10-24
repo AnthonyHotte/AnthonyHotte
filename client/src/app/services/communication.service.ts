@@ -17,11 +17,6 @@ export class CommunicationService {
         return this.http.get<Message>(`${this.baseUrl}/example`).pipe(catchError(this.handleError<Message>('basicGet')));
     }
 
-    // return turn in that room can either be 1 or 2, parameter is the index of that room
-    getTurnServer(indexRoom: number): Observable<Message> {
-        return this.http.get<Message>(`${this.baseUrl}/turn?index=${indexRoom}`).pipe(catchError(this.handleError<Message>('basicGet')));
-    }
-
     basicPost(message: Message): Observable<void> {
         return this.http.post<void>(`${this.baseUrl}/example/send`, message).pipe(catchError(this.handleError<void>('basicPost')));
     }
