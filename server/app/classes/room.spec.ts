@@ -29,21 +29,4 @@ describe('Room', () => {
         expect(room.playerNames[0]).equal('joueur1');
         expect(room.timePerTurn).equal(defaultTimePerTurn);
     });
-    it('end turn should change turn to 0', () => {
-        room.turn = 1;
-        room.endTurn('place');
-        expect(room.turn).equal(0);
-    });
-    it('end turn should change turn to 1', () => {
-        room.turn = 0;
-        room.endTurn('place');
-        expect(room.turn).equal(1);
-    });
-    it('end turn should change turn to 1 when skipped', () => {
-        room.turn = 0;
-        room.turnsSkippedInARow = 0;
-        room.endTurn('skip');
-        expect(room.turn).equal(1);
-        expect(room.turnsSkippedInARow).equal(1);
-    });
 });

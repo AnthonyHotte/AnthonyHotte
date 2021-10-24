@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-
+import { GameStatus } from '@app/game-status';
 import { ERRORCODE, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TimerTurnManagerService {
-    // signal error, initiation  of the game should change it to 0 or 1
+    gameStatus: GameStatus;
     turn: number;
     turnsSkippedInARow = 0;
     timePerTurn = VALEUR_TEMPS_DEFAULT;
@@ -15,7 +15,6 @@ export class TimerTurnManagerService {
         // turn is initialize when game start
         this.turn = ERRORCODE;
     }
-
     // will be move on server
     endTurn(reason: string) {
         //  const TIME_OUT_TIME = 3000; // TODO debug this
@@ -31,5 +30,15 @@ export class TimerTurnManagerService {
             this.turn = 0;
         }
         // }, TIME_OUT_TIME);
+    }
+    // to set the game status
+    setGameStatus(playerNumber: number, gameType: string) {
+        if (gameType === 'solo') {
+            this.gameStatus = GameStatus.SoloPlayer;
+        } else if (playerNumber === 0) {
+            this.gameStatus = GameStatus.CreaterPlayer;
+        } else {
+            this.gameStatus = GameStatus.JoinPlayer;
+        }
     }
 }

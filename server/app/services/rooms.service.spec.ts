@@ -8,7 +8,7 @@ describe('Date Service', () => {
         roomService = new RoomsService();
     });
 
-    it('currentTime should return a valid message', async () => {
+    it('should create 50 rooms', async () => {
         const NUMBEROFROOMS = 50;
         expect(roomService.rooms.length).to.equal(NUMBEROFROOMS);
     });

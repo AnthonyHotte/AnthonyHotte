@@ -32,6 +32,9 @@ export class SocketService {
             this.letterService.players[0].name = info.room.playerNames[0];
             if (this.initiateGameTypeService.gameType === 'multi player') {
                 this.letterService.players[1].name = info.room.playerNames[1];
+                this.timerTurnManagerService.setGameStatus(info.playerNumber, 'multi player');
+            } else {
+                this.timerTurnManagerService.setGameStatus(info.playerNumber, 'solo');
             }
             this.timerTurnManagerService.turn = info.indexPlayerStart;
             this.messageService.startGame();
@@ -43,6 +46,12 @@ export class SocketService {
                 this.gameLists[i][2] = games[i][2]; // time per turn
             }
         });
+        this.socket.on('joinPlayerTurn', () => {
+            // start join turn
+        });
+        this.socket.on('createrPlayerTurn', () => {
+            // start creater turn
+        });
     }
     sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {
         this.socket.emit('startingNewGameInfo', { time: playTime, bonusOn: isBonusRandom, namePlayer: name, mode: gameType });
@@ -53,9 +62,10 @@ export class SocketService {
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
     }
+    sendJoinPlayerTurn() {
+        this.socket.emit('joinPLayerTurn', this.initiateGameTypeService.roomNumber);
+    }
+    sendCreaterPlayerTurn() {
+        this.socket.emit('createrPlayerTurn', this.initiateGameTypeService.roomNumber);
+    }
 }
-// à envoyer
-// tableau lettre
-// gestion du temps
-// reserve lettre
-// validation cote serveur
