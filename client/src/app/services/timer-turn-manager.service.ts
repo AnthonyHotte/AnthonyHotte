@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
-import { VALEUR_TEMPS_DEFAULT } from '@app/constants';
+
+import { ERRORCODE, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TimerTurnManagerService {
-    turn: number = 0;
+    // signal error, initiation  of the game should change it to 0 or 1
+    turn: number;
     turnsSkippedInARow = 0;
     timePerTurn = VALEUR_TEMPS_DEFAULT;
 
     constructor() {
-        this.initiateGame();
+        // turn is initialize when game start
+        this.turn = ERRORCODE;
     }
 
-    initiateGame() {
-        this.turn = Math.floor(Math.random() * 2);
-    }
-
+    // will be move on server
     endTurn(reason: string) {
         //  const TIME_OUT_TIME = 3000; // TODO debug this
         //  setTimeout(() => {

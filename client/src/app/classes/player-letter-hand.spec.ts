@@ -9,6 +9,7 @@ describe('PlayerLetterHand', () => {
     beforeEach(
         waitForAsync(() => {
             letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+            letterBankServiceSpy.letterBank = [];
             TestBed.configureTestingModule({
                 providers: [{ provide: LetterBankService, useValue: letterBankServiceSpy }],
             }).compileComponents();

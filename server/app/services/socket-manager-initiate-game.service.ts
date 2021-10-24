@@ -1,89 +1,73 @@
 import * as io from 'socket.io';
 import * as http from 'http';
-import { Room } from '@app/classes/room';
-import { ERRORCODE } from '@app/constants';
+import { NUMBEROFROOMS } from '@app/constants';
+import { RoomsService } from './rooms.service';
+import { Service } from 'typedi';
 
+@Service()
 export class SocketManager {
+    games: string[][] = new Array(new Array());
     private sio: io.Server;
-    private rooms: Room[];
-    // private room: string = 'serverRoom';
-    constructor(server: http.Server) {
+
+    constructor(server: http.Server, private roomsService: RoomsService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
-        this.rooms = [];
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        for (let i = 0; i < 50; i++) {
-            this.rooms.push(new Room('room number' + i));
-        }
     }
 
     handleSockets(): void {
         this.sio.on('connection', (socket) => {
-            // eslint-disable-next-line no-console
-            console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
             socket.on('startingNewGameInfo', (message) => {
-                socket.join(this.rooms[0].roomName);
-                this.rooms[0].setStartingInfo(message.time, message.namePlayer, socket.id, message.bonusOn, message.gameType);
-                // eslint-disable-next-line no-console
-                console.log(`reception du temps: ${message.time}`);
+                // some clean up
+                this.roomsService.rooms[this.roomsService.indexNextRoom].cleanRoom();
+                socket.join(this.roomsService.rooms[this.roomsService.indexNextRoom].roomName);
+                // set the room parameters
+                this.roomsService.rooms[this.roomsService.indexNextRoom].setStartingInfo(
+                    message.time,
+                    message.namePlayer,
+                    socket.id,
+                    message.bonusOn,
+                    message.mode,
+                );
+                // start game if in solo mode
+                if (message.mode === 'solo') {
+                    socket.emit('startGame', {
+                        room: this.roomsService.rooms[this.roomsService.indexNextRoom],
+                        playerNumber: 0,
+                        indexPlayerStart: this.roomsService.rooms[this.roomsService.indexNextRoom].turn,
+                    });
+                } else {
+                    // put the room in the waiting room list
+                    this.roomsService.listRoomWaiting.push(this.roomsService.rooms[this.roomsService.indexNextRoom]);
+                }
+                // increment next room index but make sure it is not above 50
+                this.roomsService.indexNextRoom = ++this.roomsService.indexNextRoom % NUMBEROFROOMS;
             });
             socket.on('joinGame', (name) => {
-                socket.join(this.rooms[0].roomName);
-                this.rooms[0].playerNames.push(name);
-                this.rooms[0].socketsId.push(socket.id);
-                // eslint-disable-next-line no-console
-                console.log(`${socket.id} joining room 0`);
+                // join the oldest game in the waiting room
+                socket.join(this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].roomName);
+                // adding player name to the room
+                this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].playerNames[1] = name;
+                // adding socket id to the room
+                this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].socketsId[1] = socket.id;
+                // start game for everyone in the room
+                this.sio.to(this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].roomName).emit('startGame', {
+                    room: this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index],
+                    playerNumber: 1,
+                    indexPlayerStart: this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].turn,
+                });
+                // take of the room from waiting room
+                this.roomsService.listRoomWaiting.splice(0, 1);
             });
-            socket.on('disconnect', () => {
-                const index = this.rooms[0].socketsId.indexOf(socket.id);
-                if (index !== ERRORCODE) {
-                    this.rooms[0].socketsId.splice(index, 1);
-                    this.rooms[0].playerNames.splice(index, 1);
+            socket.on('returnListOfGames', () => {
+                this.games = new Array(new Array());
+                for (let i = 0; i < this.roomsService.indexNextRoom; i++) {
+                    if (!this.roomsService.rooms !== undefined || this.games !== undefined) {
+                        this.games[i][0] = this.roomsService.rooms[i].playerNames[0];
+                        this.games[i][1] = this.roomsService.rooms[i].bonusOn.toString();
+                        this.games[i][2] = this.roomsService.rooms[i].timePerTurn.toString();
+                    }
                 }
-                // eslint-disable-next-line no-console
-                console.log(`déconnexion par l'utilisateur avec id : ${socket.id}`);
+                socket.emit('sendGamesInformation', this.games);
             });
         });
     }
 }
-/*
-        this.sio.on('connection', (socket) => {
-            console.log(`Connexion par l'utilisateur avec id : ${socket.id}`);
-            // message initial
-            socket.emit('hello', 'Hello World!');
-
-            socket.on('message', (message: string) => {
-                console.log(message);
-            });
-            socket.on('validate', (word: string) => {
-                const isValid = word.length > 5;
-                socket.emit('wordValidated', isValid);
-            });
-
-            socket.on('broadcastAll', (message: string) => {
-                this.sio.sockets.emit('massMessage', `${socket.id} : ${message}`);
-            });
-
-            socket.on('joinRoom', () => {
-                socket.join(this.room);
-            });
-
-            socket.on('roomMessage', (message: string) => {
-                this.sio.to(this.room).emit('roomMessage', `${socket.id} : ${message}`);
-            });
-
-            socket.on('disconnect', (reason) => {
-                console.log(`Deconnexion par l'utilisateur avec id : ${socket.id}`);
-                console.log(`Raison de deconnexion : ${reason}`);
-            });
-        });
-
-        setInterval(() => {
-            this.emitTime();
-        }, 1000);
-    }
-    
-
-    private emitTime() {
-        this.sio.sockets.emit('clock', new Date().toLocaleTimeString());
-    }
-*/

@@ -33,10 +33,13 @@ describe('SidebarRightComponent', () => {
             timerTurnManagerServiceSpy.turn = 0;
             soloOpponentServiceSpy = jasmine.createSpyObj('SoloOpponentService', ['reset', 'play']);
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['getLettersForExchange', 'reset']);
-            letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
+            letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+            letterBankServiceSpy.letterBank = [];
             for (let i = 0; i < 3; i++) {
                 letterBankServiceSpy.letterBank.push({ letter: 'A', quantity: 9, point: 1 });
             }
+            letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
+
             textBoxSpy = jasmine.createSpyObj('TextBox', ['send', 'isCommand']);
             gridServiceSpy = jasmine.createSpyObj('GridService', ['increasePoliceSize']);
             placeLettersServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['policeSizeChanged']);
@@ -45,7 +48,6 @@ describe('SidebarRightComponent', () => {
             finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
             TestBed.configureTestingModule({
                 declarations: [SidebarRightComponent],
-
                 providers: [
                     { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
                     { provide: SoloOpponentService, useValue: soloOpponentServiceSpy },
@@ -67,7 +69,6 @@ describe('SidebarRightComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(SidebarRightComponent);
         component = fixture.componentInstance;
-        component.message = ['Jaque', 'Dupont', 'true', '10'];
         fixture.detectChanges();
     });
 
@@ -107,8 +108,9 @@ describe('SidebarRightComponent', () => {
         component.finishCurrentGame();
         expect(finishGameServiceSpy.isGameFinished).toBe(true);
     });
-    it('increaseFontSize should call navigate method ', () => {
+    it('increaseFontSize should call ncreasePoliceSize and policeSizeChanged method ', () => {
         component.increaseFontSize();
+        gridServiceSpy.increasePoliceSize.and.returnValue();
         expect(gridServiceSpy.increasePoliceSize).toHaveBeenCalled();
         expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
     });

@@ -1,0 +1,12 @@
+<body ng-app="app" style="text-align: Center">
+    <h1>Bienvenue à la séléction des parties en attente d'un joueur!</h1>
+    <div>
+    <button (click)="refresh()"> Mise à jour </button>
+    </div>
+    <div *ngFor="let game of this.gamesList">
+        <button [class]="game" pressed (click) = "this.changeValidity()"> Nom : {{game[0]}}, Bonus aléatoire : {{this.getBonusInLetters(game[1])}}, Temps de jeu : {{this.getTimePerTurn(game[2])}}  </button>
+    </div>
+    <button class="button" *ngIf="isValidSelection" routerLink="/soloInitiator"> Allez à la sélection du nom </button>
+    <button routerLink = "/selection"> Revenir en arrière </button>
+    </body>
+    

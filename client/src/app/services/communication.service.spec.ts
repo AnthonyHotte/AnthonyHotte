@@ -25,7 +25,7 @@ describe('CommunicationService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
-
+    /*
     it('should return expected message (HttpClient called once)', () => {
         const expectedMessage: Message = { body: 'Hello', title: 'World' };
 
@@ -40,7 +40,7 @@ describe('CommunicationService', () => {
         // actually send the request
         req.flush(expectedMessage);
     });
-
+*/
     it('should not return any message when sending a POST request (HttpClient called once)', () => {
         const sentMessage: Message = { body: 'Hello', title: 'World' };
         // subscribe to the mocked call
