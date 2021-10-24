@@ -93,6 +93,16 @@ export class PlayerLetterHand {
             this.letterBankService.letterBank.splice(index, 1);
         }
     }
+    removeLettersWithoutReplacingThem(lettersToRemove: string) {
+        for (let i = 0; i < lettersToRemove.length; i++) {
+            for (let j = 0; j < this.allLettersInHand.length; j++) {
+                if (this.allLettersInHand[j].letter.toLowerCase() === lettersToRemove.charAt(i)) {
+                    this.allLettersInHand.splice(j, 1);
+                    break;
+                }
+            }
+        }
+    }
 
     removeLettersForThreeSeconds(word: string) {
         for (let i = 0; i < word.length; i++) {

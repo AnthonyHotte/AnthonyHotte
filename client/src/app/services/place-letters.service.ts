@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as Constants from '@app/constants';
+import { MessagePlayer } from '@app/message';
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
@@ -219,9 +220,9 @@ export class PlaceLettersService {
         return tempWord.join(''); // reconstruct the string
     }
 
-    submitWordMadeClick(buttonPressed: string) {
-        if (buttonPressed === 'Enter') {
-            this.placeWord(this.placeLetterClick.transformIntoCommand());
-        }
+    submitWordMadeClick(): MessagePlayer {
+        const myMessage: MessagePlayer = { message: '', sender: this.letterService.players[0].name, role: 'Joueur' };
+        myMessage.message = this.placeLetterClick.transformIntoCommand();
+        return myMessage;
     }
 }

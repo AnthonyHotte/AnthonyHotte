@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { TextBox } from '@app/classes/text-box-behavior';
 import { Vec2 } from '@app/classes/vec2';
 import * as Constants from '@app/constants';
 import { GridService } from '@app/services/grid.service';
@@ -32,13 +33,18 @@ export class PlayAreaComponent implements AfterViewInit {
         private letterService: LetterService,
         private placeLetterClickService: PlaceLetterClickService,
         private placeLetterService: PlaceLettersService,
+        private textBox: TextBox,
     ) {}
 
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         this.letterService.setIndexSelectedSwapping(event.key);
         this.placeLetterClickService.placeLetter(event.key);
-        this.placeLetterService.submitWordMadeClick(event.key);
+        if (event.key === 'Enter' && this.placeLetterClickService.wordPlacedWithClick.length !== 0) {
+            const command = this.placeLetterService.submitWordMadeClick();
+            this.textBox.send(command);
+            this.textBox.isCommand(command.message);
+        }
     }
 
     @HostListener('mousewheel', ['$event'])

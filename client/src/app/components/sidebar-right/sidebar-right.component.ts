@@ -5,6 +5,7 @@ import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
+import { PlaceLetterClickService } from '@app/services/place-letter-click.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
@@ -30,6 +31,7 @@ export class SidebarRightComponent implements AfterViewInit {
         private textBox: TextBox,
         private readonly gridService: GridService,
         private readonly placeLetterService: PlaceLettersService,
+        private placeLetterClick: PlaceLetterClickService,
         private finishGameService: FinishGameService,
         private letterBankService: LetterBankService,
     ) {
@@ -60,6 +62,7 @@ export class SidebarRightComponent implements AfterViewInit {
 
     skipTurn() {
         this.textBox.isCommand('!passer');
+        this.placeLetterClick.reset();
         this.soloOpponentPlays();
     }
 

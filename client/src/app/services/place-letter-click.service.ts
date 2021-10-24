@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { LetterMap } from '@app/all-letters';
 import * as Constants from '@app/constants';
+import { Letter } from '@app/letter';
 import { GameStateService } from './game-state.service';
 import { GridService } from './grid.service';
 import { LetterService } from './letter.service';
@@ -16,6 +18,8 @@ export class PlaceLetterClickService {
     isTileSelected = false;
     wordPlacedWithClick = '';
     lastKeyPressed = '';
+    isLetterAtEdge = false;
+    lettersFromHand = '';
 
     constructor(private gridService: GridService, private letterService: LetterService, private gameState: GameStateService) {}
     placeLetter(letter: string) {
@@ -24,10 +28,16 @@ export class PlaceLetterClickService {
             if (letter === 'Backspace' && this.wordPlacedWithClick.length !== 0) {
                 this.removeLetterWithBackspace();
             } else if (this.letterService.players[0].handContainLetters(letter)) {
-                this.gridService.drawLetterwithpositionstring(letter, this.colomnNumber, this.row, 'red');
-                this.wordPlacedWithClick += letter;
-                this.handleRowAndColumnAfterLetter();
-                this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+                if (!this.isLetterAtEdge) {
+                    this.gridService.drawLetterwithpositionstring(letter, this.colomnNumber, this.row, 'red');
+                    this.lettersFromHand += letter;
+                    this.letterService.players[0].removeLettersWithoutReplacingThem(letter);
+                    this.wordPlacedWithClick += letter;
+                    this.handleRowAndColumnAfterLetter();
+                }
+                if (!this.isLetterAtEdge) {
+                    this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+                }
                 // TODO delete last arrow after word is validated
             }
         }
@@ -59,23 +69,25 @@ export class PlaceLetterClickService {
         }
     }
     handleRowAndColumnAfterLetter() {
-        let isLetterAtEdge = false;
+        this.isLetterAtEdge = false;
         do {
             if (this.orientation === 'h' && this.colomnNumber < Constants.NUMBEROFCASE) {
                 this.colomnNumber++;
-                if (this.colomnNumber === Constants.NUMBEROFCASE - 1) {
-                    isLetterAtEdge = true;
+                if (this.colomnNumber === Constants.NUMBEROFCASE) {
+                    this.isLetterAtEdge = true;
                 }
             } else if (this.orientation === 'v' && this.row < Constants.NUMBEROFCASE) {
                 this.row++;
-                if (this.row === Constants.NUMBEROFCASE - 1) {
-                    isLetterAtEdge = true;
+                if (this.row === Constants.NUMBEROFCASE) {
+                    this.isLetterAtEdge = true;
                 }
             }
-            if (this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== '') {
-                this.wordPlacedWithClick += this.gameState.lettersOnBoard[this.row][this.colomnNumber];
+            if (!this.isLetterAtEdge) {
+                if (this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== '') {
+                    this.wordPlacedWithClick += this.gameState.lettersOnBoard[this.row][this.colomnNumber];
+                }
             }
-        } while (this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== '' && !isLetterAtEdge);
+        } while (!this.isLetterAtEdge && this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== '');
     }
 
     transformIntoCommand(): string {
@@ -84,13 +96,7 @@ export class PlaceLetterClickService {
         command += (this.initialClickColumn + 1).toString();
         command += this.orientation + ' ';
         command += this.wordPlacedWithClick;
-        this.isTileSelected = false;
-        this.wordPlacedWithClick = '';
-        this.row = -1;
-        this.colomnNumber = -1;
-        this.orientation = '';
-        this.initialClickColumn = -1;
-        this.initialClickRow = -1;
+        this.reset();
         return command;
     }
 
@@ -105,12 +111,37 @@ export class PlaceLetterClickService {
     }
 
     removeLetterWithBackspace() {
-        this.gridService.drawtilebackground(this.colomnNumber, this.row);
-        if (this.orientation === 'h' && this.colomnNumber >= 0) {
-            this.colomnNumber--;
-        } else if (this.orientation === 'v' && this.row >= 0) {
-            this.row--;
+        if (this.isLetterAtEdge && this.orientation === 'h') {
+            this.colomnNumber = Constants.NUMBEROFCASE - 1;
+            while (this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== '') {
+                this.colomnNumber--;
+            }
+        } else if (this.isLetterAtEdge && this.orientation === 'v') {
+            this.row = Constants.NUMBEROFCASE - 1;
+            while (this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== '') {
+                this.row--;
+            }
         }
+        if (!this.isLetterAtEdge) {
+            this.gridService.drawtilebackground(this.colomnNumber, this.row);
+            if (this.orientation === 'h' && this.colomnNumber >= 0) {
+                this.colomnNumber--;
+            } else if (this.orientation === 'v' && this.row >= 0) {
+                this.row--;
+            }
+        }
+
+        this.isLetterAtEdge = false;
+        this.handleColumnAndRowAfterRemove();
+        this.wordPlacedWithClick = this.wordPlacedWithClick.substr(0, this.wordPlacedWithClick.length - 1);
+        const tempLetter = LetterMap.letterMap.letterMap.get(this.lettersFromHand.charAt(this.lettersFromHand.length - 1)) as Letter;
+        this.letterService.players[0].allLettersInHand.push(tempLetter);
+        this.lettersFromHand = this.lettersFromHand.substr(0, this.lettersFromHand.length - 1);
+        this.gridService.drawtilebackground(this.colomnNumber, this.row);
+        this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+    }
+
+    handleColumnAndRowAfterRemove() {
         while (this.gameState.lettersOnBoard[this.row][this.colomnNumber] !== '') {
             if (this.orientation === 'h' && this.colomnNumber >= 0) {
                 this.colomnNumber--;
@@ -119,14 +150,35 @@ export class PlaceLetterClickService {
             }
             this.wordPlacedWithClick = this.wordPlacedWithClick.substr(0, this.wordPlacedWithClick.length - 1);
         }
-        this.wordPlacedWithClick = this.wordPlacedWithClick.substr(0, this.wordPlacedWithClick.length - 1);
-        this.gridService.drawtilebackground(this.colomnNumber, this.row);
-        this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
     }
 
     removeArrowIfNeeded(row: number, column: number) {
         if (this.wordPlacedWithClick.length === 0 || this.lastKeyPressed === 'Backspace') {
             this.gridService.drawtilebackground(column, row);
         }
+    }
+
+    removeWholeWord() {
+        for (const letter of this.lettersFromHand) {
+            if (this.lettersFromHand.length !== 0) {
+                this.removeLetterWithBackspace();
+                const tempLetter = LetterMap.letterMap.letterMap.get(letter) as Letter;
+                this.letterService.players[0].allLettersInHand.push(tempLetter);
+            }
+        }
+        this.removeArrowIfNeeded(this.initialClickRow, this.initialClickColumn);
+    }
+
+    reset() {
+        this.removeWholeWord();
+        this.isTileSelected = false;
+        this.isLetterAtEdge = false;
+        this.lettersFromHand = '';
+        this.wordPlacedWithClick = '';
+        this.row = -1;
+        this.colomnNumber = -1;
+        this.orientation = '';
+        this.initialClickColumn = -1;
+        this.initialClickRow = -1;
     }
 }
