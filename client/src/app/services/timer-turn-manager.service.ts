@@ -17,7 +17,7 @@ export class TimerTurnManagerService {
     constructor() {
         // turn is initialize when game start
         this.turn = ERRORCODE;
-        this.indexTurn.next(this.turn);
+        this.indexTurn = new BehaviorSubject(ERRORCODE);
     }
     // will be move on server
     endTurn(reason: string) {

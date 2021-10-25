@@ -10,10 +10,11 @@ export class EmitToServer {
     turnManager: Observable<number>;
     constructor(private socketService: SocketService, private timeTurnManager: TimerTurnManagerService) {
         this.timeTurnManager.indexTurn.subscribe((indexTurn) => {
-            // next player turn is creater player
+            // index turn can be -1 if there is an error
             if (indexTurn) {
+                // next player turn is creater player
                 this.socketService.sendCreaterPlayerTurn();
-            } else {
+            } else if (indexTurn === 1) {
                 // next player turn is joiner
                 this.socketService.sendJoinPlayerTurn();
             }
