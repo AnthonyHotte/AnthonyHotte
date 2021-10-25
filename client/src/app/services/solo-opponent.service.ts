@@ -5,7 +5,7 @@ import { FinishGameService } from './finish-game.service';
 import { LetterService } from './letter.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 import { GameStatus } from '@app/game-status';
-import { EmitToServer } from './emit-to-server.service';
+// import { EmitToServer } from './emit-to-server.service';
 
 @Injectable({
     providedIn: 'root',
@@ -16,8 +16,7 @@ export class SoloOpponentService {
         public letters: LetterService,
         public timeManager: TimerTurnManagerService,
         public soloOpponent2: SoloOpponent2Service,
-        public finishGameService: FinishGameService,
-        private emitToServer: EmitToServer,
+        public finishGameService: FinishGameService, // private emitToServer: EmitToServer,
     ) {
         this.letters.players[1].addLetters(MAXLETTERINHAND);
     }
@@ -46,10 +45,10 @@ export class SoloOpponentService {
             }
         } else if (this.timeManager.gameStatus === GameStatus.CreaterPlayer) {
             // emit join Player turn
-            this.emitToServer.sendJoinPlayerTurn();
+            // this.emitToServer.sendJoinPlayerTurn();
         } else {
             // emit creater turn
-            this.emitToServer.sendCreaterPlayerTurn();
+            // this.emitToServer.sendCreaterPlayerTurn();
         }
     }
     calculateProbability(percentage: number) {
