@@ -110,8 +110,10 @@ export class SidebarRightComponent implements AfterViewInit {
         this.changedTurns = false;
     }
 
-    soloOpponentPlays() {
-        this.wait3SecondsBeginningOfTurn();
+    async soloOpponentPlays() {
+        // this.wait3SecondsBeginningOfTurn();
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        await this.delay(4000);
         this.soloOpponent.play();
         let message: MessagePlayer;
         if (this.textBox.debugCommand) {
@@ -122,12 +124,7 @@ export class SidebarRightComponent implements AfterViewInit {
         this.textBox.inputs.push(message);
         this.textBox.scrollDown();
     }
-    wait3SecondsBeginningOfTurn(): boolean {
-        // const milliseconds = 1000; // to transform miliseconds in seconds
-        const threeseconds = 3; // 3 seconds in miliseconds
-        while (this.counter.time > this.turnTimeController.timePerTurn - threeseconds) {
-            // do nothing
-        }
-        return true;
+    async delay(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
     }
 }
