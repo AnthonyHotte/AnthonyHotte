@@ -37,7 +37,7 @@
                 >s
             </div>
             <br />
-            <button *ngIf="(this.turnTimeController.turn === 0 && this.turnTimeController.gameStatus === 2) || (this.turnTimeController.gameStatus === this.turnTimeController.turn) " class="buttonfontsize" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button>
+            <button *ngIf="showPassButton()" class="buttonfontsize" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button>
         </fieldset>
         <fieldset>
             <label> Nombre de lettres dans la réserve: {{ getNumberRemainingLetters() }} </label>

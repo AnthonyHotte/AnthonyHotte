@@ -13,11 +13,11 @@ export class TimerTurnManagerService {
     timePerTurn = VALEUR_TEMPS_DEFAULT;
     // usefull to send information that turn is over to server
     indexTurn: BehaviorSubject<number>;
-
+    // turnObserver: Observer<number>;
     constructor() {
         // turn is initialize when game start
         this.turn = ERRORCODE;
-        this.indexTurn = new BehaviorSubject(ERRORCODE);
+        this.indexTurn = new BehaviorSubject(0);
     }
     // will be move on server
     endTurn(reason: string) {

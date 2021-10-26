@@ -42,6 +42,12 @@ export class SidebarRightComponent implements AfterViewInit {
             this.soloOpponentPlays();
         }
     }
+    showPassButton() {
+        return (
+            (this.turnTimeController.turn === 0 && this.turnTimeController.gameStatus === 2) ||
+            this.turnTimeController.gameStatus === this.turnTimeController.turn
+        );
+    }
 
     setAttribute() {
         this.time = this.turnTimeController.timePerTurn;
