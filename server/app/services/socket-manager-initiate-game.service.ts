@@ -1,16 +1,17 @@
 import * as io from 'socket.io';
 import * as http from 'http';
-import { NUMBEROFROOMS } from '@app/constants';
+import { NUMBEROFROOMS, MAX_NUMBER_SKIPPED_TURNS } from '@app/constants';
 import { RoomsService } from './rooms.service';
 import { Service } from 'typedi';
 
 @Service()
 export class SocketManager {
-    games: string[][] = new Array(new Array());
+    games: string[][];
     private sio: io.Server;
 
     constructor(server: http.Server, private roomsService: RoomsService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
+        this.games = [[]];
     }
 
     handleSockets(): void {
@@ -25,7 +26,6 @@ export class SocketManager {
                     message.namePlayer,
                     socket.id,
                     message.bonusOn,
-                    message.mode,
                 );
                 // start game if in solo mode
                 if (message.mode === 'solo') {
@@ -68,11 +68,25 @@ export class SocketManager {
                 }
                 socket.emit('sendGamesInformation', this.games);
             });
-            socket.on('joinPLayerTurn', (roomNumber) => {
-                this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('joinPlayerTurn');
+            socket.on('joinPLayerTurn', (endTurnInfo) => {
+                this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow = endTurnInfo.numberSkipTurn;
+                if (this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow === MAX_NUMBER_SKIPPED_TURNS) {
+                    // emit finish Game
+                }
+                // message to every one in the room
+                this.sio
+                    .to(this.roomsService.rooms[endTurnInfo.roomNumber].roomName)
+                    .emit('joinPlayerTurnFromServer', this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow);
             });
-            socket.on('createrPlayerTurn', (roomNumber) => {
-                this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('createrPlayerTurn');
+            socket.on('createrPlayerTurn', (endTurnInfo) => {
+                this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow = endTurnInfo.numberSkipTurn;
+                if (this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow === MAX_NUMBER_SKIPPED_TURNS) {
+                    // emit finish Game
+                }
+                // message to every one in the room
+                this.sio
+                    .to(this.roomsService.rooms[endTurnInfo.roomNumber].roomName)
+                    .emit('createrPlayerTurnFromServer', this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow);
             });
         });
     }
