@@ -24,7 +24,7 @@ export class SidebarRightComponent implements AfterViewInit {
     changedTurns: boolean = false;
 
     constructor(
-        private turnTimeController: TimerTurnManagerService,
+        public turnTimeController: TimerTurnManagerService,
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
         private textBox: TextBox,

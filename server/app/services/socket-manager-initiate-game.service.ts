@@ -6,11 +6,12 @@ import { Service } from 'typedi';
 
 @Service()
 export class SocketManager {
-    games: string[][] = new Array(new Array());
+    games: string[][];
     private sio: io.Server;
 
     constructor(server: http.Server, private roomsService: RoomsService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
+        this.games = [[]];
     }
 
     handleSockets(): void {

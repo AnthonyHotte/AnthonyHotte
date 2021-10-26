@@ -1,5 +1,5 @@
 export enum GameStatus {
-    SoloPlayer,
-    CreaterPlayer,
-    JoinPlayer,
+    CreaterPlayer = 0,
+    JoinPlayer = 1,
+    SoloPlayer = 2,
 }

@@ -10,7 +10,7 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
 })
 export class SocketService {
     socket = io('http://localhost:3000');
-    gameLists: string[][] = [[]];
+    gameLists: string[][];
 
     constructor(
         private messageService: MessageService,
@@ -19,6 +19,7 @@ export class SocketService {
         private initiateGameTypeService: InitiateGameTypeService,
     ) {
         this.configureBaseSocketFeatures();
+        this.gameLists = [[]];
     }
 
     configureBaseSocketFeatures() {
@@ -40,17 +41,23 @@ export class SocketService {
             this.messageService.startGame();
         });
         this.socket.on('sendGamesInformation', (games) => {
+            // eslint-disable-next-line no-console
+            console.log('game information');
             for (let i = 0; i < games.length; i++) {
                 this.gameLists[i][0] = games[i][0]; // player name of who is the game initiator
                 this.gameLists[i][1] = games[i][1]; // is random bonus on
                 this.gameLists[i][2] = games[i][2]; // time per turn
             }
         });
-        this.socket.on('joinPlayerTurn', () => {
+        this.socket.on('joinPlayerTurnFromServer', (skippedTurn) => {
             // start join turn
+            this.timerTurnManagerService.turn = 1;
+            this.timerTurnManagerService.turnsSkippedInARow = skippedTurn;
         });
-        this.socket.on('createrPlayerTurn', () => {
+        this.socket.on('createrPlayerTurnFromServer', (skippedTurn) => {
             // start creater turn
+            this.timerTurnManagerService.turn = 0;
+            this.timerTurnManagerService.turnsSkippedInARow = skippedTurn;
         });
     }
     sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {
@@ -63,9 +70,18 @@ export class SocketService {
         this.socket.emit('returnListOfGames');
     }
     sendJoinPlayerTurn() {
-        this.socket.emit('joinPLayerTurn', this.initiateGameTypeService.roomNumber);
+        this.socket.emit('joinPLayerTurn', {
+            roomName: this.initiateGameTypeService.roomNumber,
+            numberSkipTurn: this.timerTurnManagerService.turnsSkippedInARow,
+        });
     }
     sendCreaterPlayerTurn() {
-        this.socket.emit('createrPlayerTurn', this.initiateGameTypeService.roomNumber);
+        this.socket.emit(
+            'createrPlayerTurn',
+            this.socket.emit('joinPLayerTurn', {
+                roomNumber: this.initiateGameTypeService.roomNumber,
+                numberSkipTurn: this.timerTurnManagerService.turnsSkippedInARow,
+            }),
+        );
     }
 }
