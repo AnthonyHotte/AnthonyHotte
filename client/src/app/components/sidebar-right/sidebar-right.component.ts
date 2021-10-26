@@ -22,7 +22,6 @@ export class SidebarRightComponent implements AfterViewInit {
     time: number;
     turn: number;
     changedTurns: boolean = false;
-
     constructor(
         public turnTimeController: TimerTurnManagerService,
         private soloOpponent: SoloOpponentService,
@@ -111,7 +110,10 @@ export class SidebarRightComponent implements AfterViewInit {
         this.changedTurns = false;
     }
 
-    soloOpponentPlays() {
+    async soloOpponentPlays() {
+        // this.wait3SecondsBeginningOfTurn();
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        await this.delay(4000);
         this.soloOpponent.play();
         let message: MessagePlayer;
         if (this.textBox.debugCommand) {
@@ -121,5 +123,8 @@ export class SidebarRightComponent implements AfterViewInit {
         }
         this.textBox.inputs.push(message);
         this.textBox.scrollDown();
+    }
+    async delay(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
     }
 }
