@@ -3,6 +3,8 @@ import { LETTERS } from '@app/all-letters';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { Letter } from '@app/letter';
 import { LetterBankService } from '@app/services/letter-bank.service';
+import { Subscription } from 'rxjs';
+import { SocketService } from './socket.service';
 
 @Injectable({
     providedIn: 'root',
@@ -15,14 +17,21 @@ export class LetterService {
     indexSelectedExchange: number[];
     lettersSelectedExchange = '';
     areLetterSelectedExchange: boolean;
+    playerNameZeroSubscription: Subscription;
+    playerNameOneSubscription: Subscription;
 
-    constructor(private letterBankService: LetterBankService) {
+    constructor(private letterBankService: LetterBankService, private socketService: SocketService) {
         this.players = [new PlayerLetterHand(letterBankService), new PlayerLetterHand(letterBankService)];
         this.isLetterSelectedSwapping = false;
         this.areLetterSelectedExchange = false;
         this.indexSelectedExchange = [];
+        this.playerNameZeroSubscription = this.socketService.playerNameIndexZer0.subscribe((playerName) => {
+            this.players[0].name = playerName;
+        });
+        this.playerNameOneSubscription = this.socketService.playerNameIndexOne.subscribe((playerName) => {
+            this.players[1].name = playerName;
+        });
     }
-
     reset() {
         this.letterBankService.letterBank = [];
         LETTERS.forEach((letter) => {

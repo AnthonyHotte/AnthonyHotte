@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
+import { GameStatus } from '@app/game-status';
+import { BehaviorSubject } from 'rxjs';
 import { io } from 'socket.io-client';
-import { InitiateGameTypeService } from './initiate-game-type.service';
-import { LetterService } from './letter.service';
-import { MessageService } from './message.service';
-import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 @Injectable({
     providedIn: 'root',
@@ -11,15 +9,28 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
 export class SocketService {
     socket = io('http://localhost:3000');
     gameLists: string[][];
+    roomNumber: number;
+    startGame: BehaviorSubject<boolean>;
+    gameStatus: BehaviorSubject<GameStatus>;
+    playerNameIndexZer0: BehaviorSubject<string>;
+    playerNameIndexOne: BehaviorSubject<string>;
+    turn: BehaviorSubject<number>;
+    skippedTurn: BehaviorSubject<number>;
 
-    constructor(
-        private messageService: MessageService,
-        private letterService: LetterService,
-        private timerTurnManagerService: TimerTurnManagerService,
-        private initiateGameTypeService: InitiateGameTypeService,
-    ) {
-        this.configureBaseSocketFeatures();
+    constructor() {
         this.gameLists = [[]];
+        this.startGame = new BehaviorSubject<boolean>(false);
+        this.roomNumber = 0;
+        this.gameStatus = new BehaviorSubject<GameStatus>(0);
+        // default value shoul be over right
+        this.playerNameIndexZer0 = new BehaviorSubject<string>('joueur1');
+        // default value should be over right
+        this.playerNameIndexOne = new BehaviorSubject<string>('joueur2');
+        // default value should never be over right
+        this.turn = new BehaviorSubject<number>(0);
+        // default value should never be over right
+        this.skippedTurn = new BehaviorSubject<number>(0);
+        this.configureBaseSocketFeatures();
     }
 
     configureBaseSocketFeatures() {
@@ -29,20 +40,16 @@ export class SocketService {
             console.log('connected!');
         });
         this.socket.on('startGame', (info) => {
-            this.initiateGameTypeService.roomNumber = info.room.index;
-            this.letterService.players[0].name = info.room.playerNames[0];
-            if (this.initiateGameTypeService.gameType === 'multi player') {
-                this.letterService.players[1].name = info.room.playerNames[1];
-                this.timerTurnManagerService.setGameStatus(info.playerNumber, 'multi player');
-            } else {
-                this.timerTurnManagerService.setGameStatus(info.playerNumber, 'solo');
-            }
-            this.timerTurnManagerService.turn = info.indexPlayerStart;
-            this.messageService.startGame();
+            this.roomNumber = info.room.index;
+            this.playerNameIndexZer0.next(info.playerName);
+            this.playerNameIndexOne.next(info.opponentName);
+            this.turn.next(info.indexPlayerStart);
+            this.startGame.next(true);
+        });
+        this.socket.on('gameMode', (gameMode) => {
+            this.gameStatus.next(gameMode);
         });
         this.socket.on('sendGamesInformation', (games) => {
-            // eslint-disable-next-line no-console
-            console.log('game information');
             for (let i = 0; i < games.length; i++) {
                 this.gameLists[i][0] = games[i][0]; // player name of who is the game initiator
                 this.gameLists[i][1] = games[i][1]; // is random bonus on
@@ -51,17 +58,23 @@ export class SocketService {
         });
         this.socket.on('joinPlayerTurnFromServer', (skippedTurn) => {
             // start join turn
-            this.timerTurnManagerService.turn = 1;
-            this.timerTurnManagerService.turnsSkippedInARow = skippedTurn;
+            this.turn.next(1);
+            this.skippedTurn.next(skippedTurn);
         });
         this.socket.on('createrPlayerTurnFromServer', (skippedTurn) => {
             // start creater turn
-            this.timerTurnManagerService.turn = 0;
-            this.timerTurnManagerService.turnsSkippedInARow = skippedTurn;
+            this.turn.next(0);
+            this.skippedTurn.next(skippedTurn);
         });
     }
-    sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {
-        this.socket.emit('startingNewGameInfo', { time: playTime, bonusOn: isBonusRandom, namePlayer: name, mode: gameType });
+    sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameStatus: GameStatus, opponentName: string) {
+        this.socket.emit('startingNewGameInfo', {
+            time: playTime,
+            bonusOn: isBonusRandom,
+            namePlayer: name,
+            mode: gameStatus,
+            nameOpponent: opponentName,
+        });
     }
     sendJoinGameInfo(name: string) {
         this.socket.emit('joinGame', name);
@@ -69,18 +82,18 @@ export class SocketService {
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
     }
-    sendJoinPlayerTurn() {
+    sendJoinPlayerTurn(turnsSkippedInARow: number) {
         this.socket.emit('joinPLayerTurn', {
-            roomName: this.initiateGameTypeService.roomNumber,
-            numberSkipTurn: this.timerTurnManagerService.turnsSkippedInARow,
+            roomName: this.roomNumber,
+            numberSkipTurn: turnsSkippedInARow,
         });
     }
-    sendCreaterPlayerTurn() {
+    sendCreaterPlayerTurn(turnsSkippedInARow: number) {
         this.socket.emit(
             'createrPlayerTurn',
             this.socket.emit('joinPLayerTurn', {
-                roomNumber: this.initiateGameTypeService.roomNumber,
-                numberSkipTurn: this.timerTurnManagerService.turnsSkippedInARow,
+                roomNumber: this.roomNumber,
+                numberSkipTurn: turnsSkippedInARow,
             }),
         );
     }

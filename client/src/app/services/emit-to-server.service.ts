@@ -11,10 +11,10 @@ export class EmitToServer {
             // index turn can be -1 if there is an error
             if (indexTurn) {
                 // next player turn is creater player
-                this.socketService.sendCreaterPlayerTurn();
+                this.socketService.sendCreaterPlayerTurn(this.timeTurnManager.turnsSkippedInARow);
             } else if (indexTurn === 1) {
                 // next player turn is joiner
-                this.socketService.sendJoinPlayerTurn();
+                this.socketService.sendJoinPlayerTurn(this.timeTurnManager.turnsSkippedInARow);
             }
         });
     }

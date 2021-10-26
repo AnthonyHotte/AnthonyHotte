@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
-import { InitiateGameTypeService } from '@app/services/initiate-game-type.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { SocketService } from '@app/services/socket.service';
@@ -12,7 +11,6 @@ import { SoloGameInitiatorComponent } from './solo-game-initiator.component';
 describe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
     let fixture: ComponentFixture<SoloGameInitiatorComponent>;
-    let initiateTypeGameSpy: jasmine.SpyObj<InitiateGameTypeService>;
     let socketServiceSpy: jasmine.SpyObj<SocketService>;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let tileScramblerServiceSpy: jasmine.SpyObj<TileScramblerService>;
@@ -20,7 +18,6 @@ describe('SoloGameInitiatorComponent', () => {
     let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
     beforeEach(async () => {
         letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
-        initiateTypeGameSpy = jasmine.createSpyObj('InitiateGameTypeService', ['setGameType']);
         socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendJoinGameInfo']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
         const player1 = new PlayerLetterHand(letterBankServiceSpy);
@@ -40,7 +37,6 @@ describe('SoloGameInitiatorComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [SoloGameInitiatorComponent],
             providers: [
-                { provide: InitiateGameTypeService, useValue: initiateTypeGameSpy },
                 { provide: SocketService, useValue: socketServiceSpy },
                 { provide: LetterService, useValue: letterServiceSpy },
                 { provide: TileScramblerService, useValue: tileScramblerServiceSpy },

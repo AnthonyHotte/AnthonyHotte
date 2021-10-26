@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { InitiateGameTypeService } from '@app/services/initiate-game-type.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 
 @Component({
     selector: 'app-waiting-room',
@@ -7,8 +7,8 @@ import { InitiateGameTypeService } from '@app/services/initiate-game-type.servic
     styleUrls: ['./waiting-room.component.scss'],
 })
 export class WaitingRoomComponent {
-    constructor(private initiateGameTypeService: InitiateGameTypeService) {}
+    constructor(private timeTurnManager: TimerTurnManagerService) {}
     setSoloType() {
-        this.initiateGameTypeService.setGameType('solo', true);
+        this.timeTurnManager.gameStatus = 2;
     }
 }
