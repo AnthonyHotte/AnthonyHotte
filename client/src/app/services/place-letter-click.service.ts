@@ -5,6 +5,7 @@ import { Letter } from '@app/letter';
 import { GameStateService } from './game-state.service';
 import { GridService } from './grid.service';
 import { LetterService } from './letter.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 @Injectable({
     providedIn: 'root',
@@ -21,7 +22,12 @@ export class PlaceLetterClickService {
     isLetterAtEdge = false;
     lettersFromHand = '';
 
-    constructor(private gridService: GridService, private letterService: LetterService, private gameState: GameStateService) {}
+    constructor(
+        private gridService: GridService,
+        private letterService: LetterService,
+        private gameState: GameStateService,
+        private timeManager: TimerTurnManagerService,
+    ) {}
     placeLetter(letter: string) {
         if (this.isTileSelected) {
             this.lastKeyPressed = letter;
@@ -43,28 +49,30 @@ export class PlaceLetterClickService {
         }
     }
     caseSelected(xPos: number, yPos: number) {
-        if (this.wordPlacedWithClick.length === 0) {
-            const tempColumn = this.rawXYPositionToCasePosition(xPos);
-            const tempRow = this.rawXYPositionToCasePosition(yPos);
-            if (this.isTileSelected && this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
-                this.removeArrowIfNeeded(this.initialClickRow, this.initialClickColumn);
-            }
-            if (this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
-                if (tempRow === this.row && tempColumn === this.colomnNumber) {
-                    this.changeOrientation();
-                    // todo isma discussion ici
-                    this.gridService.drawtilebackground(this.colomnNumber, this.row);
-                } else {
-                    this.orientation = 'h';
-                    this.colomnNumber = tempColumn; // pas de -1 ici je crois
-                    // this.colomnNumber = tempColumn -1;
-                    // this.row = tempRow - 1;
-                    this.row = tempRow;
+        if (this.timeManager.turn === 0) {
+            if (this.wordPlacedWithClick.length === 0) {
+                const tempColumn = this.rawXYPositionToCasePosition(xPos);
+                const tempRow = this.rawXYPositionToCasePosition(yPos);
+                if (this.isTileSelected && this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
+                    this.removeArrowIfNeeded(this.initialClickRow, this.initialClickColumn);
                 }
-                this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
-                this.isTileSelected = true;
-                this.initialClickRow = this.row;
-                this.initialClickColumn = this.colomnNumber;
+                if (this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
+                    if (tempRow === this.row && tempColumn === this.colomnNumber) {
+                        this.changeOrientation();
+                        // todo isma discussion ici
+                        this.gridService.drawtilebackground(this.colomnNumber, this.row);
+                    } else {
+                        this.orientation = 'h';
+                        this.colomnNumber = tempColumn; // pas de -1 ici je crois
+                        // this.colomnNumber = tempColumn -1;
+                        // this.row = tempRow - 1;
+                        this.row = tempRow;
+                    }
+                    this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+                    this.isTileSelected = true;
+                    this.initialClickRow = this.row;
+                    this.initialClickColumn = this.colomnNumber;
+                }
             }
         }
     }
@@ -159,26 +167,27 @@ export class PlaceLetterClickService {
     }
 
     removeWholeWord() {
-        for (const letter of this.lettersFromHand) {
+        const numberOfBackspaceNecessary = this.lettersFromHand.length;
+        for (let i = 0; i < numberOfBackspaceNecessary; i++) {
             if (this.lettersFromHand.length !== 0) {
                 this.removeLetterWithBackspace();
-                const tempLetter = LetterMap.letterMap.letterMap.get(letter) as Letter;
-                this.letterService.players[0].allLettersInHand.push(tempLetter);
             }
         }
         this.removeArrowIfNeeded(this.initialClickRow, this.initialClickColumn);
     }
 
     reset() {
-        this.removeWholeWord();
-        this.isTileSelected = false;
-        this.isLetterAtEdge = false;
-        this.lettersFromHand = '';
-        this.wordPlacedWithClick = '';
-        this.row = -1;
-        this.colomnNumber = -1;
-        this.orientation = '';
-        this.initialClickColumn = -1;
-        this.initialClickRow = -1;
+        if (this.isTileSelected) {
+            this.removeWholeWord();
+            this.isTileSelected = false;
+            this.isLetterAtEdge = false;
+            this.lettersFromHand = '';
+            this.wordPlacedWithClick = '';
+            this.row = -1;
+            this.colomnNumber = -1;
+            this.orientation = '';
+            this.initialClickColumn = -1;
+            this.initialClickRow = -1;
+        }
     }
 }
