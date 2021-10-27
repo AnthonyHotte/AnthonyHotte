@@ -43,13 +43,12 @@ export class SocketManager {
                 // increment next room index but make sure it is not above 50
                 this.roomsService.indexNextRoom = ++this.roomsService.indexNextRoom % NUMBEROFROOMS;
             });
-            socket.on('joinGame', (name) => {
-                // join the oldest game in the waiting room
-                // need to change index 0 for the right one !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                const roomNumber = this.roomsService.listRoomWaiting[0].index;
+            socket.on('joinGame', (info) => {
+                // join the waiting room
+                const roomNumber = this.roomsService.listRoomWaiting[info.indexInWaitingRoom].index;
                 socket.join(this.roomsService.rooms[roomNumber].roomName);
                 // adding player name to the room
-                this.roomsService.rooms[roomNumber].playerNames[1] = name;
+                this.roomsService.rooms[roomNumber].playerNames[1] = info.playerJoinName;
                 // adding socket id to the room
                 this.roomsService.rooms[roomNumber].socketsId[1] = socket.id;
                 // start game for everyone in the room
@@ -65,7 +64,7 @@ export class SocketManager {
                     opponentName: this.roomsService.rooms[roomNumber].playerNames[1],
                 });
                 // take of the room from waiting room
-                this.roomsService.listRoomWaiting.splice(0, 1);
+                this.roomsService.listRoomWaiting.splice(info.indexInWaitingRoom, 1);
             });
             socket.on('returnListOfGames', () => {
                 this.games = new Array(new Array());
