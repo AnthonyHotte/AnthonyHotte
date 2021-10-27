@@ -68,7 +68,7 @@ export class SocketManager {
             });
             socket.on('returnListOfGames', () => {
                 this.games = new Array(new Array());
-                for (let i = 0; i < this.roomsService.indexNextRoom; i++) {
+                for (let i = 0; i < this.roomsService.listRoomWaiting.length; i++) {
                     if (!this.roomsService.rooms !== undefined || this.games !== undefined) {
                         this.games[i][0] = this.roomsService.rooms[i].playerNames[0];
                         this.games[i][1] = this.roomsService.rooms[i].bonusOn.toString();

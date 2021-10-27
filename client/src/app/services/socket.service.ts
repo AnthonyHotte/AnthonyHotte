@@ -84,7 +84,7 @@ export class SocketService {
     }
     sendJoinPlayerTurn(turnsSkippedInARow: number) {
         this.socket.emit('joinPLayerTurn', {
-            roomName: this.roomNumber,
+            roomNumber: this.roomNumber,
             numberSkipTurn: turnsSkippedInARow,
         });
     }
