@@ -1,8 +1,9 @@
-import * as io from 'socket.io';
-import * as http from 'http';
 import { NUMBEROFROOMS } from '@app/constants';
-import { RoomsService } from './rooms.service';
+import { MessagePlayer } from '@app/messages';
+import * as http from 'http';
+import * as io from 'socket.io';
 import { Service } from 'typedi';
+import { RoomsService } from './rooms.service';
 
 @Service()
 export class SocketManager {
@@ -67,6 +68,12 @@ export class SocketManager {
                     }
                 }
                 socket.emit('sendGamesInformation', this.games);
+            });
+            socket.on('toServer', (message: MessagePlayer) => {
+                socket.emit('toClient', message);
+            });
+            socket.on('toAll', (message: MessagePlayer) => {
+                socket.emit('toAllClient', message);
             });
         });
     }

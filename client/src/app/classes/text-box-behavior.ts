@@ -25,7 +25,7 @@ export class TextBox {
         private timeManager: TimerTurnManagerService,
         private letterService: LetterService,
         private finishGameService: FinishGameService,
-        private letterBankService: LetterBankService,
+        private letterBankService: LetterBankService, // private socket: SocketService,
     ) {
         this.inputs = [];
         this.character = false;
@@ -39,6 +39,7 @@ export class TextBox {
         this.inputVerification(myWord.message);
         if (this.character === false) {
             this.inputs.push(myWord);
+            // this.socket.configureSendMessageToServer(myWord, true);
         }
     }
     inputVerification(myWord: string) {

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { TextBox } from '@app/classes/text-box-behavior';
+import { MessagePlayer } from '@app/message';
 import { io } from 'socket.io-client';
 import { InitiateGameTypeService } from './initiate-game-type.service';
 import { LetterService } from './letter.service';
 import { MessageService } from './message.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -17,6 +18,7 @@ export class SocketService {
         private letterService: LetterService,
         private timerTurnManagerService: TimerTurnManagerService,
         private initiateGameTypeService: InitiateGameTypeService,
+        private textBox: TextBox,
     ) {
         this.configureBaseSocketFeatures();
     }
@@ -52,6 +54,19 @@ export class SocketService {
     }
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
+    }
+    configureSendMessageToServer(message?: MessagePlayer, toAll?: boolean) {
+        if (!toAll && message !== undefined && toAll !== undefined) {
+            this.socket.emit('toServer', message);
+        } else if (message !== undefined && toAll !== undefined) {
+            this.socket.emit('toAll', message);
+        }
+        this.socket.on('toAllClient', (messageFromServer: MessagePlayer) => {
+            this.textBox.inputs.push(messageFromServer);
+        });
+        this.socket.on('toClient', (messageFromServer: MessagePlayer) => {
+            this.textBox.inputs.push(messageFromServer);
+        });
     }
 }
 // à envoyer
