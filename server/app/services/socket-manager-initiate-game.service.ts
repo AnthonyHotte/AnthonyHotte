@@ -46,21 +46,23 @@ export class SocketManager {
             socket.on('joinGame', (name) => {
                 // join the oldest game in the waiting room
                 // need to change index 0 for the right one !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                socket.join(this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].roomName);
+                const roomNumber = this.roomsService.listRoomWaiting[0].index;
+                socket.join(this.roomsService.rooms[roomNumber].roomName);
                 // adding player name to the room
-                this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].playerNames[1] = name;
+                this.roomsService.rooms[roomNumber].playerNames[1] = name;
                 // adding socket id to the room
-                this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].socketsId[1] = socket.id;
+                this.roomsService.rooms[roomNumber].socketsId[1] = socket.id;
                 // start game for everyone in the room
                 // have to change the 0 index
                 socket.emit('gameMode', 1);
-                // probleme here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                this.sio.to(this.roomsService[this.roomsService.listRoomWaiting[0].index].socketsId[0]).emit('gameMode', 0);
-                this.sio.to(this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].roomName).emit('startGame', {
-                    room: this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index],
-                    indexPlayerStart: this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].startTurn,
-                    playerName: this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].playerNames[0],
-                    opponentName: this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].playerNames[1],
+                // send information to the other in the room
+                this.sio.to(this.roomsService.rooms[roomNumber].socketsId[0]).emit('gameMode', 0);
+                // send information to every one in the room
+                this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('startGame', {
+                    room: this.roomsService.rooms[roomNumber],
+                    indexPlayerStart: this.roomsService.rooms[roomNumber].startTurn,
+                    playerName: this.roomsService.rooms[roomNumber].playerNames[0],
+                    opponentName: this.roomsService.rooms[roomNumber].playerNames[1],
                 });
                 // take of the room from waiting room
                 this.roomsService.listRoomWaiting.splice(0, 1);
