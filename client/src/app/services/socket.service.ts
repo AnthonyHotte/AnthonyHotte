@@ -76,15 +76,15 @@ export class SocketService {
             nameOpponent: opponentName,
         });
     }
-    sendJoinGameInfo(name: string) {
-        this.socket.emit('joinGame', name);
+    sendJoinGameInfo(name: string, indexWaitingRoom: number) {
+        this.socket.emit('joinGame', { playerJoinName: name, indexInWaitingRoom: indexWaitingRoom });
     }
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
     }
     sendJoinPlayerTurn(turnsSkippedInARow: number) {
         this.socket.emit('joinPLayerTurn', {
-            roomName: this.roomNumber,
+            roomNumber: this.roomNumber,
             numberSkipTurn: turnsSkippedInARow,
         });
     }

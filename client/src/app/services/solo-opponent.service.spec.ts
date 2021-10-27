@@ -4,7 +4,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
 import { GameStatus } from '@app/game-status';
-import { BehaviorSubject } from 'rxjs';
 import { FinishGameService } from './finish-game.service';
 import { LetterBankService } from './letter-bank.service';
 import { LetterService } from './letter.service';
@@ -42,7 +41,6 @@ describe('SoloOpponentService', () => {
             letterServiceSpy.players = [player1, player2];
             timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['reset']);
             timerTurnManagerServiceSpy.gameStatus = GameStatus.SoloPlayer;
-            timerTurnManagerServiceSpy.indexTurn = new BehaviorSubject(0);
             letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
             soloOpponent2ServiceSpy = jasmine.createSpyObj('SoloOpponent2Service', ['play']);
             finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);

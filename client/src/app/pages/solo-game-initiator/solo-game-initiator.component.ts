@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
+import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { LetterService } from '@app/services/letter.service';
 import { MessageService } from '@app/services/message.service';
 import { SocketService } from '@app/services/socket.service';
@@ -29,6 +30,7 @@ export class SoloGameInitiatorComponent {
         private tileScrambler: TileScramblerService,
         private timeManager: TimerTurnManagerService,
         private messageService: MessageService,
+        private indexWaitingRoomService: IndexWaitingRoomService,
     ) {
         this.temporaryName = 'Joueur';
         this.name = 'Joueur';
@@ -41,7 +43,7 @@ export class SoloGameInitiatorComponent {
     }
     joinGame() {
         this.setName();
-        this.socketService.sendJoinGameInfo(this.name);
+        this.socketService.sendJoinGameInfo(this.name, this.indexWaitingRoomService.index);
     }
     startNewGame() {
         this.startingNewGame = true;

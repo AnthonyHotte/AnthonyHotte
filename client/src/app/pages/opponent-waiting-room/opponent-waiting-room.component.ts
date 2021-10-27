@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { SocketService } from '@app/services/socket.service';
 
 @Component({
@@ -10,10 +11,13 @@ export class OpponentWaitingRoomComponent implements OnInit {
     isValidSelection = false;
     gamesList: string[][] = [[]];
 
-    constructor(private socketInformation: SocketService) {}
+    constructor(private socketInformation: SocketService, private indexWaitingRoomService: IndexWaitingRoomService) {}
 
     ngOnInit(): void {
         this.fillGamesList();
+    }
+    setIndex(index: number) {
+        this.indexWaitingRoomService.index = index;
     }
 
     fillGamesList() {
