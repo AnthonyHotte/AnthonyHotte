@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { InitiateGameTypeService } from '@app/services/initiate-game-type.service';
 import { SocketService } from '@app/services/socket.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 
 @Component({
     selector: 'app-game-selection-page',
@@ -8,29 +8,16 @@ import { SocketService } from '@app/services/socket.service';
     styleUrls: ['./game-selection-page.component.scss'],
 })
 export class GameSelectionPageComponent {
-    // attribut representing the mode of the game
-    gameType: string;
-    // attribut true if player create new game, false if joining
-    isNewGame: boolean;
-    constructor(private initiateGameType: InitiateGameTypeService, private socket: SocketService) {
-        this.gameType = 'solo';
-        this.isNewGame = false;
-    }
+    constructor(private socket: SocketService, private timeTurnManager: TimerTurnManagerService) {}
 
     setSoloType() {
-        this.gameType = 'solo';
-        this.isNewGame = true;
-        this.initiateGameType.setGameType(this.gameType, this.isNewGame);
+        this.timeTurnManager.gameStatus = 2;
     }
     setCreateMultiPlayerGame() {
-        this.gameType = 'multi player';
-        this.isNewGame = true;
-        this.initiateGameType.setGameType(this.gameType, this.isNewGame);
+        this.timeTurnManager.gameStatus = 0;
     }
     setJoinMultiPayerGame() {
-        this.gameType = 'multi player';
-        this.isNewGame = false;
-        this.initiateGameType.setGameType(this.gameType, this.isNewGame);
+        this.timeTurnManager.gameStatus = 1;
         this.socket.sendGameListNeededNotification();
     }
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { LetterService } from '@app/services/letter.service';
-import { InitiateGameTypeService } from '@app/services/initiate-game-type.service';
+import { MessageService } from '@app/services/message.service';
 import { SocketService } from '@app/services/socket.service';
 import { TileScramblerService } from '@app/services/tile-scrambler.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
@@ -24,12 +24,11 @@ export class SoloGameInitiatorComponent {
     isBonusRandom = false;
 
     constructor(
-        // private informations: SoloGameInformationService,
-        public initiateTypeGame: InitiateGameTypeService,
         private socketService: SocketService,
         private letterService: LetterService,
         private tileScrambler: TileScramblerService,
         private timeManager: TimerTurnManagerService,
+        private messageService: MessageService,
     ) {
         this.temporaryName = 'Joueur';
         this.name = 'Joueur';
@@ -38,6 +37,7 @@ export class SoloGameInitiatorComponent {
         this.nameIsValid = true;
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
+        this.messageService.gameStartingInfoSubscribe();
     }
     joinGame() {
         this.setName();
@@ -50,9 +50,27 @@ export class SoloGameInitiatorComponent {
         this.scrambleBonus();
         this.sendNewGameStartInfo();
     }
+    getGameStatus() {
+        return this.timeManager.gameStatus;
+    }
+    getGameStatusInString() {
+        if (this.timeManager.gameStatus === 2) {
+            // mode solo
+            return 'solo';
+        } else {
+            // multi player game
+            return 'multi player';
+        }
+    }
 
     sendNewGameStartInfo() {
-        this.socketService.sendInitiateNewGameInformation(this.playTime, this.isBonusRandom, this.name, this.initiateTypeGame.gameType);
+        this.socketService.sendInitiateNewGameInformation(
+            this.playTime,
+            this.isBonusRandom,
+            this.name,
+            this.timeManager.gameStatus,
+            this.opponentName,
+        );
     }
 
     assignOpponentName() {
