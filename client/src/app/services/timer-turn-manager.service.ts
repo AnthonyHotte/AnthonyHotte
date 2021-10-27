@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GameStatus } from '@app/game-status';
 import { ERRORCODE, VALEUR_TEMPS_DEFAULT } from '@app/constants';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { SocketService } from './socket.service';
 
 @Injectable({
@@ -15,13 +15,10 @@ export class TimerTurnManagerService {
     turnSubscription: Subscription;
     skippedTurnSubscription: Subscription;
     gameStatusSubsciption: Subscription;
-    // usefull to send information that turn is over to server
-    indexTurn: BehaviorSubject<number>;
 
     constructor(private socketService: SocketService) {
         // turn is initialize when game start
         this.turn = ERRORCODE;
-        this.indexTurn = new BehaviorSubject(0);
         this.turnSubscription = this.socketService.turn.subscribe((turnNumber) => {
             this.turn = turnNumber;
         });

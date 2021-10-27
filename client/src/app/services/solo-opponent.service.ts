@@ -5,6 +5,7 @@ import { FinishGameService } from './finish-game.service';
 import { LetterService } from './letter.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 import { GameStatus } from '@app/game-status';
+import { SocketService } from './socket.service';
 
 @Injectable({
     providedIn: 'root',
@@ -16,12 +17,12 @@ export class SoloOpponentService {
         public timeManager: TimerTurnManagerService,
         public soloOpponent2: SoloOpponent2Service,
         public finishGameService: FinishGameService,
+        private socketService: SocketService,
     ) {
         this.letters.players[1].addLetters(MAXLETTERINHAND);
     }
     play() {
         if (this.timeManager.gameStatus === GameStatus.SoloPlayer) {
-            this.timeManager.indexTurn.next(1);
             if (this.timeManager.turn === 1) {
                 const HUNDRED = 100;
                 const TWENTY = 20;
@@ -43,13 +44,12 @@ export class SoloOpponentService {
                     }
                 }
             }
-            this.timeManager.indexTurn.next(0);
         } else if (this.timeManager.gameStatus === GameStatus.CreaterPlayer) {
             // emit join Player turn
-            this.timeManager.indexTurn.next(1);
+            this.socketService.sendJoinPlayerTurn(this.timeManager.turnsSkippedInARow);
         } else {
             // emit creater turn
-            this.timeManager.indexTurn.next(0);
+            this.socketService.sendCreaterPlayerTurn(this.timeManager.turnsSkippedInARow);
         }
     }
     calculateProbability(percentage: number) {
