@@ -22,6 +22,7 @@ import { FinishedGameComponent } from './components/finished-game/finished-game.
 import { ExchangeLettersGUIComponent } from './components/exchange-letters-gui/exchange-letters-gui.component';
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 import { OpponentWaitingRoomComponent } from './pages/opponent-waiting-room/opponent-waiting-room.component';
+import { PlaceWordWithClickGuiComponent } from './components/place-word-with-click-gui/place-word-with-click-gui.component';
 
 /**
  * Main module that is used in main.ts.
@@ -46,6 +47,7 @@ import { OpponentWaitingRoomComponent } from './pages/opponent-waiting-room/oppo
         ExchangeLettersGUIComponent,
         WaitingRoomComponent,
         OpponentWaitingRoomComponent,
+        PlaceWordWithClickGuiComponent,
     ],
     imports: [
         AppMaterialModule,

@@ -46,6 +46,8 @@ export class PlayAreaComponent implements AfterViewInit {
                 const command = this.placeLetterService.submitWordMadeClick();
                 this.textBox.send(command);
                 this.textBox.isCommand(command.message);
+            } else if (event.key === 'Escape') {
+                this.placeLetterClickService.reset();
             }
         } else if (this.clickManager.activeLocation === 'hand') {
             this.letterService.setIndexSelectedSwapping(event.key);
