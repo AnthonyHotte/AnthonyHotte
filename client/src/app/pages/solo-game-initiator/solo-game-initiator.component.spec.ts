@@ -7,6 +7,8 @@ import { SocketService } from '@app/services/socket.service';
 import { TileScramblerService } from '@app/services/tile-scrambler.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { SoloGameInitiatorComponent } from './solo-game-initiator.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MessageService } from '@app/services/message.service';
 
 describe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
@@ -15,8 +17,10 @@ describe('SoloGameInitiatorComponent', () => {
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let tileScramblerServiceSpy: jasmine.SpyObj<TileScramblerService>;
     let timerTurnManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
+    let messageServiceSpy: jasmine.SpyObj<MessageService>;
     let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
     beforeEach(async () => {
+        messageServiceSpy = jasmine.createSpyObj('MessageService', ['gameStartingInfoSubscribe']);
         letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
         socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendJoinGameInfo']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
@@ -37,11 +41,13 @@ describe('SoloGameInitiatorComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [SoloGameInitiatorComponent],
             providers: [
+                { provide: MessageService, useValue: messageServiceSpy },
                 { provide: SocketService, useValue: socketServiceSpy },
                 { provide: LetterService, useValue: letterServiceSpy },
                 { provide: TileScramblerService, useValue: tileScramblerServiceSpy },
                 { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
             ],
+            imports: [RouterTestingModule],
         }).compileComponents();
     });
 

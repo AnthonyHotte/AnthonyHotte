@@ -42,14 +42,4 @@ export class TimerTurnManagerService {
             this.turn = 0;
         }
     }
-    // to set the game status
-    setGameStatus(playerNumber: number, gameType: string) {
-        if (gameType === 'solo') {
-            this.gameStatus = GameStatus.SoloPlayer;
-        } else if (playerNumber === 0) {
-            this.gameStatus = GameStatus.CreaterPlayer;
-        } else {
-            this.gameStatus = GameStatus.JoinPlayer;
-        }
-    }
 }
