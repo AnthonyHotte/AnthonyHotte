@@ -51,7 +51,7 @@ export class PlaceLettersService {
             this.row = this.rowLetterToNumbers(match.groups.letter);
             this.colomnNumber = Number(match.groups.number) - 1;
             this.orientation = match.groups.dir;
-            this.wordToPlace = match.groups.word;
+            this.wordToPlace = match.groups.word.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
             this.lettersToPlace = this.wordToPlace;
             this.wordContainsJoker();
             return 'ok';
