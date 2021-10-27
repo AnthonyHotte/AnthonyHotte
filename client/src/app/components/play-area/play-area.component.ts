@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@
 import { TextBox } from '@app/classes/text-box-behavior';
 import { Vec2 } from '@app/classes/vec2';
 import * as Constants from '@app/constants';
+import { ClickManagementService } from '@app/services/click-management.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLetterClickService } from '@app/services/place-letter-click.service';
@@ -34,25 +35,31 @@ export class PlayAreaComponent implements AfterViewInit {
         private placeLetterClickService: PlaceLetterClickService,
         private placeLetterService: PlaceLettersService,
         private textBox: TextBox,
+        private clickManager: ClickManagementService,
     ) {}
 
-    @HostListener('keydown', ['$event'])
+    @HostListener('window:keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
-        this.letterService.setIndexSelectedSwapping(event.key);
-        this.placeLetterClickService.placeLetter(event.key);
-        if (event.key === 'Enter' && this.placeLetterClickService.wordPlacedWithClick.length !== 0) {
-            const command = this.placeLetterService.submitWordMadeClick();
-            this.textBox.send(command);
-            this.textBox.isCommand(command.message);
+        if (this.clickManager.activeLocation === 'gameBoard') {
+            this.placeLetterClickService.placeLetter(event.key);
+            if (event.key === 'Enter' && this.placeLetterClickService.wordPlacedWithClick.length !== 0) {
+                const command = this.placeLetterService.submitWordMadeClick();
+                this.textBox.send(command);
+                this.textBox.isCommand(command.message);
+            }
+        } else if (this.clickManager.activeLocation === 'hand') {
+            this.letterService.setIndexSelectedSwapping(event.key);
         }
     }
 
-    @HostListener('mousewheel', ['$event'])
+    @HostListener('window:mousewheel', ['$event'])
     onWindowScroll(event: WheelEvent) {
-        if (event.deltaY > 0) {
-            this.letterService.setIndexSelectedSwapping('ArrowLeft');
-        } else if (event.deltaY < 0) {
-            this.letterService.setIndexSelectedSwapping('ArrowRight');
+        if (this.clickManager.activeLocation === 'hand') {
+            if (event.deltaY > 0) {
+                this.letterService.setIndexSelectedSwapping('ArrowLeft');
+            } else if (event.deltaY < 0) {
+                this.letterService.setIndexSelectedSwapping('ArrowRight');
+            }
         }
     }
 
@@ -71,7 +78,7 @@ export class PlayAreaComponent implements AfterViewInit {
     }
 
     mouseHitDetect(event: MouseEvent) {
-        if (event.button === MouseButton.Left) {
+        if (event.button === MouseButton.Left && this.clickManager.activeLocation === 'hand') {
             this.mousePosition = { x: event.offsetX, y: event.offsetY };
             // eslint-disable-next-line @typescript-eslint/no-magic-numbers
             // this.gridService.drawarrow('v', 5, 5);
