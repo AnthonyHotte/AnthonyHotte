@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
+import { Observable, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
 import { InitiateGameTypeService } from './initiate-game-type.service';
 import { LetterService } from './letter.service';
@@ -12,15 +12,23 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
 export class SocketService {
     socket = io('http://localhost:3000');
     gameLists: string[][] = [[]];
+    textBoxMessageObservable: Observable<MessagePlayer>;
+    messageSubject: Subject<MessagePlayer>;
+    textBoxMessage: MessagePlayer;
 
     constructor(
         private messageService: MessageService,
         private letterService: LetterService,
         private timerTurnManagerService: TimerTurnManagerService,
         private initiateGameTypeService: InitiateGameTypeService,
-        private textBox: TextBox,
     ) {
         this.configureBaseSocketFeatures();
+        this.textBoxMessageObservable = new Observable((observer) => observer.next(this.textBoxMessage));
+        this.messageSubject = new Subject();
+    }
+
+    getMessageObservable() {
+        return this.messageSubject.asObservable();
     }
 
     configureBaseSocketFeatures() {
@@ -56,16 +64,23 @@ export class SocketService {
         this.socket.emit('returnListOfGames');
     }
     configureSendMessageToServer(message?: MessagePlayer, toAll?: boolean) {
+        // envoyer une commande qui sera gere par le serveur
         if (!toAll && message !== undefined && toAll !== undefined) {
-            this.socket.emit('toServer', message);
-        } else if (message !== undefined && toAll !== undefined) {
-            this.socket.emit('toAll', message);
+            this.socket.emit('toServer', message.message, message.sender, message.role);
         }
-        this.socket.on('toAllClient', (messageFromServer: MessagePlayer) => {
-            this.textBox.inputs.push(messageFromServer);
+        // envoyer un message a tout le monde sauf au sender
+        else if (message !== undefined && toAll !== undefined) {
+            this.socket.emit('toAll', message.message, message.sender, message.role);
+        }
+        // gerer le message envoye par le serveur
+        this.socket.on('toAllClient', (message_: string, sender_: string, role_: string) => {
+            const myMessage: MessagePlayer = { message: message_, sender: sender_, role: role_ };
+            this.messageSubject.next(myMessage);
         });
-        this.socket.on('toClient', (messageFromServer: MessagePlayer) => {
-            this.textBox.inputs.push(messageFromServer);
+        // gerer la commande entre par le joueur
+        this.socket.on('toClient', (message_: string, sender_: string, role_: string) => {
+            const myMessage: MessagePlayer = { message: message_, sender: sender_, role: role_ };
+            this.messageSubject.next(myMessage);
         });
     }
 }

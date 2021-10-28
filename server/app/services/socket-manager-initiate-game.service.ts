@@ -1,5 +1,4 @@
 import { NUMBEROFROOMS } from '@app/constants';
-import { MessagePlayer } from '@app/messages';
 import * as http from 'http';
 import * as io from 'socket.io';
 import { Service } from 'typedi';
@@ -69,11 +68,11 @@ export class SocketManager {
                 }
                 socket.emit('sendGamesInformation', this.games);
             });
-            socket.on('toServer', (message: MessagePlayer) => {
-                socket.emit('toClient', message);
+            socket.on('toServer', (message: string, sender: string, role: string) => {
+                socket.emit('toClient', message, sender, role);
             });
-            socket.on('toAll', (message: MessagePlayer) => {
-                socket.emit('toAllClient', message);
+            socket.on('toAll', (message: string, sender: string, role: string) => {
+                this.sio.sockets.emit('toAllClient', `${socket.id} : ${message}, ${sender}, ${role}`);
             });
         });
     }
