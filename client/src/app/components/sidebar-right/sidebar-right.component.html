@@ -56,9 +56,8 @@
             <button class="buttonfontsize" (click)="increaseFontSize()">+</button>
             <button class="buttonfontsize" (click)="decreaseFontSize()">-</button>
         </fieldset>
-        <fieldset>
-            <button class="buttonsurrender" (click)="this.finishCurrentGame()">Terminer la partie courante</button>
-        </fieldset>
+        
+            <app-abandon-game></app-abandon-game>
             <app-finished-game></app-finished-game>
             <app-exchange-letters-gui></app-exchange-letters-gui>
             <app-place-word-with-click-gui></app-place-word-with-click-gui>

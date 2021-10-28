@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
-import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
@@ -32,7 +31,7 @@ export class SidebarRightComponent implements AfterViewInit {
         private readonly gridService: GridService,
         private readonly placeLetterService: PlaceLettersService,
         private placeLetterClick: PlaceLetterClickService,
-        private finishGameService: FinishGameService,
+
         private letterBankService: LetterBankService,
     ) {
         this.setAttribute();
@@ -76,10 +75,6 @@ export class SidebarRightComponent implements AfterViewInit {
 
     getScorePlayer(index: number) {
         return this.letterService.players[index].score;
-    }
-
-    finishCurrentGame() {
-        this.finishGameService.isGameFinished = true;
     }
 
     increaseFontSize() {
