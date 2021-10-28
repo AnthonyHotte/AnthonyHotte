@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
-import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
+import { PlaceLetterClickService } from '@app/services/place-letter-click.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
@@ -29,7 +29,8 @@ export class SidebarRightComponent implements AfterViewInit {
         private textBox: TextBox,
         private readonly gridService: GridService,
         private readonly placeLetterService: PlaceLettersService,
-        private finishGameService: FinishGameService,
+        private placeLetterClick: PlaceLetterClickService,
+
         private letterBankService: LetterBankService,
     ) {
         this.setAttribute();
@@ -65,6 +66,7 @@ export class SidebarRightComponent implements AfterViewInit {
 
     skipTurn() {
         this.textBox.isCommand('!passer');
+        this.placeLetterClick.reset();
         this.soloOpponentPlays();
     }
 
@@ -78,10 +80,6 @@ export class SidebarRightComponent implements AfterViewInit {
 
     getScorePlayer(index: number) {
         return this.letterService.players[index].score;
-    }
-
-    finishCurrentGame() {
-        this.finishGameService.isGameFinished = true;
     }
 
     increaseFontSize() {

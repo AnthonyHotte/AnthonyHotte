@@ -88,9 +88,10 @@ export class TextBox {
         } else if (this.timeManager.turn === 0) {
             if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 text = this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
-                this.endTurn('place');
                 if (text !== 'Mot placé avec succès.') {
                     this.verifyCommandPasser();
+                } else {
+                    this.endTurn('place');
                 }
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
                 text = this.verifyCommandPasser();
@@ -116,8 +117,8 @@ export class TextBox {
             return 'Tour passé avec succès.';
         } else {
             this.finishGameService.isGameFinished = true;
+            return '';
         }
-        return '';
     }
 
     activateReserve() {
