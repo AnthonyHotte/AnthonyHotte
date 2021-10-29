@@ -68,30 +68,25 @@ export class PlaceLetterClickService {
         }
     }
     caseSelected(xPos: number, yPos: number) {
-        if (this.timeManager.turn === 0) {
-            if (this.wordPlacedWithClick.length === 0) {
-                const tempColumn = this.rawXYPositionToCasePosition(xPos);
-                const tempRow = this.rawXYPositionToCasePosition(yPos);
-                if (this.isTileSelected && this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
-                    this.removeArrowIfNeeded(this.initialClickRow, this.initialClickColumn);
+        if (this.timeManager.turn === 0 && this.wordPlacedWithClick.length === 0) {
+            const tempColumn = this.rawXYPositionToCasePosition(xPos);
+            const tempRow = this.rawXYPositionToCasePosition(yPos);
+            if (this.isTileSelected && this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
+                this.removeArrowIfNeeded(this.initialClickRow, this.initialClickColumn);
+            }
+            if (this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
+                if (tempRow === this.row && tempColumn === this.colomnNumber) {
+                    this.changeOrientation();
+                    this.gridService.drawtilebackground(this.colomnNumber, this.row);
+                } else {
+                    this.orientation = 'h';
+                    this.colomnNumber = tempColumn;
+                    this.row = tempRow;
                 }
-                if (this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
-                    if (tempRow === this.row && tempColumn === this.colomnNumber) {
-                        this.changeOrientation();
-                        // todo isma discussion ici
-                        this.gridService.drawtilebackground(this.colomnNumber, this.row);
-                    } else {
-                        this.orientation = 'h';
-                        this.colomnNumber = tempColumn; // pas de -1 ici je crois
-                        // this.colomnNumber = tempColumn -1;
-                        // this.row = tempRow - 1;
-                        this.row = tempRow;
-                    }
-                    this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
-                    this.isTileSelected = true;
-                    this.initialClickRow = this.row;
-                    this.initialClickColumn = this.colomnNumber;
-                }
+                this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+                this.isTileSelected = true;
+                this.initialClickRow = this.row;
+                this.initialClickColumn = this.colomnNumber;
             }
         }
     }
