@@ -2,6 +2,8 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { MAXLETTERINHAND } from '@app/constants';
+import { GameStatus } from '@app/game-status';
 import { FinishGameService } from './finish-game.service';
 import { LetterBankService } from './letter-bank.service';
 import { LetterService } from './letter.service';
@@ -20,8 +22,25 @@ describe('SoloOpponentService', () => {
 
     beforeEach(
         waitForAsync(() => {
+            letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+            letterBankServiceSpy.letterBank = [];
+            for (let i = 0; i < 3; i++) {
+                letterBankServiceSpy.letterBank.push({ letter: 'A', quantity: 9, point: 1 });
+            }
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['initiateGame', 'endTurn']);
+            const player1 = new PlayerLetterHand(letterBankServiceSpy);
+            player1.allLettersInHand = [];
+            for (let i = 0; i < MAXLETTERINHAND; i++) {
+                player1.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+            }
+            const player2 = new PlayerLetterHand(letterBankServiceSpy);
+            player2.allLettersInHand = [];
+            for (let i = 0; i < MAXLETTERINHAND; i++) {
+                player2.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+            }
+            letterServiceSpy.players = [player1, player2];
             timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['reset']);
+            timerTurnManagerServiceSpy.gameStatus = GameStatus.SoloPlayer;
             letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
             soloOpponent2ServiceSpy = jasmine.createSpyObj('SoloOpponent2Service', ['play']);
             finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);

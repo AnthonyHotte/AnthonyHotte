@@ -24,7 +24,7 @@ export class SidebarRightComponent implements AfterViewInit {
     changedTurns: boolean = false;
 
     constructor(
-        private turnTimeController: TimerTurnManagerService,
+        public turnTimeController: TimerTurnManagerService,
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
         private textBox: TextBox,
@@ -41,6 +41,12 @@ export class SidebarRightComponent implements AfterViewInit {
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
+    }
+    showPassButton() {
+        return (
+            (this.turnTimeController.turn === 0 && this.turnTimeController.gameStatus === 2) ||
+            this.turnTimeController.gameStatus === this.turnTimeController.turn
+        );
     }
 
     setAttribute() {

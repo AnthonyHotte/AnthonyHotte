@@ -1,26 +1,37 @@
 import { Injectable } from '@angular/core';
+import { GameStatus } from '@app/game-status';
 import { MessagePlayer } from '@app/message';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
-import { InitiateGameTypeService } from './initiate-game-type.service';
-import { LetterService } from './letter.service';
-import { MessageService } from './message.service';
-import { TimerTurnManagerService } from './timer-turn-manager.service';
+
 @Injectable({
     providedIn: 'root',
 })
 export class SocketService {
     socket = io('http://localhost:3000');
-    gameLists: string[][] = [[]];
-    textBoxMessageObservable: Observable<MessagePlayer>;
+    gameLists: string[][];
+    roomNumber: number;
+    startGame: BehaviorSubject<boolean>;
+    gameStatus: BehaviorSubject<GameStatus>;
+    playerNameIndexZer0: BehaviorSubject<string>;
+    playerNameIndexOne: BehaviorSubject<string>;
+    turn: BehaviorSubject<number>;
+    skippedTurn: BehaviorSubject<number>;
     messageSubject: Subject<MessagePlayer>;
 
-    constructor(
-        private messageService: MessageService,
-        private letterService: LetterService,
-        private timerTurnManagerService: TimerTurnManagerService,
-        private initiateGameTypeService: InitiateGameTypeService,
-    ) {
+    constructor() {
+        this.gameLists = [[]];
+        this.startGame = new BehaviorSubject<boolean>(false);
+        this.roomNumber = 0;
+        this.gameStatus = new BehaviorSubject<GameStatus>(0);
+        // default value shoul be over right
+        this.playerNameIndexZer0 = new BehaviorSubject<string>('joueur1');
+        // default value should be over right
+        this.playerNameIndexOne = new BehaviorSubject<string>('joueur2');
+        // default value should never be over right
+        this.turn = new BehaviorSubject<number>(0);
+        // default value should never be over right
+        this.skippedTurn = new BehaviorSubject<number>(0);
         this.configureBaseSocketFeatures();
         this.messageSubject = new Subject();
     }
@@ -36,13 +47,14 @@ export class SocketService {
             console.log('connected!');
         });
         this.socket.on('startGame', (info) => {
-            this.initiateGameTypeService.roomNumber = info.room.index;
-            this.letterService.players[0].name = info.room.playerNames[0];
-            if (this.initiateGameTypeService.gameType === 'multi player') {
-                this.letterService.players[1].name = info.room.playerNames[1];
-            }
-            this.timerTurnManagerService.turn = info.indexPlayerStart;
-            this.messageService.startGame();
+            this.roomNumber = info.room.index;
+            this.playerNameIndexZer0.next(info.playerName);
+            this.playerNameIndexOne.next(info.opponentName);
+            this.turn.next(info.indexPlayerStart);
+            this.startGame.next(true);
+        });
+        this.socket.on('gameMode', (gameMode) => {
+            this.gameStatus.next(gameMode);
         });
         this.socket.on('sendGamesInformation', (games) => {
             for (let i = 0; i < games.length; i++) {
@@ -51,12 +63,28 @@ export class SocketService {
                 this.gameLists[i][2] = games[i][2]; // time per turn
             }
         });
+        this.socket.on('joinPlayerTurnFromServer', (skippedTurn) => {
+            // start join turn
+            this.turn.next(1);
+            this.skippedTurn.next(skippedTurn);
+        });
+        this.socket.on('createrPlayerTurnFromServer', (skippedTurn) => {
+            // start creater turn
+            this.turn.next(0);
+            this.skippedTurn.next(skippedTurn);
+        });
     }
-    sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameType: string) {
-        this.socket.emit('startingNewGameInfo', { time: playTime, bonusOn: isBonusRandom, namePlayer: name, mode: gameType });
+    sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameStatus: GameStatus, opponentName: string) {
+        this.socket.emit('startingNewGameInfo', {
+            time: playTime,
+            bonusOn: isBonusRandom,
+            namePlayer: name,
+            mode: gameStatus,
+            nameOpponent: opponentName,
+        });
     }
-    sendJoinGameInfo(name: string) {
-        this.socket.emit('joinGame', name);
+    sendJoinGameInfo(name: string, indexWaitingRoom: number) {
+        this.socket.emit('joinGame', { playerJoinName: name, indexInWaitingRoom: indexWaitingRoom });
     }
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
@@ -81,9 +109,19 @@ export class SocketService {
             this.messageSubject.next(myMessage);
         });
     }
+    sendJoinPlayerTurn(turnsSkippedInARow: number) {
+        this.socket.emit('joinPLayerTurn', {
+            roomNumber: this.roomNumber,
+            numberSkipTurn: turnsSkippedInARow,
+        });
+    }
+    sendCreaterPlayerTurn(turnsSkippedInARow: number) {
+        this.socket.emit(
+            'createrPlayerTurn',
+            this.socket.emit('joinPLayerTurn', {
+                roomNumber: this.roomNumber,
+                numberSkipTurn: turnsSkippedInARow,
+            }),
+        );
+    }
 }
-// à envoyer
-// tableau lettre
-// gestion du temps
-// reserve lettre
-// validation cote serveur

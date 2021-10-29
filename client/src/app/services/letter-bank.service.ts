@@ -21,7 +21,7 @@ export class LetterBankService {
             lettersInBank += '\n' + letter.letter + ' : ';
             let numberOfLetter = 0;
             for (const letterInBank of this.letterBank) {
-                if (letterInBank.letter === letter.letter) {
+                if (letterInBank.letter.toLowerCase() === letter.letter.toLowerCase()) {
                     numberOfLetter++;
                 }
             }

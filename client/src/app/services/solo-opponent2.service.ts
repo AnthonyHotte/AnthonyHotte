@@ -33,6 +33,7 @@ export class SoloOpponent2Service {
         } else {
             // const wordfound = false;
             const letteronbord = this.gameStateService.lettersOnBoard;
+            // loop1 is an part of the code it is the name of the line we use it it to jup there
             loop1: for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
                 for (let j = 0; j < Constants.NUMBEROFCASE; j++) {
                     // all colomn of letter on board

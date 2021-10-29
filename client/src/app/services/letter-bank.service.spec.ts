@@ -13,4 +13,14 @@ describe('LetterBankService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
+    it('getLettersInBank return letter in bank', () => {
+        service.letterBank = [
+            { letter: 'a', quantity: 1, point: 1 },
+            { letter: 'e', quantity: 1, point: 1 },
+        ];
+        const minimaleLenghtString = 52;
+        const letterString = service.getLettersInBank();
+        expect(typeof letterString).toEqual(typeof 'adf');
+        expect(letterString.length).toBeGreaterThan(minimaleLenghtString);
+    });
 });

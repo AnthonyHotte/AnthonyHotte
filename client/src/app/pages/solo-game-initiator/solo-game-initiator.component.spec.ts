@@ -1,19 +1,61 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { MAXLETTERINHAND } from '@app/constants';
+import { LetterBankService } from '@app/services/letter-bank.service';
+import { LetterService } from '@app/services/letter.service';
+import { SocketService } from '@app/services/socket.service';
+import { TileScramblerService } from '@app/services/tile-scrambler.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { SoloGameInitiatorComponent } from './solo-game-initiator.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MessageService } from '@app/services/message.service';
 
 describe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
     let fixture: ComponentFixture<SoloGameInitiatorComponent>;
-
+    let socketServiceSpy: jasmine.SpyObj<SocketService>;
+    let letterServiceSpy: jasmine.SpyObj<LetterService>;
+    let tileScramblerServiceSpy: jasmine.SpyObj<TileScramblerService>;
+    let timerTurnManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
+    let messageServiceSpy: jasmine.SpyObj<MessageService>;
+    let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
     beforeEach(async () => {
+        messageServiceSpy = jasmine.createSpyObj('MessageService', ['gameStartingInfoSubscribe']);
+        letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+        socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendJoinGameInfo']);
+        letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
+        const player1 = new PlayerLetterHand(letterBankServiceSpy);
+        player1.allLettersInHand = [];
+        for (let i = 0; i < MAXLETTERINHAND; i++) {
+            player1.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+        }
+        const player2 = new PlayerLetterHand(letterBankServiceSpy);
+        player2.allLettersInHand = [];
+        for (let i = 0; i < MAXLETTERINHAND; i++) {
+            player2.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+        }
+        letterServiceSpy.players = [player1, player2];
+        tileScramblerServiceSpy = jasmine.createSpyObj('TileScramblerService', ['scrambleTiles']);
+        timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
+        timerTurnManagerServiceSpy.turn = 0;
         await TestBed.configureTestingModule({
             declarations: [SoloGameInitiatorComponent],
+            providers: [
+                { provide: MessageService, useValue: messageServiceSpy },
+                { provide: SocketService, useValue: socketServiceSpy },
+                { provide: LetterService, useValue: letterServiceSpy },
+                { provide: TileScramblerService, useValue: tileScramblerServiceSpy },
+                { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
+            ],
+            imports: [RouterTestingModule],
         }).compileComponents();
     });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(SoloGameInitiatorComponent);
         component = fixture.componentInstance;
+        component.opponentName = 'Tony';
+        component.idNameOpponent = 0;
         fixture.detectChanges();
     });
     it('should create', () => {
