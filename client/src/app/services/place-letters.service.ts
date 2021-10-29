@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as Constants from '@app/constants';
+import { MessagePlayer } from '@app/message';
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
@@ -50,7 +51,7 @@ export class PlaceLettersService {
             this.row = this.rowLetterToNumbers(match.groups.letter);
             this.colomnNumber = Number(match.groups.number) - 1;
             this.orientation = match.groups.dir;
-            this.wordToPlace = match.groups.word;
+            this.wordToPlace = match.groups.word.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
             this.lettersToPlace = this.wordToPlace;
             this.wordContainsJoker();
             return 'ok';
@@ -84,7 +85,7 @@ export class PlaceLettersService {
         }
     }
 
-    placeWord(commandrowInput: string): string {
+    placeWord(commandrowInput: string, lettersToReplace?: string): string {
         const checkInput = this.checkInput(commandrowInput);
         if (checkInput === 'ok') {
             if (!this.verifyTileNotOutOfBound()) {
@@ -109,7 +110,7 @@ export class PlaceLettersService {
                         return 'Ce mot ne touche à aucune lettre déjà en jeu.';
                     }
                     this.drawWord();
-                    if (this.validateWordPlaced()) {
+                    if (this.validateWordPlaced(lettersToReplace)) {
                         this.gameState.isBoardEmpty = false;
                         this.letterService.players[this.timeManager.turn].score += this.wordValidator.pointsForLastWord;
                         return 'Mot placé avec succès.';
@@ -173,7 +174,7 @@ export class PlaceLettersService {
             // this.placeLetterService.placeWord(this.tempword);
         }, TIME_OUT_TIME);
     }
-    validateWordPlaced() {
+    validateWordPlaced(lettersToReplace: string | undefined) {
         if (!this.gameState.validateWordCreatedByNewLetters()) {
             const delay = 3000;
             setTimeout(() => {
@@ -185,7 +186,12 @@ export class PlaceLettersService {
             this.wordValidator.pointsForLastWord = 0;
             return false;
         } else {
-            this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
+            // eslint-disable-next-line eqeqeq
+            if (lettersToReplace == undefined) {
+                this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
+            } else {
+                this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker, lettersToReplace);
+            }
             if (this.gameState.playerUsedAllLetters) {
                 this.wordValidator.pointsForLastWord += 50;
             }
@@ -227,9 +233,9 @@ export class PlaceLettersService {
         return tempWord.join(''); // reconstruct the string
     }
 
-    submitWordMadeClick(buttonPressed: string) {
-        if (buttonPressed === 'Enter') {
-            this.placeWord(this.placeLetterClick.transformIntoCommand());
-        }
+    submitWordMadeClick(): MessagePlayer {
+        const myMessage: MessagePlayer = { message: '', sender: this.letterService.players[0].name, role: 'Joueur' };
+        myMessage.message = this.placeLetterClick.transformIntoCommand();
+        return myMessage;
     }
 }

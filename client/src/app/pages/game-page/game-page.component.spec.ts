@@ -1,15 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PlayAreaComponent } from '@app/components/play-area/play-area.component';
-import { SidebarComponent } from '@app/components/sidebar/sidebar.component';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ClickManagementService } from '@app/services/click-management.service';
 import { GamePageComponent } from './game-page.component';
 
 describe('GamePageComponent', () => {
     let component: GamePageComponent;
     let fixture: ComponentFixture<GamePageComponent>;
-
+    let clickManagerSpy: jasmine.SpyObj<ClickManagementService>;
+    let routerSpy: jasmine.SpyObj<Router>;
     beforeEach(async () => {
+        clickManagerSpy = jasmine.createSpyObj('ClickManagementService', ['click']);
+        routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+
         await TestBed.configureTestingModule({
-            declarations: [GamePageComponent, SidebarComponent, PlayAreaComponent],
+            declarations: [GamePageComponent],
+            providers: [
+                { provide: ClickManagementService, useValue: clickManagerSpy },
+                { provide: Router, useValue: routerSpy },
+            ],
+            imports: [RouterTestingModule],
         }).compileComponents();
     });
 

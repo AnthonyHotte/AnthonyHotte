@@ -1,16 +1,17 @@
 import * as io from 'socket.io';
 import * as http from 'http';
-import { NUMBEROFROOMS } from '@app/constants';
+import { NUMBEROFROOMS, MAX_NUMBER_SKIPPED_TURNS } from '@app/constants';
 import { RoomsService } from './rooms.service';
 import { Service } from 'typedi';
 
 @Service()
 export class SocketManager {
-    games: string[][] = new Array(new Array());
+    games: string[][];
     private sio: io.Server;
 
     constructor(server: http.Server, private roomsService: RoomsService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
+        this.games = [[]];
     }
 
     handleSockets(): void {
@@ -25,15 +26,16 @@ export class SocketManager {
                     message.namePlayer,
                     socket.id,
                     message.bonusOn,
-                    message.mode,
                 );
                 // start game if in solo mode
-                if (message.mode === 'solo') {
+                if (message.mode === 2) {
                     socket.emit('startGame', {
                         room: this.roomsService.rooms[this.roomsService.indexNextRoom],
-                        playerNumber: 0,
-                        indexPlayerStart: this.roomsService.rooms[this.roomsService.indexNextRoom].turn,
+                        indexPlayerStart: this.roomsService.rooms[this.roomsService.indexNextRoom].startTurn,
+                        playerName: message.namePlayer,
+                        opponentName: message.nameOpponent,
                     });
+                    socket.emit('gameMode', message.mode);
                 } else {
                     // put the room in the waiting room list
                     this.roomsService.listRoomWaiting.push(this.roomsService.rooms[this.roomsService.indexNextRoom]);
@@ -41,25 +43,32 @@ export class SocketManager {
                 // increment next room index but make sure it is not above 50
                 this.roomsService.indexNextRoom = ++this.roomsService.indexNextRoom % NUMBEROFROOMS;
             });
-            socket.on('joinGame', (name) => {
-                // join the oldest game in the waiting room
-                socket.join(this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].roomName);
+            socket.on('joinGame', (info) => {
+                // join the waiting room
+                const roomNumber = this.roomsService.listRoomWaiting[info.indexInWaitingRoom].index;
+                socket.join(this.roomsService.rooms[roomNumber].roomName);
                 // adding player name to the room
-                this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].playerNames[1] = name;
+                this.roomsService.rooms[roomNumber].playerNames[1] = info.playerJoinName;
                 // adding socket id to the room
-                this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].socketsId[1] = socket.id;
+                this.roomsService.rooms[roomNumber].socketsId[1] = socket.id;
                 // start game for everyone in the room
-                this.sio.to(this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].roomName).emit('startGame', {
-                    room: this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index],
-                    playerNumber: 1,
-                    indexPlayerStart: this.roomsService.rooms[this.roomsService.listRoomWaiting[0].index].turn,
+                // have to change the 0 index
+                socket.emit('gameMode', 1);
+                // send information to the other in the room
+                this.sio.to(this.roomsService.rooms[roomNumber].socketsId[0]).emit('gameMode', 0);
+                // send information to every one in the room
+                this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('startGame', {
+                    room: this.roomsService.rooms[roomNumber],
+                    indexPlayerStart: this.roomsService.rooms[roomNumber].startTurn,
+                    playerName: this.roomsService.rooms[roomNumber].playerNames[0],
+                    opponentName: this.roomsService.rooms[roomNumber].playerNames[1],
                 });
                 // take of the room from waiting room
-                this.roomsService.listRoomWaiting.splice(0, 1);
+                this.roomsService.listRoomWaiting.splice(info.indexInWaitingRoom, 1);
             });
             socket.on('returnListOfGames', () => {
                 this.games = new Array(new Array());
-                for (let i = 0; i < this.roomsService.indexNextRoom; i++) {
+                for (let i = 0; i < this.roomsService.listRoomWaiting.length; i++) {
                     if (!this.roomsService.rooms !== undefined || this.games !== undefined) {
                         this.games[i][0] = this.roomsService.rooms[i].playerNames[0];
                         this.games[i][1] = this.roomsService.rooms[i].bonusOn.toString();
@@ -67,6 +76,26 @@ export class SocketManager {
                     }
                 }
                 socket.emit('sendGamesInformation', this.games);
+            });
+            socket.on('joinPLayerTurn', (endTurnInfo) => {
+                this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow = endTurnInfo.numberSkipTurn;
+                if (this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow === MAX_NUMBER_SKIPPED_TURNS) {
+                    // emit finish Game
+                }
+                // message to every one in the room
+                this.sio
+                    .to(this.roomsService.rooms[endTurnInfo.roomNumber].roomName)
+                    .emit('joinPlayerTurnFromServer', this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow);
+            });
+            socket.on('createrPlayerTurn', (endTurnInfo) => {
+                this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow = endTurnInfo.numberSkipTurn;
+                if (this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow === MAX_NUMBER_SKIPPED_TURNS) {
+                    // emit finish Game
+                }
+                // message to every one in the room
+                this.sio
+                    .to(this.roomsService.rooms[endTurnInfo.roomNumber].roomName)
+                    .emit('createrPlayerTurnFromServer', this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow);
             });
         });
     }

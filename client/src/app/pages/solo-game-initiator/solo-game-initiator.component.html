@@ -2,7 +2,7 @@
 https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%20let%20a%20user%20select%20only%20one,group%20can%20be%20selected%20at%20the%20same%20time.-->
 <body ng-app="app" style="text-align: Center">
     <div class="container justified">
-        <h1 class="header-item">Bienvenue dans le mode {{ initiateTypeGame.gameType }}!</h1>
+        <h1 class="header-item">Bienvenue dans le mode {{ getGameStatusInString() }}!</h1>
         <div class="justified">
             <article class="forecast">
                 <h2>Entrez votre identifiant. Les règles à suivre:</h2>
@@ -21,34 +21,41 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         <label> Nom du joueur : </label>
                         <input [(ngModel)]="temporaryName" type="string" />
                         <p>Nom du joueur: {{ this.name }}</p>
-                        <p *ngIf="initiateTypeGame.gameType==='solo'">{{ "Nom de l'adversaire: " + opponentName }}</p>
-                        <button *ngIf="initiateTypeGame.gameType==='solo'" class="button" (click)="setName()">Validation de l'identifiant</button>
+                        <p *ngIf="getGameStatus() === 2">{{ "Nom de l'adversaire: " + opponentName }}</p>
+                        <button *ngIf="getGameStatus() === 2" class="button" (click)="setName()">Validation de l'identifiant</button>
                     </fieldset>
                 </div>
-                <div *ngIf="initiateTypeGame.isNewGame">
+                <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2">
                     <fieldset>
                         <legend>Bonus aléatoire</legend>
-                        <input type="radio" id="activated" name="randomBonus" (click)="setRandomBonus(false)" checked/>
+                        <input type="radio" id="activated" name="randomBonus" (click)="setRandomBonus(false)" checked />
                         <label for="facile">Désactivé</label><br />
                         <input type="radio" id="deactivated" name="randomBonus" (click)="setRandomBonus(true)" />
                         <label for="difficile">Activé</label><br />
                     </fieldset>
                 </div>
-                <div *ngIf="initiateTypeGame.isNewGame">
+                <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2">
                     <fieldset>
                         <legend>Choisissez le temps par tour de jeu</legend>
                         <form oninput="tempsDeJeu = Math.max(parseInt(barre.value),parseInt(increment.value))">
-                            <input [(ngModel)]="playTime" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" /> 
+                            <input [(ngModel)]="playTime" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" />
                             <output name="temps" for="tempsDeJeu">{{ playTime }}</output> secondes par tour de jeu
                         </form>
                     </fieldset>
                 </div>
-                <p><button *ngIf="nameIsValid && initiateTypeGame.gameType==='solo'" (click)="startNewGame()">Démarrer la partie {{initiateTypeGame.gameType}}!</button>
-                    <button *ngIf="nameIsValid && initiateTypeGame.gameType==='multi player' && initiateTypeGame.isNewGame" (click)="startNewGame()" routerLink="/waiting">Démarrer la partie!</button>
-                    <button *ngIf="nameIsValid && initiateTypeGame.gameType==='multi player' && !initiateTypeGame.isNewGame" (click)="joinGame()">Démarrer la partie!</button></p>
+                <p>
+                    <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()">
+                        Démarrer la partie {{ getGameStatusInString() }}!
+                    </button>
+                    <button *ngIf="nameIsValid && getGameStatus() === 0" (click)="startNewGame()" routerLink="/waiting">
+                        Démarrer la partie!
+                    </button>
+                    <button *ngIf="nameIsValid && getGameStatus() === 1" (click)="joinGame()">
+                        Démarrer la partie!
+                    </button>
+                </p>
                 <button class="button" routerLink="/selection">Revenir en arrière</button>
             </article>
         </div>
     </div>
-   
 </body>

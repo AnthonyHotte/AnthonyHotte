@@ -21,12 +21,22 @@ export class LetterBankService {
             lettersInBank += '\n' + letter.letter + ' : ';
             let numberOfLetter = 0;
             for (const letterInBank of this.letterBank) {
-                if (letterInBank.letter === letter.letter) {
+                if (letterInBank.letter.toLowerCase() === letter.letter.toLowerCase()) {
                     numberOfLetter++;
                 }
             }
             lettersInBank += numberOfLetter;
         });
         return lettersInBank;
+    }
+    getindexofALetterinBank(alphabeticlettertoget: string): number {
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        const notAValidIndexvalue = -1;
+        for (let i = 0; i < this.letterBank.length; i++) {
+            if (this.letterBank[i].letter.toLowerCase() === alphabeticlettertoget) {
+                return i;
+            }
+        }
+        return notAValidIndexvalue; // return -1 in the case that the letter wouldn't be found in the bank
     }
 }

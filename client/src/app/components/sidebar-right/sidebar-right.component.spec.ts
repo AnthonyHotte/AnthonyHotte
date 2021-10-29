@@ -103,11 +103,6 @@ describe('SidebarRightComponent', () => {
         expect(result).toEqual(expectedResult);
     });
 
-    it('finishCurrentGame set isGameFinish to true ', () => {
-        finishGameServiceSpy.isGameFinished = false;
-        component.finishCurrentGame();
-        expect(finishGameServiceSpy.isGameFinished).toBe(true);
-    });
     it('increaseFontSize should call ncreasePoliceSize and policeSizeChanged method ', () => {
         component.increaseFontSize();
         gridServiceSpy.increasePoliceSize.and.returnValue();

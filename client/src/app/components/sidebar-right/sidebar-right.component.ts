@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
+import { GameStatus } from '@app/game-status';
 import { MessagePlayer } from '@app/message';
-import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
+import { PlaceLetterClickService } from '@app/services/place-letter-click.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
+// import { SocketService } from '@app/services/socket.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
@@ -22,18 +24,23 @@ export class SidebarRightComponent implements AfterViewInit {
     time: number;
     turn: number;
     changedTurns: boolean = false;
-
     constructor(
-        private turnTimeController: TimerTurnManagerService,
+        public turnTimeController: TimerTurnManagerService,
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
         private textBox: TextBox,
         private readonly gridService: GridService,
         private readonly placeLetterService: PlaceLettersService,
-        private finishGameService: FinishGameService,
-        private letterBankService: LetterBankService,
+        private letterBankService: LetterBankService, // private socketService: SocketService,
+        private placeLetterClick: PlaceLetterClickService,
     ) {
         this.setAttribute();
+        /*
+        this.socketService.turn.subscribe((turnNumber) => {
+            if (turnNumber !== this.turnTimeController.gameStatus) {
+                this.getPlayerNameAndVerifyTurn();
+            }
+        });*/
     }
 
     ngAfterViewInit() {
@@ -41,6 +48,12 @@ export class SidebarRightComponent implements AfterViewInit {
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
+    }
+    showPassButton() {
+        return (
+            (this.turnTimeController.turn === 0 && this.turnTimeController.gameStatus === 2) ||
+            this.turnTimeController.gameStatus === this.turnTimeController.turn
+        );
     }
 
     setAttribute() {
@@ -60,7 +73,10 @@ export class SidebarRightComponent implements AfterViewInit {
 
     skipTurn() {
         this.textBox.isCommand('!passer');
-        this.soloOpponentPlays();
+        this.placeLetterClick.reset();
+        if (this.turnTimeController.gameStatus === GameStatus.SoloPlayer) {
+            this.soloOpponentPlays();
+        }
     }
 
     getNumberRemainingLetters() {
@@ -73,10 +89,6 @@ export class SidebarRightComponent implements AfterViewInit {
 
     getScorePlayer(index: number) {
         return this.letterService.players[index].score;
-    }
-
-    finishCurrentGame() {
-        this.finishGameService.isGameFinished = true;
     }
 
     increaseFontSize() {
@@ -111,7 +123,11 @@ export class SidebarRightComponent implements AfterViewInit {
         this.changedTurns = false;
     }
 
-    soloOpponentPlays() {
+    async soloOpponentPlays() {
+        // this.wait3SecondsBeginningOfTurn();
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        const fourseconds = 4000;
+        await this.delay(fourseconds);
         this.soloOpponent.play();
         let message: MessagePlayer;
         if (this.textBox.debugCommand) {
@@ -121,5 +137,8 @@ export class SidebarRightComponent implements AfterViewInit {
         }
         this.textBox.inputs.push(message);
         this.textBox.scrollDown();
+    }
+    async delay(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
     }
 }
