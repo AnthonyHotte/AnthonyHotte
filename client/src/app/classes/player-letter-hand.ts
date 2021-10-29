@@ -1,6 +1,6 @@
+import { LetterMap } from '@app/all-letters';
 import { MAXLETTERINHAND } from '@app/constants';
 import { Letter } from '@app/letter';
-import { LetterMap } from '@app/all-letters';
 import { LetterBankService } from '@app/services/letter-bank.service';
 
 export class PlayerLetterHand {
@@ -27,7 +27,7 @@ export class PlayerLetterHand {
             }
         }
     }
-    exchangeLetters(letters: string) {
+    exchangeLetters(letters: string, lettersToReplace?: string) {
         // only possible when at least 7 letters are there
         if (this.letterBankService.letterBank.length >= MAXLETTERINHAND && this.handContainLetters(letters)) {
             const numberToExchange = letters.length;
@@ -42,10 +42,15 @@ export class PlayerLetterHand {
                     }
                 }
             }
-            for (let i = 0; i < numberToExchange; i++) {
-                const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
-                this.allLettersInHand.push(this.letterBankService.letterBank[index]);
-                this.letterBankService.letterBank.splice(index, 1);
+            // eslint-disable-next-line eqeqeq
+            if (lettersToReplace == undefined) {
+                for (let i = 0; i < numberToExchange; i++) {
+                    const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
+                    this.allLettersInHand.push(this.letterBankService.letterBank[index]);
+                    this.letterBankService.letterBank.splice(index, 1);
+                }
+            } else {
+                this.pushTheseLetterToPlayerHand(lettersToReplace);
             }
 
             for (const letter of lettersExchanged) {
@@ -78,7 +83,7 @@ export class PlayerLetterHand {
         return lettersAreThere.length === letters.length;
     }
 
-    removeLetters(lettersToRemove: string) {
+    removeLetters(lettersToRemove: string, lettersToReplace?: string) {
         // remove the played letters
         for (let i = 0; i < lettersToRemove.length; i++) {
             for (let j = 0; j < this.allLettersInHand.length; j++) {
@@ -94,8 +99,20 @@ export class PlayerLetterHand {
             lettersToRemove.length > this.letterBankService.letterBank.length
                 ? (replaceAmount = this.letterBankService.letterBank.length)
                 : (replaceAmount = lettersToRemove.length);
-        for (let i = 0; i < replaceAmount; i++) {
-            const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
+        // eslint-disable-next-line eqeqeq
+        if (lettersToReplace == undefined) {
+            for (let i = 0; i < replaceAmount; i++) {
+                const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
+                this.allLettersInHand.push(this.letterBankService.letterBank[index]);
+                this.letterBankService.letterBank.splice(index, 1);
+            }
+        } else {
+            this.pushTheseLetterToPlayerHand(lettersToReplace);
+        }
+    }
+    pushTheseLetterToPlayerHand(lettersToReplace: string) {
+        for (let i = 0; i < lettersToReplace.length; i++) {
+            const index = this.letterBankService.getindexofALetterinBank(lettersToReplace.charAt(i));
             this.allLettersInHand.push(this.letterBankService.letterBank[index]);
             this.letterBankService.letterBank.splice(index, 1);
         }

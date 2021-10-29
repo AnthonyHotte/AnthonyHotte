@@ -1,11 +1,11 @@
 import { fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { MAXLETTERINHAND } from '@app/constants';
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from './letter-bank.service';
 import { LetterService } from './letter.service';
 import { PlaceLettersService } from './place-letters.service';
-import { MAXLETTERINHAND } from '@app/constants';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 describe('PlaceLettersService', () => {
     let service: PlaceLettersService;
@@ -96,7 +96,8 @@ describe('PlaceLettersService', () => {
         const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(false);
         const mySpy2 = spyOn(gridServiceSpy, 'drawtilebackground');
         gameStateServiceSpy.indexLastLetters = [1, 2, 3];
-        const returnvalue = service.validateWordPlaced();
+        const dumbUndefinedVariable = undefined;
+        const returnvalue = service.validateWordPlaced(dumbUndefinedVariable);
         flush();
         expect(returnvalue).toBe(false);
         expect(mySpy).toHaveBeenCalled();
@@ -107,7 +108,8 @@ describe('PlaceLettersService', () => {
         const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(true);
         gameStateServiceSpy.indexLastLetters = [1, 2, 3];
         gameStateServiceSpy.playerUsedAllLetters = true;
-        const returnvalue = service.validateWordPlaced();
+        const dumbUndefinedVariable = undefined;
+        const returnvalue = service.validateWordPlaced(dumbUndefinedVariable);
         flush();
         expect(returnvalue).toBe(true);
         expect(mySpy).toHaveBeenCalled();
