@@ -72,7 +72,7 @@ export class SocketManager {
                 socket.emit('toClient', message, sender, role);
             });
             socket.on('toAll', (message: string, sender: string, role: string) => {
-                this.sio.sockets.emit('toAllClient', `${socket.id} : ${message}, ${sender}, ${role}`);
+                socket.broadcast.emit('toAllClient', message, sender, role);
             });
         });
     }

@@ -14,7 +14,6 @@ export class SocketService {
     gameLists: string[][] = [[]];
     textBoxMessageObservable: Observable<MessagePlayer>;
     messageSubject: Subject<MessagePlayer>;
-    textBoxMessage: MessagePlayer;
 
     constructor(
         private messageService: MessageService,
@@ -23,7 +22,6 @@ export class SocketService {
         private initiateGameTypeService: InitiateGameTypeService,
     ) {
         this.configureBaseSocketFeatures();
-        this.textBoxMessageObservable = new Observable((observer) => observer.next(this.textBoxMessage));
         this.messageSubject = new Subject();
     }
 
