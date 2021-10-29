@@ -7,7 +7,7 @@ import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
-import { SocketService } from '@app/services/socket.service';
+// import { SocketService } from '@app/services/socket.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
@@ -32,8 +32,7 @@ export class SidebarRightComponent implements AfterViewInit {
         private readonly gridService: GridService,
         private readonly placeLetterService: PlaceLettersService,
         private finishGameService: FinishGameService,
-        private letterBankService: LetterBankService,
-        private socketService: SocketService,
+        private letterBankService: LetterBankService, // private socketService: SocketService,
     ) {
         this.setAttribute();
         /*
