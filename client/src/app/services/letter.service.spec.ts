@@ -53,4 +53,25 @@ describe('LetterService', () => {
         service.reset();
         expect(letterBankServiceSpy.letterBank.length).toEqual(expectedResult);
     });
+
+    it('swapLetters should swap letters', () => {
+        service.players[0].allLettersInHand = [
+            { letter: 'a', quantity: 1, point: 1 },
+            { letter: 'i', quantity: 1, point: 1 },
+        ];
+        expect(service.players[0].allLettersInHand[0].letter).toEqual('a');
+        service.swapLetters(0, 1);
+        expect(service.players[0].allLettersInHand[0].letter).toEqual('i');
+    });
+
+    it('moveletterright should move letter selected right', () => {
+        service.players[0].allLettersInHand = [
+            { letter: 'a', quantity: 1, point: 1 },
+            { letter: 'i', quantity: 1, point: 1 },
+            { letter: 'e', quantity: 1, point: 1 },
+        ];
+        expect(service.players[0].allLettersInHand[0].letter).toEqual('a');
+        service.swapLetters(0, 1);
+        expect(service.players[0].allLettersInHand[0].letter).toEqual('i');
+    });
 });

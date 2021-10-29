@@ -96,35 +96,14 @@ describe('TextBox', () => {
             expect(textBox.getArray()[i]).toEqual(arr[i]);
         }
     });
-    it('ButtonMessageState should be ButtonMessageActivated', () => {
-        expect(textBox.getButtonMessageState()).toEqual('ButtonMessageActivated');
-    });
-    it('buttonCommandState should be ButtonCommandReleased', () => {
-        expect(textBox.getButtonCommandState()).toEqual('ButtonCommandReleased');
-    });
     it('should get debugCommand', () => {
         expect(textBox.getDebugCommand()).toBe(false);
-    });
-    it('should activate commandButton', () => {
-        textBox.activateCommandButton();
-        expect(textBox.buttonCommandState).toEqual('ButtonCommandActivated');
-        expect(textBox.buttonMessageState).toEqual('ButtonMessageReleased');
-    });
-    it('should activate MessageButton', () => {
-        textBox.buttonCommandState = 'ButtonCommandActivated';
-        textBox.buttonMessageState = 'ButtonMessageReleased';
-        textBox.activateMessageButton();
-        expect(textBox.buttonCommandState).toEqual('ButtonCommandReleased');
-        expect(textBox.buttonMessageState).toEqual('ButtonMessageActivated');
     });
     it('isCommand should call debugCommand', () => {
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
         placerLetterServiceSpy = jasmine.createSpyObj('PlacerLettersService', ['placeWord']);
         timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerServiceSpy', ['endTurn']);
         finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['goToHomeAndRefresh']);
-
-        textBox = new TextBox(placerLetterServiceSpy, timerTurnManagerServiceSpy, letterServiceSpy, finishGameServiceSpy, letterBankServiceSpy);
-
         timerTurnManagerServiceSpy.turn = 0;
         const maChaine = '!debug';
         textBox.isCommand(maChaine);

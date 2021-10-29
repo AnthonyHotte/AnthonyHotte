@@ -6,6 +6,7 @@ import { TextBox } from '@app/classes/text-box-behavior';
 import { MAXLETTERINHAND } from '@app/constants';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
+import { SocketService } from '@app/services/socket.service';
 // import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { TextBoxComponent } from './text-box';
 
@@ -16,10 +17,12 @@ describe('TextBoxComponent', () => {
     // let timeServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
+    let socketSpy: jasmine.SpyObj<SocketService>;
 
     beforeEach(async () => {
         letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
+        socketSpy = jasmine.createSpyObj('SocketService', ['getMessageObservable', 'configureSendMessageToServer']);
         const player1 = new PlayerLetterHand(letterBankServiceSpy);
         player1.allLettersInHand = [];
         for (let i = 0; i < MAXLETTERINHAND; i++) {
@@ -40,13 +43,14 @@ describe('TextBoxComponent', () => {
             'getDebugCommand',
             'isCommand',
         ]);
-        component = new TextBoxComponent(textBoxServiceSpy, letterServiceSpy);
+        component = new TextBoxComponent(textBoxServiceSpy, letterServiceSpy, socketSpy);
         await TestBed.configureTestingModule({
             declarations: [TextBoxComponent],
             imports: [FormsModule, RouterTestingModule],
             providers: [
                 { provide: TextBox, useValue: textBoxServiceSpy },
                 { provide: LetterService, useValue: letterServiceSpy },
+                { provide: SocketService, useValue: socketSpy },
             ],
         }).compileComponents();
     });
@@ -61,18 +65,7 @@ describe('TextBoxComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-    it('should activate message, desactivate command and call activateMessageButton', () => {
-        component.activateMessage();
-        expect(component.buttonCommandState).toBe('ButtonCommandReleased');
-        expect(component.buttonMessageState).toBe('ButtonMessageActivated');
-        expect(textBoxServiceSpy.activateMessageButton).toHaveBeenCalled();
-    });
-    it('should desactivate message, activate command and call activateCommandButton', () => {
-        component.activateCommand();
-        expect(component.buttonCommandState).toBe('ButtonCommandActivated');
-        expect(component.buttonMessageState).toBe('ButtonMessageReleased');
-        expect(textBoxServiceSpy.activateCommandButton).toHaveBeenCalled();
-    });
+
     it('buttonDetect should call send', () => {
         component.buttonDetect();
         expect(textBoxServiceSpy.send).toHaveBeenCalled();
@@ -80,15 +73,5 @@ describe('TextBoxComponent', () => {
     it('buttonDetect should call getDebugCommand', () => {
         component.buttonDetect();
         expect(textBoxServiceSpy.getDebugCommand).toHaveBeenCalled();
-    });
-    it('buttonDetect should call isCommand', () => {
-        component.buttonCommandState = 'ButtonCommandActivated';
-        component.buttonDetect();
-        expect(textBoxServiceSpy.isCommand).toHaveBeenCalled();
-    });
-    it('buttonDetect should not call isCommand', () => {
-        component.buttonCommandState = 'ButtonCommandReleased';
-        component.buttonDetect();
-        expect(textBoxServiceSpy.isCommand).not.toHaveBeenCalled();
     });
 });

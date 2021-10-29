@@ -45,7 +45,7 @@ describe('ClickManagementService', () => {
     });
 
     it('manageView should call removeAttributesExchange and removeAttributesSwapping when active location is gameBoard', () => {
-        service.activeLocation = 'textBox';
+        service.activeLocation = 'gameBoard';
         const mySpy = spyOn(letterServiceSpy, 'removeAttributesExchange');
         const mySpy2 = spyOn(letterServiceSpy, 'removeAttributesSwapping');
         service.manageView();
