@@ -1,4 +1,4 @@
-import { NUMBEROFROOMS } from '@app/constants';
+import { MAX_NUMBER_SKIPPED_TURNS, NUMBEROFROOMS } from '@app/constants';
 import * as http from 'http';
 import * as io from 'socket.io';
 import { Service } from 'typedi';
