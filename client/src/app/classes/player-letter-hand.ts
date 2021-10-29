@@ -31,10 +31,12 @@ export class PlayerLetterHand {
         // only possible when at least 7 letters are there
         if (this.letterBankService.letterBank.length >= MAXLETTERINHAND && this.handContainLetters(letters)) {
             const numberToExchange = letters.length;
+            const lettersExchanged = [];
             // removes letters from hand
             for (const letter of letters) {
                 for (let i = 0; i < this.allLettersInHand.length; i++) {
                     if (this.allLettersInHand[i].letter.toLowerCase() === letter) {
+                        lettersExchanged.push(letter);
                         this.allLettersInHand.splice(i, 1);
                         break;
                     }
@@ -49,6 +51,11 @@ export class PlayerLetterHand {
                 }
             } else {
                 this.pushTheseLetterToPlayerHand(lettersToReplace);
+            }
+
+            for (const letter of lettersExchanged) {
+                const tempLetter = LetterMap.letterMap.letterMap.get(letter) as Letter;
+                this.letterBankService.letterBank.push(tempLetter);
             }
         }
     }
@@ -108,6 +115,16 @@ export class PlayerLetterHand {
             const index = this.letterBankService.getindexofALetterinBank(lettersToReplace.charAt(i));
             this.allLettersInHand.push(this.letterBankService.letterBank[index]);
             this.letterBankService.letterBank.splice(index, 1);
+        }
+    }
+    removeLettersWithoutReplacingThem(lettersToRemove: string) {
+        for (let i = 0; i < lettersToRemove.length; i++) {
+            for (let j = 0; j < this.allLettersInHand.length; j++) {
+                if (this.allLettersInHand[j].letter.toLowerCase() === lettersToRemove.charAt(i)) {
+                    this.allLettersInHand.splice(j, 1);
+                    break;
+                }
+            }
         }
     }
 

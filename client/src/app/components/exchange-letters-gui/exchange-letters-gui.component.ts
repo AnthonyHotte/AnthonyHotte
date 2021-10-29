@@ -28,7 +28,8 @@ export class ExchangeLettersGUIComponent {
         return this.letterBankService.letterBank.length >= MAXLETTERINHAND;
     }
 
-    exchangeLetters() {
+    exchangeLetters(event: MouseEvent) {
+        event.stopPropagation();
         this.letterService.players[this.timeManager.turn].exchangeLetters(this.letterService.lettersSelectedExchange);
         const message: MessagePlayer = {
             message: 'échanger ' + this.letterService.lettersSelectedExchange,
@@ -36,10 +37,11 @@ export class ExchangeLettersGUIComponent {
             role: 'Joueur',
         };
         this.textBox.inputs.push(message);
-        this.cancelSelection();
+        this.cancelSelection(event);
         this.timeManager.endTurn('exchange');
     }
-    cancelSelection() {
+    cancelSelection(event: MouseEvent) {
+        event.stopPropagation();
         this.letterService.removeAttributesExchange();
     }
 }
