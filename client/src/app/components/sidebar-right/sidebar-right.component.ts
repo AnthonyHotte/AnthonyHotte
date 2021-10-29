@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
+import { GameStatus } from '@app/game-status';
 import { MessagePlayer } from '@app/message';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
+import { SocketService } from '@app/services/socket.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
@@ -31,8 +33,15 @@ export class SidebarRightComponent implements AfterViewInit {
         private readonly placeLetterService: PlaceLettersService,
         private finishGameService: FinishGameService,
         private letterBankService: LetterBankService,
+        private socketService: SocketService,
     ) {
         this.setAttribute();
+        /*
+        this.socketService.turn.subscribe((turnNumber) => {
+            if (turnNumber !== this.turnTimeController.gameStatus) {
+                this.getPlayerNameAndVerifyTurn();
+            }
+        });*/
     }
 
     ngAfterViewInit() {
@@ -65,7 +74,9 @@ export class SidebarRightComponent implements AfterViewInit {
 
     skipTurn() {
         this.textBox.isCommand('!passer');
-        this.soloOpponentPlays();
+        if (this.turnTimeController.gameStatus === GameStatus.SoloPlayer) {
+            this.soloOpponentPlays();
+        }
     }
 
     getNumberRemainingLetters() {
@@ -119,7 +130,8 @@ export class SidebarRightComponent implements AfterViewInit {
     async soloOpponentPlays() {
         // this.wait3SecondsBeginningOfTurn();
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        await this.delay(4000);
+        const fourseconds = 4000;
+        await this.delay(fourseconds);
         this.soloOpponent.play();
         let message: MessagePlayer;
         if (this.textBox.debugCommand) {

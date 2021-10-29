@@ -84,7 +84,7 @@ export class PlaceLettersService {
         }
     }
 
-    placeWord(commandrowInput: string): string {
+    placeWord(commandrowInput: string, lettersToReplace?: string): string {
         const checkInput = this.checkInput(commandrowInput);
         if (checkInput === 'ok') {
             if (!this.verifyTileNotOutOfBound()) {
@@ -109,7 +109,7 @@ export class PlaceLettersService {
                         return 'Ce mot ne touche à aucune lettre déjà en jeu.';
                     }
                     this.drawWord();
-                    if (this.validateWordPlaced()) {
+                    if (this.validateWordPlaced(lettersToReplace)) {
                         this.gameState.isBoardEmpty = false;
                         this.letterService.players[this.timeManager.turn].score += this.wordValidator.pointsForLastWord;
                         return 'Mot placé avec succès.';
@@ -173,7 +173,7 @@ export class PlaceLettersService {
             // this.placeLetterService.placeWord(this.tempword);
         }, TIME_OUT_TIME);
     }
-    validateWordPlaced() {
+    validateWordPlaced(lettersToReplace: string | undefined) {
         if (!this.gameState.validateWordCreatedByNewLetters()) {
             const delay = 3000;
             setTimeout(() => {
@@ -185,7 +185,12 @@ export class PlaceLettersService {
             this.wordValidator.pointsForLastWord = 0;
             return false;
         } else {
-            this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
+            // eslint-disable-next-line eqeqeq
+            if (lettersToReplace == undefined) {
+                this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
+            } else {
+                this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker, lettersToReplace);
+            }
             if (this.gameState.playerUsedAllLetters) {
                 this.wordValidator.pointsForLastWord += 50;
             }
