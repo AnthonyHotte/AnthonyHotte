@@ -5,7 +5,9 @@ import { FinishGameService } from '@app/services/finish-game.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
+import { SocketService } from '@app/services/socket.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { Subscription } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -14,10 +16,9 @@ export class TextBox {
     inputs: MessagePlayer[] = [];
     inputsSoloOpponent: string[];
     character: boolean = false;
-    buttonMessageState: string = 'ButtonMessageActivated';
-    buttonCommandState: string = 'ButtonCommandReleased';
     debugCommand: boolean = false;
     valueToEndGame: number;
+    messageFromServer: Subscription;
 
     commandSuccessful: boolean = false;
     constructor(
@@ -25,15 +26,33 @@ export class TextBox {
         private timeManager: TimerTurnManagerService,
         private letterService: LetterService,
         private finishGameService: FinishGameService,
+        private socketService: SocketService,
         private letterBankService: LetterBankService,
     ) {
         this.inputs = [];
         this.character = false;
-        this.buttonMessageState = 'ButtonMessageActivated';
-        this.buttonCommandState = 'ButtonCommandReleased';
         this.debugCommand = false;
         this.valueToEndGame = 0;
         this.inputsSoloOpponent = [];
+
+        this.socketService.getMessageObservable().subscribe((myMessage) => {
+            let text = '';
+            if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
+                this.verifyCommandPasser();
+            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
+                this.verifyCommandEchanger(myMessage.message);
+            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
+                this.activateReserve();
+            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
+                text = this.placeLettersService.placeWord(myMessage.message.substring(PLACERCOMMANDLENGTH + 1, myMessage.message.length));
+                // this.endTurn('place');
+                if (text !== 'Mot placé avec succès.') {
+                    this.verifyCommandPasser();
+                }
+            }
+
+            this.inputs.push(myMessage);
+        });
     }
     send(myWord: MessagePlayer) {
         this.inputVerification(myWord.message);
@@ -55,23 +74,6 @@ export class TextBox {
 
     getMessagesSoloOpponent() {
         return this.inputsSoloOpponent;
-    }
-
-    getButtonMessageState() {
-        return this.buttonMessageState;
-    }
-
-    getButtonCommandState() {
-        return this.buttonCommandState;
-    }
-
-    activateCommandButton() {
-        this.buttonCommandState = 'ButtonCommandActivated';
-        this.buttonMessageState = 'ButtonMessageReleased';
-    }
-    activateMessageButton() {
-        this.buttonCommandState = 'ButtonCommandReleased';
-        this.buttonMessageState = 'ButtonMessageActivated';
     }
 
     isCommand(myWord: string) {
