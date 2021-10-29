@@ -30,7 +30,6 @@ export class LetterBankService {
         return lettersInBank;
     }
     getindexofALetterinBank(alphabeticlettertoget: string): number {
-        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         const notAValidIndexvalue = -1;
         for (let i = 0; i < this.letterBank.length; i++) {
             if (this.letterBank[i].letter.toLowerCase() === alphabeticlettertoget) {
