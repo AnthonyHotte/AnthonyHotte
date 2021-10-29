@@ -1,8 +1,8 @@
-import * as io from 'socket.io';
+import { MAX_NUMBER_SKIPPED_TURNS, NUMBEROFROOMS } from '@app/constants';
 import * as http from 'http';
-import { NUMBEROFROOMS, MAX_NUMBER_SKIPPED_TURNS } from '@app/constants';
-import { RoomsService } from './rooms.service';
+import * as io from 'socket.io';
 import { Service } from 'typedi';
+import { RoomsService } from './rooms.service';
 
 @Service()
 export class SocketManager {
