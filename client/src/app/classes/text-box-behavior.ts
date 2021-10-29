@@ -38,21 +38,33 @@ export class TextBox {
         this.socketService.getMessageObservable().subscribe((myMessage) => {
             let text = '';
             if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
-                this.verifyCommandPasser();
+                text = 'Votre adversaire a passé';
             } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
-                this.verifyCommandEchanger(myMessage.message);
+                text = 'Votre adversaire a échangé des lettres';
             } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
-                this.activateReserve();
+                text = 'Votre adversaire a affiché sa reserve';
             } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 text = this.placeLettersService.placeWord(myMessage.message.substring(PLACERCOMMANDLENGTH + 1, myMessage.message.length));
-                // this.endTurn('place');
                 if (text !== 'Mot placé avec succès.') {
                     this.verifyCommandPasser();
                 }
             }
-
+            const message1: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
             this.inputs.push(myMessage);
+            this.inputs.push(message1);
         });
+    }
+
+    handleEnter(message: string) {
+        let mess = '';
+        for (let i = 0; i < message.length; ++i) {
+            if (message.substr(i) === '\n') {
+                const message1: MessagePlayer = { message: mess, sender: '', role: 'Systeme' };
+                this.inputs.push(message1);
+            } else {
+                mess += message.substr(i);
+            }
+        }
     }
     send(myWord: MessagePlayer) {
         this.inputVerification(myWord.message);
@@ -100,7 +112,7 @@ export class TextBox {
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
                 text = this.verifyCommandEchanger(myWord);
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
-                this.activateReserve();
+                this.handleEnter(this.activateReserve());
             } else {
                 text = 'Erreur de syntaxe...';
             }
@@ -124,7 +136,7 @@ export class TextBox {
     }
 
     activateReserve() {
-        return true;
+        return this.letterBankService.getLettersInBank();
     }
 
     endTurn(reason: string) {

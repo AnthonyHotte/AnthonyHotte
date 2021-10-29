@@ -91,21 +91,33 @@ export class SocketService {
     }
     configureSendMessageToServer(message?: MessagePlayer, toAll?: boolean) {
         // envoyer une commande qui sera gere par le serveur
+        // if (!toAll && message !== undefined && toAll !== undefined) {
+        //     this.socket.emit('toServer', message.message, message.sender, message.role);
+        // }
         if (!toAll && message !== undefined && toAll !== undefined) {
-            this.socket.emit('toServer', message.message, message.sender, message.role);
+            this.socket.emit('toServer', message);
         }
         // envoyer un message a tout le monde sauf au sender
+        // else if (message !== undefined && toAll !== undefined) {
+        //     this.socket.emit('toAll', message.message, message.sender, message.role);
+        // }
         else if (message !== undefined && toAll !== undefined) {
-            this.socket.emit('toAll', message.message, message.sender, message.role);
+            this.socket.emit('toAll', message);
         }
         // gerer le message envoye par le serveur
-        this.socket.on('toAllClient', (message_: string, sender_: string, role_: string) => {
-            const myMessage: MessagePlayer = { message: message_, sender: sender_, role: role_ };
+        // this.socket.on('toAllClient', (message_: string, sender_: string, role_: string) => {
+        //     const myMessage: MessagePlayer = { message: message_, sender: sender_, role: role_ };
+        //     this.messageSubject.next(myMessage);
+        // });
+        this.socket.on('toAllClient', (myMessage) => {
             this.messageSubject.next(myMessage);
         });
         // gerer la commande entre par le joueur
-        this.socket.on('toClient', (message_: string, sender_: string, role_: string) => {
-            const myMessage: MessagePlayer = { message: message_, sender: sender_, role: role_ };
+        // this.socket.on('toClient', (message_: string, sender_: string, role_: string) => {
+        //     const myMessage: MessagePlayer = { message: message_, sender: sender_, role: role_ };
+        //     this.messageSubject.next(myMessage);
+        // });
+        this.socket.on('toClient', (myMessage) => {
             this.messageSubject.next(myMessage);
         });
     }
