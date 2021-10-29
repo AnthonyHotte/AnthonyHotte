@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GameStatus } from '@app/game-status';
-import { BehaviorSubject } from 'rxjs';
+import { MessagePlayer } from '@app/message';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
 
 @Injectable({
@@ -16,6 +17,7 @@ export class SocketService {
     playerNameIndexOne: BehaviorSubject<string>;
     turn: BehaviorSubject<number>;
     skippedTurn: BehaviorSubject<number>;
+    messageSubject: Subject<MessagePlayer>;
 
     constructor() {
         this.gameLists = [[]];
@@ -31,6 +33,11 @@ export class SocketService {
         // default value should never be over right
         this.skippedTurn = new BehaviorSubject<number>(0);
         this.configureBaseSocketFeatures();
+        this.messageSubject = new Subject();
+    }
+
+    getMessageObservable() {
+        return this.messageSubject.asObservable();
     }
 
     configureBaseSocketFeatures() {
@@ -81,6 +88,26 @@ export class SocketService {
     }
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
+    }
+    configureSendMessageToServer(message?: MessagePlayer, toAll?: boolean) {
+        // envoyer une commande qui sera gere par le serveur
+        if (!toAll && message !== undefined && toAll !== undefined) {
+            this.socket.emit('toServer', message.message, message.sender, message.role);
+        }
+        // envoyer un message a tout le monde sauf au sender
+        else if (message !== undefined && toAll !== undefined) {
+            this.socket.emit('toAll', message.message, message.sender, message.role);
+        }
+        // gerer le message envoye par le serveur
+        this.socket.on('toAllClient', (message_: string, sender_: string, role_: string) => {
+            const myMessage: MessagePlayer = { message: message_, sender: sender_, role: role_ };
+            this.messageSubject.next(myMessage);
+        });
+        // gerer la commande entre par le joueur
+        this.socket.on('toClient', (message_: string, sender_: string, role_: string) => {
+            const myMessage: MessagePlayer = { message: message_, sender: sender_, role: role_ };
+            this.messageSubject.next(myMessage);
+        });
     }
     sendJoinPlayerTurn(turnsSkippedInARow: number) {
         this.socket.emit('joinPLayerTurn', {
