@@ -64,14 +64,51 @@ describe('LetterService', () => {
         expect(service.players[0].allLettersInHand[0].letter).toEqual('i');
     });
 
-    it('moveletterright should move letter selected right', () => {
+    it('moveletterright should move letter selected to the right when not on edge', () => {
         service.players[0].allLettersInHand = [
             { letter: 'a', quantity: 1, point: 1 },
             { letter: 'i', quantity: 1, point: 1 },
             { letter: 'e', quantity: 1, point: 1 },
         ];
+        service.indexSelectedSwapping = 0;
         expect(service.players[0].allLettersInHand[0].letter).toEqual('a');
-        service.swapLetters(0, 1);
-        expect(service.players[0].allLettersInHand[0].letter).toEqual('i');
+        service.moveLetterRight();
+        expect(service.players[0].allLettersInHand[1].letter).toEqual('a');
+    });
+
+    it('moveletterright should move letter selected at the opposite end when on edge', () => {
+        service.players[0].allLettersInHand = [
+            { letter: 'a', quantity: 1, point: 1 },
+            { letter: 'i', quantity: 1, point: 1 },
+            { letter: 'e', quantity: 1, point: 1 },
+        ];
+        service.indexSelectedSwapping = 2;
+        expect(service.players[0].allLettersInHand[0].letter).toEqual('a');
+        service.moveLetterRight();
+        expect(service.players[0].allLettersInHand[0].letter).toEqual('e');
+    });
+
+    it('moveletterleft should move letter selected at the opposite end when on edge', () => {
+        service.players[0].allLettersInHand = [
+            { letter: 'a', quantity: 1, point: 1 },
+            { letter: 'i', quantity: 1, point: 1 },
+            { letter: 'e', quantity: 1, point: 1 },
+        ];
+        service.indexSelectedSwapping = 0;
+        expect(service.players[0].allLettersInHand[0].letter).toEqual('a');
+        service.moveLetterLeft();
+        expect(service.players[0].allLettersInHand[0].letter).toEqual('e');
+    });
+
+    it('moveletterleft should move letter selected to the left when not on edge', () => {
+        service.players[0].allLettersInHand = [
+            { letter: 'a', quantity: 1, point: 1 },
+            { letter: 'i', quantity: 1, point: 1 },
+            { letter: 'e', quantity: 1, point: 1 },
+        ];
+        service.indexSelectedSwapping = 2;
+        expect(service.players[0].allLettersInHand[2].letter).toEqual('e');
+        service.moveLetterLeft();
+        expect(service.players[0].allLettersInHand[1].letter).toEqual('e');
     });
 });
