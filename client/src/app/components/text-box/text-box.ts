@@ -19,14 +19,16 @@ export class TextBoxComponent {
     constructor(public input: TextBox, private letterService: LetterService, private socket: SocketService, private turn: TimerTurnManagerService) {
         this.word = '';
         this.debugCommand = false;
+        this.message = { message: '', sender: '', role: '' };
+        this.socket.configureSendMessageToServer(this.message, true);
     }
 
     buttonDetect() {
         let myMessage: MessagePlayer = { message: '', sender: this.letterService.players[0].name, role: 'Joueur' };
-        if (this.turn.gameStatus === 0) {
-            myMessage = { message: this.word, sender: this.letterService.players[0].name, role: 'Joueur' };
+        if (this.turn.gameStatus === 0 || this.turn.gameStatus === 2) {
+            myMessage = { message: this.word, sender: this.letterService.players[0].name, role: 'Joueur0' };
         } else {
-            myMessage = { message: this.word, sender: this.letterService.players[1].name, role: 'Joueur' };
+            myMessage = { message: this.word, sender: this.letterService.players[1].name, role: 'Joueur1' };
         }
         if (myMessage.message.substr(0, 1) === '!') {
             this.input.send(myMessage);

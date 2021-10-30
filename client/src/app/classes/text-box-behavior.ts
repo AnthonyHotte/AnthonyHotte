@@ -36,33 +36,43 @@ export class TextBox {
         this.inputsSoloOpponent = [];
 
         this.socketService.getMessageObservable().subscribe((myMessage) => {
-            let text = '';
-            if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
-                text = 'Votre adversaire a passé';
-            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
-                text = 'Votre adversaire a échangé des lettres';
-            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
-                text = 'Votre adversaire a affiché sa reserve';
-            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
-                text = this.placeLettersService.placeWord(myMessage.message.substring(PLACERCOMMANDLENGTH + 1, myMessage.message.length));
-                if (text !== 'Mot placé avec succès.') {
-                    this.verifyCommandPasser();
+            let isCommand = false;
+            if (myMessage.message !== '' && myMessage.sender !== '') {
+                let text = '';
+                if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
+                    text = 'Votre adversaire a passé';
+                    isCommand = true;
+                } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
+                    text = 'Votre adversaire a échangé des lettres';
+                    isCommand = true;
+                } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
+                    text = 'Votre adversaire a affiché sa reserve';
+                    isCommand = true;
+                } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
+                    text = this.placeLettersService.placeWord(myMessage.message.substring(PLACERCOMMANDLENGTH + 1, myMessage.message.length));
+                    isCommand = true;
+                    if (text !== 'Mot placé avec succès.') {
+                        this.verifyCommandPasser();
+                    }
                 }
+                if (!isCommand) {
+                    this.inputs.push(myMessage);
+                }
+                const message1: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
+                this.inputs.push(message1);
             }
-            const message1: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
-            this.inputs.push(myMessage);
-            this.inputs.push(message1);
         });
     }
 
     handleEnter(message: string) {
         let mess = '';
         for (let i = 0; i < message.length; ++i) {
-            if (message.substr(i) === '\n') {
+            if (message.charAt(i) === '\n') {
                 const message1: MessagePlayer = { message: mess, sender: '', role: 'Systeme' };
+                mess = '';
                 this.inputs.push(message1);
             } else {
-                mess += message.substr(i);
+                mess += message.charAt(i);
             }
         }
     }
@@ -112,6 +122,7 @@ export class TextBox {
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
                 text = this.verifyCommandEchanger(myWord);
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
+                text = '';
                 this.handleEnter(this.activateReserve());
             } else {
                 text = 'Erreur de syntaxe...';
