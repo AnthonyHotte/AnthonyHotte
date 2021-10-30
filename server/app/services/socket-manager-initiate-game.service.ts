@@ -97,6 +97,14 @@ export class SocketManager {
                     .to(this.roomsService.rooms[endTurnInfo.roomNumber].roomName)
                     .emit('createrPlayerTurnFromServer', this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow);
             });
+
+            socket.on('toServer', (message) => {
+                socket.emit('toClient', message);
+            });
+
+            socket.on('toAll', (message) => {
+                socket.broadcast.emit('toAllClient', message);
+            });
         });
     }
 }
