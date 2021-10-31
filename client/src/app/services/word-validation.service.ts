@@ -1,6 +1,7 @@
 import jsonDictionnary from 'src/assets/dictionnary.json';
 import { Injectable } from '@angular/core';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
+import { SocketService } from './socket.service';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +12,7 @@ export class WordValidationService {
     pointsForLastWord: number;
     indexLastLetters: number[] = [];
 
-    constructor(readonly scoreCalculator: ScoreCalculatorService) {
+    constructor(readonly scoreCalculator: ScoreCalculatorService, private socket: SocketService) {
         // when importing the json, typescript doesnt let me read it as a json object. To go around this, we stringify it then parse it
         const temp = JSON.stringify(jsonDictionnary);
         const temp2 = JSON.parse(temp);
@@ -78,6 +79,10 @@ export class WordValidationService {
             lastIndexWord = firstColumnOfWord;
         }
         this.pointsForLastWord += this.scoreCalculator.calculateScoreForHorizontal(beginIndexWord, lastIndexWord, row, wordCreated);
+        this.socket.isWordValidationFinished = false;
+        // emit to server word validation with word
+        while (!this.socket.isWordValidationFinished) {}
+
         return this.isWordValid(wordCreated);
     }
 

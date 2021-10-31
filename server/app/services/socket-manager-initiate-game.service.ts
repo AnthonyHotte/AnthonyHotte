@@ -10,7 +10,7 @@ export class SocketManager {
     games: string[][];
     private sio: io.Server;
 
-    constructor(server: http.Server, private roomsService: RoomsService) {
+    constructor(server: http.Server, private roomsService: RoomsService, private wordValidationService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.games = new Array(new Array());
     }
@@ -112,6 +112,9 @@ export class SocketManager {
                 this.sio
                     .to(this.roomsService.rooms[endTurnInfo.roomNumber].roomName)
                     .emit('createrPlayerTurnFromServer', this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow);
+            });
+            socket.on('validateWordOnServer', (wordCreated) => {
+                this.validateWord()
             });
             socket.on('cancelWaitingGame', (indexes) => {
                 this.roomsService.indexNextRoom--;
