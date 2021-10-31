@@ -4,7 +4,7 @@ import { PopUpData } from '@app/classes/pop-up-data';
 
 import { PopUpComponent } from './pop-up.component';
 
-fdescribe('PopUpComponent', () => {
+describe('PopUpComponent', () => {
     let component: PopUpComponent;
     let fixture: ComponentFixture<PopUpComponent>;
     let dialogRefSpy: jasmine.SpyObj<MatDialogRef<PopUpComponent>>;
