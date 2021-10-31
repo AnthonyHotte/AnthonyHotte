@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { PopUpData } from '@app/classes/pop-up-data';
+import { PopUpComponent } from '@app/components/pop-up/pop-up.component';
 import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { LetterService } from '@app/services/letter.service';
@@ -31,6 +34,7 @@ export class SoloGameInitiatorComponent {
         private timeManager: TimerTurnManagerService,
         private messageService: MessageService,
         private indexWaitingRoomService: IndexWaitingRoomService,
+        private dialog: MatDialog,
     ) {
         this.temporaryName = 'Joueur';
         this.name = 'Joueur';
@@ -148,5 +152,19 @@ export class SoloGameInitiatorComponent {
         if (this.isBonusRandom) {
             this.tileScrambler.scrambleTiles();
         }
+    }
+    returnIsGameToBeJoined() {
+        return this.socketService.ableToJoin;
+    }
+    createPopUp() {
+        const dialogData = new PopUpData(
+            'Titre en lien avec des problemes de connexion',
+            'Texte Avertissant de la non possibilité de rejoindre une partie',
+        );
+        this.dialog.open(PopUpComponent, {
+            maxWidth: '400px',
+            closeOnNavigation: true,
+            data: dialogData,
+        });
     }
 }
