@@ -4,13 +4,14 @@ import * as http from 'http';
 import * as io from 'socket.io';
 import { Service } from 'typedi';
 import { RoomsService } from './rooms.service';
+import { WordValidationService } from './word-validation.service';
 
 @Service()
 export class SocketManager {
     games: string[][];
     private sio: io.Server;
 
-    constructor(server: http.Server, private roomsService: RoomsService, private wordValidationService) {
+    constructor(server: http.Server, private roomsService: RoomsService, private wordValidationService: WordValidationService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.games = new Array(new Array());
     }
@@ -114,7 +115,7 @@ export class SocketManager {
                     .emit('createrPlayerTurnFromServer', this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow);
             });
             socket.on('validateWordOnServer', (wordCreated) => {
-                this.validateWord()
+                socket.emit('wordValidation', this.wordValidationService.isWordValid(wordCreated).toString());
             });
             socket.on('cancelWaitingGame', (indexes) => {
                 this.roomsService.indexNextRoom--;

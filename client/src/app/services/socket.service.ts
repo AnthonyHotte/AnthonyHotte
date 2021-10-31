@@ -92,7 +92,7 @@ export class SocketService {
 
         this.socket.on('wordValidation', (wordIsValid) => {
             this.isWordValidationFinished = true;
-            this.wordIsValid = wordIsValid;
+            this.wordIsValid = wordIsValid === 'true' ? true : false;
         });
     }
     sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameStatus: GameStatus, opponentName: string) {
