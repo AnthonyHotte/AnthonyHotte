@@ -53,27 +53,29 @@ export class SocketManager {
                     // join the waiting room
                     const roomNumber = this.roomsService.listRoomWaiting[info.indexInWaitingRoom].index;
                     if (this.roomsService.rooms[roomNumber].roomIsAvailable) {
-                        socket.join(this.roomsService.rooms[roomNumber].roomName);
-                        // adding player name to the room
-                        this.roomsService.rooms[roomNumber].playerNames[1] = info.playerJoinName;
-                        // adding socket id to the room
-                        this.roomsService.rooms[roomNumber].socketsId[1] = socket.id;
-                        // start game for everyone in the room
-                        // have to change the 0 index
-                        socket.emit('gameMode', 1);
-                        // send information to the other in the room
-                        this.sio.to(this.roomsService.rooms[roomNumber].socketsId[0]).emit('gameMode', 0);
-                        // send information to every one in the room
-                        this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('startGame', {
-                            room: this.roomsService.rooms[roomNumber],
-                            indexPlayerStart: this.roomsService.rooms[roomNumber].startTurn,
-                            playerName: this.roomsService.rooms[roomNumber].playerNames[0],
-                            opponentName: this.roomsService.rooms[roomNumber].playerNames[1],
-                        });
-                        // take of the room from waiting room
-                        this.roomsService.listRoomWaiting.splice(info.indexInWaitingRoom, 1);
-                        // puts the room in occupied state
-                        this.roomsService.rooms[roomNumber].setRoomOccupied();
+                        if (this.roomsService.rooms[roomNumber].playerNames[0] !== info.playerJoinName) {
+                            socket.join(this.roomsService.rooms[roomNumber].roomName);
+                            // adding player name to the room
+                            this.roomsService.rooms[roomNumber].playerNames[1] = info.playerJoinName;
+                            // adding socket id to the room
+                            this.roomsService.rooms[roomNumber].socketsId[1] = socket.id;
+                            // start game for everyone in the room
+                            // have to change the 0 index
+                            socket.emit('gameMode', 1);
+                            // send information to the other in the room
+                            this.sio.to(this.roomsService.rooms[roomNumber].socketsId[0]).emit('gameMode', 0);
+                            // send information to every one in the room
+                            this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('startGame', {
+                                room: this.roomsService.rooms[roomNumber],
+                                indexPlayerStart: this.roomsService.rooms[roomNumber].startTurn,
+                                playerName: this.roomsService.rooms[roomNumber].playerNames[0],
+                                opponentName: this.roomsService.rooms[roomNumber].playerNames[1],
+                            });
+                            // take of the room from waiting room
+                            this.roomsService.listRoomWaiting.splice(info.indexInWaitingRoom, 1);
+                            // puts the room in occupied state
+                            this.roomsService.rooms[roomNumber].setRoomOccupied();
+                        }
                     } else {
                         socket.emit('roomOccupied');
                     }

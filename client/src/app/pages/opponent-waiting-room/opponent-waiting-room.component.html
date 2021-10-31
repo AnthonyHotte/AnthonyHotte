@@ -4,7 +4,7 @@
     <button (click)="refresh()"> Mise à jour </button>
     </div>
     <div *ngFor="let game of this.gamesList; let indexElement = index;">
-        <button [class]="game" pressed (click) = "this.changeValidity()" (click) = "this.setIndex(indexElement)"> Nom : {{game[0]}}, Bonus aléatoire : {{this.getBonusInLetters(game[1])}}, Temps de jeu : {{this.getTimePerTurn(game[2])}}  </button>
+        <button *ngIf="game !== undefined" [class]="game" pressed (click) = "this.changeValidity(game[0])" (click) = "this.setIndex(indexElement)"> Nom : {{game[0]}}, Bonus aléatoire : {{this.getBonusInLetters(game[1])}}, Temps de jeu : {{this.getTimePerTurn(game[2])}}  </button>
     </div>
     <button class="button" *ngIf="isValidSelection" routerLink="/soloInitiator"> Allez à la sélection du nom </button>
     <button routerLink = "/selection"> Revenir en arrière </button>

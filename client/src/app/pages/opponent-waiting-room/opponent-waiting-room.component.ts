@@ -46,12 +46,13 @@ export class OpponentWaitingRoomComponent implements OnInit {
         return parseInt(time, 10);
     }
 
-    changeValidity() {
+    changeValidity(name: string) {
         if (!this.isValidSelection) {
             this.isValidSelection = true;
         } else {
             this.isValidSelection = false;
         }
+        this.socketInformation.nameOfRoomCreator = name;
     }
 
     refresh() {

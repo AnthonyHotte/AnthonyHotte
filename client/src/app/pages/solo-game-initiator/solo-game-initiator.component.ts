@@ -47,6 +47,7 @@ export class SoloGameInitiatorComponent {
     }
     joinGame() {
         this.setName();
+        this.timeManager.timePerTurn = parseInt(this.socketService.gameLists[this.indexWaitingRoomService.index][2], 10); // timePerTurn
         this.socketService.sendJoinGameInfo(this.name, this.indexWaitingRoomService.index);
     }
     startNewGame() {
@@ -108,6 +109,9 @@ export class SoloGameInitiatorComponent {
         } else {
             this.nameIsValid = false;
         }
+        if (!this.verifyNameIsNotSameAsRoomCreator() && this.getGameStatus() === 1) {
+            this.nameIsValid = false;
+        }
     }
     switchOpponentName(temp: string) {
         if (temp === this.opponentName.split(' ').join('').toLocaleLowerCase()) {
@@ -166,5 +170,13 @@ export class SoloGameInitiatorComponent {
             closeOnNavigation: true,
             data: dialogData,
         });
+    }
+
+    verifyNameIsNotSameAsRoomCreator() {
+        return this.socketService.nameOfRoomCreator.toLowerCase() !== this.temporaryName.toLowerCase();
+    }
+
+    returnNameOfCreator() {
+        return this.socketService.nameOfRoomCreator;
     }
 }

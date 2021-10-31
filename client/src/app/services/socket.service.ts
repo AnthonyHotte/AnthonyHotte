@@ -20,6 +20,7 @@ export class SocketService {
     messageSubject: Subject<MessagePlayer>;
     cancellationIndexes: number[];
     ableToJoin: boolean = true;
+    nameOfRoomCreator: string = 'Default';
 
     constructor() {
         this.gameLists = [[]];
