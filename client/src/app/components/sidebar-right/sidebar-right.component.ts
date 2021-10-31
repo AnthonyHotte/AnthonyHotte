@@ -126,17 +126,19 @@ export class SidebarRightComponent implements AfterViewInit {
     async soloOpponentPlays() {
         // this.wait3SecondsBeginningOfTurn();
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        const fourseconds = 4000;
-        await this.delay(fourseconds);
-        this.soloOpponent.play();
-        let message: MessagePlayer;
-        if (this.textBox.debugCommand) {
-            message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name, role: 'Adversaire' };
-        } else {
-            message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name, role: 'Adversaire' };
+        if (this.turnTimeController.gameStatus === 2) {
+            const fourseconds = 4000;
+            await this.delay(fourseconds);
+            this.soloOpponent.play();
+            let message: MessagePlayer;
+            if (this.textBox.debugCommand) {
+                message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name, role: 'Adversaire' };
+            } else {
+                message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name, role: 'Adversaire' };
+            }
+            this.textBox.inputs.push(message);
+            this.textBox.scrollDown();
         }
-        this.textBox.inputs.push(message);
-        this.textBox.scrollDown();
     }
     async delay(ms: number) {
         return new Promise((resolve) => setTimeout(resolve, ms));

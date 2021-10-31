@@ -42,8 +42,7 @@ export class PlayerLetterHand {
                     }
                 }
             }
-            // eslint-disable-next-line eqeqeq
-            if (lettersToReplace == undefined) {
+            if (lettersToReplace === undefined) {
                 for (let i = 0; i < numberToExchange; i++) {
                     const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
                     this.allLettersInHand.push(this.letterBankService.letterBank[index]);
@@ -99,8 +98,7 @@ export class PlayerLetterHand {
             lettersToRemove.length > this.letterBankService.letterBank.length
                 ? (replaceAmount = this.letterBankService.letterBank.length)
                 : (replaceAmount = lettersToRemove.length);
-        // eslint-disable-next-line eqeqeq
-        if (lettersToReplace == undefined) {
+        if (lettersToReplace === undefined) {
             for (let i = 0; i < replaceAmount; i++) {
                 const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
                 this.allLettersInHand.push(this.letterBankService.letterBank[index]);

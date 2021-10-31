@@ -7,14 +7,14 @@ import { MAXLETTERINHAND } from '@app/constants';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { SocketService } from '@app/services/socket.service';
-// import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { TextBoxComponent } from './text-box';
 
 describe('TextBoxComponent', () => {
     let component: TextBoxComponent;
     let fixture: ComponentFixture<TextBoxComponent>;
     let textBoxServiceSpy: jasmine.SpyObj<TextBox>;
-    // let timeServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
+    let timeServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
     let socketSpy: jasmine.SpyObj<SocketService>;
@@ -23,6 +23,8 @@ describe('TextBoxComponent', () => {
         letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
         socketSpy = jasmine.createSpyObj('SocketService', ['getMessageObservable', 'configureSendMessageToServer']);
+        timeServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
+
         const player1 = new PlayerLetterHand(letterBankServiceSpy);
         player1.allLettersInHand = [];
         for (let i = 0; i < MAXLETTERINHAND; i++) {
@@ -43,7 +45,7 @@ describe('TextBoxComponent', () => {
             'getDebugCommand',
             'isCommand',
         ]);
-        component = new TextBoxComponent(textBoxServiceSpy, letterServiceSpy, socketSpy);
+        component = new TextBoxComponent(textBoxServiceSpy, letterServiceSpy, socketSpy, timeServiceSpy);
         await TestBed.configureTestingModule({
             declarations: [TextBoxComponent],
             imports: [FormsModule, RouterTestingModule],
