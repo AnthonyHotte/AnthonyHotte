@@ -50,9 +50,10 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <button *ngIf="nameIsValid && getGameStatus() === 0" (click)="startNewGame()" routerLink="/waiting">
                         Démarrer la partie!
                     </button>
-                    <button *ngIf="nameIsValid && getGameStatus() === 1" (click)="joinGame()">
+                    <button *ngIf="nameIsValid && getGameStatus() === 1 && this.returnIsGameToBeJoined()" (click)="joinGame()">
                         Démarrer la partie!
                     </button>
+                    <button *ngIf="!this.returnIsGameToBeJoined()" (click) = "this.createPopUp()">Mettre à jour la situation</button>
                 </p>
                 <button class="button" routerLink="/selection">Revenir en arrière</button>
             </article>

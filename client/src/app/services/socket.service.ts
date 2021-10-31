@@ -18,6 +18,8 @@ export class SocketService {
     turn: BehaviorSubject<number>;
     skippedTurn: BehaviorSubject<number>;
     messageSubject: Subject<MessagePlayer>;
+    cancellationIndexes: number[];
+    ableToJoin: boolean = true;
 
     constructor() {
         this.gameLists = [[]];
@@ -34,6 +36,7 @@ export class SocketService {
         this.skippedTurn = new BehaviorSubject<number>(0);
         this.configureBaseSocketFeatures();
         this.messageSubject = new Subject();
+        this.cancellationIndexes = [1, 2]; // room number and waiting room number
     }
 
     getMessageObservable() {
@@ -57,7 +60,9 @@ export class SocketService {
             this.gameStatus.next(gameMode);
         });
         this.socket.on('sendGamesInformation', (games) => {
+            this.gameLists.length = 0;
             for (let i = 0; i < games.length; i++) {
+                this.gameLists.push(['name', 'bonus', 'time']);
                 this.gameLists[i][0] = games[i][0]; // player name of who is the game initiator
                 this.gameLists[i][1] = games[i][1]; // is random bonus on
                 this.gameLists[i][2] = games[i][2]; // time per turn
@@ -72,6 +77,15 @@ export class SocketService {
             // start creater turn
             this.turn.next(0);
             this.skippedTurn.next(skippedTurn);
+        });
+        // cancelled game indexes
+        this.socket.on('CancellationIndexes', (indexes) => {
+            this.cancellationIndexes[0] = indexes[0]; // room index
+            this.cancellationIndexes[1] = indexes[1]; // waiting room index
+        });
+        // if room is unavailable for the joiner
+        this.socket.on('roomOccupied', () => {
+            this.ableToJoin = false;
         });
     }
     sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameStatus: GameStatus, opponentName: string) {
@@ -123,5 +137,11 @@ export class SocketService {
                 numberSkipTurn: turnsSkippedInARow,
             }),
         );
+    }
+    cancelGame() {
+        this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
+    }
+    setAbleToJoinGame() {
+        this.ableToJoin = true;
     }
 }

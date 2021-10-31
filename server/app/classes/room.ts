@@ -14,6 +14,8 @@ export class Room {
     turnsSkippedInARow: number;
     // maximum time per turn
     timePerTurn: number;
+    // is it an available room
+    roomIsAvailable: boolean = true;
     constructor(name: string, index: number) {
         this.roomName = name;
         this.timePerTurn = VALEUR_TEMPS_DEFAULT;
@@ -38,5 +40,13 @@ export class Room {
         this.socketsId = [];
         this.startTurn = Math.floor(Math.random() * 2);
         this.turnsSkippedInARow = 0;
+    }
+
+    setRoomOccupied() {
+        this.roomIsAvailable = false;
+    }
+
+    setRoomAvailable(){
+        this.roomIsAvailable = true;
     }
 }

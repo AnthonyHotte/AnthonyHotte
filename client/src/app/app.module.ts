@@ -24,6 +24,9 @@ import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.componen
 import { OpponentWaitingRoomComponent } from './pages/opponent-waiting-room/opponent-waiting-room.component';
 import { PlaceWordWithClickGuiComponent } from './components/place-word-with-click-gui/place-word-with-click-gui.component';
 import { AbandonGameComponent } from './components/abandon-game/abandon-game.component';
+import { PopUpComponent } from './components/pop-up/pop-up.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 
 /**
  * Main module that is used in main.ts.
@@ -50,6 +53,7 @@ import { AbandonGameComponent } from './components/abandon-game/abandon-game.com
         OpponentWaitingRoomComponent,
         PlaceWordWithClickGuiComponent,
         AbandonGameComponent,
+        PopUpComponent,
     ],
     imports: [
         AppMaterialModule,
@@ -60,6 +64,8 @@ import { AbandonGameComponent } from './components/abandon-game/abandon-game.com
         HttpClientModule,
         AutosizeModule,
         CountdownModule,
+        MatDialogModule,
+        MatButtonModule,
     ],
     providers: [],
     bootstrap: [AppComponent],
