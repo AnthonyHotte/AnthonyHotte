@@ -9,6 +9,7 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
 import { SoloGameInitiatorComponent } from './solo-game-initiator.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MessageService } from '@app/services/message.service';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
@@ -19,11 +20,13 @@ describe('SoloGameInitiatorComponent', () => {
     let timerTurnManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let messageServiceSpy: jasmine.SpyObj<MessageService>;
     let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
+    let dialogSpy: jasmine.SpyObj<MatDialog>;
     beforeEach(async () => {
         messageServiceSpy = jasmine.createSpyObj('MessageService', ['gameStartingInfoSubscribe']);
         letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
         socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendJoinGameInfo']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
+        dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
         const player1 = new PlayerLetterHand(letterBankServiceSpy);
         player1.allLettersInHand = [];
         for (let i = 0; i < MAXLETTERINHAND; i++) {
@@ -46,6 +49,7 @@ describe('SoloGameInitiatorComponent', () => {
                 { provide: LetterService, useValue: letterServiceSpy },
                 { provide: TileScramblerService, useValue: tileScramblerServiceSpy },
                 { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
+                { provide: MatDialog, useValue: dialogSpy },
             ],
             imports: [RouterTestingModule],
         }).compileComponents();

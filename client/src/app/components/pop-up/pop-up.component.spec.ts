@@ -11,7 +11,7 @@ describe('PopUpComponent', () => {
     let dataSpy: jasmine.SpyObj<PopUpData>;
 
     beforeEach(async () => {
-        dialogRefSpy = jasmine.createSpyObj(MatDialogRef, ['close']);
+        dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
         await TestBed.configureTestingModule({
             declarations: [PopUpComponent],
             providers: [
