@@ -46,7 +46,7 @@ export class Room {
         this.roomIsAvailable = false;
     }
 
-    setRoomAvailable(){
+    setRoomAvailable() {
         this.roomIsAvailable = true;
     }
 }
