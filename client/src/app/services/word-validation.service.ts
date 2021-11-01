@@ -58,7 +58,7 @@ export class WordValidationService {
         return true;
     }
 
-    validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][]): boolean {
+    async validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][]): Promise<boolean> {
         let beginIndexWord = 0;
         let lastIndexWord = 0;
         let firstColumnOfWord = 0;
@@ -79,11 +79,13 @@ export class WordValidationService {
             lastIndexWord = firstColumnOfWord;
         }
         this.pointsForLastWord += this.scoreCalculator.calculateScoreForHorizontal(beginIndexWord, lastIndexWord, row, wordCreated);
-        this.socket.isWordValidationFinished = false;
+        // this.socket.isWordValidationFinished = false;
         // emit to server word validation with word
-        while (!this.socket.isWordValidationFinished) {}
+        // while (!this.socket.isWordValidationFinished) {}
 
-        return this.isWordValid(wordCreated);
+        const validated = await this.socket.validateWord(wordCreated);
+
+        return validated;
     }
 
     validateVerticalWord(row: number, column: number, lettersOnBoard: string[][]): boolean {

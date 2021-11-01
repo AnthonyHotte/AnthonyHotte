@@ -20,8 +20,8 @@ export class SocketService {
     messageSubject: Subject<MessagePlayer>;
     cancellationIndexes: number[];
     ableToJoin: boolean = true;
-    isWordValidationFinished = false;
-    wordIsValid = false;
+    // isWordValidationFinished = false;
+    // wordIsValid = false;
 
     constructor() {
         this.gameLists = [[]];
@@ -89,11 +89,12 @@ export class SocketService {
         this.socket.on('roomOccupied', () => {
             this.ableToJoin = false;
         });
-
+        /*
         this.socket.on('wordValidation', (wordIsValid) => {
             this.isWordValidationFinished = true;
             this.wordIsValid = wordIsValid === 'true' ? true : false;
         });
+        */
     }
     sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameStatus: GameStatus, opponentName: string) {
         this.socket.emit('startingNewGameInfo', {
@@ -164,7 +165,13 @@ export class SocketService {
         this.ableToJoin = true;
     }
 
-    validateWord(wordCreated: string) {
-        this.socket.emit('validateWordOnServer', wordCreated);
+    async validateWord(wordCreated: string): Promise<boolean> {
+        return new Promise<boolean>((resolve) => {
+            this.socket.emit('validateWordOnServer', wordCreated, (response: boolean) => {
+                resolve(response);
+            });
+        }).then((res: boolean) => {
+            return res;
+        });
     }
 }
