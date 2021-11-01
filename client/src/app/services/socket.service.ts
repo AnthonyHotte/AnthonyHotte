@@ -59,10 +59,6 @@ export class SocketService {
             this.playerNameIndexZer0.next(info.playerName);
             this.playerNameIndexOne.next(info.opponentName);
             this.turn.next(info.indexPlayerStart);
-            // AddOn Update Hand of Creator
-            if (this.gameMode === 0) {
-                this.lettersOfJoinerInStringForSynch = info.lettersJoiner; // synch the letters of the creator with the letters of joiner
-            }
             this.startGame.next(true);
         });
         this.socket.on('gameMode', (gameMode) => {
@@ -121,7 +117,6 @@ export class SocketService {
         this.socket.emit('joinGame', {
             playerJoinName: name,
             indexInWaitingRoom: indexWaitingRoom,
-            handOfJoiner: this.lettersOfJoiner,
         });
     }
     sendGameListNeededNotification() {

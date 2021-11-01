@@ -48,8 +48,6 @@ export class SidebarRightComponent implements AfterViewInit {
         if (this.turnTimeController.turn === 1 && this.turnTimeController.gameStatus === 2) {
             this.opponentSet = true;
             this.soloOpponentPlays();
-        } else if (this.turnTimeController.gameStatus === 0) {
-            this.letterService.synchLetters(this.socketService.lettersOfJoinerInStringForSynch, false, true);
         }
     }
     showPassButton() {

@@ -90,11 +90,4 @@ export class Room {
         }
         return lettersInString;
     }
-
-    fillLettersOfJoiner(handOfJoiner: Letter[]) {
-        this.lettersJoiner = [];
-        for (const letter of handOfJoiner) {
-            this.lettersJoiner.push(letter);
-        }
-    }
 }
