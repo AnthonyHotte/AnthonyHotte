@@ -58,17 +58,21 @@ export class SocketManager {
                         this.roomsService.rooms[roomNumber].playerNames[1] = info.playerJoinName;
                         // adding socket id to the room
                         this.roomsService.rooms[roomNumber].socketsId[1] = socket.id;
-                        // start game for everyone in the room
-                        // have to change the 0 index
-                        socket.emit('gameMode', 1);
-                        // send information to the other in the room
-                        this.sio.to(this.roomsService.rooms[roomNumber].socketsId[0]).emit('gameMode', 0);
-                        // send information to every one in the room
-                        this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('startGame', {
+                        // start game for the joiner
+                        socket.emit('startGame', {
+                            room: this.roomsService.rooms[roomNumber],
+                            indexPlayerStart: (this.roomsService.rooms[roomNumber].startTurn + 1) % 2,
+                            playerName: this.roomsService.rooms[roomNumber].playerNames[0],
+                            opponentName: this.roomsService.rooms[roomNumber].playerNames[1],
+                            gameMode: 1,
+                        });
+                        // send information to the creater of the game
+                        this.sio.to(this.roomsService.rooms[roomNumber].socketsId[0]).emit('startGame', {
                             room: this.roomsService.rooms[roomNumber],
                             indexPlayerStart: this.roomsService.rooms[roomNumber].startTurn,
                             playerName: this.roomsService.rooms[roomNumber].playerNames[0],
                             opponentName: this.roomsService.rooms[roomNumber].playerNames[1],
+                            gameMode: 0,
                         });
                         // take of the room from waiting room
                         this.roomsService.listRoomWaiting.splice(info.indexInWaitingRoom, 1);

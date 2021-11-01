@@ -50,14 +50,12 @@ export class SocketService {
             console.log('connected!');
         });
         this.socket.on('startGame', (info) => {
+            this.gameStatus.next(info.gameMode);
             this.roomNumber = info.room.index;
             this.playerNameIndexZer0.next(info.playerName);
             this.playerNameIndexOne.next(info.opponentName);
             this.turn.next(info.indexPlayerStart);
             this.startGame.next(true);
-        });
-        this.socket.on('gameMode', (gameMode) => {
-            this.gameStatus.next(gameMode);
         });
         this.socket.on('sendGamesInformation', (games) => {
             this.gameLists.length = 0;

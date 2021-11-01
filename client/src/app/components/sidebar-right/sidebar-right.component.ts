@@ -50,10 +50,7 @@ export class SidebarRightComponent implements AfterViewInit {
         }
     }
     showPassButton() {
-        return (
-            (this.turnTimeController.turn === 0 && this.turnTimeController.gameStatus === 2) ||
-            this.turnTimeController.gameStatus === this.turnTimeController.turn
-        );
+        return this.turnTimeController.turn === 0;
     }
 
     setAttribute() {
