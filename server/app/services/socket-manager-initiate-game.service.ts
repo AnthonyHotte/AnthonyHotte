@@ -114,8 +114,9 @@ export class SocketManager {
                     .to(this.roomsService.rooms[endTurnInfo.roomNumber].roomName)
                     .emit('createrPlayerTurnFromServer', this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow);
             });
-            socket.on('validateWordOnServer', (wordCreated) => {
-                socket.emit('wordValidation', this.wordValidationService.isWordValid(wordCreated).toString());
+            socket.on('validateWordOnServer', (wordCreated, ackCallback) => {
+                ackCallback(this.wordValidationService.isWordValid(wordCreated));
+                // socket.emit('wordValidation', this.wordValidationService.isWordValid(wordCreated));
             });
             socket.on('cancelWaitingGame', (indexes) => {
                 this.roomsService.indexNextRoom--;
