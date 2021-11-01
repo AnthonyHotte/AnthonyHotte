@@ -114,6 +114,7 @@ export class SocketManager {
                     .to(this.roomsService.rooms[endTurnInfo.roomNumber].roomName)
                     .emit('createrPlayerTurnFromServer', this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow);
             });
+            // eslint-disable-next-line no-unused-vars
             socket.on('validateWordOnServer', (wordCreated, ackCallback) => {
                 ackCallback(this.wordValidationService.isWordValid(wordCreated));
                 // socket.emit('wordValidation', this.wordValidationService.isWordValid(wordCreated));
