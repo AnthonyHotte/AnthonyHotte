@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import * as Constants from '@app/constants';
 import { Letter } from '@app/letter';
 import { LetterService } from '@app/services/letter.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 
 @Component({
     selector: 'app-letters',
@@ -14,7 +15,7 @@ export class LettersComponent implements OnInit {
     currentLetterNumber: number;
     letterSize: number;
 
-    constructor(private letterService: LetterService) {}
+    constructor(private letterService: LetterService, private timerTurnManager: TimerTurnManagerService) {}
     // call only at the beginning
     @HostListener('keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
@@ -23,15 +24,17 @@ export class LettersComponent implements OnInit {
 
     getNewLetters(): void {
         this.letters = this.letterService.players[0].allLettersInHand;
-        //////////////////////////////////////////////////////////////////////////// for debug
+        /// ///////////////////////////////////////////////////////////////////////// for debug
         for (const letter of this.letterService.players[1].allLettersInHand) {
             this.letters.push(letter);
         }
-        //////////////////////////////////////////////////////////////////////////// for debug
+        /// ///////////////////////////////////////////////////////////////////////// for debug
     }
 
     ngOnInit(): void {
-        this.letterService.reset();
+        if (this.timerTurnManager.gameStatus === 2) {
+            this.letterService.reset();
+        }
         this.maxLettersInHand = Constants.MAXLETTERINHAND;
         this.letterSize = Constants.CASESIZE;
         this.getNewLetters();

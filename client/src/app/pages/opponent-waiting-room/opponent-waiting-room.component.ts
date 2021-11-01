@@ -35,10 +35,11 @@ export class OpponentWaitingRoomComponent implements OnInit {
     fillList() {
         this.gamesList.length = 0;
         for (let i = 0; i < this.socketInformation.gameLists.length; i++) {
-            this.gamesList.push(['name', 'bonus', 'time']);
+            this.gamesList.push(['name', 'bonus', 'time', 'letters']);
             this.gamesList[i][0] = this.socketInformation.gameLists[i][0]; // name
             this.gamesList[i][1] = this.socketInformation.gameLists[i][1]; // bonus
             this.gamesList[i][2] = this.socketInformation.gameLists[i][2]; // time per turn
+            this.gamesList[i][3] = this.socketInformation.gameLists[i][3] + this.socketInformation.gameLists[i][4];
         }
     }
 

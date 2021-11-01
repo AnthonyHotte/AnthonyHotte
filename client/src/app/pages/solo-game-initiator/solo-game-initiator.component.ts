@@ -183,4 +183,15 @@ export class SoloGameInitiatorComponent {
     returnNameOfCreator() {
         return this.socketService.nameOfRoomCreator;
     }
+
+    returnLetters() {
+        let temp = '';
+        for (const letter of this.letterService.players[0].allLettersInHand) {
+            temp += letter.letter;
+        }
+        for (const letter of this.letterService.players[1].allLettersInHand) {
+            temp += letter.letter;
+        }
+        return temp;
+    }
 }

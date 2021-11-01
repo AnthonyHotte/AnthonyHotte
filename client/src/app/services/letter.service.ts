@@ -51,6 +51,17 @@ export class LetterService {
         this.players[0].pushTheseLetterToPlayerHand(lettersJoiner); // local letters of joiner (player)
     }
 
+    resetLetterBankForSynch() {
+        this.letterBankService.letterBank = [];
+        LETTERS.forEach((letter) => {
+            for (let i = 0; i < letter.quantity; i++) {
+                this.letterBankService.letterBank.push(letter);
+            }
+        });
+        this.players[0].allLettersInHand = [];
+        this.players[1].allLettersInHand = [];
+    }
+
     swapLetters(index1: number, index2: number): void {
         const tempLetter: Letter = this.players[0].allLettersInHand[index1];
         this.players[0].allLettersInHand[index1] = this.players[0].allLettersInHand[index2];
