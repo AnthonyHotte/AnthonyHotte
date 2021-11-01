@@ -125,7 +125,6 @@ export class SidebarRightComponent implements AfterViewInit {
 
     async soloOpponentPlays() {
         // this.wait3SecondsBeginningOfTurn();
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         if (this.turnTimeController.gameStatus === 2) {
             const fourseconds = 4000;
             await this.delay(fourseconds);
