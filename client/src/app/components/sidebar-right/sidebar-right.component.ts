@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
-import { GameStatus } from '@app/game-status';
 import { MessagePlayer } from '@app/message';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
@@ -71,7 +70,7 @@ export class SidebarRightComponent implements AfterViewInit {
     skipTurn() {
         this.textBox.isCommand('!passer');
         this.placeLetterClick.reset();
-        if (this.turnTimeController.gameStatus === GameStatus.SoloPlayer) {
+        if (this.turnTimeController.turn === 0) {
             this.soloOpponentPlays();
         }
     }

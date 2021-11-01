@@ -60,6 +60,8 @@ export class SoloOpponentService {
                 } else if (commandToPlay.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
                     // not sure what this does maybe Aziz can help ?  as this section of the code is copied from textboxbehavior
                     //  this.activateReserve();
+                    // todo change the reason
+                    this.endTurn('');
                 }
             }
             /*
@@ -68,6 +70,9 @@ export class SoloOpponentService {
             // emit creater turn
             this.socketService.sendCreaterPlayerTurn(this.timeManager.turnsSkippedInARow);
             */
+        } else {
+            // change the reason
+            this.endTurn('');
         }
     }
     calculateProbability(percentage: number) {

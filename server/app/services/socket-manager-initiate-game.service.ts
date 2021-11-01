@@ -35,8 +35,8 @@ export class SocketManager {
                         indexPlayerStart: this.roomsService.rooms[this.roomsService.indexNextRoom].startTurn,
                         playerName: message.namePlayer,
                         opponentName: message.nameOpponent,
+                        gameMode: message.mode,
                     });
-                    socket.emit('gameMode', message.mode);
                     // removes possibility to join room
                     this.roomsService.rooms[this.roomsService.indexNextRoom].setRoomOccupied();
                     this.roomsService.listRoomWaiting.splice(this.roomsService.indexNextRoom, 1);
@@ -97,7 +97,11 @@ export class SocketManager {
                 }
                 socket.emit('sendGamesInformation', this.games);
             });
-            socket.on('joinPLayerTurn', (endTurnInfo) => {
+            socket.on('endTurn', (endTurn) => {
+                this.roomsService.rooms[endTurn.roomNumber].turnsSkippedInARow = endTurn.numberSkipTurn;
+                this.sio.to(this.roomsService.rooms[endTurn.roomNumber].socketsId[endTurn.playerTurnStatus]).emit('yourTurn');
+            });
+            socket.on('joinPlayerTurn', (endTurnInfo) => {
                 this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow = endTurnInfo.numberSkipTurn;
                 if (this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow === MAX_NUMBER_SKIPPED_TURNS) {
                     // emit finish Game

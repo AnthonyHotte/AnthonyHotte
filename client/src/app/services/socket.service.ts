@@ -52,8 +52,13 @@ export class SocketService {
         this.socket.on('startGame', (info) => {
             this.gameStatus.next(info.gameMode);
             this.roomNumber = info.room.index;
-            this.playerNameIndexZer0.next(info.playerName);
-            this.playerNameIndexOne.next(info.opponentName);
+            if (info.gameMode === 1) {
+                this.playerNameIndexZer0.next(info.opponentName);
+                this.playerNameIndexOne.next(info.playerName);
+            } else {
+                this.playerNameIndexZer0.next(info.playerName);
+                this.playerNameIndexOne.next(info.opponentName);
+            }
             this.turn.next(info.indexPlayerStart);
             this.startGame.next(true);
         });
@@ -65,6 +70,9 @@ export class SocketService {
                 this.gameLists[i][1] = games[i][1]; // is random bonus on
                 this.gameLists[i][2] = games[i][2]; // time per turn
             }
+        });
+        this.socket.on('yourTurn', () => {
+            this.turn.next(0);
         });
         this.socket.on('joinPlayerTurnFromServer', (skippedTurn) => {
             // start join turn
@@ -133,20 +141,20 @@ export class SocketService {
             this.messageSubject.next(myMessage);
         });
     }
+    endTurn(turnsSkippedInARow: number, nextPlayerTurn: GameStatus) {
+        this.socket.emit('endTurn', { roomNumber: this.roomNumber, turnSkipped: turnsSkippedInARow, playerTurnStatus: nextPlayerTurn });
+    }
     sendJoinPlayerTurn(turnsSkippedInARow: number) {
-        this.socket.emit('joinPLayerTurn', {
+        this.socket.emit('joinPlayerTurn', {
             roomNumber: this.roomNumber,
             numberSkipTurn: turnsSkippedInARow,
         });
     }
     sendCreaterPlayerTurn(turnsSkippedInARow: number) {
-        this.socket.emit(
-            'createrPlayerTurn',
-            this.socket.emit('joinPLayerTurn', {
-                roomNumber: this.roomNumber,
-                numberSkipTurn: turnsSkippedInARow,
-            }),
-        );
+        this.socket.emit('createrPlayerTurn', {
+            roomNumber: this.roomNumber,
+            numberSkipTurn: turnsSkippedInARow,
+        });
     }
     cancelGame() {
         this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
