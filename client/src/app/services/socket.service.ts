@@ -20,6 +20,8 @@ export class SocketService {
     messageSubject: Subject<MessagePlayer>;
     cancellationIndexes: number[];
     ableToJoin: boolean = true;
+    isWordValidationFinished = false;
+    wordIsValid = false;
 
     constructor() {
         this.gameLists = [[]];
@@ -86,6 +88,11 @@ export class SocketService {
         // if room is unavailable for the joiner
         this.socket.on('roomOccupied', () => {
             this.ableToJoin = false;
+        });
+
+        this.socket.on('wordValidation', (wordIsValid) => {
+            this.isWordValidationFinished = true;
+            this.wordIsValid = wordIsValid === 'true' ? true : false;
         });
     }
     sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameStatus: GameStatus, opponentName: string) {
@@ -155,5 +162,9 @@ export class SocketService {
     }
     setAbleToJoinGame() {
         this.ableToJoin = true;
+    }
+
+    validateWord(wordCreated: string) {
+        this.socket.emit('validateWordOnServer', wordCreated);
     }
 }
