@@ -48,6 +48,7 @@ export class SoloGameInitiatorComponent {
     joinGame() {
         this.setName();
         this.timeManager.timePerTurn = parseInt(this.socketService.gameLists[this.indexWaitingRoomService.index][2], 10); // timePerTurn
+        this.socketService.setGameMode(this.getGameStatus());
         this.socketService.sendJoinGameInfo(this.name, this.indexWaitingRoomService.index);
     }
     startNewGame() {
@@ -55,6 +56,7 @@ export class SoloGameInitiatorComponent {
         this.setName();
         this.setTime();
         this.scrambleBonus();
+        this.socketService.setGameMode(this.getGameStatus());
         this.sendNewGameStartInfo();
     }
     getGameStatus() {
@@ -77,6 +79,8 @@ export class SoloGameInitiatorComponent {
             this.name,
             this.timeManager.gameStatus,
             this.opponentName,
+            this.letterService.players[0].allLettersInHand,
+            this.letterService.players[1].allLettersInHand,
         );
     }
 

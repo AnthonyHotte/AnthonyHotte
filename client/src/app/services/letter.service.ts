@@ -44,6 +44,97 @@ export class LetterService {
         }
     }
 
+    // useful for when letters are removed from the game in multiplayer by the multiplayer opponent :
+    // ie, when there is an initial synch or there are played letters
+    synchLetters(letters: string, isInitialSynchForJoiner: boolean, isInitialSynchForCreator: boolean, isWordPlaced: boolean) {
+        // for when the initial letters of the created have to be put with those of the joiner
+        if (isInitialSynchForJoiner) {
+            this.resetLetterBankForSynch();
+            this.players[1].addLettersByChar(letters);
+            const FULL_HAND = 7;
+            this.players[0].addLetters(FULL_HAND);
+        } else if (isInitialSynchForCreator) {
+            // when the creator receives letters from joiner
+            this.returnLettersOfOpponent();
+            this.players[1].addLettersByChar(letters);
+        } else if (isWordPlaced) {
+            // when word has been placed
+            const DIFFERENCE_IN_LETTERS = this.findDifferentLetters(letters);
+            this.removeDifferentLettersForSynch(letters, DIFFERENCE_IN_LETTERS);
+            this.players[1].addLettersByChar(DIFFERENCE_IN_LETTERS);
+        }
+    }
+
+    removeDifferentLettersForSynch(letters: string, difference: string) {
+        let sameLetters = '';
+        let i = 0;
+        let j = 0;
+        while (i < letters.length) {
+            while (j < difference.length) {
+                if (letters[i] === difference[j]) {
+                    sameLetters += letters[i];
+                    letters.replace(letters[i], '');
+                    difference.replace(difference[j], '');
+                }
+                j++;
+            }
+            j = 0;
+            i++;
+        }
+        this.removeDifferentLettersFromHand(sameLetters);
+    }
+
+    removeDifferentLettersFromHand(sameLetters: string) {
+        let valuesToRemove = '';
+        let index = 0;
+        let sameLetter = false;
+        for (const letter of this.players[1].allLettersInHand) {
+            while (index < sameLetters.length) {
+                if (letter.letter === sameLetters) {
+                    sameLetter = true;
+                }
+                index++;
+            }
+            if (!sameLetter) {
+                valuesToRemove += letter.letter;
+            }
+            sameLetter = false;
+        }
+        this.players[1].removeLetters(valuesToRemove);
+    }
+
+    findDifferentLetters(letters: string) {
+        let j = 0;
+        for (const letter of this.players[1].allLettersInHand) {
+            while (j < letters.length) {
+                if (letter.letter === letters[j]) {
+                    letters.replace(letters[j], '');
+                }
+                j++;
+            }
+            j = 0;
+        }
+        return letters;
+    }
+
+    returnLettersOfOpponent() {
+        for (const letter of this.players[1].allLettersInHand) {
+            this.letterBankService.letterBank.push(letter);
+        }
+        this.players[1].allLettersInHand = [];
+    }
+
+    resetLetterBankForSynch() {
+        this.letterBankService.letterBank = [];
+        LETTERS.forEach((letter) => {
+            for (let i = 0; i < letter.quantity; i++) {
+                this.letterBankService.letterBank.push(letter);
+            }
+        });
+        this.players[0].allLettersInHand = [];
+        this.players[1].allLettersInHand = [];
+    }
+
     swapLetters(index1: number, index2: number): void {
         const tempLetter: Letter = this.players[0].allLettersInHand[index1];
         this.players[0].allLettersInHand[index1] = this.players[0].allLettersInHand[index2];

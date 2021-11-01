@@ -27,6 +27,8 @@ export class SocketManager {
                     message.namePlayer,
                     socket.id,
                     message.bonusOn,
+                    message.lettersCreator,
+                    message.lettersOpponent,
                 );
                 // start game if in solo mode
                 if (message.mode === 2) {
@@ -62,6 +64,8 @@ export class SocketManager {
                             // start game for everyone in the room
                             // have to change the 0 index
                             socket.emit('gameMode', 1);
+                            // AddOn : add joiner hand to that of the room
+                            this.roomsService.rooms[roomNumber].lettersJoiner = info.handOfJoiner;
                             // send information to the other in the room
                             this.sio.to(this.roomsService.rooms[roomNumber].socketsId[0]).emit('gameMode', 0);
                             // send information to every one in the room
@@ -70,6 +74,8 @@ export class SocketManager {
                                 indexPlayerStart: this.roomsService.rooms[roomNumber].startTurn,
                                 playerName: this.roomsService.rooms[roomNumber].playerNames[0],
                                 opponentName: this.roomsService.rooms[roomNumber].playerNames[1],
+                                letterCreator: this.roomsService.rooms[roomNumber].lettersCreator,
+                                letterJoiner: this.roomsService.rooms[roomNumber].lettersJoiner,
                             });
                             // take of the room from waiting room
                             this.roomsService.listRoomWaiting.splice(info.indexInWaitingRoom, 1);
@@ -91,6 +97,7 @@ export class SocketManager {
                         this.games[i][0] = this.roomsService.listRoomWaiting[i].playerNames[0];
                         this.games[i][1] = this.roomsService.listRoomWaiting[i].bonusOn.toString();
                         this.games[i][2] = this.roomsService.listRoomWaiting[i].timePerTurn.toString();
+                        this.games[i][3] = this.roomsService.listRoomWaiting[i].returnLetters();
                     }
                 }
                 socket.emit('sendGamesInformation', this.games);

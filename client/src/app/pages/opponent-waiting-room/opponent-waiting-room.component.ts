@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
+import { LetterService } from '@app/services/letter.service';
 import { SocketService } from '@app/services/socket.service';
 
 @Component({
@@ -11,13 +12,19 @@ export class OpponentWaitingRoomComponent implements OnInit {
     isValidSelection = false;
     gamesList: string[][] = [[]];
 
-    constructor(private socketInformation: SocketService, private indexWaitingRoomService: IndexWaitingRoomService) {}
+    constructor(
+        private socketInformation: SocketService,
+        private indexWaitingRoomService: IndexWaitingRoomService,
+        private letterService: LetterService,
+    ) {}
 
     ngOnInit(): void {
         this.fillGamesList();
     }
     setIndex(index: number) {
         this.indexWaitingRoomService.index = index;
+        // for synching the letters of opponent with letter bank and current letters of joiner
+        this.letterService.synchLetters(this.socketInformation.gameLists[index][3], true, false, false);
     }
 
     fillGamesList() {

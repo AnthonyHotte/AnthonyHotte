@@ -144,4 +144,17 @@ export class PlayerLetterHand {
             }
         }, TIME_OUT_TIME);
     }
+
+    addLettersByChar(letters: string) {
+        let index = 0;
+        while (index < letters.length) {
+            for (let j = 0; j < this.letterBankService.letterBank.length; j++) {
+                if (this.letterBankService.letterBank[j].letter.toLowerCase() === letters[index].toLowerCase()) {
+                    this.allLettersInHand.push(this.letterBankService.letterBank[j]);
+                    this.letterBankService.letterBank.splice(j, 1);
+                }
+            }
+            ++index;
+        }
+    }
 }

@@ -31,7 +31,8 @@ export class SidebarRightComponent implements AfterViewInit {
         private textBox: TextBox,
         private readonly gridService: GridService,
         private readonly placeLetterService: PlaceLettersService,
-        private letterBankService: LetterBankService, // private socketService: SocketService,
+        private letterBankService: LetterBankService,
+        // private socketService: SocketService,
         private placeLetterClick: PlaceLetterClickService,
     ) {
         this.setAttribute();
@@ -44,7 +45,7 @@ export class SidebarRightComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (this.turnTimeController.turn === 1) {
+        if (this.turnTimeController.turn === 1 && this.turnTimeController.gameStatus === 2) {
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
@@ -106,7 +107,7 @@ export class SidebarRightComponent implements AfterViewInit {
     getPlayerNameAndVerifyTurn() {
         if (this.turn !== this.turnTimeController.turn) {
             this.changedTurns = true;
-            if (this.textBox.commandSuccessful) {
+            if (this.textBox.commandSuccessful && this.turnTimeController.gameStatus === 2) {
                 this.opponentSet = true;
                 this.textBox.commandSuccessful = false;
                 this.soloOpponentPlays();
