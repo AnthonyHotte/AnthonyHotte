@@ -4,7 +4,6 @@ import { Letter } from '@app/letter';
 import { MessagePlayer } from '@app/message';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
-import { LetterService } from './letter.service';
 
 @Injectable({
     providedIn: 'root',
