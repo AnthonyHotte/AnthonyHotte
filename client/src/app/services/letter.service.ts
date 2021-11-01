@@ -46,17 +46,17 @@ export class LetterService {
 
     // useful for when letters are removed from the game in multiplayer by the multiplayer opponent :
     // ie, when there is an initial synch or there are played letters
-    synchLetters(letters: string, isInitialSynchForJoiner: boolean, isInitialSynchForCreator: boolean, isWordPlaced: boolean) {
+    synchLetters(letters: string, isInitialSynchForJoiner: boolean, isInitialSynchForCreator: boolean) {
         // for when the initial letters of the created have to be put with those of the joiner
         if (isInitialSynchForJoiner) {
             this.resetLetterBankForSynch();
-            this.players[1].addLettersByChar(letters);
+            this.players[1].pushTheseLetterToPlayerHand(letters); // with the letters of creator
             const FULL_HAND = 7;
-            this.players[0].addLetters(FULL_HAND);
+            this.players[0].addLetters(FULL_HAND); // letters of joiner
         } else if (isInitialSynchForCreator) {
             // when the creator receives letters from joiner
             this.returnLettersOfOpponent();
-            this.players[1].addLettersByChar(letters);
+            this.players[1].pushTheseLetterToPlayerHand(letters); // update letters of joiner
         }
     }
 
@@ -194,6 +194,10 @@ export class LetterService {
         this.indexSelectedExchange = [];
         this.areLetterSelectedExchange = false;
         this.lettersSelectedExchange = '';
+    }
+
+    transmitLettersJoiner() {
+        this.socketService.lettersOfJoiner = this.players[0].allLettersInHand;
     }
 
     private removeCharFromString(letters: string, index: number): string {

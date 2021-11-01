@@ -7,7 +7,7 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLetterClickService } from '@app/services/place-letter-click.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
-// import { SocketService } from '@app/services/socket.service';
+import { SocketService } from '@app/services/socket.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
@@ -32,7 +32,7 @@ export class SidebarRightComponent implements AfterViewInit {
         private readonly gridService: GridService,
         private readonly placeLetterService: PlaceLettersService,
         private letterBankService: LetterBankService,
-        // private socketService: SocketService,
+        private socketService: SocketService,
         private placeLetterClick: PlaceLetterClickService,
     ) {
         this.setAttribute();
@@ -48,6 +48,8 @@ export class SidebarRightComponent implements AfterViewInit {
         if (this.turnTimeController.turn === 1 && this.turnTimeController.gameStatus === 2) {
             this.opponentSet = true;
             this.soloOpponentPlays();
+        } else if (this.turnTimeController.gameStatus === 0) {
+            this.letterService.synchLetters(this.socketService.lettersOfJoinerInStringForSynch, false, true);
         }
     }
     showPassButton() {

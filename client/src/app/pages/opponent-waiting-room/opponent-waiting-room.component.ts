@@ -24,7 +24,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
     setIndex(index: number) {
         this.indexWaitingRoomService.index = index;
         // for synching the letters of opponent with letter bank and current letters of joiner
-        this.letterService.synchLetters(this.socketInformation.gameLists[index][3], true, false, false);
+        this.letterService.synchLetters(this.socketInformation.gameLists[index][3], true, false);
     }
 
     fillGamesList() {

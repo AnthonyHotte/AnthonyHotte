@@ -23,8 +23,10 @@ export class SocketService {
     ableToJoin: boolean = true;
     nameOfRoomCreator: string = 'Default';
     gameMode = 2;
+    lettersOfJoiner: Letter[] = [];
+    lettersOfJoinerInStringForSynch: string = '';
 
-    constructor(private letterService: LetterService) {
+    constructor() {
         this.gameLists = [[]];
         this.startGame = new BehaviorSubject<boolean>(false);
         this.roomNumber = 0;
@@ -59,7 +61,7 @@ export class SocketService {
             this.turn.next(info.indexPlayerStart);
             // AddOn Update Hand of Creator
             if (this.gameMode === 0) {
-                this.letterService.synchLetters(info.lettersJoiner, false, true, false); // synch the letters of the joiner with the letter bank
+                this.lettersOfJoinerInStringForSynch = info.lettersJoiner; // synch the letters of the creator with the letters of joiner
             }
             this.startGame.next(true);
         });
@@ -119,7 +121,7 @@ export class SocketService {
         this.socket.emit('joinGame', {
             playerJoinName: name,
             indexInWaitingRoom: indexWaitingRoom,
-            handOfJoiner: this.gameLists[indexWaitingRoom][3],
+            handOfJoiner: this.lettersOfJoiner,
         });
     }
     sendGameListNeededNotification() {

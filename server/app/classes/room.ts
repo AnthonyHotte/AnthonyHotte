@@ -71,13 +71,30 @@ export class Room {
         this.roomIsAvailable = true;
     }
 
-    returnLetters() {
-        let temp = '';
-        for (const letter of this.lettersCreator) {
-            if (letter !== undefined) {
-                temp += letter.letter;
+    returnLetters(isCreator: boolean) {
+        let lettersInString = '';
+        const array: Letter[] = [];
+        if (isCreator) {
+            for (const letter of this.lettersCreator) {
+                array.push(letter);
+            }
+        } else {
+            for (const letter of this.lettersJoiner) {
+                array.push(letter);
             }
         }
-        return temp;
+        for (const letter of array) {
+            if (letter !== undefined) {
+                lettersInString += letter.letter;
+            }
+        }
+        return lettersInString;
+    }
+
+    fillLettersOfJoiner(handOfJoiner: Letter[]) {
+        this.lettersJoiner = [];
+        for (const letter of handOfJoiner) {
+            this.lettersJoiner.push(letter);
+        }
     }
 }
