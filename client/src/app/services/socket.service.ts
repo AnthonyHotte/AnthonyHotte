@@ -74,16 +74,6 @@ export class SocketService {
         this.socket.on('yourTurn', () => {
             this.turn.next(0);
         });
-        this.socket.on('joinPlayerTurnFromServer', (skippedTurn) => {
-            // start join turn
-            this.turn.next(1);
-            this.skippedTurn.next(skippedTurn);
-        });
-        this.socket.on('createrPlayerTurnFromServer', (skippedTurn) => {
-            // start creater turn
-            this.turn.next(0);
-            this.skippedTurn.next(skippedTurn);
-        });
         // cancelled game indexes
         this.socket.on('CancellationIndexes', (indexes) => {
             this.cancellationIndexes[0] = indexes[0]; // room index
@@ -143,18 +133,6 @@ export class SocketService {
     }
     endTurn(turnsSkippedInARow: number, nextPlayerTurn: GameStatus) {
         this.socket.emit('endTurn', { roomNumber: this.roomNumber, turnSkipped: turnsSkippedInARow, playerTurnStatus: nextPlayerTurn });
-    }
-    sendJoinPlayerTurn(turnsSkippedInARow: number) {
-        this.socket.emit('joinPlayerTurn', {
-            roomNumber: this.roomNumber,
-            numberSkipTurn: turnsSkippedInARow,
-        });
-    }
-    sendCreaterPlayerTurn(turnsSkippedInARow: number) {
-        this.socket.emit('createrPlayerTurn', {
-            roomNumber: this.roomNumber,
-            numberSkipTurn: turnsSkippedInARow,
-        });
     }
     cancelGame() {
         this.socket.emit('cancelWaitingGame', this.cancellationIndexes);

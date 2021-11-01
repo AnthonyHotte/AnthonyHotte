@@ -1,5 +1,5 @@
 import { Room } from '@app/classes/room';
-import { MAX_NUMBER_SKIPPED_TURNS, NUMBEROFROOMS } from '@app/constants';
+import { NUMBEROFROOMS } from '@app/constants';
 import * as http from 'http';
 import * as io from 'socket.io';
 import { Service } from 'typedi';
@@ -100,26 +100,6 @@ export class SocketManager {
             socket.on('endTurn', (endTurn) => {
                 this.roomsService.rooms[endTurn.roomNumber].turnsSkippedInARow = endTurn.numberSkipTurn;
                 this.sio.to(this.roomsService.rooms[endTurn.roomNumber].socketsId[endTurn.playerTurnStatus]).emit('yourTurn');
-            });
-            socket.on('joinPlayerTurn', (endTurnInfo) => {
-                this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow = endTurnInfo.numberSkipTurn;
-                if (this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow === MAX_NUMBER_SKIPPED_TURNS) {
-                    // emit finish Game
-                }
-                // message to every one in the room
-                this.sio
-                    .to(this.roomsService.rooms[endTurnInfo.roomNumber].roomName)
-                    .emit('joinPlayerTurnFromServer', this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow);
-            });
-            socket.on('createrPlayerTurn', (endTurnInfo) => {
-                this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow = endTurnInfo.numberSkipTurn;
-                if (this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow === MAX_NUMBER_SKIPPED_TURNS) {
-                    // emit finish Game
-                }
-                // message to every one in the room
-                this.sio
-                    .to(this.roomsService.rooms[endTurnInfo.roomNumber].roomName)
-                    .emit('createrPlayerTurnFromServer', this.roomsService.rooms[endTurnInfo.roomNumber].turnsSkippedInARow);
             });
             socket.on('cancelWaitingGame', (indexes) => {
                 this.roomsService.indexNextRoom--;

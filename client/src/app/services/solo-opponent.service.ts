@@ -64,13 +64,8 @@ export class SoloOpponentService {
                     this.endTurn('');
                 }
             }
-            /*
-            this.socketService.sendJoinPlayerTurn(this.timeManager.turnsSkippedInARow);
         } else {
-            // emit creater turn
-            this.socketService.sendCreaterPlayerTurn(this.timeManager.turnsSkippedInARow);
-            */
-        } else {
+            // Joiner Player
             // change the reason
             this.endTurn('');
         }

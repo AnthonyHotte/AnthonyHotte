@@ -34,12 +34,6 @@ export class SidebarRightComponent implements AfterViewInit {
         private placeLetterClick: PlaceLetterClickService,
     ) {
         this.setAttribute();
-        /*
-        this.socketService.turn.subscribe((turnNumber) => {
-            if (turnNumber !== this.turnTimeController.gameStatus) {
-                this.getPlayerNameAndVerifyTurn();
-            }
-        });*/
     }
 
     ngAfterViewInit() {
