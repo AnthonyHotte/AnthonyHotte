@@ -31,8 +31,6 @@ export class TimerTurnManagerService {
     }
 
     endTurn(reason: string) {
-        //  const TIME_OUT_TIME = 3000; // TODO debug this
-        //  setTimeout(() => {
         if (reason === 'skip') {
             this.turnsSkippedInARow++;
         } else {
@@ -43,6 +41,11 @@ export class TimerTurnManagerService {
         } else {
             this.turn = 0;
         }
-        // }, TIME_OUT_TIME);
+        if (this.gameStatus === 0) {
+            // creater
+            this.socketService.sendJoinPlayerTurn(this.turnsSkippedInARow);
+        } else if (this.gameStatus === 1) {
+            this.socketService.sendCreaterPlayerTurn(this.turnsSkippedInARow);
+        }
     }
 }
