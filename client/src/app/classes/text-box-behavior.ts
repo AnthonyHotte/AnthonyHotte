@@ -40,20 +40,20 @@ export class TextBox {
             if (myMessage.message !== '' && myMessage.sender !== '') {
                 let text = '';
                 if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
-                    text = 'Votre adversaire a passé';
+                    this.inputs.push(myMessage);
+                    text = this.letterService.players[1].name + ' a passé son tour';
                     isCommand = true;
                 } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
-                    text = 'Votre adversaire a échangé des lettres';
+                    this.exchangeLetterOpponent(myMessage.message);
                     isCommand = true;
                 } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
-                    text = 'Votre adversaire a affiché sa reserve';
+                    this.inputs.push(myMessage);
+                    text = this.letterService.players[1].name + ' a affiché sa reserve';
                     isCommand = true;
                 } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
-                    text = this.placeLettersService.placeWord(myMessage.message.substring(PLACERCOMMANDLENGTH + 1, myMessage.message.length));
+                    this.inputs.push(myMessage);
                     isCommand = true;
-                    if (text !== 'Mot placé avec succès.') {
-                        this.verifyCommandPasser();
-                    }
+                    this.placeWordOpponent(myMessage.message);
                 }
                 if (!isCommand) {
                     this.inputs.push(myMessage);
@@ -62,6 +62,29 @@ export class TextBox {
                 this.inputs.push(message1);
             }
         });
+    }
+
+    placeWordOpponent(command: string) {
+        const text = this.placeLettersService.placeWord(command.substring(PLACERCOMMANDLENGTH + 1, command.length));
+        if (text !== 'Mot placé avec succès.') {
+            this.verifyCommandPasser();
+        } else {
+            this.endTurn('place');
+        }
+        return text;
+    }
+
+    exchangeLetterOpponent(command: string) {
+        const commandResult = this.verifyCommandEchanger(command);
+        let systemResponse = '';
+        if (commandResult === 'Échange de lettre avec succès.') {
+            systemResponse =
+                this.letterService.players[1].name +
+                ' a échangé ' +
+                command.substring('!échanger '.length, command.length).length.toString() +
+                ' lettres';
+        }
+        return systemResponse;
     }
 
     handleEnter(message: string) {
