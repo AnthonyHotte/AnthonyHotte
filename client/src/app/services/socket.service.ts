@@ -67,11 +67,12 @@ export class SocketService {
         this.socket.on('sendGamesInformation', (games) => {
             this.gameLists.length = 0;
             for (let i = 0; i < games.length; i++) {
-                this.gameLists.push(['name', 'bonus', 'time', 'letters']);
+                this.gameLists.push(['name', 'bonus', 'time', 'lettersCreator', 'lettersJoiner']);
                 this.gameLists[i][0] = games[i][0]; // player name of who is the game initiator
                 this.gameLists[i][1] = games[i][1]; // is random bonus on
                 this.gameLists[i][2] = games[i][2]; // time per turn
                 this.gameLists[i][3] = games[i][3]; // letters of creator
+                this.gameLists[i][4] = games[i][4]; // letters of joiner
             }
         });
         this.socket.on('joinPlayerTurnFromServer', (skippedTurn) => {

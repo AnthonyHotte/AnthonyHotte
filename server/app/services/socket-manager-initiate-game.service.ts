@@ -64,8 +64,6 @@ export class SocketManager {
                             // start game for everyone in the room
                             // have to change the 0 index
                             socket.emit('gameMode', 1);
-                            // AddOn : add joiner hand to that of the room
-                            this.roomsService.rooms[roomNumber].fillLettersOfJoiner(info.handOfJoiner);
                             // send information to the other in the room
                             this.sio.to(this.roomsService.rooms[roomNumber].socketsId[0]).emit('gameMode', 0);
                             // send information to every one in the room
@@ -74,8 +72,6 @@ export class SocketManager {
                                 indexPlayerStart: this.roomsService.rooms[roomNumber].startTurn,
                                 playerName: this.roomsService.rooms[roomNumber].playerNames[0],
                                 opponentName: this.roomsService.rooms[roomNumber].playerNames[1],
-                                lettersCreator: this.roomsService.rooms[roomNumber].returnLetters(true),
-                                lettersJoiner: this.roomsService.rooms[roomNumber].returnLetters(false),
                             });
                             // take of the room from waiting room
                             this.roomsService.listRoomWaiting.splice(info.indexInWaitingRoom, 1);
@@ -93,11 +89,12 @@ export class SocketManager {
                 this.games.length = 0;
                 for (let i = 0; i < this.roomsService.listRoomWaiting.length; i++) {
                     if (this.roomsService.listRoomWaiting !== undefined) {
-                        this.games.push(['name', 'bonus', 'time', 'lettersOfCreator']);
+                        this.games.push(['name', 'bonus', 'time', 'lettersOfCreator', 'lettersJoiner']);
                         this.games[i][0] = this.roomsService.listRoomWaiting[i].playerNames[0];
                         this.games[i][1] = this.roomsService.listRoomWaiting[i].bonusOn.toString();
                         this.games[i][2] = this.roomsService.listRoomWaiting[i].timePerTurn.toString();
-                        this.games[i][3] = this.roomsService.listRoomWaiting[i].returnLetters(true); // letters of creator
+                        this.games[i][3] = this.roomsService.listRoomWaiting[i].returnLettersInString(true); // letters of creator
+                        this.games[i][4] = this.roomsService.listRoomWaiting[i].returnLettersInString(false); // letters of joiner
                     }
                 }
                 socket.emit('sendGamesInformation', this.games);

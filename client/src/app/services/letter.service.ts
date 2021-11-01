@@ -47,16 +47,8 @@ export class LetterService {
     // only function for synch : only used by joiner
     synchLetters(lettersCreator: string, lettersJoiner: string) {
         this.resetLetterBankForSynch();
-        this.players[1].pushTheseLetterToPlayerHand(letters); // with the letters of creator
-        const FULL_HAND = 7;
-        this.players[0].addLetters(FULL_HAND); // letters of joiner
-    }
-
-    returnLettersOfOpponent() {
-        for (const letter of this.players[1].allLettersInHand) {
-            this.letterBankService.letterBank.push(letter);
-        }
-        this.players[1].allLettersInHand = [];
+        this.players[1].pushTheseLetterToPlayerHand(lettersCreator); // local letters of creator (opponent)
+        this.players[0].pushTheseLetterToPlayerHand(lettersJoiner); // local letters of joiner (player)
     }
 
     resetLetterBankForSynch() {

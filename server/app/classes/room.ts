@@ -71,7 +71,7 @@ export class Room {
         this.roomIsAvailable = true;
     }
 
-    returnLetters(isCreator: boolean) {
+    returnLettersInString(isCreator: boolean) {
         let lettersInString = '';
         const array: Letter[] = [];
         if (isCreator) {
