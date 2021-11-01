@@ -50,14 +50,17 @@ export class SocketService {
             console.log('connected!');
         });
         this.socket.on('startGame', (info) => {
+            this.gameStatus.next(info.gameMode);
             this.roomNumber = info.room.index;
-            this.playerNameIndexZer0.next(info.playerName);
-            this.playerNameIndexOne.next(info.opponentName);
+            if (info.gameMode === 1) {
+                this.playerNameIndexZer0.next(info.opponentName);
+                this.playerNameIndexOne.next(info.playerName);
+            } else {
+                this.playerNameIndexZer0.next(info.playerName);
+                this.playerNameIndexOne.next(info.opponentName);
+            }
             this.turn.next(info.indexPlayerStart);
             this.startGame.next(true);
-        });
-        this.socket.on('gameMode', (gameMode) => {
-            this.gameStatus.next(gameMode);
         });
         this.socket.on('sendGamesInformation', (games) => {
             this.gameLists.length = 0;
@@ -68,15 +71,8 @@ export class SocketService {
                 this.gameLists[i][2] = games[i][2]; // time per turn
             }
         });
-        this.socket.on('joinPlayerTurnFromServer', (skippedTurn) => {
-            // start join turn
-            this.turn.next(1);
-            this.skippedTurn.next(skippedTurn);
-        });
-        this.socket.on('createrPlayerTurnFromServer', (skippedTurn) => {
-            // start creater turn
+        this.socket.on('yourTurn', () => {
             this.turn.next(0);
-            this.skippedTurn.next(skippedTurn);
         });
         // cancelled game indexes
         this.socket.on('CancellationIndexes', (indexes) => {
@@ -135,20 +131,8 @@ export class SocketService {
             this.messageSubject.next(myMessage);
         });
     }
-    sendJoinPlayerTurn(turnsSkippedInARow: number) {
-        this.socket.emit('joinPLayerTurn', {
-            roomNumber: this.roomNumber,
-            numberSkipTurn: turnsSkippedInARow,
-        });
-    }
-    sendCreaterPlayerTurn(turnsSkippedInARow: number) {
-        this.socket.emit(
-            'createrPlayerTurn',
-            this.socket.emit('joinPLayerTurn', {
-                roomNumber: this.roomNumber,
-                numberSkipTurn: turnsSkippedInARow,
-            }),
-        );
+    endTurn(turnsSkippedInARow: number, nextPlayerTurn: GameStatus) {
+        this.socket.emit('endTurn', { roomNumber: this.roomNumber, turnSkipped: turnsSkippedInARow, playerTurnStatus: nextPlayerTurn });
     }
     cancelGame() {
         this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
