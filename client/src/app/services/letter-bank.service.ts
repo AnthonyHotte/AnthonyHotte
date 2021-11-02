@@ -40,4 +40,15 @@ export class LetterBankService {
             }
         }
     }
+
+    removeLettersFromBank(letters: string) {
+        for (const letter of letters) {
+            for (let i = 0; i < this.letterBank.length; i++) {
+                if (this.letterBank[i].letter.toLowerCase() === letter.toLowerCase()) {
+                    this.letterBank.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    }
 }

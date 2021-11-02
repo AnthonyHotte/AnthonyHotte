@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
-import { GameStatus } from '@app/game-status';
 import { MessagePlayer } from '@app/message';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
@@ -34,12 +33,6 @@ export class SidebarRightComponent implements AfterViewInit {
         private placeLetterClick: PlaceLetterClickService,
     ) {
         this.setAttribute();
-        /*
-        this.socketService.turn.subscribe((turnNumber) => {
-            if (turnNumber !== this.turnTimeController.gameStatus) {
-                this.getPlayerNameAndVerifyTurn();
-            }
-        });*/
     }
 
     ngAfterViewInit() {
@@ -49,10 +42,7 @@ export class SidebarRightComponent implements AfterViewInit {
         }
     }
     showPassButton() {
-        return (
-            (this.turnTimeController.turn === 0 && this.turnTimeController.gameStatus === 2) ||
-            this.turnTimeController.gameStatus === this.turnTimeController.turn
-        );
+        return this.turnTimeController.turn === 0;
     }
 
     setAttribute() {
@@ -75,7 +65,7 @@ export class SidebarRightComponent implements AfterViewInit {
     skipTurn() {
         this.textBox.isCommand('!passer');
         this.placeLetterClick.reset();
-        if (this.turnTimeController.gameStatus === GameStatus.SoloPlayer) {
+        if (this.turnTimeController.turn === 0) {
             this.soloOpponentPlays();
         }
     }
