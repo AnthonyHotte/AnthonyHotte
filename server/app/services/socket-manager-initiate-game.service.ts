@@ -106,14 +106,13 @@ export class SocketManager {
                 this.roomsService.rooms.splice(indexes[0], 1);
                 this.roomsService.rooms.push(new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length));
                 this.roomsService.listRoomWaiting.splice(indexes[1], 1);
+            });
+            socket.on('toServer', (message) => {
+                socket.emit('toClient', message);
+            });
 
-                socket.on('toServer', (message) => {
-                    socket.emit('toClient', message);
-                });
-
-                socket.on('toAll', (message) => {
-                    socket.broadcast.emit('toAllClient', message);
-                });
+            socket.on('toAll', (message) => {
+                socket.broadcast.emit('toAllClient', message);
             });
         });
     }
