@@ -186,8 +186,7 @@ export class PlaceLettersService {
             this.wordValidator.pointsForLastWord = 0;
             return false;
         } else {
-            // eslint-disable-next-line eqeqeq
-            if (lettersToReplace == undefined) {
+            if (lettersToReplace === undefined) {
                 this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
             } else {
                 this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker, lettersToReplace);
