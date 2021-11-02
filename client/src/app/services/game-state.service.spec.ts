@@ -4,7 +4,7 @@ import { CENTERCASE, NUMBEROFCASE } from '@app/constants';
 import { GameStateService } from '@app/services/game-state.service';
 import { WordValidationService } from '@app/services/word-validation.service';
 
-fdescribe('GameStateService', () => {
+describe('GameStateService', () => {
     let service: GameStateService;
     let wordValidationServiceSpy: jasmine.SpyObj<WordValidationService>;
     beforeEach(
@@ -15,10 +15,7 @@ fdescribe('GameStateService', () => {
                 'validateHorizontalWord',
                 'validateVerticalWord',
             ]);
-            // const returnValue = new Promise<boolean>(() => {
-            //     return true;
-            // });
-            // wordValidationServiceSpy.validateHorizontalWord.and.returnValue(returnValue);
+            wordValidationServiceSpy.validateHorizontalWord.and.returnValue(true);
             TestBed.configureTestingModule({
                 providers: [{ provide: WordValidationService, useValue: wordValidationServiceSpy }],
             }).compileComponents();
@@ -77,19 +74,13 @@ fdescribe('GameStateService', () => {
     });
     it('validateWordCreatedByNewLetters should return false validationHorizontalWord return false orientationOfLastWord is h', () => {
         service.orientationOfLastWord = 'h';
-        const returnValue = new Promise<boolean>(() => {
-            return false;
-        });
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(returnValue);
+        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(false);
         const result = service.validateWordCreatedByNewLetters();
         expect(result).toBe(false);
     });
     it('validateWordCreatedByNewLetters should return false validationHorizontalWord return false and orientationOfLastWord is v', () => {
         service.orientationOfLastWord = 'v';
-        const returnValue = new Promise<boolean>(() => {
-            return false;
-        });
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(returnValue);
+        wordValidationServiceSpy.validateVerticalWord.and.returnValue(false);
         const result = service.validateWordCreatedByNewLetters();
         expect(result).toBe(false);
     });
@@ -97,14 +88,8 @@ fdescribe('GameStateService', () => {
     it('validateWordCreatedByNewLetters should return false when vertical invalid word', () => {
         service.orientationOfLastWord = 'h';
         wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
-        const returnValueFalse = new Promise<boolean>(() => {
-            return false;
-        });
-        const returnValueTrue = new Promise<boolean>(() => {
-            return false;
-        });
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(returnValueTrue);
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(returnValueFalse);
+        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(true);
+        wordValidationServiceSpy.validateVerticalWord.and.returnValue(false);
         const result = service.validateWordCreatedByNewLetters();
         expect(result).toBe(false);
     });
@@ -112,22 +97,16 @@ fdescribe('GameStateService', () => {
     it('validateWordCreatedByNewLetters should return true when word should validate with orientation h', () => {
         service.orientationOfLastWord = 'h';
         wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
-        const returnValueTrue = new Promise<boolean>(() => {
-            return true;
-        });
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(returnValueTrue);
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(returnValueTrue);
+        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(true);
+        wordValidationServiceSpy.validateVerticalWord.and.returnValue(true);
         const result = service.validateWordCreatedByNewLetters();
         expect(result).toBe(true);
     });
     it('validateWordCreatedByNewLetters should return true when word should validate with orientation v', () => {
         service.orientationOfLastWord = 'v';
         wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
-        const returnValueTrue = new Promise<boolean>(() => {
-            return true;
-        });
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(returnValueTrue);
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(returnValueTrue);
+        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(true);
+        wordValidationServiceSpy.validateVerticalWord.and.returnValue(true);
         const result = service.validateWordCreatedByNewLetters();
         expect(result).toBe(true);
     });
@@ -135,14 +114,8 @@ fdescribe('GameStateService', () => {
     it('validateWordCreatedByNewLetters should return true when vertical is not part of vertical word', () => {
         service.orientationOfLastWord = 'h';
         wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(false);
-        const returnValueFalse = new Promise<boolean>(() => {
-            return false;
-        });
-        const returnValueTrue = new Promise<boolean>(() => {
-            return true;
-        });
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(returnValueTrue);
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(returnValueFalse);
+        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(true);
+        wordValidationServiceSpy.validateVerticalWord.and.returnValue(false);
         const result = service.validateWordCreatedByNewLetters();
         expect(result).toBe(true);
     });
@@ -151,10 +124,7 @@ fdescribe('GameStateService', () => {
         service.orientationOfLastWord = 'v';
         wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(false);
         wordValidationServiceSpy.validateHorizontalWord.and.callThrough();
-        const returnValueFalse = new Promise<boolean>(() => {
-            return false;
-        });
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(returnValueFalse);
+        wordValidationServiceSpy.validateVerticalWord.and.returnValue(false);
         const result = service.validateWordCreatedByNewLetters();
         expect(result).toBe(false);
     });
@@ -162,14 +132,8 @@ fdescribe('GameStateService', () => {
     it('validateWordCreatedByNewLetters should return false when horizontal invalid word', () => {
         service.orientationOfLastWord = 'v';
         wordValidationServiceSpy.isPartOfWordHorizontal.and.returnValue(true);
-        const returnValueFalse = new Promise<boolean>(() => {
-            return false;
-        });
-        const returnValueTrue = new Promise<boolean>(() => {
-            return true;
-        });
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(returnValueTrue);
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(returnValueFalse);
+        wordValidationServiceSpy.validateVerticalWord.and.returnValue(true);
+        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(false);
         const result = service.validateWordCreatedByNewLetters();
         expect(result).toBe(false);
     });

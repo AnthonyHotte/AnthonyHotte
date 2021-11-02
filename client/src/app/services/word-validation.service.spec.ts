@@ -1,17 +1,25 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { BehaviorSubject } from 'rxjs';
 import { ScoreCalculatorService } from './score-calculator.service';
+import { SocketService } from './socket.service';
 
 import { WordValidationService } from './word-validation.service';
 
 describe('WordValidationService', () => {
     let service: WordValidationService;
     let scoreCalculatorService: jasmine.SpyObj<ScoreCalculatorService>;
+    let socketSpy: jasmine.SpyObj<SocketService>;
 
     beforeEach(
         waitForAsync(() => {
             scoreCalculatorService = jasmine.createSpyObj('ScoreCalculatorService', ['calculateScoreForHorizontal', 'calculateScoreForVertical']);
+            socketSpy = jasmine.createSpyObj('SocketService', ['validateWord']);
+            socketSpy.isWordValid = new BehaviorSubject<boolean>(false);
             TestBed.configureTestingModule({
-                providers: [{ provide: ScoreCalculatorService, useValue: scoreCalculatorService }],
+                providers: [
+                    { provide: ScoreCalculatorService, useValue: scoreCalculatorService },
+                    { provide: SocketService, useValue: socketSpy },
+                ],
             }).compileComponents();
         }),
     );
@@ -123,11 +131,11 @@ describe('WordValidationService', () => {
             ['e', 'm', 'f'],
         ];
         scoreCalculatorService.calculateScoreForHorizontal.and.returnValue(0);
-        const spyIsWordValid = spyOn(service, 'isWordValid');
+        // const spyIsWordValid = spyOn(service, 'isWordValid');
         service.pointsForLastWord = 0;
         service.validateHorizontalWord(1, 2, myBoard);
         expect(scoreCalculatorService.calculateScoreForHorizontal).toHaveBeenCalledWith(0, 0, 1, '');
-        expect(spyIsWordValid).toHaveBeenCalledWith('');
+        expect(socketSpy.validateWord).toHaveBeenCalledWith('');
         expect(service.pointsForLastWord).toEqual(0);
     });
     it('validateHorizontalWord should create the right word ', () => {
@@ -136,10 +144,10 @@ describe('WordValidationService', () => {
             ['', '', ''],
             ['e', 'm', 'f'],
         ];
-        const spyIsWordValid = spyOn(service, 'isWordValid');
+        // const spyIsWordValid = spyOn(service, 'isWordValid');
         service.validateHorizontalWord(0, 2, myBoard);
         expect(scoreCalculatorService.calculateScoreForHorizontal).toHaveBeenCalledWith(0, 2, 0, 'afy');
-        expect(spyIsWordValid).toHaveBeenCalledWith('afy');
+        expect(socketSpy.validateWord).toHaveBeenCalledWith('afy');
     });
 
     it('validateVerticalWord should not give point for no word ', () => {
@@ -149,11 +157,11 @@ describe('WordValidationService', () => {
             ['e', '', 'f'],
         ];
         scoreCalculatorService.calculateScoreForVertical.and.returnValue(0);
-        const spyIsWordValid = spyOn(service, 'isWordValid');
+        // const spyIsWordValid = spyOn(service, 'isWordValid');
         service.pointsForLastWord = 0;
         service.validateVerticalWord(1, 1, myBoard);
         expect(scoreCalculatorService.calculateScoreForVertical).toHaveBeenCalledWith(0, 0, 1, '');
-        expect(spyIsWordValid).toHaveBeenCalledWith('');
+        expect(socketSpy.validateWord).toHaveBeenCalledWith('');
         expect(service.pointsForLastWord).toEqual(0);
     });
     it('validateVerticalWord should create the right word ', () => {
@@ -162,9 +170,9 @@ describe('WordValidationService', () => {
             ['d', 'y', 'h'],
             ['e', 'm', 'f'],
         ];
-        const spyIsWordValid = spyOn(service, 'isWordValid');
+        // const spyIsWordValid = spyOn(service, 'isWordValid');
         service.validateVerticalWord(0, 1, myBoard);
         expect(scoreCalculatorService.calculateScoreForVertical).toHaveBeenCalledWith(0, 2, 1, 'fym');
-        expect(spyIsWordValid).toHaveBeenCalledWith('fym');
+        expect(socketSpy.validateWord).toHaveBeenCalledWith('fym');
     });
 });

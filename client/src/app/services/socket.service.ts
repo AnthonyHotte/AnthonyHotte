@@ -25,6 +25,7 @@ export class SocketService {
     gameMode = 2;
     lettersOfJoiner: Letter[] = [];
     lettersOfJoinerInStringForSynch: string = '';
+    isWordValid: BehaviorSubject<boolean>;
 
     constructor() {
         this.gameLists = [[]];
@@ -42,6 +43,7 @@ export class SocketService {
         this.configureBaseSocketFeatures();
         this.messageSubject = new Subject();
         this.cancellationIndexes = [1, 2]; // room number and waiting room number
+        this.isWordValid = new BehaviorSubject<boolean>(false);
     }
 
     getMessageObservable() {
@@ -173,6 +175,7 @@ export class SocketService {
                 resolve(response);
             });
         }).then((res: boolean) => {
+            this.isWordValid.next(res);
             return res;
         });
     }
