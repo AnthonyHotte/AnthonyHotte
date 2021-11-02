@@ -8,7 +8,6 @@ import logger from 'morgan';
 import swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { Service } from 'typedi';
-import { DictionnaryController } from './controllers/dictionnary.controller';
 import { ExampleController } from './controllers/example.controller';
 
 @Service()
@@ -17,11 +16,7 @@ export class Application {
     private readonly internalError: number = StatusCodes.INTERNAL_SERVER_ERROR;
     private readonly swaggerOptions: swaggerJSDoc.Options;
 
-    constructor(
-        private readonly dateController: DateController,
-        private readonly exampleController: ExampleController,
-        private readonly dictionnaryController: DictionnaryController,
-    ) {
+    constructor(private readonly dateController: DateController, private readonly exampleController: ExampleController) {
         this.app = express();
 
         this.swaggerOptions = {
@@ -44,7 +39,6 @@ export class Application {
         this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
         this.app.use('/api/example', this.exampleController.router);
         this.app.use('/api/date', this.dateController.router);
-        this.app.use('/api/dict', this.dictionnaryController.router);
         this.app.use('/', (req, res) => {
             res.redirect('/api/docs');
         });

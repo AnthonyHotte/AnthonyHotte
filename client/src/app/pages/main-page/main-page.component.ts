@@ -15,11 +15,6 @@ export class MainPageComponent {
 
     constructor(private readonly communicationService: CommunicationService) {}
 
-    sendDictionnaryToServer(): void {
-        this.sendTimeToServer();
-        this.communicationService.sendDictionnary();
-    }
-
     sendTimeToServer(): void {
         const newTimeMessage: Message = {
             title: 'Hello from the client',
