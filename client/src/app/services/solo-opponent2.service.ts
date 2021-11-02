@@ -118,9 +118,9 @@ export class SoloOpponent2Service {
         this.placeLetterService.lettersToPlace = word;
         let isPlayable = true;
         if (!this.placeLetterService.verifyTileNotOutOfBound()) {
-            isPlayable = false;
+            return false;
         } else if (!this.placeLetterService.verifyAvailable()) {
-            isPlayable = false;
+            return false;
         } else {
             this.placeLetterService.placeWordGameState();
             if (this.gameStateService.isWordCreationPossibleWithRessources()) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MAXLETTERINHAND, PLACERCOMMANDLENGTH } from '@app/constants';
+import { MAXLETTERINHAND } from '@app/constants';
 import { GameStatus } from '@app/game-status';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { FinishGameService } from './finish-game.service';
@@ -44,30 +44,6 @@ export class SoloOpponentService {
                     }
                 }
             }
-        } else if (this.timeManager.gameStatus === GameStatus.CreaterPlayer) {
-            const commandToPlay = 'placer h8v an'; // change for the command played by the joining player
-            const lettersReplacer = 'aa'; // change for the letters that were randomly exchange when placing or replacing letters
-            if (commandToPlay.substring(0, PLACERCOMMANDLENGTH) === '!debug') {
-                // nothing here right ?
-            } else if (this.timeManager.turn === 0) {
-                if (commandToPlay.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
-                    this.placeLettersService.placeWord(commandToPlay, lettersReplacer);
-                    this.endTurn('place');
-                } else if (commandToPlay.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
-                    this.skipTurn();
-                } else if (commandToPlay.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
-                    this.exchangeLetters(lettersReplacer.length + 1, lettersReplacer); // to change for a not random function also to check +1
-                } else if (commandToPlay.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
-                    // not sure what this does maybe Aziz can help ?  as this section of the code is copied from textboxbehavior
-                    //  this.activateReserve();
-                    // todo change the reason
-                    this.endTurn('');
-                }
-            }
-        } else {
-            // Joiner Player
-            // change the reason
-            this.endTurn('');
         }
     }
     calculateProbability(percentage: number) {
@@ -85,7 +61,7 @@ export class SoloOpponentService {
             this.lastCommandEntered = '!passer';
         }
     }
-    exchangeLetters(numberOfLettersToTrade: number, lettersReplaced?: string) {
+    exchangeLetters(numberOfLettersToTrade: number) {
         let i = 0;
         const indexLettersToExchange: number[] = [];
         while (i < numberOfLettersToTrade) {
@@ -99,14 +75,8 @@ export class SoloOpponentService {
         for (const index of indexLettersToExchange) {
             lettersToExchange += this.letters.players[this.timeManager.turn].allLettersInHand[index];
         }
-        // eslint-disable-next-line eqeqeq
-        if (lettersReplaced == undefined) {
-            this.letters.players[this.timeManager.turn].exchangeLetters(lettersToExchange);
-            this.lastCommandEntered = '!échanger ' + numberOfLettersToTrade.toString();
-        } else {
-            this.letters.players[this.timeManager.turn].exchangeLetters(lettersToExchange, lettersReplaced);
-            this.lastCommandEntered = '!échanger ' + numberOfLettersToTrade.toString();
-        }
+        this.letters.players[this.timeManager.turn].exchangeLetters(lettersToExchange);
+        this.lastCommandEntered = '!échanger ' + numberOfLettersToTrade.toString();
     }
 
     endTurn(reason: string) {
