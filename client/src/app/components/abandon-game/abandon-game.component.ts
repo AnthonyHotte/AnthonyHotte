@@ -9,21 +9,11 @@ import { SocketService } from '@app/services/socket.service';
 })
 export class AbandonGameComponent {
     validationNecessary = false;
-    constructor(
-        private finishGameService: FinishGameService,
-        private socketService: SocketService,
-        private timerTurnManager: TimerTurnManagerService,
-    ) {}
+    constructor(private finishGameService: FinishGameService, private socketService: SocketService) {}
 
     finishCurrentGame() {
         this.finishGameService.isGameFinished = true;
-        if (this.timerTurnManager.gameStatus !== 2) {
-            let index = 0;
-            if (this.timerTurnManager.gameStatus === 0) {
-                index = 1;
-            }
-            this.socketService.finishedGameMessageTransmission(index);
-        }
+        this.socketService.finishedGameMessageTransmission();
     }
 
     setIsGameUnderway() {

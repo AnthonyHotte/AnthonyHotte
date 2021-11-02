@@ -174,8 +174,7 @@ export class SocketService {
         this.gameMode = gameMode;
     }
 
-    finishedGameMessageTransmission(indexPlayerToSend: number) {
-        this.socket.emit('gameFinished', { roomNumber: this.roomNumber, index: indexPlayerToSend });
-        this.cancelGame();
+    finishedGameMessageTransmission() {
+        this.socket.emit('gameFinished', this.roomNumber);
     }
 }

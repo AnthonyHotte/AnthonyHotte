@@ -121,8 +121,11 @@ export class SocketManager {
                     socket.broadcast.emit('toAllClient', message);
                 });
 
-                socket.on('gameFinished', (info) => {
-                    socket.to(this.roomsService.rooms[info.roomNumber].socketsId[info.index]).emit('gameIsFinished');
+                socket.on('gameFinished', (roomNumber) => {
+                    this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('gameIsFinished');
+                    this.roomsService.indexNextRoom--;
+                    this.roomsService.rooms.splice(indexes[0], 1);
+                    this.roomsService.rooms.push(new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length));
                 });
             });
         });
