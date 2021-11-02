@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { SocketService } from '@app/services/socket.service';
-import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 
 @Component({
     selector: 'app-abandon-game',
