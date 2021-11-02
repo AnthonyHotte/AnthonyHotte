@@ -19,11 +19,6 @@ export class LettersComponent implements OnInit {
 
     getNewLetters(): void {
         this.letters = this.letterService.players[0].allLettersInHand;
-        /// ///////////////////////////////////////////////////////////////////////// for debug
-        for (const letter of this.letterService.players[1].allLettersInHand) {
-            this.letters.push(letter);
-        }
-        /// ///////////////////////////////////////////////////////////////////////// for debug
     }
 
     ngOnInit(): void {

@@ -39,7 +39,6 @@ export class OpponentWaitingRoomComponent implements OnInit {
             this.gamesList[i][0] = this.socketInformation.gameLists[i][0]; // name
             this.gamesList[i][1] = this.socketInformation.gameLists[i][1]; // bonus
             this.gamesList[i][2] = this.socketInformation.gameLists[i][2]; // time per turn
-            this.gamesList[i][3] = this.socketInformation.gameLists[i][3] + this.socketInformation.gameLists[i][4];
         }
     }
 
