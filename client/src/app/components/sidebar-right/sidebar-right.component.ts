@@ -65,7 +65,7 @@ export class SidebarRightComponent implements AfterViewInit {
     skipTurn() {
         this.textBox.isCommand('!passer');
         this.placeLetterClick.reset();
-        if (this.turnTimeController.turn === 0) {
+        if (this.turnTimeController.turn === 1) {
             this.soloOpponentPlays();
         }
     }
