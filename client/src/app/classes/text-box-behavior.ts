@@ -53,7 +53,7 @@ export class TextBox {
                 } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                     this.inputs.push(myMessage);
                     printCommand = true;
-                    text = this.placeWordOpponent(myMessage.message);
+                    text = this.placeWordOpponent(myMessage.message, 'abc');
                 }
                 if (printCommand) {
                     this.inputs.push(myMessage);
@@ -64,7 +64,8 @@ export class TextBox {
         });
     }
 
-    placeWordOpponent(command: string) {
+    placeWordOpponent(command: string, lettersToReplace: string) {
+        console.log(lettersToReplace);
         const text = this.placeLettersService.placeWord(command.substring(PLACERCOMMANDLENGTH + 1, command.length));
         if (text !== 'Mot placé avec succès.') {
             this.verifyCommandPasser();
@@ -181,12 +182,16 @@ export class TextBox {
         }
     }
 
-    verifyCommandEchanger(word: string) {
+    verifyCommandEchanger(word: string, lettersToReplace?: string) {
         const ALLOWED_NUMBER_OF_LETTERS = 7;
         if (this.letterBankService.letterBank.length >= ALLOWED_NUMBER_OF_LETTERS) {
             const letters = word.substring('!échanger '.length, word.length);
             if (this.letterService.players[this.timeManager.turn].handContainLetters(letters)) {
-                this.letterService.players[this.timeManager.turn].exchangeLetters(letters);
+                if (lettersToReplace === undefined) {
+                    this.letterService.players[this.timeManager.turn].exchangeLetters(letters);
+                } else {
+                    this.letterService.players[this.timeManager.turn].exchangeLetters(letters, lettersToReplace);
+                }
                 this.endTurn('exchange');
                 return 'Échange de lettre avec succès.';
             } else {
