@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GameStatus } from '@app/game-status';
+import { Letter } from '@app/letter';
 import { MessagePlayer } from '@app/message';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
@@ -20,6 +21,10 @@ export class SocketService {
     messageSubject: Subject<MessagePlayer>;
     cancellationIndexes: number[];
     ableToJoin: boolean = true;
+    nameOfRoomCreator: string = 'Default';
+    gameMode = 2;
+    lettersOfJoiner: Letter[] = [];
+    lettersOfJoinerInStringForSynch: string = '';
 
     constructor() {
         this.gameLists = [[]];
@@ -65,10 +70,12 @@ export class SocketService {
         this.socket.on('sendGamesInformation', (games) => {
             this.gameLists.length = 0;
             for (let i = 0; i < games.length; i++) {
-                this.gameLists.push(['name', 'bonus', 'time']);
+                this.gameLists.push(['name', 'bonus', 'time', 'lettersCreator', 'lettersJoiner']);
                 this.gameLists[i][0] = games[i][0]; // player name of who is the game initiator
                 this.gameLists[i][1] = games[i][1]; // is random bonus on
                 this.gameLists[i][2] = games[i][2]; // time per turn
+                this.gameLists[i][3] = games[i][3]; // letters of creator
+                this.gameLists[i][4] = games[i][4]; // letters of joiner
             }
         });
         this.socket.on('yourTurn', () => {
@@ -84,17 +91,30 @@ export class SocketService {
             this.ableToJoin = false;
         });
     }
-    sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameStatus: GameStatus, opponentName: string) {
+    sendInitiateNewGameInformation(
+        playTime: number,
+        isBonusRandom: boolean,
+        name: string,
+        gameStatus: GameStatus,
+        opponentName: string,
+        lettersOfCreator: Letter[],
+        lettersOfJoiner: Letter[],
+    ) {
         this.socket.emit('startingNewGameInfo', {
             time: playTime,
             bonusOn: isBonusRandom,
             namePlayer: name,
             mode: gameStatus,
             nameOpponent: opponentName,
+            lettersCreator: lettersOfCreator,
+            lettersOpponent: lettersOfJoiner,
         });
     }
     sendJoinGameInfo(name: string, indexWaitingRoom: number) {
-        this.socket.emit('joinGame', { playerJoinName: name, indexInWaitingRoom: indexWaitingRoom });
+        this.socket.emit('joinGame', {
+            playerJoinName: name,
+            indexInWaitingRoom: indexWaitingRoom,
+        });
     }
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
@@ -139,5 +159,9 @@ export class SocketService {
     }
     setAbleToJoinGame() {
         this.ableToJoin = true;
+    }
+
+    setGameMode(gameMode: number) {
+        this.gameMode = gameMode;
     }
 }
