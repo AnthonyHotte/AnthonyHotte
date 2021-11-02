@@ -80,7 +80,7 @@ export class SocketManager {
                             // take of the room from waiting room
                             this.roomsService.listRoomWaiting.splice(info.indexInWaitingRoom, 1);
                             // puts the room in occupied state
-                            this.roomsService.rooms[roomNumber].setRoomOccupied()
+                            this.roomsService.rooms[roomNumber].setRoomOccupied();
                         }
                     } else {
                         socket.emit('roomOccupied');
@@ -119,6 +119,10 @@ export class SocketManager {
 
                 socket.on('toAll', (message) => {
                     socket.broadcast.emit('toAllClient', message);
+                });
+
+                socket.on('gameFinished', (info) => {
+                    socket.to(this.roomsService.rooms[info.roomNumber].socketsId[info.index]).emit('gameIsFinished');
                 });
             });
         });

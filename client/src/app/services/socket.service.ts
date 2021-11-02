@@ -25,6 +25,7 @@ export class SocketService {
     gameMode = 2;
     lettersOfJoiner: Letter[] = [];
     lettersOfJoinerInStringForSynch: string = '';
+    gameIsFinished = false;
 
     constructor() {
         this.gameLists = [[]];
@@ -90,6 +91,9 @@ export class SocketService {
         this.socket.on('roomOccupied', () => {
             this.ableToJoin = false;
         });
+        this.socket.on('gameIsFinished', () => {
+            this.gameIsFinished = true;
+        });
     }
     sendInitiateNewGameInformation(
         playTime: number,
@@ -100,6 +104,9 @@ export class SocketService {
         lettersOfCreator: Letter[],
         lettersOfJoiner: Letter[],
     ) {
+        if (gameStatus === 2 && this.cancellationIndexes[0] >= 0 && this.cancellationIndexes[1] >= 0) {
+            this.cancelGame();
+        }
         this.socket.emit('startingNewGameInfo', {
             time: playTime,
             bonusOn: isBonusRandom,
@@ -156,6 +163,8 @@ export class SocketService {
     }
     cancelGame() {
         this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
+        const INEXISTING_ROOM = -1;
+        this.cancellationIndexes = [INEXISTING_ROOM, INEXISTING_ROOM];
     }
     setAbleToJoinGame() {
         this.ableToJoin = true;
@@ -163,5 +172,10 @@ export class SocketService {
 
     setGameMode(gameMode: number) {
         this.gameMode = gameMode;
+    }
+
+    finishedGameMessageTransmission(indexPlayerToSend: number) {
+        this.socket.emit('gameFinished', { roomNumber: this.roomNumber, index: indexPlayerToSend });
+        this.cancelGame();
     }
 }
