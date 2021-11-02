@@ -53,6 +53,7 @@ describe('TextBoxComponent', () => {
                 { provide: TextBox, useValue: textBoxServiceSpy },
                 { provide: LetterService, useValue: letterServiceSpy },
                 { provide: SocketService, useValue: socketSpy },
+                { provide: TimerTurnManagerService, useValue: timeServiceSpy },
             ],
         }).compileComponents();
     });

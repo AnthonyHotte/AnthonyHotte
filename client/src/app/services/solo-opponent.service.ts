@@ -5,7 +5,6 @@ import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { FinishGameService } from './finish-game.service';
 import { LetterService } from './letter.service';
 import { PlaceLettersService } from './place-letters.service';
-import { SocketService } from './socket.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 @Injectable({
@@ -18,7 +17,6 @@ export class SoloOpponentService {
         public timeManager: TimerTurnManagerService,
         public soloOpponent2: SoloOpponent2Service,
         public finishGameService: FinishGameService,
-        private socketService: SocketService,
         public placeLettersService: PlaceLettersService,
     ) {
         this.letters.players[1].addLetters(MAXLETTERINHAND);
@@ -62,13 +60,14 @@ export class SoloOpponentService {
                 } else if (commandToPlay.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
                     // not sure what this does maybe Aziz can help ?  as this section of the code is copied from textboxbehavior
                     //  this.activateReserve();
+                    // todo change the reason
+                    this.endTurn('');
                 }
             }
-
-            this.socketService.sendJoinPlayerTurn(this.timeManager.turnsSkippedInARow);
         } else {
-            // emit creater turn
-            this.socketService.sendCreaterPlayerTurn(this.timeManager.turnsSkippedInARow);
+            // Joiner Player
+            // change the reason
+            this.endTurn('');
         }
     }
     calculateProbability(percentage: number) {

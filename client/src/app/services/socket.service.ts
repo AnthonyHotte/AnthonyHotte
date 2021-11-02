@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GameStatus } from '@app/game-status';
+import { Letter } from '@app/letter';
 import { MessagePlayer } from '@app/message';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
@@ -20,8 +21,10 @@ export class SocketService {
     messageSubject: Subject<MessagePlayer>;
     cancellationIndexes: number[];
     ableToJoin: boolean = true;
-    // isWordValidationFinished = false;
-    // wordIsValid = false;
+    nameOfRoomCreator: string = 'Default';
+    gameMode = 2;
+    lettersOfJoiner: Letter[] = [];
+    lettersOfJoinerInStringForSynch: string = '';
 
     constructor() {
         this.gameLists = [[]];
@@ -52,33 +55,31 @@ export class SocketService {
             console.log('connected!');
         });
         this.socket.on('startGame', (info) => {
+            this.gameStatus.next(info.gameMode);
             this.roomNumber = info.room.index;
-            this.playerNameIndexZer0.next(info.playerName);
-            this.playerNameIndexOne.next(info.opponentName);
+            if (info.gameMode === 1) {
+                this.playerNameIndexZer0.next(info.opponentName);
+                this.playerNameIndexOne.next(info.playerName);
+            } else {
+                this.playerNameIndexZer0.next(info.playerName);
+                this.playerNameIndexOne.next(info.opponentName);
+            }
             this.turn.next(info.indexPlayerStart);
             this.startGame.next(true);
-        });
-        this.socket.on('gameMode', (gameMode) => {
-            this.gameStatus.next(gameMode);
         });
         this.socket.on('sendGamesInformation', (games) => {
             this.gameLists.length = 0;
             for (let i = 0; i < games.length; i++) {
-                this.gameLists.push(['name', 'bonus', 'time']);
+                this.gameLists.push(['name', 'bonus', 'time', 'lettersCreator', 'lettersJoiner']);
                 this.gameLists[i][0] = games[i][0]; // player name of who is the game initiator
                 this.gameLists[i][1] = games[i][1]; // is random bonus on
                 this.gameLists[i][2] = games[i][2]; // time per turn
+                this.gameLists[i][3] = games[i][3]; // letters of creator
+                this.gameLists[i][4] = games[i][4]; // letters of joiner
             }
         });
-        this.socket.on('joinPlayerTurnFromServer', (skippedTurn) => {
-            // start join turn
-            this.turn.next(1);
-            this.skippedTurn.next(skippedTurn);
-        });
-        this.socket.on('createrPlayerTurnFromServer', (skippedTurn) => {
-            // start creater turn
+        this.socket.on('yourTurn', () => {
             this.turn.next(0);
-            this.skippedTurn.next(skippedTurn);
         });
         // cancelled game indexes
         this.socket.on('CancellationIndexes', (indexes) => {
@@ -96,17 +97,30 @@ export class SocketService {
         });
         */
     }
-    sendInitiateNewGameInformation(playTime: number, isBonusRandom: boolean, name: string, gameStatus: GameStatus, opponentName: string) {
+    sendInitiateNewGameInformation(
+        playTime: number,
+        isBonusRandom: boolean,
+        name: string,
+        gameStatus: GameStatus,
+        opponentName: string,
+        lettersOfCreator: Letter[],
+        lettersOfJoiner: Letter[],
+    ) {
         this.socket.emit('startingNewGameInfo', {
             time: playTime,
             bonusOn: isBonusRandom,
             namePlayer: name,
             mode: gameStatus,
             nameOpponent: opponentName,
+            lettersCreator: lettersOfCreator,
+            lettersOpponent: lettersOfJoiner,
         });
     }
     sendJoinGameInfo(name: string, indexWaitingRoom: number) {
-        this.socket.emit('joinGame', { playerJoinName: name, indexInWaitingRoom: indexWaitingRoom });
+        this.socket.emit('joinGame', {
+            playerJoinName: name,
+            indexInWaitingRoom: indexWaitingRoom,
+        });
     }
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
@@ -143,20 +157,8 @@ export class SocketService {
             this.messageSubject.next(myMessage);
         });
     }
-    sendJoinPlayerTurn(turnsSkippedInARow: number) {
-        this.socket.emit('joinPLayerTurn', {
-            roomNumber: this.roomNumber,
-            numberSkipTurn: turnsSkippedInARow,
-        });
-    }
-    sendCreaterPlayerTurn(turnsSkippedInARow: number) {
-        this.socket.emit(
-            'createrPlayerTurn',
-            this.socket.emit('joinPLayerTurn', {
-                roomNumber: this.roomNumber,
-                numberSkipTurn: turnsSkippedInARow,
-            }),
-        );
+    endTurn(turnsSkippedInARow: number, nextPlayerTurn: GameStatus) {
+        this.socket.emit('endTurn', { roomNumber: this.roomNumber, turnSkipped: turnsSkippedInARow, playerTurnStatus: nextPlayerTurn });
     }
     cancelGame() {
         this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
@@ -173,5 +175,8 @@ export class SocketService {
         }).then((res: boolean) => {
             return res;
         });
+    }
+    setGameMode(gameMode: number) {
+        this.gameMode = gameMode;
     }
 }

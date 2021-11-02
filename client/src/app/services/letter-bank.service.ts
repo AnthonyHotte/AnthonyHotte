@@ -29,15 +29,7 @@ export class LetterBankService {
         });
         return lettersInBank;
     }
-    getindexofALetterinBank(alphabeticlettertoget: string): number {
-        const notAValidIndexvalue = -1;
-        for (let i = 0; i < this.letterBank.length; i++) {
-            if (this.letterBank[i].letter.toLowerCase() === alphabeticlettertoget) {
-                return i;
-            }
-        }
-        return notAValidIndexvalue; // return -1 in the case that the letter wouldn't be found in the bank
-    }
+
 
     removeLettersFromBank(letters: string) {
         for (const letter of letters) {

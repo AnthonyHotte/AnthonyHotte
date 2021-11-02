@@ -44,6 +44,24 @@ export class LetterService {
         }
     }
 
+    // only function for synch : only used by joiner
+    synchLetters(lettersCreator: string, lettersJoiner: string) {
+        this.resetLetterBankForSynch();
+        this.players[1].addLetterToHand(lettersCreator); // local letters of creator (opponent)
+        this.players[0].addLetterToHand(lettersJoiner); // local letters of joiner (player)
+    }
+
+    resetLetterBankForSynch() {
+        this.letterBankService.letterBank = [];
+        LETTERS.forEach((letter) => {
+            for (let i = 0; i < letter.quantity; i++) {
+                this.letterBankService.letterBank.push(letter);
+            }
+        });
+        this.players[0].allLettersInHand = [];
+        this.players[1].allLettersInHand = [];
+    }
+
     swapLetters(index1: number, index2: number): void {
         const tempLetter: Letter = this.players[0].allLettersInHand[index1];
         this.players[0].allLettersInHand[index1] = this.players[0].allLettersInHand[index2];
@@ -160,6 +178,10 @@ export class LetterService {
         this.indexSelectedExchange = [];
         this.areLetterSelectedExchange = false;
         this.lettersSelectedExchange = '';
+    }
+
+    transmitLettersJoiner() {
+        this.socketService.lettersOfJoiner = this.players[0].allLettersInHand;
     }
 
     private removeCharFromString(letters: string, index: number): string {

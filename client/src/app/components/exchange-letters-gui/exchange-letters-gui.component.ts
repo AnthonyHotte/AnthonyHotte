@@ -30,7 +30,7 @@ export class ExchangeLettersGUIComponent {
 
     exchangeLetters(event: MouseEvent) {
         event.stopPropagation();
-        this.letterService.players[this.timeManager.turn].exchangeLetters(this.letterService.lettersSelectedExchange);
+        this.textBox.isCommand('!échanger ' + this.letterService.lettersSelectedExchange);
         const message: MessagePlayer = {
             message: 'échanger ' + this.letterService.lettersSelectedExchange,
             sender: this.letterService.players[0].name,
