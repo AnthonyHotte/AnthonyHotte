@@ -88,7 +88,7 @@ export class WordValidationService {
         return validated;
     }
 
-    validateVerticalWord(row: number, column: number, lettersOnBoard: string[][]): boolean {
+    async validateVerticalWord(row: number, column: number, lettersOnBoard: string[][]): Promise<boolean> {
         let beginIndexWord = 0;
         let lastIndexWord = 0;
         let firstRowOfWord = 0;
@@ -109,7 +109,8 @@ export class WordValidationService {
             lastIndexWord = firstRowOfWord;
         }
         this.pointsForLastWord += this.scoreCalculator.calculateScoreForVertical(beginIndexWord, lastIndexWord, column, wordCreated);
-        return this.isWordValid(wordCreated);
+        const validated = await this.socket.validateWord(wordCreated);
+        return validated;
     }
     isWordLongerThanTwo(word: string): boolean {
         if (word.length >= 2) {

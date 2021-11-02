@@ -1,4 +1,5 @@
-// import jsonDictionnary from 'assets/dictionnary.json';
+import jsonDictionnary from '@app/dictionnary.json';
+// import * as dict_path from 'assets/dictionnary.json';
 import { Service } from 'typedi';
 
 @Service()
@@ -6,13 +7,12 @@ export class WordValidationService {
     dictionnary: string[];
     dicLength: number;
 
-    // eslint-disable-next-line @typescript-eslint/no-useless-constructor
     constructor() {
         // when importing the json, typescript doesnt let me read it as a json object. To go around this, we stringify it then parse it
-        // const temp = JSON.stringify(jsonDictionnary);
-        // const temp2 = JSON.parse(temp);
-        // this.dictionnary = temp2.words;
-        // this.dicLength = this.dictionnary.length;
+        const temp = JSON.stringify(jsonDictionnary);
+        const temp2 = JSON.parse(temp);
+        this.dictionnary = temp2.words;
+        this.dicLength = this.dictionnary.length;
     }
 
     // The binary search was inspired by the binarysearch method provided here https://www.geeksforgeeks.org/binary-search/
