@@ -123,6 +123,7 @@ export class TextBox {
 
     isCommand(myWord: string) {
         let text = '';
+        alert('is');
         text = 'Commande invalide.';
         if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!debug') {
             if (!this.debugCommand) {
