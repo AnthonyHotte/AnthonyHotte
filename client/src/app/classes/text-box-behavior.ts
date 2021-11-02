@@ -36,30 +36,30 @@ export class TextBox {
         this.inputsSoloOpponent = [];
 
         this.socketService.getMessageObservable().subscribe((myMessage) => {
-            let isCommand = false;
+            let printCommand = false;
             if (myMessage.message !== '' && myMessage.sender !== '') {
                 let text = '';
                 if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
-                    this.inputs.push(myMessage);
                     text = this.letterService.players[1].name + ' a passé son tour';
-                    isCommand = true;
+                    printCommand = true;
                 } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
-                    this.exchangeLetterOpponent(myMessage.message);
-                    isCommand = true;
+                    myMessage.message = '!échanger' + myMessage.message.substring('!échanger '.length, myMessage.message.length).length.toString();
+                    text = this.exchangeLetterOpponent(myMessage.message);
+                    printCommand = true;
                 } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
                     this.inputs.push(myMessage);
-                    text = this.letterService.players[1].name + ' a affiché sa reserve';
-                    isCommand = true;
+                    text = this.letterService.players[1].name + ' a affiché la reserve';
+                    printCommand = true;
                 } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                     this.inputs.push(myMessage);
-                    isCommand = true;
-                    this.placeWordOpponent(myMessage.message);
+                    printCommand = true;
+                    text = this.placeWordOpponent(myMessage.message);
                 }
-                if (!isCommand) {
+                if (printCommand) {
                     this.inputs.push(myMessage);
+                    const message1: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
+                    this.inputs.push(message1);
                 }
-                const message1: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
-                this.inputs.push(message1);
             }
         });
     }
@@ -71,9 +71,6 @@ export class TextBox {
         } else {
             this.endTurn('place');
         }
-        const message: MessagePlayer = { message: '', sender: 'Systeme', role: 'Systeme' };
-        message.message = text;
-        this.inputs.push(message);
         return text;
     }
 
