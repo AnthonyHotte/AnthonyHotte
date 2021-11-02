@@ -23,21 +23,4 @@ describe('LetterBankService', () => {
         expect(typeof letterString).toEqual(typeof 'adf');
         expect(letterString.length).toBeGreaterThan(minimaleLenghtString);
     });
-
-    it('getindexofALetterinBank should return index of letter in bank if its there', () => {
-        service.letterBank = [
-            { letter: 'a', quantity: 1, point: 1 },
-            { letter: 'e', quantity: 1, point: 1 },
-        ];
-        expect(service.getindexofALetterinBank('e')).toEqual(1);
-    });
-
-    it('getindexofALetterinBank should return -1 if letter is not there', () => {
-        service.letterBank = [
-            { letter: 'a', quantity: 1, point: 1 },
-            { letter: 'e', quantity: 1, point: 1 },
-        ];
-        const notAValidIndexvalue = -1;
-        expect(service.getindexofALetterinBank('i')).toEqual(notAValidIndexvalue);
-    });
 });

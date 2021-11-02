@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LetterService } from '@app/services/letter.service';
 import { SocketService } from '@app/services/socket.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 
@@ -8,13 +9,14 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
     styleUrls: ['./game-selection-page.component.scss'],
 })
 export class GameSelectionPageComponent {
-    constructor(private socket: SocketService, private timeTurnManager: TimerTurnManagerService) {}
+    constructor(private socket: SocketService, private timeTurnManager: TimerTurnManagerService, private letterService: LetterService) {}
 
     setSoloType() {
         this.timeTurnManager.gameStatus = 2;
     }
     setCreateMultiPlayerGame() {
         this.timeTurnManager.gameStatus = 0;
+        this.letterService.reset();
     }
     setJoinMultiPayerGame() {
         this.timeTurnManager.gameStatus = 1;
