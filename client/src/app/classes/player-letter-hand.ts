@@ -49,7 +49,7 @@ export class PlayerLetterHand {
                     this.letterBankService.letterBank.splice(index, 1);
                 }
             } else {
-                this.pushTheseLetterToPlayerHand(lettersToReplace);
+                this.addLetterToHand(lettersToReplace);
             }
 
             for (const letter of lettersExchanged) {
@@ -105,16 +105,22 @@ export class PlayerLetterHand {
                 this.letterBankService.letterBank.splice(index, 1);
             }
         } else {
-            this.pushTheseLetterToPlayerHand(lettersToReplace);
+            this.addLetterToHand(lettersToReplace);
         }
     }
-    pushTheseLetterToPlayerHand(lettersToReplace: string) {
-        for (let i = 0; i < lettersToReplace.length; i++) {
-            const index = this.letterBankService.getindexofALetterinBank(lettersToReplace.charAt(i));
-            this.allLettersInHand.push(this.letterBankService.letterBank[index]);
-            this.letterBankService.letterBank.splice(index, 1);
+
+    addLetterToHand(lettersToAdd: string) {
+        for (const letter of lettersToAdd) {
+            for (let i = 0; i < this.letterBankService.letterBank.length; i++) {
+                if (letter.toLowerCase() === this.letterBankService.letterBank[i].letter.toLowerCase()) {
+                    this.allLettersInHand.push(this.letterBankService.letterBank[i]);
+                    this.letterBankService.letterBank.splice(i, 1);
+                    break;
+                }
+            }
         }
     }
+
     removeLettersWithoutReplacingThem(lettersToRemove: string) {
         for (let i = 0; i < lettersToRemove.length; i++) {
             for (let j = 0; j < this.allLettersInHand.length; j++) {

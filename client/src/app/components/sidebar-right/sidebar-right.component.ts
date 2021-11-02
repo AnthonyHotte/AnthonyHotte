@@ -7,7 +7,6 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLetterClickService } from '@app/services/place-letter-click.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
-// import { SocketService } from '@app/services/socket.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
@@ -31,14 +30,14 @@ export class SidebarRightComponent implements AfterViewInit {
         private textBox: TextBox,
         private readonly gridService: GridService,
         private readonly placeLetterService: PlaceLettersService,
-        private letterBankService: LetterBankService, // private socketService: SocketService,
+        private letterBankService: LetterBankService,
         private placeLetterClick: PlaceLetterClickService,
     ) {
         this.setAttribute();
     }
 
     ngAfterViewInit() {
-        if (this.turnTimeController.turn === 1) {
+        if (this.turnTimeController.turn === 1 && this.turnTimeController.gameStatus === 2) {
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
@@ -50,9 +49,11 @@ export class SidebarRightComponent implements AfterViewInit {
     setAttribute() {
         this.time = this.turnTimeController.timePerTurn;
         this.turn = this.turnTimeController.turn;
-        this.letterService.reset();
-        this.letterService.players[0].reset();
-        this.soloOpponent.reset(1);
+        if (this.turnTimeController.gameStatus === 2) {
+            this.letterService.reset();
+            this.letterService.players[0].reset();
+            this.soloOpponent.reset(1);
+        }
     }
     difficultyInCharacters() {
         if (this.easyDifficultyIsTrue === true) {
@@ -69,7 +70,7 @@ export class SidebarRightComponent implements AfterViewInit {
             this.textBox.endTurn('skip');
         }
         this.placeLetterClick.reset();
-        if (this.turnTimeController.turn === 0) {
+        if (this.turnTimeController.turn === 1) {
             this.soloOpponentPlays();
         }
     }
@@ -101,7 +102,7 @@ export class SidebarRightComponent implements AfterViewInit {
     getPlayerNameAndVerifyTurn() {
         if (this.turn !== this.turnTimeController.turn) {
             this.changedTurns = true;
-            if (this.textBox.commandSuccessful) {
+            if (this.textBox.commandSuccessful && this.turnTimeController.gameStatus === 2) {
                 this.opponentSet = true;
                 this.textBox.commandSuccessful = false;
                 this.soloOpponentPlays();
@@ -120,7 +121,6 @@ export class SidebarRightComponent implements AfterViewInit {
 
     async soloOpponentPlays() {
         // this.wait3SecondsBeginningOfTurn();
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         if (this.turnTimeController.gameStatus === 2) {
             const fourseconds = 4000;
             await this.delay(fourseconds);
