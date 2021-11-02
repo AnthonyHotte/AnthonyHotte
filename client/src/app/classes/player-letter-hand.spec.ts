@@ -65,7 +65,7 @@ describe('PlayerLetterHand', () => {
             { letter: 'a', quantity: 1, point: 1 },
             { letter: 'e', quantity: 1, point: 1 },
         ];
-        const spyPush = spyOn(playerLetterHand, 'pushTheseLetterToPlayerHand');
+        const spyPush = spyOn(playerLetterHand, 'addLetterToHand');
         playerLetterHand.exchangeLetters('ae', 'ie');
         expect(spyPush).toHaveBeenCalled();
     });
@@ -171,7 +171,7 @@ describe('PlayerLetterHand', () => {
             { letter: 'u', quantity: 1, point: 1 },
             { letter: 'r', quantity: 1, point: 1 },
         ];
-        const mySpy = spyOn(playerLetterHand, 'pushTheseLetterToPlayerHand');
+        const mySpy = spyOn(playerLetterHand, 'addLetterToHand');
         playerLetterHand.removeLetters('bon', 'abc');
         expect(mySpy).toHaveBeenCalled();
     });
@@ -234,8 +234,8 @@ describe('PlayerLetterHand', () => {
             { letter: 'k', quantity: 1, point: 1 },
             { letter: 'j', quantity: 1, point: 1 },
         ];
-        playerLetterHand.pushTheseLetterToPlayerHand('a');
-        expect(letterBankServiceSpy.getindexofALetterinBank).toHaveBeenCalled();
+        playerLetterHand.addLetterToHand('a');
+        expect(playerLetterHand.allLettersInHand[playerLetterHand.allLettersInHand.length - 1].letter.toLowerCase()).toEqual('a');
     });
 
     it('pushTheseLetterToPlayerHand should call getindexofALetterinBank', () => {
