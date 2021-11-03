@@ -36,31 +36,23 @@ export class TextBox {
         this.inputsSoloOpponent = [];
 
         this.socketService.getMessageObservable().subscribe((myMessage) => {
-            let printCommand = false;
-            if (myMessage.message !== '' && myMessage.sender !== '') {
-                let text = '';
-                if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
-                    text = this.letterService.players[1].name + ' a passé son tour';
-                    printCommand = true;
-                } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
-                    myMessage.message = '!échanger' + myMessage.message.substring('!échanger '.length, myMessage.message.length).length.toString();
-                    text = this.exchangeLetterOpponent(myMessage.message);
-                    printCommand = true;
-                } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
-                    this.inputs.push(myMessage);
-                    text = this.letterService.players[1].name + ' a affiché la reserve';
-                    printCommand = true;
-                } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
-                    this.inputs.push(myMessage);
-                    printCommand = true;
-                    text = this.placeWordOpponent(myMessage.message, 'abc');
-                }
-                if (printCommand) {
-                    this.inputs.push(myMessage);
-                    const message1: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
-                    this.inputs.push(message1);
-                }
+            let text = '';
+            if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
+                text = this.letterService.players[1].name + ' a passé son tour';
+            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
+                myMessage.message = '!échanger' + myMessage.message.substring('!échanger '.length, myMessage.message.length).length.toString();
+                text = this.exchangeLetterOpponent(myMessage.message);
+            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
+                this.inputs.push(myMessage);
+                text = this.letterService.players[1].name + ' a affiché la reserve';
+            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
+                this.inputs.push(myMessage);
+
+                text = this.placeWordOpponent(myMessage.message, 'abc');
             }
+            this.inputs.push(myMessage);
+            const message1: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
+            this.inputs.push(message1);
         });
     }
 

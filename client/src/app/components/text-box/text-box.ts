@@ -3,6 +3,7 @@ import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
 import { LetterService } from '@app/services/letter.service';
 import { SocketService } from '@app/services/socket.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 @Component({
     selector: 'app-text-box',
     templateUrl: './text-box.html',
@@ -14,7 +15,12 @@ export class TextBoxComponent {
     debugCommand: boolean;
     text: string;
 
-    constructor(public input: TextBox, private letterService: LetterService, private socket: SocketService) {
+    constructor(
+        public input: TextBox,
+        private letterService: LetterService,
+        private socket: SocketService,
+        private timeManager: TimerTurnManagerService,
+    ) {
         this.word = '';
         this.debugCommand = false;
     }
@@ -25,10 +31,10 @@ export class TextBoxComponent {
         if (myMessage.message.substr(0, 1) === '!') {
             this.input.send(myMessage);
             this.input.isCommand(myMessage.message);
-            this.socket.configureSendMessageToServer(myMessageForOpp);
+            this.socket.configureSendMessageToServer(myMessageForOpp, this.timeManager.gameStatus);
         } else {
             this.input.send(myMessage);
-            this.socket.configureSendMessageToServer(myMessageForOpp);
+            this.socket.configureSendMessageToServer(myMessageForOpp, this.timeManager.gameStatus);
         }
         if (this.input.getDebugCommand()) {
             this.messagesSoloOpponent = this.input.getMessagesSoloOpponent();

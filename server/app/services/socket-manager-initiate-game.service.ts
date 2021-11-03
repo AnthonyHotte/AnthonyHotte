@@ -115,7 +115,6 @@ export class SocketManager {
             });
 
             socket.on('toOpponent', (message, gameStatus, roomNumber) => {
-                console.log('recu');
                 const gameStatusToSendTo = gameStatus === 0 ? 1 : 0;
                 this.sio.to(this.roomsService.rooms[roomNumber].socketsId[gameStatusToSendTo]).emit('toPlayer', message);
             });

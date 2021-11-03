@@ -128,12 +128,12 @@ export class SocketService {
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
     }
-    configureSendMessageToServer(message: MessagePlayer) {
+    configureSendMessageToServer(message: MessagePlayer, gameStatus: number) {
         // envoyer un message a tout le monde sauf au sender
         // else if (message !== undefined && toAll !== undefined) {
         //     this.socket.emit('toAll', message.message, message.sender, message.role);
         // }
-        this.socket.emit('toOpponent', message, this.gameStatus, this.roomNumber);
+        this.socket.emit('toOpponent', message, gameStatus, this.roomNumber);
     }
     endTurn(turnsSkippedInARow: number, nextPlayerTurn: GameStatus) {
         this.socket.emit('endTurn', { roomNumber: this.roomNumber, turnSkipped: turnsSkippedInARow, playerTurnStatus: nextPlayerTurn });
