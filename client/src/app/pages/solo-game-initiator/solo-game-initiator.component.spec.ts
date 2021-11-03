@@ -11,7 +11,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MessageService } from '@app/services/message.service';
 import { MatDialog } from '@angular/material/dialog';
 
-describe('SoloGameInitiatorComponent', () => {
+fdescribe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
     let fixture: ComponentFixture<SoloGameInitiatorComponent>;
     let socketServiceSpy: jasmine.SpyObj<SocketService>;
@@ -25,6 +25,7 @@ describe('SoloGameInitiatorComponent', () => {
         messageServiceSpy = jasmine.createSpyObj('MessageService', ['gameStartingInfoSubscribe']);
         letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
         socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendJoinGameInfo']);
+        socketServiceSpy.nameOfRoomCreator = 'Tony';
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
         dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
         const player1 = new PlayerLetterHand(letterBankServiceSpy);
@@ -58,6 +59,7 @@ describe('SoloGameInitiatorComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(SoloGameInitiatorComponent);
         component = fixture.componentInstance;
+        component.nameIsValid = true;
         component.opponentName = 'Tony';
         component.idNameOpponent = 0;
         fixture.detectChanges();
