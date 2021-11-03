@@ -115,9 +115,11 @@ export class PlaceLettersService {
                     }
                     this.drawWord();
                     if (this.validateWordPlaced(lettersToReplace)) {
-                        const row = String.fromCharCode(this.row + Constants.SIDELETTERS_TO_ASCII);
-                        const command = '!placer ' + row + (this.colomnNumber + 1).toString() + this.orientation + ' ' + this.wordToPlaceBrut;
-                        this.socket.configureSendMessageToServer(command, this.timeManager.gameStatus);
+                        if (lettersToReplace === undefined) {
+                            const row = String.fromCharCode(this.row + Constants.SIDELETTERS_TO_ASCII);
+                            const command = '!placer ' + row + (this.colomnNumber + 1).toString() + this.orientation + ' ' + this.wordToPlaceBrut;
+                            this.socket.configureSendMessageToServer(command, this.timeManager.gameStatus);
+                        }
                         this.gameState.isBoardEmpty = false;
                         this.letterService.players[this.timeManager.turn].score += this.wordValidator.pointsForLastWord;
                         return 'Mot placé avec succès.';
