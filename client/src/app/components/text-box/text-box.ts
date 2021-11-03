@@ -27,14 +27,12 @@ export class TextBoxComponent {
 
     buttonDetect() {
         const myMessage: MessagePlayer = { message: this.word, sender: this.letterService.players[0].name, role: 'Joueur' };
-        const myMessageForOpp: MessagePlayer = { message: this.word, sender: this.letterService.players[0].name, role: 'Adversaire' };
         if (myMessage.message.substr(0, 1) === '!') {
             this.input.send(myMessage);
             this.input.isCommand(myMessage.message);
-            this.socket.configureSendMessageToServer(myMessageForOpp, this.timeManager.gameStatus);
         } else {
             this.input.send(myMessage);
-            this.socket.configureSendMessageToServer(myMessageForOpp, this.timeManager.gameStatus);
+            this.socket.configureSendMessageToServer(this.word, this.timeManager.gameStatus);
         }
         if (this.input.getDebugCommand()) {
             this.messagesSoloOpponent = this.input.getMessagesSoloOpponent();

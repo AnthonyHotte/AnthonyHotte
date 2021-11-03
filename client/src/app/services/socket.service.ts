@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GameStatus } from '@app/game-status';
 import { Letter } from '@app/letter';
-import { MessagePlayer } from '@app/message';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
 
@@ -18,13 +17,14 @@ export class SocketService {
     playerNameIndexOne: BehaviorSubject<string>;
     turn: BehaviorSubject<number>;
     skippedTurn: BehaviorSubject<number>;
-    messageSubject: Subject<MessagePlayer>;
+    messageSubject: Subject<string>;
     cancellationIndexes: number[];
     ableToJoin: boolean = true;
     nameOfRoomCreator: string = 'Default';
     gameMode = 2;
     lettersOfJoiner: Letter[] = [];
     lettersOfJoinerInStringForSynch: string = '';
+    lettersToReplace = '';
 
     constructor() {
         this.gameLists = [[]];
@@ -99,6 +99,9 @@ export class SocketService {
         this.socket.on('toPlayer', (myMessage) => {
             this.messageSubject.next(myMessage);
         });
+        this.socket.on('receiveLettersReplaced', (lettersReplaced) => {
+            this.lettersToReplace = lettersReplaced;
+        });
     }
     sendInitiateNewGameInformation(
         playTime: number,
@@ -128,7 +131,7 @@ export class SocketService {
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
     }
-    configureSendMessageToServer(message: MessagePlayer, gameStatus: number) {
+    configureSendMessageToServer(message: string, gameStatus: number) {
         // envoyer un message a tout le monde sauf au sender
         // else if (message !== undefined && toAll !== undefined) {
         //     this.socket.emit('toAll', message.message, message.sender, message.role);
@@ -148,5 +151,9 @@ export class SocketService {
 
     setGameMode(gameMode: number) {
         this.gameMode = gameMode;
+    }
+
+    sendLetterReplaced(lettersToReplace: string, gameStatus: number) {
+        this.socket.emit('sendLettersReplaced', lettersToReplace, gameStatus);
     }
 }

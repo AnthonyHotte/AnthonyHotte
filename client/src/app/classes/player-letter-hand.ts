@@ -5,6 +5,7 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 
 export class PlayerLetterHand {
     allLettersInHand: Letter[];
+    lettersReplaced = '';
     score: number;
     name: string;
 
@@ -27,8 +28,9 @@ export class PlayerLetterHand {
             }
         }
     }
-    exchangeLetters(letters: string, lettersToReplace?: string) {
+    exchangeLetters(letters: string, lettersToReplace?: string): string {
         // only possible when at least 7 letters are there
+        let lettersReplacedExchange = '';
         if (this.letterBankService.letterBank.length >= MAXLETTERINHAND && this.handContainLetters(letters)) {
             const numberToExchange = letters.length;
             const lettersExchanged = [];
@@ -46,6 +48,7 @@ export class PlayerLetterHand {
                 for (let i = 0; i < numberToExchange; i++) {
                     const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
                     this.allLettersInHand.push(this.letterBankService.letterBank[index]);
+                    lettersReplacedExchange += this.letterBankService.letterBank[index].letter;
                     this.letterBankService.letterBank.splice(index, 1);
                 }
             } else {
@@ -57,6 +60,7 @@ export class PlayerLetterHand {
                 this.letterBankService.letterBank.push(tempLetter);
             }
         }
+        return lettersReplacedExchange;
     }
 
     reset() {
@@ -102,6 +106,7 @@ export class PlayerLetterHand {
             for (let i = 0; i < replaceAmount; i++) {
                 const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
                 this.allLettersInHand.push(this.letterBankService.letterBank[index]);
+                this.lettersReplaced += this.letterBankService.letterBank[index].letter;
                 this.letterBankService.letterBank.splice(index, 1);
             }
         } else {
