@@ -66,11 +66,9 @@ export class SidebarRightComponent implements AfterViewInit {
     }
 
     skipTurn() {
-        if (this.turnTimeController.gameStatus === GameStatus.SoloPlayer) {
-            this.textBox.isCommand('!passer');
-        } else {
-            this.textBox.endTurn('skip');
-        }
+        const messageSkip = { message: '!passer', sender: this.letterService.players[0].name, role: 'Joueur' };
+        this.textBox.inputs.push(messageSkip);
+        this.textBox.isCommand('!passer');
         this.placeLetterClick.reset();
         if (this.turnTimeController.turn === 1 && this.turnTimeController.gameStatus === GameStatus.SoloPlayer) {
             this.soloOpponentPlays();

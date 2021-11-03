@@ -41,6 +41,7 @@ export class TextBox {
             const myMessage = { message: messageString, sender: this.letterService.players[1].name, role: 'Adversaire' };
             let text = '';
             if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
+                this.verifyCommandPasser();
                 text = this.letterService.players[1].name + ' a passé son tour';
                 printCommand = true;
             } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
@@ -52,7 +53,6 @@ export class TextBox {
                 text = this.letterService.players[1].name + ' a affiché la reserve';
                 printCommand = true;
             } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
-                this.inputs.push(myMessage);
                 text = this.placeWordOpponent(myMessage.message, this.socket.lettersToReplace);
                 printCommand = true;
             }
