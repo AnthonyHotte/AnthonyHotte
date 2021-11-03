@@ -28,6 +28,11 @@ describe('PlayerLetterHand', () => {
         playerLetterHand.reset();
         expect(playerLetterHand.allLettersInHand.length).toEqual(0);
     });
+    it('handContainsLetter should...', () => {
+        playerLetterHand.allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
+        const res = playerLetterHand.handContainLetters('eart');
+        expect(res).toBe(false);
+    });
 
     it('exchangeLetters should call push and slice method', () => {
         // we need to add seven letters so we have at least the equal number of letters to that of the minimum amount which is seven
@@ -96,6 +101,22 @@ describe('PlayerLetterHand', () => {
         const letterToAdd = 4;
         playerLetterHand.addLetters(letterToAdd);
         expect(spyPush).toHaveBeenCalledTimes(letterToAdd);
+    });
+    // test
+    it('addLetterToHand should add letters to hand', () => {
+        // we need to add seven letters so we have at least the equal number of letters to that of the minimum amount which is seven
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'b', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'c', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'd', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'f', quantity: 1, point: 1 });
+        letterBankServiceSpy.letterBank.push({ letter: 'a', quantity: 1, point: 1 });
+        playerLetterHand.allLettersInHand = [];
+        const spyPush = spyOn(playerLetterHand.allLettersInHand, 'push');
+        const letterToAdd = 'abz';
+        playerLetterHand.addLetterToHand(letterToAdd);
+        expect(spyPush).toHaveBeenCalledTimes(2);
     });
     it('addLetters should call push method 0 times when pass 8', () => {
         const spyPush = spyOn(playerLetterHand.allLettersInHand, 'push');
