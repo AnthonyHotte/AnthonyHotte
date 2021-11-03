@@ -128,7 +128,7 @@ export class SocketManager {
             socket.on('sendLettersReplaced', (lettersReplaced, gameStatus, roomNumber) => {
                 const gameStatusToSendTo = gameStatus === 0 ? 1 : 0;
                 this.sio.to(this.roomsService.rooms[roomNumber].socketsId[gameStatusToSendTo]).emit('receiveLettersReplaced', lettersReplaced);
-
+            });
             socket.on('gameFinished', (roomNumber) => {
                 this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('gameIsFinished');
                 this.roomsService.indexNextRoom--;
@@ -157,6 +157,5 @@ export class SocketManager {
                 }, TIME_FOR_RESPONSE);
             });
         });
-    }
     }
 }
