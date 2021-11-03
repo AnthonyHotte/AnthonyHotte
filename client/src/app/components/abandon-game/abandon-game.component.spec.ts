@@ -6,7 +6,7 @@ import { AbandonGameComponent } from './abandon-game.component';
 import { SocketService } from '@app/services/socket.service';
 import { BehaviorSubject } from 'rxjs';
 
-fdescribe('AbandonGameComponent', () => {
+describe('AbandonGameComponent', () => {
     let component: AbandonGameComponent;
     let fixture: ComponentFixture<AbandonGameComponent>;
     let spy: jasmine.SpyObj<FinishGameService>;

@@ -38,7 +38,6 @@ export class ExchangeLettersGUIComponent {
         this.textBox.inputs.push(message);
         this.textBox.isCommand('!échanger ' + this.letterService.lettersSelectedExchange);
         this.cancelSelection(event);
-        this.timeManager.endTurn('exchange');
     }
     cancelSelection(event: MouseEvent) {
         event.stopPropagation();
