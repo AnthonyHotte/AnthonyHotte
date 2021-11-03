@@ -154,6 +154,6 @@ export class SocketService {
     }
 
     sendLetterReplaced(lettersToReplace: string, gameStatus: number) {
-        this.socket.emit('sendLettersReplaced', lettersToReplace, gameStatus);
+        this.socket.emit('sendLettersReplaced', lettersToReplace, gameStatus, this.roomNumber);
     }
 }
