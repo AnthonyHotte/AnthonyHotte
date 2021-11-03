@@ -12,15 +12,10 @@ export class AbandonGameComponent {
     constructor(private finishGameService: FinishGameService, private socketService: SocketService) {}
 
     finishCurrentGame() {
-        this.finishGameService.isGameFinished = true;
         this.socketService.finishedGameMessageTransmission();
     }
 
     setIsGameUnderway() {
-        if (this.socketService.gameIsFinished) {
-            this.finishGameService.isGameFinished = this.socketService.gameIsFinished;
-        }
-        this.socketService.gameIsFinished = false;
         if (this.finishGameService.isGameFinished) {
             return 'Finie';
         }

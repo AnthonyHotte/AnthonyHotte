@@ -25,7 +25,6 @@ export class SocketService {
     gameMode = 2;
     lettersOfJoiner: Letter[] = [];
     lettersOfJoinerInStringForSynch: string = '';
-    gameIsFinished = false;
 
     constructor() {
         this.gameLists = [[]];

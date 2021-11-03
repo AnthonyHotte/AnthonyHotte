@@ -38,7 +38,6 @@ export class FinishGameService {
     }
 
     getWinner(): number[] {
-        let currentTop = 0;
         let winner: number[] = [];
         for (let i = 0; i < this.finalScore.length; i++) {
             if (this.finalScore[i] > currentTop) {
