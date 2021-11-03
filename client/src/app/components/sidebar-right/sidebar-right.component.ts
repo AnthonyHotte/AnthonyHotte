@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { GameStatus } from '@app/game-status';
 import { MessagePlayer } from '@app/message';
+import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
@@ -32,6 +33,7 @@ export class SidebarRightComponent implements AfterViewInit {
         private readonly placeLetterService: PlaceLettersService,
         private letterBankService: LetterBankService,
         private placeLetterClick: PlaceLetterClickService,
+        private gameFinishService: FinishGameService,
     ) {
         this.setAttribute();
     }
@@ -113,10 +115,14 @@ export class SidebarRightComponent implements AfterViewInit {
     }
 
     verifyChangedTurns(counter: CountdownComponent) {
-        if (this.changedTurns === true) {
-            counter.reset();
+        if (this.gameFinishService.isGameFinished) {
+            counter.pause();
+        } else {
+            if (this.changedTurns === true) {
+                counter.reset();
+            }
+            this.changedTurns = false;
         }
-        this.changedTurns = false;
     }
 
     async soloOpponentPlays() {

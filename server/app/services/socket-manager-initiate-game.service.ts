@@ -4,13 +4,14 @@ import * as http from 'http';
 import * as io from 'socket.io';
 import { Service } from 'typedi';
 import { RoomsService } from './rooms.service';
+import { WordValidationService } from './word-validation.service';
 
 @Service()
 export class SocketManager {
     games: string[][];
     private sio: io.Server;
 
-    constructor(server: http.Server, private roomsService: RoomsService) {
+    constructor(server: http.Server, private roomsService: RoomsService, private wordValidationService: WordValidationService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.games = new Array(new Array());
     }
@@ -107,6 +108,11 @@ export class SocketManager {
                 this.roomsService.rooms[endTurn.roomNumber].turnsSkippedInARow = endTurn.numberSkipTurn;
                 this.sio.to(this.roomsService.rooms[endTurn.roomNumber].socketsId[endTurn.playerTurnStatus]).emit('yourTurn');
             });
+            // eslint-disable-next-line no-unused-vars
+            socket.on('validateWordOnServer', (wordCreated, ackCallback) => {
+                ackCallback(this.wordValidationService.isWordValid(wordCreated));
+                // socket.emit('wordValidation', this.wordValidationService.isWordValid(wordCreated));
+            });
             socket.on('cancelWaitingGame', (indexes) => {
                 this.roomsService.indexNextRoom--;
                 this.roomsService.rooms.splice(indexes[0], 1);
@@ -122,6 +128,33 @@ export class SocketManager {
             socket.on('sendLettersReplaced', (lettersReplaced, gameStatus, roomNumber) => {
                 const gameStatusToSendTo = gameStatus === 0 ? 1 : 0;
                 this.sio.to(this.roomsService.rooms[roomNumber].socketsId[gameStatusToSendTo]).emit('receiveLettersReplaced', lettersReplaced);
+
+            socket.on('gameFinished', (roomNumber) => {
+                this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('gameIsFinished');
+                this.roomsService.indexNextRoom--;
+                this.roomsService.rooms.splice(roomNumber, 1);
+                this.roomsService.rooms.push(new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length));
+            });
+
+            socket.on('disconnect', () => {
+                const TIME_FOR_RESPONSE = 5000;
+                setTimeout(() => {
+                    let index = 0;
+                    for (const room of this.roomsService.rooms) {
+                        for (const socketId of room.socketsId) {
+                            if (socketId === socket.id) {
+                                this.sio.to(this.roomsService.rooms[index].roomName).emit('gameIsFinished');
+                                this.roomsService.indexNextRoom--;
+                                this.roomsService.rooms.splice(index, 1);
+                                this.roomsService.rooms.push(
+                                    new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length),
+                                );
+                                break;
+                            }
+                        }
+                        ++index;
+                    }
+                }, TIME_FOR_RESPONSE);
             });
         });
     }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GameStatus } from '@app/game-status';
 import { Letter } from '@app/letter';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
 
 @Injectable({
@@ -25,6 +25,10 @@ export class SocketService {
     lettersOfJoiner: Letter[] = [];
     lettersOfJoinerInStringForSynch: string = '';
     lettersToReplace = '';
+    currentEndGameValue: Observable<boolean>; // to be observed by finishGameService
+    updateOfEndGameValue = new BehaviorSubject(false); // to be observed by finishGameService
+    triggeredQuit: boolean = false;
+    isWordValid: BehaviorSubject<boolean>;
 
     constructor() {
         this.gameLists = [[]];
@@ -42,6 +46,8 @@ export class SocketService {
         this.configureBaseSocketFeatures();
         this.messageSubject = new Subject();
         this.cancellationIndexes = [1, 2]; // room number and waiting room number
+        this.currentEndGameValue = this.updateOfEndGameValue.asObservable();
+        this.isWordValid = new BehaviorSubject<boolean>(false);
     }
 
     getMessageObservable() {
@@ -102,6 +108,17 @@ export class SocketService {
         this.socket.on('receiveLettersReplaced', (lettersReplaced) => {
             this.lettersToReplace = lettersReplaced;
         });
+
+        this.socket.on('gameIsFinished', () => {
+            this.updateOfEndGameValue.next(true);
+        });
+        /*
+        this.socket.on('wordValidation', (wordIsValid) => {
+            this.isWordValidationFinished = true;
+            this.wordIsValid = wordIsValid === 'true' ? true : false;
+        });
+        */
+
     }
     sendInitiateNewGameInformation(
         playTime: number,
@@ -112,6 +129,9 @@ export class SocketService {
         lettersOfCreator: Letter[],
         lettersOfJoiner: Letter[],
     ) {
+        if (gameStatus === 2 && this.cancellationIndexes[0] >= 0 && this.cancellationIndexes[1] >= 0) {
+            this.cancelGame();
+        }
         this.socket.emit('startingNewGameInfo', {
             time: playTime,
             bonusOn: isBonusRandom,
@@ -143,17 +163,40 @@ export class SocketService {
     }
     cancelGame() {
         this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
+        const INEXISTING_ROOM = -1;
+        this.cancellationIndexes = [INEXISTING_ROOM, INEXISTING_ROOM];
     }
 
     setAbleToJoinGame() {
         this.ableToJoin = true;
     }
 
+    async validateWord(wordCreated: string): Promise<boolean> {
+        return new Promise<boolean>((resolve) => {
+            this.socket.emit('validateWordOnServer', wordCreated, (response: boolean) => {
+                resolve(response);
+            });
+        }).then((res: boolean) => {
+            this.isWordValid.next(res);
+            return res;
+        });
+    }
     setGameMode(gameMode: number) {
         this.gameMode = gameMode;
     }
 
+
     sendLetterReplaced(lettersToReplace: string, gameStatus: number) {
         this.socket.emit('sendLettersReplaced', lettersToReplace, gameStatus, this.roomNumber);
     }
+
+    finishedGameMessageTransmission() {
+        this.triggeredQuit = true;
+        this.socket.emit('gameFinished', this.roomNumber);
+    }
+
+    handleDisconnect() {
+        this.socket.disconnect();
+    }
+
 }

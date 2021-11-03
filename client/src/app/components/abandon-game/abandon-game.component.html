@@ -1,4 +1,5 @@
 <fieldset *ngIf = "validationNecessary">
+    <p><label> Le status de la partie est : {{this.setIsGameUnderway()}} </label></p>
     <button class="buttonsurrenderconfirmed" (click)="this.finishCurrentGame()">Confirmer</button>
     <span></span>
     <button (click)="this.validationNecessary = false">Annuler</button>
