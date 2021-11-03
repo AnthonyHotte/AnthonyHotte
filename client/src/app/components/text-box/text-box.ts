@@ -14,29 +14,25 @@ export class TextBoxComponent {
     messagesSoloOpponent: string[];
     debugCommand: boolean;
     text: string;
-    message: MessagePlayer;
 
-    constructor(public input: TextBox, private letterService: LetterService, private socket: SocketService, private turn: TimerTurnManagerService) {
+    constructor(
+        public input: TextBox,
+        private letterService: LetterService,
+        private socket: SocketService,
+        private timeManager: TimerTurnManagerService,
+    ) {
         this.word = '';
         this.debugCommand = false;
-        this.message = { message: '', sender: '', role: '' };
-        this.socket.configureSendMessageToServer(this.message, true);
     }
 
     buttonDetect() {
-        let myMessage: MessagePlayer = { message: '', sender: this.letterService.players[0].name, role: 'Joueur' };
-        if (this.turn.gameStatus === 0 || this.turn.gameStatus === 2) {
-            myMessage = { message: this.word, sender: this.letterService.players[0].name, role: 'Joueur0' };
-        } else {
-            myMessage = { message: this.word, sender: this.letterService.players[1].name, role: 'Joueur1' };
-        }
+        const myMessage: MessagePlayer = { message: this.word, sender: this.letterService.players[0].name, role: 'Joueur' };
         if (myMessage.message.substr(0, 1) === '!') {
             this.input.send(myMessage);
             this.input.isCommand(myMessage.message);
-            this.socket.configureSendMessageToServer(myMessage, true);
         } else {
             this.input.send(myMessage);
-            this.socket.configureSendMessageToServer(myMessage, true);
+            this.socket.configureSendMessageToServer(this.word, this.timeManager.gameStatus);
         }
         if (this.input.getDebugCommand()) {
             this.messagesSoloOpponent = this.input.getMessagesSoloOpponent();

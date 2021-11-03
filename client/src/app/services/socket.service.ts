@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GameStatus } from '@app/game-status';
 import { Letter } from '@app/letter';
-import { MessagePlayer } from '@app/message';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
 
@@ -18,13 +17,14 @@ export class SocketService {
     playerNameIndexOne: BehaviorSubject<string>;
     turn: BehaviorSubject<number>;
     skippedTurn: BehaviorSubject<number>;
-    messageSubject: Subject<MessagePlayer>;
+    messageSubject: Subject<string>;
     cancellationIndexes: number[];
     ableToJoin: boolean = true;
     nameOfRoomCreator: string = 'Default';
     gameMode = 2;
     lettersOfJoiner: Letter[] = [];
     lettersOfJoinerInStringForSynch: string = '';
+    lettersToReplace = '';
     currentEndGameValue: Observable<boolean>; // to be observed by finishGameService
     updateOfEndGameValue = new BehaviorSubject(false); // to be observed by finishGameService
     triggeredQuit: boolean = false;
@@ -96,6 +96,19 @@ export class SocketService {
         this.socket.on('roomOccupied', () => {
             this.ableToJoin = false;
         });
+
+        // gerer le message envoye par le serveur
+        // this.socket.on('toAllClient', (message_: string, sender_: string, role_: string) => {
+        //     const myMessage: MessagePlayer = { message: message_, sender: sender_, role: role_ };
+        //     this.messageSubject.next(myMessage);
+        // });
+        this.socket.on('toPlayer', (myMessage) => {
+            this.messageSubject.next(myMessage);
+        });
+        this.socket.on('receiveLettersReplaced', (lettersReplaced) => {
+            this.lettersToReplace = lettersReplaced;
+        });
+
         this.socket.on('gameIsFinished', () => {
             this.updateOfEndGameValue.next(true);
         });
@@ -105,6 +118,7 @@ export class SocketService {
             this.wordIsValid = wordIsValid === 'true' ? true : false;
         });
         */
+
     }
     sendInitiateNewGameInformation(
         playTime: number,
@@ -137,37 +151,12 @@ export class SocketService {
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
     }
-    configureSendMessageToServer(message?: MessagePlayer, toAll?: boolean) {
-        // envoyer une commande qui sera gere par le serveur
-        // if (!toAll && message !== undefined && toAll !== undefined) {
-        //     this.socket.emit('toServer', message.message, message.sender, message.role);
-        // }
-        if (!toAll && message !== undefined && toAll !== undefined) {
-            this.socket.emit('toServer', message);
-        }
+    configureSendMessageToServer(message: string, gameStatus: number) {
         // envoyer un message a tout le monde sauf au sender
         // else if (message !== undefined && toAll !== undefined) {
         //     this.socket.emit('toAll', message.message, message.sender, message.role);
         // }
-        else if (message !== undefined && toAll !== undefined) {
-            this.socket.emit('toAll', message);
-        }
-        // gerer le message envoye par le serveur
-        // this.socket.on('toAllClient', (message_: string, sender_: string, role_: string) => {
-        //     const myMessage: MessagePlayer = { message: message_, sender: sender_, role: role_ };
-        //     this.messageSubject.next(myMessage);
-        // });
-        this.socket.on('toAllClient', (myMessage) => {
-            this.messageSubject.next(myMessage);
-        });
-        // gerer la commande entre par le joueur
-        // this.socket.on('toClient', (message_: string, sender_: string, role_: string) => {
-        //     const myMessage: MessagePlayer = { message: message_, sender: sender_, role: role_ };
-        //     this.messageSubject.next(myMessage);
-        // });
-        this.socket.on('toClient', (myMessage) => {
-            this.messageSubject.next(myMessage);
-        });
+        this.socket.emit('toOpponent', message, gameStatus, this.roomNumber);
     }
     endTurn(turnsSkippedInARow: number, nextPlayerTurn: GameStatus) {
         this.socket.emit('endTurn', { roomNumber: this.roomNumber, turnSkipped: turnsSkippedInARow, playerTurnStatus: nextPlayerTurn });
@@ -177,6 +166,7 @@ export class SocketService {
         const INEXISTING_ROOM = -1;
         this.cancellationIndexes = [INEXISTING_ROOM, INEXISTING_ROOM];
     }
+
     setAbleToJoinGame() {
         this.ableToJoin = true;
     }
@@ -195,6 +185,11 @@ export class SocketService {
         this.gameMode = gameMode;
     }
 
+
+    sendLetterReplaced(lettersToReplace: string, gameStatus: number) {
+        this.socket.emit('sendLettersReplaced', lettersToReplace, gameStatus, this.roomNumber);
+    }
+
     finishedGameMessageTransmission() {
         this.triggeredQuit = true;
         this.socket.emit('gameFinished', this.roomNumber);
@@ -203,4 +198,5 @@ export class SocketService {
     handleDisconnect() {
         this.socket.disconnect();
     }
+
 }

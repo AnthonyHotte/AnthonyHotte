@@ -41,9 +41,5 @@ export class TimerTurnManagerService {
         } else {
             this.turn = 0;
         }
-        if (this.gameStatus < 2) {
-            // send info that it is the other's turn
-            this.socketService.endTurn(this.turnsSkippedInARow, (this.gameStatus + 1) % 2);
-        }
     }
 }

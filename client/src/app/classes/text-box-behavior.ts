@@ -28,6 +28,7 @@ export class TextBox {
         private finishGameService: FinishGameService,
         private socketService: SocketService,
         private letterBankService: LetterBankService,
+        private socket: SocketService,
     ) {
         this.inputs = [];
         this.character = false;
@@ -35,33 +36,49 @@ export class TextBox {
         this.valueToEndGame = 0;
         this.inputsSoloOpponent = [];
 
-        this.socketService.getMessageObservable().subscribe((myMessage) => {
-            let isCommand = false;
-            if (myMessage.message !== '' && myMessage.sender !== '') {
-                let text = '';
-                if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
-                    text = 'Votre adversaire a passé';
-                    isCommand = true;
-                } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
-                    text = 'Votre adversaire a échangé des lettres';
-                    isCommand = true;
-                } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
-                    text = 'Votre adversaire a affiché sa reserve';
-                    isCommand = true;
-                } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
-                    text = this.placeLettersService.placeWord(myMessage.message.substring(PLACERCOMMANDLENGTH + 1, myMessage.message.length));
-                    isCommand = true;
-                    if (text !== 'Mot placé avec succès.') {
-                        this.verifyCommandPasser();
-                    }
-                }
-                if (!isCommand) {
-                    this.inputs.push(myMessage);
-                }
-                const message1: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
-                this.inputs.push(message1);
+        this.socketService.getMessageObservable().subscribe((messageString) => {
+            const myMessage = { message: messageString, sender: this.letterService.players[1].name, role: 'Adversaire' };
+            let text = '';
+            if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
+                text = this.letterService.players[1].name + ' a passé son tour';
+            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
+                myMessage.message = '!échanger' + myMessage.message.substring('!échanger '.length, myMessage.message.length).length.toString();
+                text = this.exchangeLetterOpponent(myMessage.message);
+            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
+                this.inputs.push(myMessage);
+                text = this.letterService.players[1].name + ' a affiché la reserve';
+            } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
+                this.inputs.push(myMessage);
+
+                text = this.placeWordOpponent(myMessage.message, this.socket.lettersToReplace);
             }
+            this.inputs.push(myMessage);
+            const message1: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
+            this.inputs.push(message1);
         });
+    }
+
+    placeWordOpponent(command: string, lettersToReplace: string) {
+        const text = this.placeLettersService.placeWord(command.substring(PLACERCOMMANDLENGTH + 1, command.length), lettersToReplace);
+        if (text !== 'Mot placé avec succès.') {
+            this.verifyCommandPasser();
+        } else {
+            this.endTurn('place');
+        }
+        return text;
+    }
+
+    exchangeLetterOpponent(command: string) {
+        const commandResult = this.verifyCommandEchanger(command, this.socket.lettersToReplace);
+        let systemResponse = '';
+        if (commandResult === 'Échange de lettre avec succès.') {
+            systemResponse =
+                this.letterService.players[1].name +
+                ' a échangé ' +
+                command.substring('!échanger '.length, command.length).length.toString() +
+                ' lettres';
+        }
+        return systemResponse;
     }
 
     handleEnter(message: string) {
@@ -119,11 +136,13 @@ export class TextBox {
                 }
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
                 text = this.verifyCommandPasser();
+                this.socket.configureSendMessageToServer('!passer', this.timeManager.gameStatus);
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
                 text = this.verifyCommandEchanger(myWord);
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
                 text = '';
                 this.handleEnter(this.activateReserve());
+                this.socket.configureSendMessageToServer('!réserve', this.timeManager.gameStatus);
             } else {
                 text = 'Erreur de syntaxe...';
             }
@@ -158,12 +177,18 @@ export class TextBox {
         }
     }
 
-    verifyCommandEchanger(word: string) {
+    verifyCommandEchanger(word: string, lettersToReplace?: string) {
         const ALLOWED_NUMBER_OF_LETTERS = 7;
         if (this.letterBankService.letterBank.length >= ALLOWED_NUMBER_OF_LETTERS) {
             const letters = word.substring('!échanger '.length, word.length);
             if (this.letterService.players[this.timeManager.turn].handContainLetters(letters)) {
-                this.letterService.players[this.timeManager.turn].exchangeLetters(letters);
+                if (lettersToReplace === undefined) {
+                    const lettersReplacedExchange = this.letterService.players[this.timeManager.turn].exchangeLetters(letters);
+                    this.socketService.sendLetterReplaced(lettersReplacedExchange, this.timeManager.gameStatus);
+                    this.socketService.configureSendMessageToServer('!échanger ' + letters, this.timeManager.gameStatus);
+                } else {
+                    this.letterService.players[this.timeManager.turn].exchangeLetters(letters, lettersToReplace);
+                }
                 this.endTurn('exchange');
                 return 'Échange de lettre avec succès.';
             } else {

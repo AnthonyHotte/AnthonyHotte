@@ -119,14 +119,16 @@ export class SocketManager {
                 this.roomsService.rooms.push(new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length));
                 this.roomsService.listRoomWaiting.splice(indexes[1], 1);
             });
-            socket.on('toServer', (message) => {
-                socket.emit('toClient', message);
+
+            socket.on('toOpponent', (message, gameStatus, roomNumber) => {
+                const gameStatusToSendTo = gameStatus === 0 ? 1 : 0;
+                this.sio.to(this.roomsService.rooms[roomNumber].socketsId[gameStatusToSendTo]).emit('toPlayer', message);
             });
 
-            socket.on('toAll', (message) => {
-                socket.broadcast.emit('toAllClient', message);
+            socket.on('sendLettersReplaced', (lettersReplaced, gameStatus, roomNumber) => {
+                const gameStatusToSendTo = gameStatus === 0 ? 1 : 0;
+                this.sio.to(this.roomsService.rooms[roomNumber].socketsId[gameStatusToSendTo]).emit('receiveLettersReplaced', lettersReplaced);
             });
-
             socket.on('gameFinished', (roomNumber) => {
                 this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('gameIsFinished');
                 this.roomsService.indexNextRoom--;

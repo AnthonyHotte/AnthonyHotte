@@ -8,6 +8,7 @@ import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { WordValidationService } from '@app/services/word-validation.service';
 import { PlaceLetterClickService } from './place-letter-click.service';
+import { SocketService } from './socket.service';
 @Injectable({
     providedIn: 'root',
 })
@@ -19,6 +20,7 @@ export class PlaceLettersService {
     lettersToPlace: string;
     spaceIndexInput: number;
     wordPlacedWithClick = '';
+    wordToPlaceBrut = '';
     initialClickRow: number;
     initialClickColumn: number;
     isTileSelected = false;
@@ -34,6 +36,7 @@ export class PlaceLettersService {
         private readonly timeManager: TimerTurnManagerService,
         private scoreCalculator: ScoreCalculatorService,
         private placeLetterClick: PlaceLetterClickService,
+        private socket: SocketService,
     ) {}
     verifyTileNotOutOfBound(): boolean {
         if ((this.orientation === 'h' && this.colomnNumber + this.wordToPlace.length > Constants.NUMBEROFCASE) || this.colomnNumber < 0) {
@@ -51,6 +54,7 @@ export class PlaceLettersService {
             this.row = this.rowLetterToNumbers(match.groups.letter);
             this.colomnNumber = Number(match.groups.number) - 1;
             this.orientation = match.groups.dir;
+            this.wordToPlaceBrut = match.groups.word;
             this.wordToPlace = match.groups.word.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
             this.lettersToPlace = this.wordToPlace;
             this.wordContainsJoker();
@@ -111,6 +115,9 @@ export class PlaceLettersService {
                     }
                     this.drawWord();
                     if (this.validateWordPlaced(lettersToReplace)) {
+                        const row = String.fromCharCode(this.row + Constants.SIDELETTERS_TO_ASCII);
+                        const command = '!placer ' + row + this.colomnNumber.toString() + this.orientation + ' ' + this.wordToPlaceBrut;
+                        this.socket.configureSendMessageToServer(command, this.timeManager.gameStatus);
                         this.gameState.isBoardEmpty = false;
                         this.letterService.players[this.timeManager.turn].score += this.wordValidator.pointsForLastWord;
                         return 'Mot placé avec succès.';
@@ -174,7 +181,7 @@ export class PlaceLettersService {
             // this.placeLetterService.placeWord(this.tempword);
         }, TIME_OUT_TIME);
     }
-    validateWordPlaced(lettersToReplace: string | undefined) {
+    validateWordPlaced(lettersToReplace?: string) {
         if (!this.gameState.validateWordCreatedByNewLetters()) {
             const delay = 3000;
             setTimeout(() => {
@@ -186,9 +193,9 @@ export class PlaceLettersService {
             this.wordValidator.pointsForLastWord = 0;
             return false;
         } else {
-            // eslint-disable-next-line eqeqeq
-            if (lettersToReplace == undefined) {
+            if (lettersToReplace === undefined) {
                 this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
+                this.socket.sendLetterReplaced(this.letterService.players[0].lettersReplaced, this.timeManager.gameStatus);
             } else {
                 this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker, lettersToReplace);
             }
