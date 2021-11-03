@@ -11,7 +11,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MessageService } from '@app/services/message.service';
 import { MatDialog } from '@angular/material/dialog';
 
-fdescribe('SoloGameInitiatorComponent', () => {
+describe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
     let fixture: ComponentFixture<SoloGameInitiatorComponent>;
     let socketServiceSpy: jasmine.SpyObj<SocketService>;
