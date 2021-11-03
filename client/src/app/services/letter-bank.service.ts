@@ -30,7 +30,6 @@ export class LetterBankService {
         return lettersInBank;
     }
 
-
     removeLettersFromBank(letters: string) {
         for (const letter of letters) {
             for (let i = 0; i < this.letterBank.length; i++) {
