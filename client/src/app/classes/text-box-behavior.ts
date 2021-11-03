@@ -37,24 +37,30 @@ export class TextBox {
         this.inputsSoloOpponent = [];
 
         this.socketService.getMessageObservable().subscribe((messageString) => {
+            let printCommand = false;
             const myMessage = { message: messageString, sender: this.letterService.players[1].name, role: 'Adversaire' };
             let text = '';
             if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
                 text = this.letterService.players[1].name + ' a passé son tour';
+                printCommand = true;
             } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
-                myMessage.message = '!échanger' + myMessage.message.substring('!échanger '.length, myMessage.message.length).length.toString();
-                text = this.exchangeLetterOpponent(myMessage.message);
+                myMessage.message = '!échanger ' + myMessage.message.substring('!échanger '.length, myMessage.message.length).length.toString();
+                text = this.exchangeLetterOpponent(messageString);
+                printCommand = true;
             } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
                 this.inputs.push(myMessage);
                 text = this.letterService.players[1].name + ' a affiché la reserve';
+                printCommand = true;
             } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 this.inputs.push(myMessage);
-
                 text = this.placeWordOpponent(myMessage.message, this.socket.lettersToReplace);
+                printCommand = true;
             }
-            this.inputs.push(myMessage);
-            const message1: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
-            this.inputs.push(message1);
+            if (printCommand) {
+                this.inputs.push(myMessage);
+                const messageSystem: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
+                this.inputs.push(messageSystem);
+            }
         });
     }
 
