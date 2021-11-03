@@ -118,7 +118,6 @@ export class SocketService {
             this.wordIsValid = wordIsValid === 'true' ? true : false;
         });
         */
-
     }
     sendInitiateNewGameInformation(
         playTime: number,
@@ -185,7 +184,6 @@ export class SocketService {
         this.gameMode = gameMode;
     }
 
-
     sendLetterReplaced(lettersToReplace: string, gameStatus: number) {
         this.socket.emit('sendLettersReplaced', lettersToReplace, gameStatus, this.roomNumber);
     }
@@ -198,5 +196,4 @@ export class SocketService {
     handleDisconnect() {
         this.socket.disconnect();
     }
-
 }
