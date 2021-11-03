@@ -12,9 +12,12 @@ import { SocketService } from '@app/services/socket.service';
 export class PopUpComponent {
     title: string;
     message: string;
-    private socketService: SocketService;
 
-    constructor(public dialogRef: MatDialogRef<PopUpComponent>, @Inject(MAT_DIALOG_DATA) public data: PopUpData) {
+    constructor(
+        public dialogRef: MatDialogRef<PopUpComponent>,
+        private socketService: SocketService,
+        @Inject(MAT_DIALOG_DATA) public data: PopUpData,
+    ) {
         this.title = 'Impossibilité de rejoindre la salle';
         this.message = 'La salle que vous essayez de rejoindre est occupée!';
     }
