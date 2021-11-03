@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { LetterService } from '@app/services/letter.service';
 import { Router } from '@angular/router';
+import { SocketService } from './socket.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 @Injectable({
     providedIn: 'root',
@@ -8,7 +10,12 @@ import { Router } from '@angular/router';
 export class FinishGameService {
     finalScore: number[] = [];
     isGameFinished: boolean = false;
-    constructor(private letterService: LetterService, private link: Router) {}
+    constructor(
+        private letterService: LetterService,
+        private link: Router,
+        private socketService: SocketService,
+        private timerTurnManager: TimerTurnManagerService,
+    ) {}
 
     scoreCalculator() {
         for (const player of this.letterService.players) {
@@ -39,13 +46,22 @@ export class FinishGameService {
 
     getWinner(): number[] {
         let winner: number[] = [];
-        for (let i = 0; i < this.finalScore.length; i++) {
-            if (this.finalScore[i] > currentTop) {
-                winner = [];
-                winner.push(i);
-                currentTop = this.finalScore[i];
-            } else if (this.finalScore[i] === currentTop) {
-                winner.push(i);
+        if (this.timerTurnManager.gameStatus < 2) {
+            if (this.socketService.triggeredQuit) {
+                winner.push(1);
+            } else {
+                winner.push(0);
+            }
+        } else {
+            let currentTop = 0;
+            for (let i = 0; i < this.finalScore.length; i++) {
+                if (this.finalScore[i] > currentTop) {
+                    winner = [];
+                    winner.push(i);
+                    currentTop = this.finalScore[i];
+                } else if (this.finalScore[i] === currentTop) {
+                    winner.push(i);
+                }
             }
         }
         return winner;
@@ -54,9 +70,9 @@ export class FinishGameService {
     getCongratulation(): string {
         this.scoreCalculator();
         const winners = this.getWinner();
-        let congratulationMsg = 'Félicitation, ' + this.letterService.players[0].name;
+        let congratulationMsg = 'Félicitation, ' + this.letterService.players[winners[0]].name;
         for (let i = 1; i < winners.length; i++) {
-            congratulationMsg += ' et ' + this.letterService.players[i].name + ',';
+            congratulationMsg += ' et ' + this.letterService.players[winners[i]].name + ',';
         }
         congratulationMsg += ' vous avez gagné!!!';
         this.finalScore = [];

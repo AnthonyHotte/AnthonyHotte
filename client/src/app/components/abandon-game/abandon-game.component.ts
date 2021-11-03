@@ -1,15 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { SocketService } from '@app/services/socket.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-abandon-game',
     templateUrl: './abandon-game.component.html',
     styleUrls: ['./abandon-game.component.scss'],
 })
-export class AbandonGameComponent {
+export class AbandonGameComponent implements OnDestroy {
     validationNecessary = false;
-    constructor(private finishGameService: FinishGameService, private socketService: SocketService) {}
+    subscription: Subscription; // useful for updating views and current value : we observe the value of socketService
+
+    constructor(private finishGameService: FinishGameService, private socketService: SocketService) {
+        this.subscription = this.socketService.currentEndGameValue.subscribe(
+            (valueOfEndGame) => (this.finishGameService.isGameFinished = valueOfEndGame),
+        );
+    }
+
+    @HostListener('window:beforeunload', ['$event'])
+    beforeUnloadHandler() {
+        this.socketService.handleDisconnect();
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
 
     finishCurrentGame() {
         this.socketService.finishedGameMessageTransmission();

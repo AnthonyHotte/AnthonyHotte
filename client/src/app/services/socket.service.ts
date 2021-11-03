@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GameStatus } from '@app/game-status';
 import { Letter } from '@app/letter';
 import { MessagePlayer } from '@app/message';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
 
 @Injectable({
@@ -25,6 +25,9 @@ export class SocketService {
     gameMode = 2;
     lettersOfJoiner: Letter[] = [];
     lettersOfJoinerInStringForSynch: string = '';
+    currentEndGameValue: Observable<boolean>; // to be observed by finishGameService
+    updateOfEndGameValue = new BehaviorSubject(false); // to be observed by finishGameService
+    triggeredQuit: boolean = false;
 
     constructor() {
         this.gameLists = [[]];
@@ -42,6 +45,7 @@ export class SocketService {
         this.configureBaseSocketFeatures();
         this.messageSubject = new Subject();
         this.cancellationIndexes = [1, 2]; // room number and waiting room number
+        this.currentEndGameValue = this.updateOfEndGameValue.asObservable();
     }
 
     getMessageObservable() {
@@ -91,7 +95,7 @@ export class SocketService {
             this.ableToJoin = false;
         });
         this.socket.on('gameIsFinished', () => {
-            this.gameIsFinished = true;
+            this.updateOfEndGameValue.next(true);
         });
     }
     sendInitiateNewGameInformation(
@@ -174,6 +178,11 @@ export class SocketService {
     }
 
     finishedGameMessageTransmission() {
+        this.triggeredQuit = true;
         this.socket.emit('gameFinished', this.roomNumber);
+    }
+
+    handleDisconnect() {
+        this.socket.disconnect();
     }
 }
