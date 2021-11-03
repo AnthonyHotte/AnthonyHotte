@@ -151,11 +151,9 @@ export class SocketService {
         this.socket.emit('returnListOfGames');
     }
     configureSendMessageToServer(message: string, gameStatus: number) {
-        // envoyer un message a tout le monde sauf au sender
-        // else if (message !== undefined && toAll !== undefined) {
-        //     this.socket.emit('toAll', message.message, message.sender, message.role);
-        // }
-        this.socket.emit('toOpponent', message, gameStatus, this.roomNumber);
+        if (gameStatus !== 2) {
+            this.socket.emit('toOpponent', message, gameStatus, this.roomNumber);
+        }
     }
     endTurn(turnsSkippedInARow: number, nextPlayerTurn: GameStatus) {
         this.socket.emit('endTurn', { roomNumber: this.roomNumber, turnSkipped: turnsSkippedInARow, playerTurnStatus: nextPlayerTurn });
@@ -185,7 +183,9 @@ export class SocketService {
     }
 
     sendLetterReplaced(lettersToReplace: string, gameStatus: number) {
-        this.socket.emit('sendLettersReplaced', lettersToReplace, gameStatus, this.roomNumber);
+        if (gameStatus !== 2) {
+            this.socket.emit('sendLettersReplaced', lettersToReplace, gameStatus, this.roomNumber);
+        }
     }
 
     finishedGameMessageTransmission() {

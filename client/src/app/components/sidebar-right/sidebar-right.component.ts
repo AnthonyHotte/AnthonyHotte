@@ -72,7 +72,7 @@ export class SidebarRightComponent implements AfterViewInit {
             this.textBox.endTurn('skip');
         }
         this.placeLetterClick.reset();
-        if (this.turnTimeController.turn === 1) {
+        if (this.turnTimeController.turn === 1 && this.turnTimeController.gameStatus === GameStatus.SoloPlayer) {
             this.soloOpponentPlays();
         }
     }
