@@ -22,7 +22,7 @@ describe('ExchangeLettersGUIComponent', () => {
         letterServiceSpy = jasmine.createSpyObj(LetterService, ['removeAttributesExchange']);
         letterServiceSpy.areLetterSelectedExchange = true;
         letterBankServiceSpy = jasmine.createSpyObj(LetterBankService, ['getLettersInBank']);
-        textBoxSpy = jasmine.createSpyObj(TextBox, ['send']);
+        textBoxSpy = jasmine.createSpyObj(TextBox, ['send', 'isCommand']);
         letterBankServiceSpy.letterBank = [];
         for (let i = 0; i < 3; i++) {
             letterBankServiceSpy.letterBank.push({ letter: 'A', quantity: 9, point: 1 });
@@ -49,7 +49,18 @@ describe('ExchangeLettersGUIComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-
+    it('cancelSelection should call removeAttributesExchange', () => {
+        const event = new MouseEvent('move');
+        component.cancelSelection(event);
+        expect(letterServiceSpy.removeAttributesExchange).toHaveBeenCalled();
+    });
+    it('exchangeLetters should call cancelSelection', () => {
+        textBoxSpy.inputs = [];
+        const event = new MouseEvent('move');
+        const spy = spyOn(component, 'cancelSelection');
+        component.exchangeLetters(event);
+        expect(spy).toHaveBeenCalled();
+    });
     it('isPLayerTurn should return true if turn is 0', () => {
         expect(component.isPlayerTurn()).toBeTrue();
     });
