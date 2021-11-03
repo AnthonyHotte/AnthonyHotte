@@ -10,6 +10,7 @@ import { SoloGameInitiatorComponent } from './solo-game-initiator.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MessageService } from '@app/services/message.service';
 import { MatDialog } from '@angular/material/dialog';
+import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 
 describe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
@@ -21,11 +22,16 @@ describe('SoloGameInitiatorComponent', () => {
     let messageServiceSpy: jasmine.SpyObj<MessageService>;
     let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
     let dialogSpy: jasmine.SpyObj<MatDialog>;
+    let indexWaintingRoomService: jasmine.SpyObj<IndexWaitingRoomService>;
     beforeEach(async () => {
+        indexWaintingRoomService = jasmine.createSpyObj('IndexWaitingRoomService', ['getIndex']);
+        indexWaintingRoomService.getIndex.and.returnValue(0);
         messageServiceSpy = jasmine.createSpyObj('MessageService', ['gameStartingInfoSubscribe']);
         letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
-        socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendJoinGameInfo']);
+        socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendJoinGameInfo', 'setGameMode', 'sendInitiateNewGameInformation']);
         socketServiceSpy.nameOfRoomCreator = 'Tony';
+        socketServiceSpy.gameLists = [];
+        socketServiceSpy.gameLists.push(['name', 'false', '30', 'abc', 'def']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
         dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
         const player1 = new PlayerLetterHand(letterBankServiceSpy);
@@ -51,6 +57,7 @@ describe('SoloGameInitiatorComponent', () => {
                 { provide: TileScramblerService, useValue: tileScramblerServiceSpy },
                 { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
                 { provide: MatDialog, useValue: dialogSpy },
+                { provide: IndexWaitingRoomService, useValue: indexWaintingRoomService },
             ],
             imports: [RouterTestingModule],
         }).compileComponents();
@@ -66,6 +73,54 @@ describe('SoloGameInitiatorComponent', () => {
     });
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+    it('join game should call set name', () => {
+        const spy = spyOn(component, 'setName');
+        component.joinGame();
+        expect(spy).toHaveBeenCalled();
+    });
+    it('sendNewGameStartInfo should call sendInitiateNewGameInformation', () => {
+        component.sendNewGameStartInfo();
+        expect(socketServiceSpy.sendInitiateNewGameInformation).toHaveBeenCalled();
+    });
+    it('verifyName should put nameIsValid to false', () => {
+        const spyStatus = spyOn(component, 'getGameStatus').and.returnValue(1);
+        const spyVerifName = spyOn(component, 'verifyNameIsNotSameAsRoomCreator').and.returnValue(false);
+        component.verifyNames();
+        expect(spyStatus).toHaveBeenCalled();
+        expect(spyVerifName).toHaveBeenCalled();
+        expect(component.nameIsValid).toBe(false);
+    });
+    it('setRandomBonus should set random bonus', () => {
+        component.isBonusRandom = false;
+        component.setRandomBonus(true);
+        expect(component.isBonusRandom).toBe(true);
+    });
+    it('scrambleBonus should call scrambleTiles', () => {
+        component.isBonusRandom = true;
+        component.scrambleBonus();
+        expect(tileScramblerServiceSpy.scrambleTiles).toHaveBeenCalled();
+    });
+    it('startNewGame should put start new game to true', () => {
+        component.startingNewGame = false;
+        const spy = spyOn(component, 'sendNewGameStartInfo');
+        component.startNewGame();
+        expect(spy).toHaveBeenCalled();
+        expect(component.startingNewGame).toBe(true);
+    });
+    it('getGameStatusInString should return solo', () => {
+        timerTurnManagerServiceSpy.gameStatus = 2;
+        const res = component.getGameStatusInString();
+        expect(res).toEqual('solo');
+    });
+    it('createPopUp should call open', () => {
+        component.createPopUp();
+        expect(dialogSpy.open).toHaveBeenCalled();
+    });
+    it('returnNameOfCreator should return the name', () => {
+        socketServiceSpy.nameOfRoomCreator = 'antho';
+        const res = component.returnNameOfCreator();
+        expect(res).toEqual('antho');
     });
 
     it('verifyName should call assignOpponentName', () => {
