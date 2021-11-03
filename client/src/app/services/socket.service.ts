@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GameStatus } from '@app/game-status';
 import { Letter } from '@app/letter';
 import { MessagePlayer } from '@app/message';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
 
 @Injectable({
@@ -25,6 +25,9 @@ export class SocketService {
     gameMode = 2;
     lettersOfJoiner: Letter[] = [];
     lettersOfJoinerInStringForSynch: string = '';
+    currentEndGameValue: Observable<boolean>; // to be observed by finishGameService
+    updateOfEndGameValue = new BehaviorSubject(false); // to be observed by finishGameService
+    triggeredQuit: boolean = false;
     isWordValid: BehaviorSubject<boolean>;
 
     constructor() {
@@ -43,6 +46,7 @@ export class SocketService {
         this.configureBaseSocketFeatures();
         this.messageSubject = new Subject();
         this.cancellationIndexes = [1, 2]; // room number and waiting room number
+        this.currentEndGameValue = this.updateOfEndGameValue.asObservable();
         this.isWordValid = new BehaviorSubject<boolean>(false);
     }
 
@@ -92,6 +96,9 @@ export class SocketService {
         this.socket.on('roomOccupied', () => {
             this.ableToJoin = false;
         });
+        this.socket.on('gameIsFinished', () => {
+            this.updateOfEndGameValue.next(true);
+        });
         /*
         this.socket.on('wordValidation', (wordIsValid) => {
             this.isWordValidationFinished = true;
@@ -108,6 +115,9 @@ export class SocketService {
         lettersOfCreator: Letter[],
         lettersOfJoiner: Letter[],
     ) {
+        if (gameStatus === 2 && this.cancellationIndexes[0] >= 0 && this.cancellationIndexes[1] >= 0) {
+            this.cancelGame();
+        }
         this.socket.emit('startingNewGameInfo', {
             time: playTime,
             bonusOn: isBonusRandom,
@@ -164,6 +174,8 @@ export class SocketService {
     }
     cancelGame() {
         this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
+        const INEXISTING_ROOM = -1;
+        this.cancellationIndexes = [INEXISTING_ROOM, INEXISTING_ROOM];
     }
     setAbleToJoinGame() {
         this.ableToJoin = true;
@@ -181,5 +193,14 @@ export class SocketService {
     }
     setGameMode(gameMode: number) {
         this.gameMode = gameMode;
+    }
+
+    finishedGameMessageTransmission() {
+        this.triggeredQuit = true;
+        this.socket.emit('gameFinished', this.roomNumber);
+    }
+
+    handleDisconnect() {
+        this.socket.disconnect();
     }
 }

@@ -81,7 +81,7 @@ export class SocketManager {
                             // take of the room from waiting room
                             this.roomsService.listRoomWaiting.splice(info.indexInWaitingRoom, 1);
                             // puts the room in occupied state
-                            this.roomsService.rooms[roomNumber].setRoomOccupied()
+                            this.roomsService.rooms[roomNumber].setRoomOccupied();
                         }
                     } else {
                         socket.emit('roomOccupied');
@@ -118,14 +118,41 @@ export class SocketManager {
                 this.roomsService.rooms.splice(indexes[0], 1);
                 this.roomsService.rooms.push(new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length));
                 this.roomsService.listRoomWaiting.splice(indexes[1], 1);
+            });
+            socket.on('toServer', (message) => {
+                socket.emit('toClient', message);
+            });
 
-                socket.on('toServer', (message) => {
-                    socket.emit('toClient', message);
-                });
+            socket.on('toAll', (message) => {
+                socket.broadcast.emit('toAllClient', message);
+            });
 
-                socket.on('toAll', (message) => {
-                    socket.broadcast.emit('toAllClient', message);
-                });
+            socket.on('gameFinished', (roomNumber) => {
+                this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('gameIsFinished');
+                this.roomsService.indexNextRoom--;
+                this.roomsService.rooms.splice(roomNumber, 1);
+                this.roomsService.rooms.push(new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length));
+            });
+
+            socket.on('disconnect', () => {
+                const TIME_FOR_RESPONSE = 5000;
+                setTimeout(() => {
+                    let index = 0;
+                    for (const room of this.roomsService.rooms) {
+                        for (const socketId of room.socketsId) {
+                            if (socketId === socket.id) {
+                                this.sio.to(this.roomsService.rooms[index].roomName).emit('gameIsFinished');
+                                this.roomsService.indexNextRoom--;
+                                this.roomsService.rooms.splice(index, 1);
+                                this.roomsService.rooms.push(
+                                    new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length),
+                                );
+                                break;
+                            }
+                        }
+                        ++index;
+                    }
+                }, TIME_FOR_RESPONSE);
             });
         });
     }
