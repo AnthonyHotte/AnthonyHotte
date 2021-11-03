@@ -45,7 +45,8 @@ export class SocketService {
         this.skippedTurn = new BehaviorSubject<number>(0);
         this.configureBaseSocketFeatures();
         this.messageSubject = new Subject();
-        this.cancellationIndexes = [1, 2]; // room number and waiting room number
+        const unexistingRooms = -1;
+        this.cancellationIndexes = [unexistingRooms, unexistingRooms]; // room number and waiting room number
         this.currentEndGameValue = this.updateOfEndGameValue.asObservable();
         this.isWordValid = new BehaviorSubject<boolean>(false);
     }
