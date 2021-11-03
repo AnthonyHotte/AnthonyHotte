@@ -4,6 +4,7 @@ import { AddressInfo } from 'net';
 import { Service } from 'typedi';
 import { RoomsService } from './services/rooms.service';
 import { SocketManager } from './services/socket-manager-initiate-game.service';
+import { WordValidationService } from './services/word-validation.service';
 
 @Service()
 export class Server {
@@ -15,7 +16,11 @@ export class Server {
 
     // Add a list of all socket conected here
 
-    constructor(private readonly application: Application, private roomsService: RoomsService) {}
+    constructor(
+        private readonly application: Application,
+        private roomsService: RoomsService,
+        private wordValidationService: WordValidationService,
+    ) {}
 
     private static normalizePort(val: number | string): number | string | boolean {
         const port: number = typeof val === 'string' ? parseInt(val, this.baseDix) : val;
@@ -32,7 +37,7 @@ export class Server {
 
         this.server = http.createServer(this.application.app);
 
-        this.socketManager = new SocketManager(this.server, this.roomsService);
+        this.socketManager = new SocketManager(this.server, this.roomsService, this.wordValidationService);
         this.socketManager.handleSockets();
 
         this.server.listen(Server.appPort);
