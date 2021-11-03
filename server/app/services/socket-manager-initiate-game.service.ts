@@ -80,7 +80,7 @@ export class SocketManager {
                             // take of the room from waiting room
                             this.roomsService.listRoomWaiting.splice(info.indexInWaitingRoom, 1);
                             // puts the room in occupied state
-                            this.roomsService.rooms[roomNumber].setRoomOccupied()
+                            this.roomsService.rooms[roomNumber].setRoomOccupied();
                         }
                     } else {
                         socket.emit('roomOccupied');
@@ -113,12 +113,11 @@ export class SocketManager {
                 this.roomsService.rooms.push(new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length));
                 this.roomsService.listRoomWaiting.splice(indexes[1], 1);
             });
-            socket.on('toServer', (message) => {
-                socket.emit('toClient', message);
-            });
 
-            socket.on('toAll', (message) => {
-                socket.broadcast.emit('toAllClient', message);
+            socket.on('toOpponent', (message, gameStatus, roomNumber) => {
+                console.log('recu');
+                const gameStatusToSendTo = gameStatus === 0 ? 1 : 0;
+                this.sio.to(this.roomsService.rooms[roomNumber].socketsId[gameStatusToSendTo]).emit('toPlayer', message);
             });
         });
     }

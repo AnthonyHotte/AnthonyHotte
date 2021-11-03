@@ -3,7 +3,6 @@ import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
 import { LetterService } from '@app/services/letter.service';
 import { SocketService } from '@app/services/socket.service';
-import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 @Component({
     selector: 'app-text-box',
     templateUrl: './text-box.html',
@@ -14,29 +13,22 @@ export class TextBoxComponent {
     messagesSoloOpponent: string[];
     debugCommand: boolean;
     text: string;
-    message: MessagePlayer;
 
-    constructor(public input: TextBox, private letterService: LetterService, private socket: SocketService, private turn: TimerTurnManagerService) {
+    constructor(public input: TextBox, private letterService: LetterService, private socket: SocketService) {
         this.word = '';
         this.debugCommand = false;
-        this.message = { message: '', sender: '', role: '' };
-        this.socket.configureSendMessageToServer(this.message, true);
     }
 
     buttonDetect() {
-        let myMessage: MessagePlayer = { message: '', sender: this.letterService.players[0].name, role: 'Joueur' };
-        if (this.turn.gameStatus === 0 || this.turn.gameStatus === 2) {
-            myMessage = { message: this.word, sender: this.letterService.players[0].name, role: 'Joueur0' };
-        } else {
-            myMessage = { message: this.word, sender: this.letterService.players[1].name, role: 'Joueur1' };
-        }
+        const myMessage: MessagePlayer = { message: this.word, sender: this.letterService.players[0].name, role: 'Joueur' };
+        const myMessageForOpp: MessagePlayer = { message: this.word, sender: this.letterService.players[0].name, role: 'Adversaire' };
         if (myMessage.message.substr(0, 1) === '!') {
             this.input.send(myMessage);
             this.input.isCommand(myMessage.message);
-            this.socket.configureSendMessageToServer(myMessage, true);
+            this.socket.configureSendMessageToServer(myMessageForOpp);
         } else {
             this.input.send(myMessage);
-            this.socket.configureSendMessageToServer(myMessage, true);
+            this.socket.configureSendMessageToServer(myMessageForOpp);
         }
         if (this.input.getDebugCommand()) {
             this.messagesSoloOpponent = this.input.getMessagesSoloOpponent();
