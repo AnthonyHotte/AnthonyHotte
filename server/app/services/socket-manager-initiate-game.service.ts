@@ -4,13 +4,14 @@ import * as http from 'http';
 import * as io from 'socket.io';
 import { Service } from 'typedi';
 import { RoomsService } from './rooms.service';
+import { WordValidationService } from './word-validation.service';
 
 @Service()
 export class SocketManager {
     games: string[][];
     private sio: io.Server;
 
-    constructor(server: http.Server, private roomsService: RoomsService) {
+    constructor(server: http.Server, private roomsService: RoomsService, private wordValidationService: WordValidationService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
         this.games = new Array(new Array());
     }
@@ -106,6 +107,11 @@ export class SocketManager {
             socket.on('endTurn', (endTurn) => {
                 this.roomsService.rooms[endTurn.roomNumber].turnsSkippedInARow = endTurn.numberSkipTurn;
                 this.sio.to(this.roomsService.rooms[endTurn.roomNumber].socketsId[endTurn.playerTurnStatus]).emit('yourTurn');
+            });
+            // eslint-disable-next-line no-unused-vars
+            socket.on('validateWordOnServer', (wordCreated, ackCallback) => {
+                ackCallback(this.wordValidationService.isWordValid(wordCreated));
+                // socket.emit('wordValidation', this.wordValidationService.isWordValid(wordCreated));
             });
             socket.on('cancelWaitingGame', (indexes) => {
                 this.roomsService.indexNextRoom--;

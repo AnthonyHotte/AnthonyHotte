@@ -1,6 +1,8 @@
 import jsonDictionnary from 'src/assets/dictionnary.json';
 import { Injectable } from '@angular/core';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
+import { SocketService } from './socket.service';
+import { Subscription } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -10,13 +12,18 @@ export class WordValidationService {
     dicLength: number;
     pointsForLastWord: number;
     indexLastLetters: number[] = [];
+    validatedWord: boolean;
+    validatedSubscription: Subscription;
 
-    constructor(readonly scoreCalculator: ScoreCalculatorService) {
+    constructor(readonly scoreCalculator: ScoreCalculatorService, private socket: SocketService) {
         // when importing the json, typescript doesnt let me read it as a json object. To go around this, we stringify it then parse it
         const temp = JSON.stringify(jsonDictionnary);
         const temp2 = JSON.parse(temp);
         this.dictionnary = temp2.words;
         this.dicLength = this.dictionnary.length;
+        this.validatedSubscription = this.socket.isWordValid.subscribe((value: boolean) => {
+            this.validatedWord = value;
+        });
     }
     // The binary search was inspired by the binarysearch method provided here https://www.geeksforgeeks.org/binary-search/
     isWordValid(word: string): boolean {
@@ -78,7 +85,19 @@ export class WordValidationService {
             lastIndexWord = firstColumnOfWord;
         }
         this.pointsForLastWord += this.scoreCalculator.calculateScoreForHorizontal(beginIndexWord, lastIndexWord, row, wordCreated);
-        return this.isWordValid(wordCreated);
+        // this.socket.isWordValidationFinished = false;
+        // emit to server word validation with word
+        // while (!this.socket.isWordValidationFinished) {}
+        this.socket.validateWord(wordCreated);
+
+        // set timer
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        const timeToWait = 3000;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        setTimeout(() => {}, timeToWait);
+        // return this.validatedWord;
+        // temporaire
+        return true;
     }
 
     validateVerticalWord(row: number, column: number, lettersOnBoard: string[][]): boolean {
@@ -102,7 +121,18 @@ export class WordValidationService {
             lastIndexWord = firstRowOfWord;
         }
         this.pointsForLastWord += this.scoreCalculator.calculateScoreForVertical(beginIndexWord, lastIndexWord, column, wordCreated);
-        return this.isWordValid(wordCreated);
+        this.socket.validateWord(wordCreated);
+
+        // set timer
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        const timeToWait = 3000;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        setTimeout(() => {
+            return this.validatedWord;
+        }, timeToWait);
+        // return this.validatedWord;
+        // temporaire
+        return true;
     }
     isWordLongerThanTwo(word: string): boolean {
         if (word.length >= 2) {

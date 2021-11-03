@@ -28,6 +28,7 @@ export class SocketService {
     currentEndGameValue: Observable<boolean>; // to be observed by finishGameService
     updateOfEndGameValue = new BehaviorSubject(false); // to be observed by finishGameService
     triggeredQuit: boolean = false;
+    isWordValid: BehaviorSubject<boolean>;
 
     constructor() {
         this.gameLists = [[]];
@@ -46,6 +47,7 @@ export class SocketService {
         this.messageSubject = new Subject();
         this.cancellationIndexes = [1, 2]; // room number and waiting room number
         this.currentEndGameValue = this.updateOfEndGameValue.asObservable();
+        this.isWordValid = new BehaviorSubject<boolean>(false);
     }
 
     getMessageObservable() {
@@ -97,6 +99,12 @@ export class SocketService {
         this.socket.on('gameIsFinished', () => {
             this.updateOfEndGameValue.next(true);
         });
+        /*
+        this.socket.on('wordValidation', (wordIsValid) => {
+            this.isWordValidationFinished = true;
+            this.wordIsValid = wordIsValid === 'true' ? true : false;
+        });
+        */
     }
     sendInitiateNewGameInformation(
         playTime: number,
@@ -173,6 +181,16 @@ export class SocketService {
         this.ableToJoin = true;
     }
 
+    async validateWord(wordCreated: string): Promise<boolean> {
+        return new Promise<boolean>((resolve) => {
+            this.socket.emit('validateWordOnServer', wordCreated, (response: boolean) => {
+                resolve(response);
+            });
+        }).then((res: boolean) => {
+            this.isWordValid.next(res);
+            return res;
+        });
+    }
     setGameMode(gameMode: number) {
         this.gameMode = gameMode;
     }
