@@ -93,8 +93,7 @@ export class WordValidationService {
         // set timer
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         const timeToWait = 3000;
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        setTimeout(() => {}, timeToWait);
+        this.delay(timeToWait);
         // return this.validatedWord;
         // temporaire
         return true;
@@ -126,13 +125,13 @@ export class WordValidationService {
         // set timer
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
         const timeToWait = 3000;
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        setTimeout(() => {
-            return this.validatedWord;
-        }, timeToWait);
+        this.delay(timeToWait);
         // return this.validatedWord;
         // temporaire
         return true;
+    }
+    async delay(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
     }
     isWordLongerThanTwo(word: string): boolean {
         if (word.length >= 2) {

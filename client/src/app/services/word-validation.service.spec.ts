@@ -5,7 +5,7 @@ import { SocketService } from './socket.service';
 
 import { WordValidationService } from './word-validation.service';
 
-describe('WordValidationService', () => {
+fdescribe('WordValidationService', () => {
     let service: WordValidationService;
     let scoreCalculatorService: jasmine.SpyObj<ScoreCalculatorService>;
     let socketSpy: jasmine.SpyObj<SocketService>;
@@ -70,6 +70,14 @@ describe('WordValidationService', () => {
         const isValid = service.isPartOfWordVertical(1, 0, myBoard);
         expect(isValid).toBe(false);
     });
+    it('isPartOfWordVertical should return true with row equal 0 and letter under is not empty ', () => {
+        const myBoard = [
+            ['d', 'b'],
+            ['u', 'a'],
+        ];
+        const isValid = service.isPartOfWordVertical(0, 0, myBoard);
+        expect(isValid).toBe(true);
+    });
     it('isPartOfWordVertical should return false when place above and bellow are empty ', () => {
         const myBoard = [
             ['a', '', 'y'],
@@ -78,6 +86,33 @@ describe('WordValidationService', () => {
         ];
         const isValid = service.isPartOfWordVertical(1, 1, myBoard);
         expect(isValid).toBe(false);
+    });
+    it('isPartOfWordVertical should return true when place above are not empty ', () => {
+        const myBoard = [
+            ['a', 'd', 'y'],
+            ['d', 'a', 'g'],
+            ['e', 'r', 'f'],
+        ];
+        const isValid = service.isPartOfWordVertical(2, 1, myBoard);
+        expect(isValid).toBe(true);
+    });
+    it('isPartOfWordHorizontale should return true when place at left are not empty and colum equal lenght-1 ', () => {
+        const myBoard = [
+            ['a', 'd', 'y'],
+            ['d', 'a', 'g'],
+            ['e', 'r', 'f'],
+        ];
+        const isValid = service.isPartOfWordHorizontal(1, 2, myBoard);
+        expect(isValid).toBe(true);
+    });
+    it('isPartOfWordHorizontale should return true when place at right are not empty and colum equal 0 ', () => {
+        const myBoard = [
+            ['a', 'd', 'y'],
+            ['d', 'a', 'g'],
+            ['e', 'r', 'f'],
+        ];
+        const isValid = service.isPartOfWordHorizontal(1, 0, myBoard);
+        expect(isValid).toBe(true);
     });
     it('isPartOfWordVertical should return true when the letter touch an other vertically ', () => {
         const myBoard = [
