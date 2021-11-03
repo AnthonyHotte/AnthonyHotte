@@ -61,7 +61,6 @@ describe('TextBoxComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(TextBoxComponent);
         component = fixture.componentInstance;
-        component.message = { message: '', sender: letterServiceSpy.players[0].name, role: 'Joueur' };
         fixture.detectChanges();
     });
 

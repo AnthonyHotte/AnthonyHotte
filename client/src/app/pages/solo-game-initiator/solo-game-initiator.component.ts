@@ -47,9 +47,9 @@ export class SoloGameInitiatorComponent {
     }
     joinGame() {
         this.setName();
-        this.timeManager.timePerTurn = parseInt(this.socketService.gameLists[this.indexWaitingRoomService.index][2], 10); // timePerTurn
+        this.timeManager.timePerTurn = parseInt(this.socketService.gameLists[this.indexWaitingRoomService.getIndex()][2], 10); // timePerTurn
         this.socketService.setGameMode(this.getGameStatus());
-        this.socketService.sendJoinGameInfo(this.name, this.indexWaitingRoomService.index);
+        this.socketService.sendJoinGameInfo(this.name, this.indexWaitingRoomService.getIndex());
     }
     startNewGame() {
         this.startingNewGame = true;

@@ -22,7 +22,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
         this.fillGamesList();
     }
     setIndex(index: number) {
-        this.indexWaitingRoomService.index = index;
+        this.indexWaitingRoomService.setIndex(index);
         // synch letters once and for all for joiner
         this.letterService.synchLetters(this.socketInformation.gameLists[index][3], this.socketInformation.gameLists[index][4]);
     }

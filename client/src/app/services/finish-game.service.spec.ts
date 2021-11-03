@@ -6,15 +6,18 @@ import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { FinishGameService } from './finish-game.service';
 import { LetterBankService } from './letter-bank.service';
 import { LetterService } from './letter.service';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 describe('FinishGameService', () => {
     let service: FinishGameService;
     let letterServiceSpy: LetterService;
     let letterBankServiceSpy: LetterBankService;
     let linkSpy: Router;
+    let timeTurnManagerSpy: TimerTurnManagerService;
 
     beforeEach(
         waitForAsync(() => {
+            timeTurnManagerSpy = jasmine.createSpyObj('timeTurnManagerSpy', ['endTurn']);
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
             letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
             letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
@@ -43,6 +46,7 @@ describe('FinishGameService', () => {
                 providers: [
                     { provide: LetterService, useValue: letterServiceSpy },
                     { provide: Router, useValue: linkSpy },
+                    { provide: TimerTurnManagerService, useValue: timeTurnManagerSpy },
                 ],
             }).compileComponents();
         }),
@@ -80,16 +84,19 @@ describe('FinishGameService', () => {
     });
 
     it('GetWinner should have have a length of 2 when both players have same score', () => {
+        timeTurnManagerSpy.gameStatus = 0;
         const scoreOfPlayer = 6;
         service.finalScore[0] = scoreOfPlayer;
         service.finalScore[1] = scoreOfPlayer;
-        service.getWinner();
-        expect(service.finalScore[0] === service.finalScore[0]).toBe(true);
-        expect(service.getWinner().length).toEqual(2);
+        const winners = service.getWinner();
+        expect(service.finalScore[0] === service.finalScore[1]).toBe(true);
+        expect(winners.length).toEqual(2);
     });
 
     it('Congratulation message has both player when both player have the same score', () => {
+        const spy = spyOn(service, 'getWinner').and.returnValue([0, 1]);
         expect(service.getCongratulation()).toEqual('Félicitation, allo et bonjour, vous avez gagné!!!');
+        expect(spy).toHaveBeenCalled();
     });
 
     it(' message textbox is the one asked in issue', () => {

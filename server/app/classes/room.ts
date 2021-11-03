@@ -32,14 +32,7 @@ export class Room {
         this.lettersCreator = [];
         this.lettersJoiner = [];
     }
-    setStartingInfo(
-        time: number,
-        namePlayer: string,
-        socketId: string,
-        bonusOn: boolean = false,
-        lettersCreator: Letter[],
-        lettersOpponent: Letter[],
-    ) {
+    setStartingInfo(time: number, namePlayer: string, socketId: string, bonusOn: boolean, lettersCreator: Letter[], lettersOpponent: Letter[]) {
         this.timePerTurn = time;
         this.bonusOn = bonusOn;
         this.playerNames[0] = namePlayer;
@@ -84,9 +77,11 @@ export class Room {
             }
         }
         for (const letter of array) {
+            lettersInString += letter.letter;
+            /*
             if (letter !== undefined) {
                 lettersInString += letter.letter;
-            }
+            }*/
         }
         return lettersInString;
     }

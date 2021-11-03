@@ -128,6 +128,7 @@ describe('SidebarRightComponent', () => {
         component.turn = 0;
         timerTurnManagerServiceSpy.turn = 1;
         textBoxSpy.commandSuccessful = true;
+        timerTurnManagerServiceSpy.gameStatus = 2;
         const spy = spyOn(component, 'soloOpponentPlays');
         letterServiceSpy.players[1].name = 'antho';
         const name = component.getPlayerNameAndVerifyTurn();
