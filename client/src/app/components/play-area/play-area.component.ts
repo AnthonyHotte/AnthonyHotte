@@ -41,13 +41,14 @@ export class PlayAreaComponent implements AfterViewInit {
     @HostListener('window:keydown', ['$event'])
     buttonDetect(event: KeyboardEvent) {
         if (this.clickManager.activeLocation === 'gameBoard') {
-            this.placeLetterClickService.placeLetter(event.key);
             if (event.key === 'Enter' && this.placeLetterClickService.wordPlacedWithClick.length !== 0) {
                 const command = this.placeLetterService.submitWordMadeClick();
                 this.textBox.send(command);
                 this.textBox.isCommand(command.message);
             } else if (event.key === 'Escape') {
                 this.placeLetterClickService.reset();
+            } else {
+                this.placeLetterClickService.placeLetter(event.key);
             }
         } else if (this.clickManager.activeLocation === 'hand') {
             this.letterService.setIndexSelectedSwapping(event.key);

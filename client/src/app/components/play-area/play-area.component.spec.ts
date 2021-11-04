@@ -24,11 +24,11 @@ describe('PlayAreaComponent', () => {
 
     beforeEach(async () => {
         gridServiceSpy = jasmine.createSpyObj('GridService', ['increasePoliceSize', 'drawGrid']);
-        placeLetterServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['policeSizeChanged']);
-        placeLetterClickServiceSpy = jasmine.createSpyObj('PlaceLetterClickService', ['reset', 'caseSelected']);
+        placeLetterServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['submitWordMadeClick']);
+        placeLetterClickServiceSpy = jasmine.createSpyObj('PlaceLetterClickService', ['reset', 'caseSelected', 'placeLetter']);
         routerSpy = jasmine.createSpyObj('Router', ['navigate']);
         textBoxSpy = jasmine.createSpyObj('TextBox', ['send', 'isCommand']);
-        letterServiceSpy = jasmine.createSpyObj('LetterService', ['getLettersForExchange', 'reset']);
+        letterServiceSpy = jasmine.createSpyObj('LetterService', ['getLettersForExchange', 'reset', 'setIndexSelectedSwapping']);
         clickManagerSpy = jasmine.createSpyObj('ClickManagementService', ['click', 'manageView']);
 
         await TestBed.configureTestingModule({
@@ -78,5 +78,73 @@ describe('PlayAreaComponent', () => {
         component.mouseHitDetect(mouseEvent);
         expect(component.mousePosition).not.toEqual({ x: mouseEvent.offsetX, y: mouseEvent.offsetY });
         expect(component.mousePosition).toEqual(expectedPosition);
+    });
+
+    it('button detect should call submitWordMadeClick if location is gameBoard and keydown is enter ', () => {
+        clickManagerSpy.activeLocation = 'gameBoard';
+        placeLetterClickServiceSpy.wordPlacedWithClick = 'hello';
+        const event = new KeyboardEvent('keydown', { key: 'Enter' });
+        placeLetterServiceSpy.submitWordMadeClick.and.returnValue({ message: '!placer h8h allo', sender: 'Salut', role: 'Joueur' });
+        component.buttonDetect(event);
+        expect(placeLetterServiceSpy.submitWordMadeClick).toHaveBeenCalled();
+    });
+
+    it('button detect should call submitWordMadeClick if location is gameBoard and keydown is Escape ', () => {
+        clickManagerSpy.activeLocation = 'gameBoard';
+        const event = new KeyboardEvent('keydown', { key: 'Escape' });
+        component.buttonDetect(event);
+        expect(placeLetterClickServiceSpy.reset).toHaveBeenCalled();
+    });
+
+    it('button detect should call placeLetter if location is gameBoard and keydown is a letter ', () => {
+        clickManagerSpy.activeLocation = 'gameBoard';
+        const event = new KeyboardEvent('keydown', { key: 'a' });
+        component.buttonDetect(event);
+        expect(placeLetterClickServiceSpy.placeLetter).toHaveBeenCalled();
+    });
+
+    it('button detect should call setIndexSelectedSwapping if location is hand and keydown is letter ', () => {
+        clickManagerSpy.activeLocation = 'hand';
+        const event = new KeyboardEvent('keydown', { key: 'a' });
+        component.buttonDetect(event);
+        expect(letterServiceSpy.setIndexSelectedSwapping).toHaveBeenCalled();
+    });
+
+    it('button detect should not call anything setIndexSelectedSwapping if location is not hand or gameBoard ', () => {
+        clickManagerSpy.activeLocation = 'textBox';
+        const event = new KeyboardEvent('keydown', { key: 'a' });
+        component.buttonDetect(event);
+        expect(letterServiceSpy.setIndexSelectedSwapping).not.toHaveBeenCalled();
+        expect(placeLetterClickServiceSpy.reset).not.toHaveBeenCalled();
+        expect(placeLetterServiceSpy.submitWordMadeClick).not.toHaveBeenCalled();
+        expect(placeLetterClickServiceSpy.placeLetter).not.toHaveBeenCalled();
+    });
+
+    it('onWindowScroll should call setIndexSelectedSwapping if location is hand and wheel goes up', () => {
+        clickManagerSpy.activeLocation = 'hand';
+        const event = new WheelEvent('wheel', { deltaY: 1 });
+        component.onWindowScroll(event);
+        expect(letterServiceSpy.setIndexSelectedSwapping).toHaveBeenCalled();
+    });
+
+    it('onWindowScroll should call setIndexSelectedSwapping if location is hand and wheel goes down', () => {
+        clickManagerSpy.activeLocation = 'hand';
+        const event = new WheelEvent('wheel', { deltaY: -1 });
+        component.onWindowScroll(event);
+        expect(letterServiceSpy.setIndexSelectedSwapping).toHaveBeenCalled();
+    });
+
+    it('onWindowScroll should not call setIndexSelectedSwapping if location is hand and wheel does not go up or down', () => {
+        clickManagerSpy.activeLocation = 'hand';
+        const event = new WheelEvent('wheel', { deltaY: 0 });
+        component.onWindowScroll(event);
+        expect(letterServiceSpy.setIndexSelectedSwapping).not.toHaveBeenCalled();
+    });
+
+    it('onWindowScroll should not call setIndexSelectedSwapping if location is not hand', () => {
+        clickManagerSpy.activeLocation = 'gameBoard';
+        const event = new WheelEvent('wheel', { deltaY: 1 });
+        component.onWindowScroll(event);
+        expect(letterServiceSpy.setIndexSelectedSwapping).not.toHaveBeenCalled();
     });
 });
