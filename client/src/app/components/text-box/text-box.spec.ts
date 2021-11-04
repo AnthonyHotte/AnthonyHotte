@@ -44,6 +44,7 @@ describe('TextBoxComponent', () => {
             'getWord',
             'getDebugCommand',
             'isCommand',
+            'getMessagesSoloOpponent',
         ]);
         component = new TextBoxComponent(textBoxServiceSpy, letterServiceSpy, socketSpy, timeServiceSpy);
         await TestBed.configureTestingModule({
@@ -75,5 +76,29 @@ describe('TextBoxComponent', () => {
     it('buttonDetect should call getDebugCommand', () => {
         component.buttonDetect();
         expect(textBoxServiceSpy.getDebugCommand).toHaveBeenCalled();
+    });
+
+    it('buttonDetect should call isCommand', () => {
+        component.word = '!passer';
+        component.buttonDetect();
+        expect(textBoxServiceSpy.isCommand).toHaveBeenCalled();
+    });
+
+    it('buttonDetect should call getMessagesSoloOpponent if debug is activated', () => {
+        component.word = '!passer';
+        textBoxServiceSpy.getDebugCommand.and.returnValue(true);
+        component.buttonDetect();
+        expect(textBoxServiceSpy.getMessagesSoloOpponent).toHaveBeenCalled();
+    });
+
+    it('getInputs should call getArray', () => {
+        component.getInputs();
+        expect(textBoxServiceSpy.getArray).toHaveBeenCalled();
+    });
+
+    it('getSoloOpponentInputs should return the soloOpponent inputs getArray', () => {
+        const soloOppMess = ['Hello', 'Bye'];
+        textBoxServiceSpy.inputsSoloOpponent = soloOppMess;
+        expect(component.getSoloOpponentInputs()).toEqual(soloOppMess);
     });
 });
