@@ -40,11 +40,12 @@ describe('SidebarRightComponent', () => {
             }
             letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
 
-            textBoxSpy = jasmine.createSpyObj('TextBox', ['send', 'isCommand']);
-            gridServiceSpy = jasmine.createSpyObj('GridService', ['increasePoliceSize']);
+            textBoxSpy = jasmine.createSpyObj('TextBox', ['send', 'isCommand', 'scrollDown']);
+            textBoxSpy.inputs = [];
+            gridServiceSpy = jasmine.createSpyObj('GridService', ['increasePoliceSize', 'decreasePoliceSize']);
             placeLettersServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['policeSizeChanged']);
             routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-            counterSpy = jasmine.createSpyObj('CountdownComponent', ['reset']);
+            counterSpy = jasmine.createSpyObj('CountdownComponent', ['reset', 'pause']);
             finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
             TestBed.configureTestingModule({
                 declarations: [SidebarRightComponent],
@@ -159,5 +160,85 @@ describe('SidebarRightComponent', () => {
         component.verifyChangedTurns(counterSpy);
         expect(counterSpy.reset).toHaveBeenCalled();
         expect(component.changedTurns).toBe(false);
+    });
+
+    it('soloOpponentPlays should be called when game status 2 and its his turn afterview init', () => {
+        timerTurnManagerServiceSpy.turn = 1;
+        timerTurnManagerServiceSpy.gameStatus = 2;
+        const mySpy = spyOn(component, 'soloOpponentPlays');
+        component.ngAfterViewInit();
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('soloOpponentPlays should not be called when game status is not 2 and its not his turn afterview init', () => {
+        timerTurnManagerServiceSpy.turn = 0;
+        timerTurnManagerServiceSpy.gameStatus = 0;
+        const mySpy = spyOn(component, 'soloOpponentPlays');
+        component.ngAfterViewInit();
+        expect(mySpy).not.toHaveBeenCalled();
+    });
+
+    it('setAttribute should call reset when game status 2', () => {
+        timerTurnManagerServiceSpy.turn = 1;
+        timerTurnManagerServiceSpy.gameStatus = 2;
+        component.setAttribute();
+        expect(letterServiceSpy.reset).toHaveBeenCalled();
+    });
+
+    it('setAttribute should not call reset when game status not 2', () => {
+        timerTurnManagerServiceSpy.turn = 1;
+        timerTurnManagerServiceSpy.gameStatus = 0;
+        component.setAttribute();
+        expect(letterServiceSpy.reset).not.toHaveBeenCalled();
+    });
+
+    it('skipTurn should not call soloOpponentPlays when game status is 2 and it is his turn', () => {
+        timerTurnManagerServiceSpy.turn = 1;
+        timerTurnManagerServiceSpy.gameStatus = 2;
+        spyOn(textBoxSpy.inputs, 'push');
+        const mySpy = spyOn(component, 'soloOpponentPlays');
+        component.skipTurn();
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('skipTurn should not call soloOpponentPlays when game status is not 2 and it is not his turn', () => {
+        timerTurnManagerServiceSpy.turn = 0;
+        timerTurnManagerServiceSpy.gameStatus = 0;
+        spyOn(textBoxSpy.inputs, 'push');
+        const mySpy = spyOn(component, 'soloOpponentPlays');
+        component.skipTurn();
+        expect(mySpy).not.toHaveBeenCalled();
+    });
+
+    it('decreaseFontSize should call decreasePoliceSize and policeSizeChanged', () => {
+        component.decreaseFontSize();
+        expect(gridServiceSpy.decreasePoliceSize).toHaveBeenCalled();
+        expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
+    });
+
+    it('verifyChangedTurns should call pause() if game is finished', () => {
+        finishGameServiceSpy.isGameFinished = true;
+        component.verifyChangedTurns(counterSpy);
+        expect(counterSpy.pause).toHaveBeenCalled();
+    });
+
+    it('soloOpponentPlayse should call delay if game status is 2', () => {
+        timerTurnManagerServiceSpy.gameStatus = 2;
+        const mySpy = spyOn(component, 'delay');
+        component.soloOpponentPlays();
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('soloOpponentPlayse should not call delay if game status is not 2', () => {
+        timerTurnManagerServiceSpy.gameStatus = 0;
+        const mySpy = spyOn(component, 'delay');
+        component.soloOpponentPlays();
+        expect(mySpy).not.toHaveBeenCalled();
+    });
+
+    it('delay should call setTimeout', () => {
+        spyOn(window, 'setTimeout');
+        component.delay(2);
+        expect(setTimeout).toHaveBeenCalled();
     });
 });

@@ -129,12 +129,11 @@ export class SidebarRightComponent implements AfterViewInit {
             const fourseconds = 4000;
             await this.delay(fourseconds);
             this.soloOpponent.play();
-            let message: MessagePlayer;
-            if (this.textBox.debugCommand) {
-                message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name, role: 'Adversaire' };
-            } else {
-                message = { message: this.soloOpponent.lastCommandEntered, sender: this.letterService.players[1].name, role: 'Adversaire' };
-            }
+            const message: MessagePlayer = {
+                message: this.soloOpponent.lastCommandEntered,
+                sender: this.letterService.players[1].name,
+                role: 'Adversaire',
+            };
             this.textBox.inputs.push(message);
             this.textBox.scrollDown();
         }
