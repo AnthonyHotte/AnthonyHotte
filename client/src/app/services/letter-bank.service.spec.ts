@@ -23,4 +23,13 @@ describe('LetterBankService', () => {
         expect(typeof letterString).toEqual(typeof 'adf');
         expect(letterString.length).toBeGreaterThan(minimaleLenghtString);
     });
+
+    it('removeLettersFromBank should remove letter from bank', () => {
+        service.letterBank = [
+            { letter: 'a', quantity: 1, point: 1 },
+            { letter: 'e', quantity: 1, point: 1 },
+        ];
+        service.removeLettersFromBank('ea');
+        expect(service.letterBank.length).toEqual(0);
+    });
 });

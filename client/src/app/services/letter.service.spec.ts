@@ -3,10 +3,12 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { LetterService } from '@app/services/letter.service';
 import { LETTERS } from '@app/all-letters';
 import { LetterBankService } from './letter-bank.service';
+import { SocketService } from './socket.service';
 
 describe('LetterService', () => {
     let service: LetterService;
     let letterBankServiceSpy: LetterBankService;
+    let socketServiceSpy: SocketService;
 
     beforeEach(
         waitForAsync(() => {
@@ -19,6 +21,7 @@ describe('LetterService', () => {
     );
     beforeEach(() => {
         TestBed.configureTestingModule({});
+        socketServiceSpy = TestBed.inject(SocketService) as jasmine.SpyObj<SocketService>;
         service = TestBed.inject(LetterService);
         service.players[0].allLettersInHand = [
             { letter: 'a', quantity: 1, point: 1 },
@@ -184,5 +187,28 @@ describe('LetterService', () => {
     it('remove attribute exchange should set arelettersselected exchange', () => {
         service.removeAttributesExchange();
         expect(service.areLetterSelectedExchange).toBeFalse();
+    });
+
+    it('sycnh letters should call addLetterToHand twice and resetLetterBankForSynch', () => {
+        const mySpy = spyOn(service.players[0], 'addLetterToHand');
+        const mySpy1 = spyOn(service.players[1], 'addLetterToHand');
+        const mySpy2 = spyOn(service, 'resetLetterBankForSynch');
+        service.synchLetters('abc', 'eac');
+        expect(mySpy).toHaveBeenCalled();
+        expect(mySpy1).toHaveBeenCalled();
+        expect(mySpy2).toHaveBeenCalled();
+    });
+
+    it('resetLetterBankForSynch should reset player hand', () => {
+        service.resetLetterBankForSynch();
+        const amountOfLettersTotal = 102;
+        expect(service.players[0].allLettersInHand).toEqual([]);
+        expect(service.players[1].allLettersInHand).toEqual([]);
+        expect(letterBankServiceSpy.letterBank.length).toEqual(amountOfLettersTotal);
+    });
+
+    it('transmitLettersJoiner should set letters of joiner', () => {
+        service.transmitLettersJoiner();
+        expect(socketServiceSpy.lettersOfJoiner).toEqual(service.players[0].allLettersInHand);
     });
 });
