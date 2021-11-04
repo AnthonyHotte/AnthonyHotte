@@ -98,6 +98,11 @@ export class TextBox {
                 mess += message.charAt(i);
             }
         }
+        if (mess !== '') {
+            const message1: MessagePlayer = { message: mess, sender: '', role: 'Systeme' };
+            mess = '';
+            this.inputs.push(message1);
+        }
     }
     send(myWord: MessagePlayer) {
         this.inputVerification(myWord.message);

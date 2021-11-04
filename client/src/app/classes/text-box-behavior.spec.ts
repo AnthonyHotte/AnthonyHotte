@@ -10,7 +10,7 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
 import { PlayerLetterHand } from './player-letter-hand';
 import { TextBox } from './text-box-behavior';
 
-describe('TextBox', () => {
+fdescribe('TextBox', () => {
     let textBox: TextBox;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let placerLetterServiceSpy: jasmine.SpyObj<PlaceLettersService>;
@@ -214,5 +214,48 @@ describe('TextBox', () => {
     it("Can't exchange when there isn't enough letters in the reserve", () => {
         letterBankServiceSpy.letterBank = [];
         expect(textBox.verifyCommandEchanger('a')).toEqual('Commande impossible à réaliser! La réserve ne contient pas assez de lettres.');
+    });
+
+    it("placeWordOpponent should call verifyCommanPasser if place word doesn't return Mot placé avec succès.", () => {
+        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('allo');
+        const mySpy = spyOn(textBox, 'verifyCommandPasser');
+        textBox.placeWordOpponent('!placer h8h allo', 'abcd');
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('placeWordOpponent should call endTurn if place word returns Mot placé avec succès.', () => {
+        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('Mot placé avec succès.');
+        const mySpy = spyOn(textBox, 'endTurn');
+        textBox.placeWordOpponent('!placer h8h allo', 'abcd');
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('exchangeLetterOpponent return the name of opponent and the amount of letters exchanged when he does successful exchange', () => {
+        letterServiceSpy.players[1].name = 'Opp';
+        spyOn(textBox, 'verifyCommandEchanger').and.returnValue('Échange de lettre avec succès.');
+        const command = '!échanger allo';
+        const expectedResult = 'Opp a échangé 4 lettres';
+        expect(textBox.exchangeLetterOpponent(command)).toEqual(expectedResult);
+    });
+
+    it('exchangeLetterOpponent return empty string if exchange is not successful', () => {
+        letterServiceSpy.players[1].name = 'Opp';
+        spyOn(textBox, 'verifyCommandEchanger').and.returnValue('Erreur! Les lettres sélectionnées ne font pas partie de la main courante.');
+        const lettersExch = 'allo';
+        expect(textBox.exchangeLetterOpponent(lettersExch)).toEqual('');
+    });
+
+    it('handleEnter should call push for every time there is a skip line in the string passed to it', () => {
+        const input = 'pls \n give 100% \n';
+        const mySpy = spyOn(textBox.inputs, 'push');
+        textBox.handleEnter(input);
+        expect(mySpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('handleEnter should call push for evry time there is a skipline in the string passd and 1more time if theinput doesnt finish withskip', () => {
+        const input = 'pls \n give \n 100%';
+        const mySpy = spyOn(textBox.inputs, 'push');
+        textBox.handleEnter(input);
+        expect(mySpy).toHaveBeenCalledTimes(3);
     });
 });
