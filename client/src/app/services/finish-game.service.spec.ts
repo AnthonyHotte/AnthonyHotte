@@ -6,6 +6,7 @@ import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { FinishGameService } from './finish-game.service';
 import { LetterBankService } from './letter-bank.service';
 import { LetterService } from './letter.service';
+import { SocketService } from './socket.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 describe('FinishGameService', () => {
@@ -14,9 +15,11 @@ describe('FinishGameService', () => {
     let letterBankServiceSpy: LetterBankService;
     let linkSpy: Router;
     let timeTurnManagerSpy: TimerTurnManagerService;
+    let socketSpy: SocketService;
 
     beforeEach(
         waitForAsync(() => {
+            socketSpy = jasmine.createSpyObj('SocketService', ['getMessageObservable']);
             timeTurnManagerSpy = jasmine.createSpyObj('timeTurnManagerSpy', ['endTurn']);
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
             letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
@@ -47,6 +50,7 @@ describe('FinishGameService', () => {
                     { provide: LetterService, useValue: letterServiceSpy },
                     { provide: Router, useValue: linkSpy },
                     { provide: TimerTurnManagerService, useValue: timeTurnManagerSpy },
+                    { provide: SocketService, useValue: socketSpy },
                 ],
             }).compileComponents();
         }),
@@ -71,6 +75,28 @@ describe('FinishGameService', () => {
         service.scoreCalculator();
         expect(service.finalScore[0] === service.finalScore[0]).toBe(true);
         expect(service.finalScore.length).toEqual(2);
+    });
+    it('getWinner should return 1 when trigged quit', () => {
+        socketSpy.triggeredQuit = true;
+        const winner = service.getWinner();
+        expect(winner.length).toEqual(1);
+        expect(winner[0]).toEqual(1);
+    });
+    it('getWinner should return 0 when player win', () => {
+        socketSpy.triggeredQuit = false;
+        service.finalScore[0] = 5;
+        service.finalScore[1] = 2;
+        const winner = service.getWinner();
+        expect(winner.length).toEqual(1);
+        expect(winner[0]).toEqual(0);
+    });
+    it('getWinner should return 1 when player lose', () => {
+        socketSpy.triggeredQuit = false;
+        service.finalScore[0] = 2;
+        service.finalScore[1] = 5;
+        const winner = service.getWinner();
+        expect(winner.length).toEqual(1);
+        expect(winner[0]).toEqual(1);
     });
 
     it('scoreCalculator should have have a length of 1 when one player has a score bigger than the other', () => {

@@ -13,4 +13,8 @@ describe('IndexWaitingRoomService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
+    it('getIndex should return index', () => {
+        service.setIndex(1);
+        expect(service.getIndex()).toEqual(1);
+    });
 });
