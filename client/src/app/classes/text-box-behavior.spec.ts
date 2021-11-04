@@ -132,6 +132,14 @@ fdescribe('TextBox', () => {
         textBox.isCommand(maChaine);
         expect(mySpy).toHaveBeenCalled();
     });
+
+    it('isCommand should call handleEnter when input is !réserve', () => {
+        const mySPy = spyOn(textBox, 'handleEnter');
+        timerTurnManagerServiceSpy.turn = 0;
+        const maChaine = '!réserve';
+        textBox.isCommand(maChaine);
+        expect(mySPy).toHaveBeenCalled();
+    });
     it('isCommand should call push', () => {
         const mySpy = spyOn(textBox.inputs, 'push');
 
@@ -257,5 +265,31 @@ fdescribe('TextBox', () => {
         const mySpy = spyOn(textBox.inputs, 'push');
         textBox.handleEnter(input);
         expect(mySpy).toHaveBeenCalledTimes(3);
+    });
+
+    it('endturn should set isgamefinished to true if player hand is empty', () => {
+        letterServiceSpy.players[0].allLettersInHand = [];
+        timerTurnManagerServiceSpy.turn = 1;
+        textBox.endTurn('place');
+        expect(finishGameServiceSpy.isGameFinished).toBeTrue();
+    });
+
+    it('Can exchange when you have the letters in hand and there is preset letters to chose from letterbank', () => {
+        timerTurnManagerServiceSpy.turn = 0;
+        letterServiceSpy.players[timerTurnManagerServiceSpy.turn].allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
+        expect(textBox.verifyCommandEchanger('!échanger a', 'a')).toEqual('Échange de lettre avec succès.');
+    });
+
+    it('scrolldown should call getElementById when the element is not null', () => {
+        const dummyElement = document.createElement('div');
+        const mySpy = spyOn(document, 'getElementById').and.returnValue(dummyElement);
+        textBox.scrollDown();
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('scrolldown should call getElementById when the element is null', () => {
+        const mySpy = spyOn(document, 'getElementById').and.returnValue(null);
+        textBox.scrollDown();
+        expect(mySpy).toHaveBeenCalled();
     });
 });

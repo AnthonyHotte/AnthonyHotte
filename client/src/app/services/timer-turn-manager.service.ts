@@ -31,15 +31,7 @@ export class TimerTurnManagerService {
     }
 
     endTurn(reason: string) {
-        if (reason === 'skip') {
-            this.turnsSkippedInARow++;
-        } else {
-            this.turnsSkippedInARow = 0;
-        }
-        if (this.turn === 0) {
-            this.turn = 1;
-        } else {
-            this.turn = 0;
-        }
+        this.turnsSkippedInARow = reason === 'skip' ? this.turnsSkippedInARow + 1 : 0;
+        this.turn = this.turn === 0 ? 1 : 0;
     }
 }
