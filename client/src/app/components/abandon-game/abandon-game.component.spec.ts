@@ -13,7 +13,7 @@ describe('AbandonGameComponent', () => {
     let socketSpy: jasmine.SpyObj<SocketService>;
 
     beforeEach(async () => {
-        socketSpy = jasmine.createSpyObj(SocketService, ['handleDisconnect']);
+        socketSpy = jasmine.createSpyObj(SocketService, ['handleDisconnect', 'finishedGameMessageTransmission']);
         socketSpy.currentEndGameValue = new BehaviorSubject<boolean>(false);
         spy = jasmine.createSpyObj(FinishGameService, ['goToHomeAndRefresh', 'getCongratulation']);
         await TestBed.configureTestingModule({
@@ -38,5 +38,18 @@ describe('AbandonGameComponent', () => {
     it('beforeUnloadHandler should call handleDisconnect', () => {
         component.beforeUnloadHandler();
         expect(socketSpy.handleDisconnect).toHaveBeenCalled();
+    });
+    it('finishCurrentGame should call finishedGameMessageTransmission', () => {
+        component.finishCurrentGame();
+        expect(socketSpy.finishedGameMessageTransmission).toHaveBeenCalled();
+    });
+
+    it('setIsGameUnderway should return Finie when game is finished', () => {
+        spy.isGameFinished = true;
+        expect(component.setIsGameUnderway()).toEqual('Finie');
+    });
+    it('setIsGameUnderway should return En cours when game is not finished', () => {
+        spy.isGameFinished = false;
+        expect(component.setIsGameUnderway()).toEqual('En cours');
     });
 });

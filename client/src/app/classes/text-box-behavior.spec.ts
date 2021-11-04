@@ -10,7 +10,7 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
 import { PlayerLetterHand } from './player-letter-hand';
 import { TextBox } from './text-box-behavior';
 
-fdescribe('TextBox', () => {
+describe('TextBox', () => {
     let textBox: TextBox;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let placerLetterServiceSpy: jasmine.SpyObj<PlaceLettersService>;
@@ -148,16 +148,7 @@ fdescribe('TextBox', () => {
         textBox.isCommand(maChaine);
         expect(mySpy).toHaveBeenCalled();
     });
-    // function doesn't exist anymore, can probably be removed.
-    // removed for now as test are crashing and blocking other test developpement
-    /* 
-    it('sendExecuteCommand should call next', () => {
-        const mySpy = spyOn(textBox.sourceMessage, 'next');
 
-        textBox.sendExecutedCommand();
-        expect(mySpy).toHaveBeenCalled();
-    });
-    */
     it('verifyCommandPasser should call incrementPassedTurn', () => {
         finishGameServiceSpy.isGameFinished = false;
         timerTurnManagerServiceSpy.turnsSkippedInARow = 100;
