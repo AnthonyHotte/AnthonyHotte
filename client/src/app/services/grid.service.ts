@@ -172,21 +172,6 @@ export class GridService {
         this.gridContext.lineWidth = 1;
     }
 
-    //  not used yet, Julien do you need it in the future?
-    drawWord(word: string) {
-        const startPosition: Vec2 = { x: 175, y: 100 };
-        const step = 20;
-        this.gridContext.font = '20px system-ui';
-        for (let i = 0; i < word.length; i++) {
-            this.gridContext.fillText(word[i], startPosition.x + step * i, startPosition.y);
-        }
-    }
-    // TODO add test for this function
-    // drawLetterwithRawXYcoordinate(word: string, x1: number, y1: number) {
-    //      const x: number = Math.floor(x1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
-    //     const y: number = Math.floor(y1 / Constants.CASESIZE) * Constants.CASESIZE + Constants.CASESIZE / 2;
-    //     this.drawLetterwithpositionstring(word, x, y);
-    //  }
     // code pulled from https://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
 
     drawarrow(orientation: string, row: number, column: number) {
@@ -212,22 +197,6 @@ export class GridService {
         this.gridContext.strokeStyle = 'black';
         this.gridContext.beginPath();
         this.canvasArrow(arrowtailXpos, arrowtailYpos, arrowHeadXpos, arrowHeadYpos);
-
-        /*
-        if (orientation === 'h') {
-            const arrowHeadYpos = Constants.TILESIZE * (column + arrowOffset);
-            const arrowHeadXpos = Constants.TILESIZE * (row + 1);
-            const arrowtailYpos = arrowHeadYpos; // since the arrow is horizontal y doesn't change
-            const arrowtailXpos = arrowHeadXpos - arrowlength;
-        } else {
-            const arrowHeadYpos = Constants.TILESIZE * (column + 1);
-            const arrowHeadXpos = Constants.TILESIZE * (row + arrowOffset);
-            const arrowtailYpos = arrowHeadYpos - arrowlength;
-            const arrowtailXpos = arrowHeadXpos; // since the arrow is horizontal x doesn't change
-        }
-        this.gridContext.beginPath();
-        this.canvasArrow(arrowtailXpos, arrowtailYpos, arrowHeadXpos, arrowHeadYpos);
-        */
         this.gridContext.stroke();
     }
 

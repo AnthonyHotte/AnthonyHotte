@@ -29,34 +29,6 @@ describe('GridService', () => {
         expect(service.width).toEqual(CANVAS_HEIGHT);
     });
 
-    it(' drawWord should call fillText on the canvas', () => {
-        const fillTextSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
-        service.drawWord('test');
-        expect(fillTextSpy).toHaveBeenCalled();
-    });
-
-    it(' drawWord should not call fillText if word is empty', () => {
-        const fillTextSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
-        service.drawWord('');
-        expect(fillTextSpy).toHaveBeenCalledTimes(0);
-    });
-
-    it(' drawWord should call fillText as many times as letters in a word', () => {
-        const fillTextSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
-        const word = 'test';
-        service.drawWord(word);
-        expect(fillTextSpy).toHaveBeenCalledTimes(word.length);
-    });
-
-    it(' drawWord should color pixels on the canvas', () => {
-        let imageData = service.gridContext.getImageData(0, 0, service.width, service.height).data;
-        const beforeSize = imageData.filter((x) => x !== 0).length;
-        service.drawWord('test');
-        imageData = service.gridContext.getImageData(0, 0, service.width, service.height).data;
-        const afterSize = imageData.filter((x) => x !== 0).length;
-        expect(afterSize).toBeGreaterThan(beforeSize);
-    });
-
     it(' drawGrid should call moveTo 31 times and lineTo 41 times', () => {
         const expectedCallMoveToTimes = 31;
         const expectedCallLineToTimes = 41;
@@ -131,6 +103,24 @@ describe('GridService', () => {
         expect(fillSpy).toHaveBeenCalledTimes(expectedCallFillRectTimes);
         expect(spy).toHaveBeenCalledTimes(expectedDrawLetterValueWithPosition);
     });
+
+    it(' drawLetterwithpositionstring red should call strokeRect, drawLetterValuewithposition, fillRect, fillText 1, 3, 2, 3  times', () => {
+        const expectedCallFillTextTimes = 3;
+        // called 2 times in the function and one time by drawtilebackground
+        const expectedCallStrokeRectTimes = 3;
+        const expectedCallFillRectTimes = 2;
+        const expectedDrawLetterValueWithPosition = 1;
+        const strokeSpy = spyOn(service.gridContext, 'strokeRect').and.callThrough();
+        const lineToSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
+        const fillSpy = spyOn(service.gridContext, 'fillRect').and.callThrough();
+        const spy = spyOn(service, 'drawLetterValuewithposition');
+        service.drawLetterwithpositionstring('a', 0, 0, 'red');
+        expect(strokeSpy).toHaveBeenCalledTimes(expectedCallStrokeRectTimes);
+        expect(lineToSpy).toHaveBeenCalledTimes(expectedCallFillTextTimes);
+        expect(fillSpy).toHaveBeenCalledTimes(expectedCallFillRectTimes);
+        expect(spy).toHaveBeenCalledTimes(expectedDrawLetterValueWithPosition);
+    });
+
     it(' drawLetterValuewithposition should call filltext 1 times', () => {
         const expectedCallFillTextTimes = 1;
         const lineToSpy = spyOn(service.gridContext, 'fillText').and.callThrough();
@@ -173,5 +163,33 @@ describe('GridService', () => {
         service.decreasePoliceSize();
         expect(service.policesizeletter).toEqual(expectedPoliceSizeLetter);
         expect(service.policesizelettervalue).toEqual(expectedPoliceSizeLetterValue);
+    });
+
+    it(' drawArrow should call beginPath canvasArrow and stroke when orientation h', () => {
+        const strokeSpy = spyOn(service.gridContext, 'stroke');
+        const lineToSpy = spyOn(service, 'canvasArrow');
+        const beginPathSpy = spyOn(service.gridContext, 'beginPath');
+        service.drawarrow('h', 1, 1);
+        expect(strokeSpy).toHaveBeenCalled();
+        expect(lineToSpy).toHaveBeenCalled();
+        expect(beginPathSpy).toHaveBeenCalled();
+    });
+
+    it(' drawArrow should call beginPath canvasArrow and stroke when orientation v', () => {
+        const strokeSpy = spyOn(service.gridContext, 'stroke');
+        const canvasArrowToSpy = spyOn(service, 'canvasArrow');
+        const beginPathSpy = spyOn(service.gridContext, 'beginPath');
+        service.drawarrow('v', 1, 1);
+        expect(strokeSpy).toHaveBeenCalled();
+        expect(canvasArrowToSpy).toHaveBeenCalled();
+        expect(beginPathSpy).toHaveBeenCalled();
+    });
+
+    it(' canvasArrow should call lineTo and moveTo', () => {
+        const moveToSpy = spyOn(service.gridContext, 'moveTo');
+        const lineToSpy = spyOn(service.gridContext, 'lineTo');
+        service.canvasArrow(1, 1, 1, 1);
+        expect(lineToSpy).toHaveBeenCalled();
+        expect(moveToSpy).toHaveBeenCalled();
     });
 });
