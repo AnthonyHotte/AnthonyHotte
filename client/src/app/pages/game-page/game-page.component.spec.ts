@@ -32,4 +32,9 @@ describe('GamePageComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('click should call click from click manager create', () => {
+        component.clickLocation('textBox');
+        expect(clickManagerSpy.click).toHaveBeenCalled();
+    });
 });
