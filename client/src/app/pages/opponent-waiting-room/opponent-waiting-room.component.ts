@@ -33,7 +33,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
     }
 
     fillList() {
-        this.gamesList.length = 0;
+        this.gamesList.length = 0; // TODO talk to Artour
         for (let i = 0; i < this.socketInformation.gameLists.length; i++) {
             this.gamesList.push(['name', 'bonus', 'time', 'letters']);
             this.gamesList[i][0] = this.socketInformation.gameLists[i][0]; // name
@@ -42,11 +42,8 @@ export class OpponentWaitingRoomComponent implements OnInit {
         }
     }
 
-    getBonusInLetters(bonus: string) {
-        if (bonus === 'true') {
-            return 'Oui';
-        }
-        return 'Non';
+    getBonusInLetters(bonus: string): string {
+        return bonus === 'true' ? 'Oui' : 'Non';
     }
 
     getTimePerTurn(time: string) {
@@ -54,11 +51,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
     }
 
     changeValidity(name: string) {
-        if (!this.isValidSelection) {
-            this.isValidSelection = true;
-        } else {
-            this.isValidSelection = false;
-        }
+        this.isValidSelection = this.isValidSelection ? false : true;
         this.socketInformation.nameOfRoomCreator = name;
     }
 
