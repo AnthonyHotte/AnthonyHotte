@@ -9,7 +9,7 @@ import { WordValidationService } from './word-validation.service';
 @Service()
 export class SocketManager {
     games: string[][];
-    private sio: io.Server;
+    sio: io.Server;
 
     constructor(server: http.Server, private roomsService: RoomsService, private wordValidationService: WordValidationService) {
         this.sio = new io.Server(server, { cors: { origin: '*', methods: ['GET', 'POST'] } });
