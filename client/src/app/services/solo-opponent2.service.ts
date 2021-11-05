@@ -20,7 +20,7 @@ export class SoloOpponent2Service {
     ) {}
 
     play(): string {
-        let tempword: string | undefined;
+        let tempword = '';
         const arrayHand: string[] = [];
         for (const letter of this.letterService.players[this.timeManagerService.turn].allLettersInHand) {
             arrayHand.push(letter.letter.toLowerCase());
@@ -65,7 +65,7 @@ export class SoloOpponent2Service {
                 }
             }
         }
-        if (tempword !== undefined) {
+        if (tempword !== '') {
             this.tempword = tempword;
             // const TIME_OUT_TIME = 3000; // TODO debug this
             // setTimeout(() => {
@@ -74,7 +74,7 @@ export class SoloOpponent2Service {
 
             return '!placer ' + tempword;
         } else {
-            return '!placer ' + tempword;
+            return '!placer undefined';
         }
     }
     // return all the word that exist with the letters given;
@@ -85,22 +85,25 @@ export class SoloOpponent2Service {
             if (letter === '*') {
                 avail[STAR_INDEX] = avail[STAR_INDEX] + 1;
             } else {
-                if (letter !== undefined) {
-                    const index = letter.charCodeAt(0) - Constants.ASCIICODEOFLOWERA;
-                    avail[index] = avail[index] + 1;
-                }
+                const index = letter.charCodeAt(0) - Constants.ASCIICODEOFLOWERA;
+                avail[index] = avail[index] + 1;
             }
         }
         const result: string[] = [];
         for (const word of dict) {
             const count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            const availCopy = avail;
             let ok = true;
             for (let k = 0; k <= word.length; k++) {
                 const index = word.charCodeAt(k) - Constants.ASCIICODEOFLOWERA;
                 count[index] = count[index] + 1;
-                if (count[index] > avail[index]) {
-                    ok = false;
-                    break;
+                if (count[index] > availCopy[index]) {
+                    if (count[index] > availCopy[index] + availCopy[STAR_INDEX]) {
+                        ok = false;
+                        break;
+                    }
+                    // use star tile
+                    availCopy[STAR_INDEX] = availCopy[STAR_INDEX] - (count[index] - availCopy[index]);
                 }
             }
             if (ok) {
