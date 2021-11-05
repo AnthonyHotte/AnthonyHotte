@@ -13,11 +13,11 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 describe('SoloOpponentService', () => {
     let service: SoloOpponentService;
-    let timerTurnManagerServiceSpy: TimerTurnManagerService;
-    let letterServiceSpy: LetterService;
-    let soloOpponent2ServiceSpy: SoloOpponent2Service;
-    let finishGameServiceSpy: FinishGameService;
-    let letterBankServiceSpy: LetterBankService;
+    let timerTurnManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
+    let letterServiceSpy: jasmine.SpyObj<LetterService>;
+    let soloOpponent2ServiceSpy: jasmine.SpyObj<SoloOpponent2Service>;
+    let finishGameServiceSpy: jasmine.SpyObj<FinishGameService>;
+    let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
     let routerSpy: Router;
 
     beforeEach(
@@ -39,11 +39,12 @@ describe('SoloOpponentService', () => {
                 player2.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
             }
             letterServiceSpy.players = [player1, player2];
-            timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['reset']);
+            timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['reset', 'endTurn']);
             timerTurnManagerServiceSpy.gameStatus = GameStatus.SoloPlayer;
             letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
             soloOpponent2ServiceSpy = jasmine.createSpyObj('SoloOpponent2Service', ['play']);
             finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
+            finishGameServiceSpy.isGameFinished = false;
             routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
             TestBed.configureTestingModule({
@@ -86,7 +87,7 @@ describe('SoloOpponentService', () => {
         expect(spy2).toHaveBeenCalled();
     });
 
-    it('play should call calculate probability twice', () => {
+    it('play should call calculate probability twice when it exchanging', () => {
         timerTurnManagerServiceSpy.turn = 1;
         const returnValue = 12;
         const spy = spyOn(service, 'calculateProbability').and.returnValue(returnValue);
@@ -94,10 +95,33 @@ describe('SoloOpponentService', () => {
         service.play();
         expect(spy).toHaveBeenCalledTimes(2);
         expect(spy2).toHaveBeenCalled();
-        expect(service).toBeTruthy();
     });
 
-    it('calculateProbability should call calculate probability twice', () => {
+    it('play should call calculate probability twice when it exchanging and should exchange if there is enough letters', () => {
+        timerTurnManagerServiceSpy.turn = 1;
+        const firstReturnValue = 12;
+        const secondReturnValue = 3;
+        const spy = spyOn(service, 'calculateProbability').and.returnValues(firstReturnValue, secondReturnValue);
+        const spy2 = spyOn(service, 'endTurn');
+        const spy3 = spyOn(service, 'exchangeLetters');
+        service.play();
+        expect(spy).toHaveBeenCalledTimes(2);
+        expect(spy2).toHaveBeenCalled();
+        expect(spy3).toHaveBeenCalled();
+    });
+
+    it('play should call calculate probability twice when it playing', () => {
+        timerTurnManagerServiceSpy.turn = 1;
+        const returnValue = 25;
+        const spy = spyOn(service, 'calculateProbability').and.returnValue(returnValue);
+        const spy2 = spyOn(service, 'endTurn');
+        service.play();
+        expect(spy).toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalled();
+        expect(soloOpponent2ServiceSpy.play).toHaveBeenCalled();
+    });
+
+    it('calculateProbability should call floor twice', () => {
         const spy = spyOn(Math, 'floor');
         const inputProb = 30;
         service.calculateProbability(inputProb);
@@ -131,5 +155,41 @@ describe('SoloOpponentService', () => {
         const spy = spyOn(service, 'endTurn');
         service.skipTurn();
         expect(spy).toHaveBeenCalled();
+    });
+
+    it('endTurn should call endTurn and finish game when opponent hand is empty', () => {
+        timerTurnManagerServiceSpy.turn = 0;
+        letterServiceSpy.players[0].allLettersInHand = [];
+        service.endTurn('place');
+        expect(timerTurnManagerServiceSpy.endTurn).toHaveBeenCalled();
+        expect(finishGameServiceSpy.isGameFinished).toBeTrue();
+    });
+
+    it('endTurn should call endTurn and not finish game when opponent hand is not empty', () => {
+        timerTurnManagerServiceSpy.turn = 1;
+        service.endTurn('place');
+        timerTurnManagerServiceSpy.turn = 0;
+        expect(timerTurnManagerServiceSpy.endTurn).toHaveBeenCalled();
+        expect(finishGameServiceSpy.isGameFinished).toBeFalse();
+    });
+
+    it('exchangeLetters should exchange letters', () => {
+        timerTurnManagerServiceSpy.turn = 1;
+        const firstReturnValue = 0;
+        const secondReturnValue = 1;
+        const thirdReturnValue = 0;
+        const fourthReturnValue = 2;
+        const spy = spyOn(service, 'calculateProbability').and.returnValues(firstReturnValue, secondReturnValue, thirdReturnValue, fourthReturnValue);
+        const spy2 = spyOn(letterServiceSpy.players[timerTurnManagerServiceSpy.turn], 'exchangeLetters');
+        service.exchangeLetters(3);
+        expect(spy).toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalled();
+    });
+
+    it('play should not call calculateProbability if game status is not 2', () => {
+        timerTurnManagerServiceSpy.gameStatus = 1;
+        const spy = spyOn(service, 'calculateProbability');
+        service.play();
+        expect(spy).not.toHaveBeenCalled();
     });
 });

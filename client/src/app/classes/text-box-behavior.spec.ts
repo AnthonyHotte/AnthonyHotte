@@ -283,4 +283,31 @@ describe('TextBox', () => {
         textBox.scrollDown();
         expect(mySpy).toHaveBeenCalled();
     });
+
+    it('handleOpponentCommand should call verifyCommandPasser when the the command is !passer', () => {
+        spyOn(textBox.inputs, 'push');
+        const mySpy = spyOn(textBox, 'verifyCommandPasser');
+        textBox.handleOpponentCommand('!passer');
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('handleOpponentCommand should call exchangeLetterOpponent when the the command is !échanger', () => {
+        spyOn(textBox.inputs, 'push');
+        const mySpy = spyOn(textBox, 'exchangeLetterOpponent');
+        textBox.handleOpponentCommand('!échanger abc');
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('handleOpponentCommand should push something in inputs when the the command is !réserve', () => {
+        const mySpy = spyOn(textBox.inputs, 'push');
+        textBox.handleOpponentCommand('!réserve');
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('handleOpponentCommand should call placeWordOpponent when the the command is !placer', () => {
+        spyOn(textBox.inputs, 'push');
+        const mySpy = spyOn(textBox, 'placeWordOpponent');
+        textBox.handleOpponentCommand('!placer h8h abc');
+        expect(mySpy).toHaveBeenCalled();
+    });
 });

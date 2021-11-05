@@ -5,7 +5,9 @@ import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from './letter-bank.service';
 import { LetterService } from './letter.service';
+import { PlaceLetterClickService } from './place-letter-click.service';
 import { PlaceLettersService } from './place-letters.service';
+import { SocketService } from './socket.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 describe('PlaceLettersService', () => {
     let service: PlaceLettersService;
@@ -14,6 +16,8 @@ describe('PlaceLettersService', () => {
     let letterServiceSpy: LetterService;
     let letterBankServiceSpy: LetterBankService;
     let timeManagerSpy: TimerTurnManagerService;
+    let placeLetterClickServiceSpy: PlaceLetterClickService;
+    let socketSpy: SocketService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
@@ -23,6 +27,8 @@ describe('PlaceLettersService', () => {
         letterServiceSpy = TestBed.inject(LetterService) as jasmine.SpyObj<LetterService>;
         letterBankServiceSpy = TestBed.inject(LetterBankService) as jasmine.SpyObj<LetterBankService>;
         timeManagerSpy = TestBed.inject(TimerTurnManagerService) as jasmine.SpyObj<TimerTurnManagerService>;
+        placeLetterClickServiceSpy = TestBed.inject(PlaceLetterClickService) as jasmine.SpyObj<PlaceLetterClickService>;
+        socketSpy = TestBed.inject(SocketService) as jasmine.SpyObj<SocketService>;
         timeManagerSpy.turn = 0;
         const player1 = new PlayerLetterHand(letterBankServiceSpy);
         for (let i = 0; i < MAXLETTERINHAND; i++) {
@@ -104,7 +110,7 @@ describe('PlaceLettersService', () => {
         expect(mySpy2).toHaveBeenCalled();
         gameStateServiceSpy.indexLastLetters = [];
     }));
-    it('validateWordPlaced should return true when playerUsedAllLetters is true and validateWordCreatedByNewLetters is false ', fakeAsync(() => {
+    it('validateWordPlaced should return true when playerUsedAllLetters is true and validateWordCreatedByNewLetters is true ', fakeAsync(() => {
         const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(true);
         gameStateServiceSpy.indexLastLetters = [1, 2, 3];
         gameStateServiceSpy.playerUsedAllLetters = true;
@@ -115,11 +121,33 @@ describe('PlaceLettersService', () => {
         expect(mySpy).toHaveBeenCalled();
         gameStateServiceSpy.indexLastLetters = [];
     }));
+
+    it('validateWordPlaced should return true ehen validateWordCreatedByNewLetters is true and letters replaced is defined', fakeAsync(() => {
+        const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(true);
+        gameStateServiceSpy.indexLastLetters = [1, 2, 3];
+        gameStateServiceSpy.playerUsedAllLetters = false;
+        const lettersToReplace = 'allo';
+        const returnvalue = service.validateWordPlaced(lettersToReplace);
+        flush();
+        expect(returnvalue).toBe(true);
+        expect(mySpy).toHaveBeenCalled();
+        gameStateServiceSpy.indexLastLetters = [];
+    }));
     // verifyavailable tests
     it('verifyAvailable should be called when the word is not out of bound', () => {
         service.orientation = 'h';
         const mySpy = spyOn(service, 'verifyAvailable');
         service.placeWord('a1v allo');
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('verifyCaseAvailable should be called when verifyAvailable is called', () => {
+        service.orientation = 'h';
+        service.wordToPlace = 'testing';
+        service.colomnNumber = 8;
+        service.row = 8;
+        const mySpy = spyOn(service, 'verifyCaseAvailable').and.returnValue(true);
+        service.verifyAvailable();
         expect(mySpy).toHaveBeenCalled();
     });
     // verifyCaseAvailable
@@ -209,5 +237,50 @@ describe('PlaceLettersService', () => {
     it('removeUpperCaseFromString should remove uppercase and replace them with * ', () => {
         service.wordToPlace = 'Allo';
         service.removeUpperCaseFromString(0);
+    });
+
+    it('placeWord should return Vous devez utiliser au moins une lettre de votre main pour créer if last letters added is empty', () => {
+        service.wordToPlace = 'Allo';
+        service.orientation = 'h';
+        service.row = 7;
+        service.colomnNumber = 7;
+        spyOn(service, 'checkInput').and.returnValue('ok');
+        spyOn(service, 'verifyTileNotOutOfBound').and.returnValue(true);
+        const mySpy = spyOn(service, 'placeWordGameState');
+        spyOn(gameStateServiceSpy, 'isWordCreationPossibleWithRessources').and.returnValue(true);
+        gameStateServiceSpy.isBoardEmpty = false;
+        gameStateServiceSpy.lastLettersAdded = '';
+        const mySpy2 = spyOn(service, 'removeLetterInGameState');
+        const expectedResult = 'Vous devez utiliser au moins une lettre de votre main pour créer un mot';
+        expect(service.placeWord('!placer h8h allo')).toEqual(expectedResult);
+        expect(mySpy).toHaveBeenCalled();
+        expect(mySpy2).toHaveBeenCalled();
+    });
+
+    it('placeWord should not call configureSendMessageToServer if lettersto replace is not undefined', () => {
+        service.wordToPlace = 'Allo';
+        service.orientation = 'h';
+        service.row = 7;
+        service.colomnNumber = 7;
+        spyOn(service, 'checkInput').and.returnValue('ok');
+        spyOn(service, 'verifyAvailable').and.returnValue(true);
+        spyOn(service, 'verifyTileNotOutOfBound').and.returnValue(true);
+        spyOn(gameStateServiceSpy, 'isWordTouchingLetterOnBoard').and.returnValue(true);
+        const mySpy = spyOn(service, 'placeWordGameState');
+        spyOn(gameStateServiceSpy, 'isWordCreationPossibleWithRessources').and.returnValue(true);
+        gameStateServiceSpy.isBoardEmpty = false;
+        gameStateServiceSpy.lastLettersAdded = 'Allo';
+        const mySpy3 = spyOn(service, 'drawWord');
+        const mySpy4 = spyOn(socketSpy, 'configureSendMessageToServer');
+        spyOn(service, 'validateWordPlaced').and.returnValue(true);
+        service.placeWord('!placer h8h Allo', 'abcd');
+        expect(mySpy).toHaveBeenCalled();
+        expect(mySpy3).toHaveBeenCalled();
+        expect(mySpy4).not.toHaveBeenCalled();
+    });
+    it('submitWordMadeClick should call transformIntoCommand', () => {
+        const mySpy = spyOn(placeLetterClickServiceSpy, 'transformIntoCommand');
+        service.submitWordMadeClick();
+        expect(mySpy).toHaveBeenCalled();
     });
 });

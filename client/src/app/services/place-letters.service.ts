@@ -73,7 +73,7 @@ export class PlaceLettersService {
             }
             if (this.orientation === 'h') {
                 xtile++;
-            } else if (this.orientation === 'v') {
+            } else {
                 ytile++;
             }
         }
@@ -149,7 +149,7 @@ export class PlaceLettersService {
             this.gameState.placeLetter(ytile, xtile, this.wordToPlace.charAt(i), this.lettersToPlace.charAt(i));
             if (this.orientation === 'h') {
                 xtile++;
-            } else if (this.orientation === 'v') {
+            } else {
                 ytile++;
             }
         }
@@ -169,20 +169,12 @@ export class PlaceLettersService {
             this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile, 'black');
             if (this.orientation === 'h') {
                 xtile++;
-            } else if (this.orientation === 'v') {
+            } else {
                 ytile++;
             }
         }
     }
 
-    drawWordwiththreeseconddelay() {
-        // this.tempword = tempword;
-        const TIME_OUT_TIME = 3000; // TODO debug this
-        setTimeout(() => {
-            this.drawWord();
-            // this.placeLetterService.placeWord(this.tempword);
-        }, TIME_OUT_TIME);
-    }
     validateWordPlaced(lettersToReplace?: string) {
         if (!this.gameState.validateWordCreatedByNewLetters()) {
             const delay = 3000;

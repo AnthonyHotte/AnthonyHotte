@@ -156,9 +156,7 @@ export class SocketService {
             this.socket.emit('toOpponent', message, gameStatus, this.roomNumber);
         }
     }
-    endTurn(turnsSkippedInARow: number, nextPlayerTurn: GameStatus) {
-        this.socket.emit('endTurn', { roomNumber: this.roomNumber, turnSkipped: turnsSkippedInARow, playerTurnStatus: nextPlayerTurn });
-    }
+
     cancelGame() {
         this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
         const INEXISTING_ROOM = -1;
@@ -169,15 +167,8 @@ export class SocketService {
         this.ableToJoin = true;
     }
 
-    async validateWord(wordCreated: string): Promise<boolean> {
-        return new Promise<boolean>((resolve) => {
-            this.socket.emit('validateWordOnServer', wordCreated, (response: boolean) => {
-                resolve(response);
-            });
-        }).then((res: boolean) => {
-            this.isWordValid.next(res);
-            return res;
-        });
+    validateWord(wordCreated: string) {
+        this.socket.emit('validateWordOnServer', wordCreated);
     }
     setGameMode(gameMode: number) {
         this.gameMode = gameMode;

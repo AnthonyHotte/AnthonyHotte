@@ -4,7 +4,7 @@ import { CENTERCASE, NUMBEROFCASE } from '@app/constants';
 import { GameStateService } from '@app/services/game-state.service';
 import { WordValidationService } from '@app/services/word-validation.service';
 
-describe('GameStateService', () => {
+fdescribe('GameStateService', () => {
     let service: GameStateService;
     let wordValidationServiceSpy: jasmine.SpyObj<WordValidationService>;
     beforeEach(
@@ -136,6 +136,15 @@ describe('GameStateService', () => {
         wordValidationServiceSpy.validateHorizontalWord.and.returnValue(false);
         const result = service.validateWordCreatedByNewLetters();
         expect(result).toBe(false);
+    });
+
+    it('validateWordCreatedByNewLetters should return true when horizontal valid word', () => {
+        service.orientationOfLastWord = 'v';
+        wordValidationServiceSpy.isPartOfWordHorizontal.and.returnValue(true);
+        wordValidationServiceSpy.validateVerticalWord.and.returnValue(true);
+        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(true);
+        const result = service.validateWordCreatedByNewLetters();
+        expect(result).toBe(true);
     });
     it('isWordCreationPossibleWithRessources should return true when not part of horizontal word', () => {
         const spy = spyOn(service, 'canWordBeCreated');
@@ -270,5 +279,19 @@ describe('GameStateService', () => {
         const eleven = 11;
         service.indexLastLetters = [ten, 3, eleven, 3];
         expect(service.isWordTouchingVertical()).toBe(false);
+    });
+
+    it('isWordTouchingLetterOnBoard should return true if word is not the same length as last letter added', () => {
+        service.lastLettersAdded = 'llo';
+        service.isBoardEmpty = true;
+        expect(service.isWordTouchingLetterOnBoard('hello', 'h')).toBe(true);
+    });
+
+    it('isWordTouchingLetterOnBoard should call isWordTouchingVertical if word is not same length as last letter added and oreintation is v', () => {
+        service.lastLettersAdded = 'hello';
+        service.isBoardEmpty = false;
+        const spy = spyOn(service, 'isWordTouchingVertical');
+        service.isWordTouchingLetterOnBoard('hello', 'v');
+        expect(spy).toHaveBeenCalled();
     });
 });
