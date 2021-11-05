@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Position } from '@app/position-tile-interface';
 
 import { SocketService } from './socket.service';
 
@@ -22,9 +21,7 @@ describe('SocketService', () => {
     });
     it('sendInitiateNewGameInformation should call emit', () => {
         const emitSpy = spyOn(service.socket, 'emit');
-        const map = new Map<string, Position[]>();
-        map.set('DoubleWord', [{ positionX: 2, positionY: 2 }]);
-        service.sendInitiateNewGameInformation(1, true, 'name', 1, 'name', [], [], map);
+        service.sendInitiateNewGameInformation(1, true, 'name', 1, 'name', [], [], []);
         expect(emitSpy).toHaveBeenCalled();
     });
 
@@ -32,9 +29,7 @@ describe('SocketService', () => {
         const emitSpy = spyOn(service.socket, 'emit');
         const cancelSpy = spyOn(service, 'cancelGame');
         service.cancellationIndexes = [0, 0];
-        const map = new Map<string, Position[]>();
-        map.set('DoubleWord', [{ positionX: 2, positionY: 2 }]);
-        service.sendInitiateNewGameInformation(1, true, 'name', 2, 'name', [], [], map);
+        service.sendInitiateNewGameInformation(1, true, 'name', 2, 'name', [], [], []);
         expect(emitSpy).toHaveBeenCalled();
         expect(cancelSpy).toHaveBeenCalled();
     });
