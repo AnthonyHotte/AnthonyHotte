@@ -2,13 +2,12 @@
 import { Room } from '@app/classes/room';
 import { NUMBEROFROOMS } from '@app/constants';
 import { Letter } from '@app/letter';
+import { Server } from '@app/server';
 import { assert } from 'console';
-import * as http from 'http';
 import { spy } from 'sinon';
 import * as io from 'socket.io';
-import { RoomsService } from './rooms.service';
+import { Container } from 'typedi';
 import { SocketManager } from './socket-manager-initiate-game.service';
-import { WordValidationService } from './word-validation.service';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type CallbackSignature = (...params: unknown[]) => {};
@@ -71,20 +70,25 @@ class SocketMock {
 
 describe('Socket Manager', () => {
     let socketManager: SocketManager;
+    let client;
     const socketServer = new SocketServer();
     const myLetters: Letter[] = [];
     const myLetters1: Letter[] = [];
     let roomSpy: RoomsServiceMock;
 
     beforeEach(async () => {
-        roomSpy = new RoomsServiceMock();
-        const ioSPy = new http.Server();
-        const wordValidation = new WordValidationService();
-        socketManager = new SocketManager(
-            ioSPy as unknown as http.Server,
-            roomSpy as unknown as RoomsService,
-            wordValidation as unknown as WordValidationService,
-        );
+        socket = new SocketMock();
+        const server: Server = Container.get(Server);
+        server.init();
+
+        // roomSpy = new RoomsServiceMock();
+        // const ioSPy = new http.Server();
+        // const wordValidation = new WordValidationService();
+        // socketManager = new SocketManager(
+        //     ioSPy as unknown as http.Server,
+        //     roomSpy as unknown as RoomsService,
+        //     wordValidation as unknown as WordValidationService,
+        // );
 
         socketManager.sio = socketServer as unknown as io.Server;
     });
