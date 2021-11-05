@@ -65,6 +65,7 @@ export class WordValidationService {
     }
 
     async validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][], onServer: boolean): Promise<boolean> {
+        // validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][], onServer: boolean): boolean {
         let beginIndexWord = 0;
         let lastIndexWord = 0;
         let firstColumnOfWord = 0;
@@ -98,6 +99,7 @@ export class WordValidationService {
         // temporaire
         if (onServer) {
             return await this.socket.validateWord(wordCreated);
+            // return this.isWordValid(wordCreated);
         } else {
             return this.isWordValid(wordCreated);
         }

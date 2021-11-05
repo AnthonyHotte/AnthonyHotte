@@ -84,10 +84,10 @@ describe('TextBoxComponent', () => {
         expect(textBoxServiceSpy.isCommand).toHaveBeenCalled();
     });
 
-    it('buttonDetect should call getMessagesSoloOpponent if debug is activated', () => {
+    it('buttonDetect should call getMessagesSoloOpponent if debug is activated', async () => {
         component.word = '!passer';
         textBoxServiceSpy.getDebugCommand.and.returnValue(true);
-        component.buttonDetect();
+        await component.buttonDetect();
         expect(textBoxServiceSpy.getMessagesSoloOpponent).toHaveBeenCalled();
     });
 
