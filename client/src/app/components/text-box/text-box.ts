@@ -25,11 +25,11 @@ export class TextBoxComponent {
         this.debugCommand = false;
     }
 
-    buttonDetect() {
+    async buttonDetect(): Promise<void> {
         const myMessage: MessagePlayer = { message: this.word, sender: this.letterService.players[0].name, role: 'Joueur' };
         if (myMessage.message.substr(0, 1) === '!') {
             this.input.send(myMessage);
-            this.input.isCommand(myMessage.message);
+            await this.input.isCommand(myMessage.message);
         } else {
             this.input.send(myMessage);
             this.socket.configureSendMessageToServer(this.word, this.timeManager.gameStatus);

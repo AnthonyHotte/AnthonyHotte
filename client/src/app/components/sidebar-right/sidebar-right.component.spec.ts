@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { SidebarRightComponent } from '@app/components/sidebar-right/sidebar-right.component';
+import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
+import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
-import { PlayerLetterHand } from '@app/classes/player-letter-hand';
-import { FinishGameService } from '@app/services/finish-game.service';
-import { LetterBankService } from '@app/services/letter-bank.service';
 
 describe('SidebarRightComponent', () => {
     let component: SidebarRightComponent;
@@ -190,15 +190,6 @@ describe('SidebarRightComponent', () => {
         timerTurnManagerServiceSpy.gameStatus = 0;
         component.setAttribute();
         expect(letterServiceSpy.reset).not.toHaveBeenCalled();
-    });
-
-    it('skipTurn should not call soloOpponentPlays when game status is 2 and it is his turn', () => {
-        timerTurnManagerServiceSpy.turn = 1;
-        timerTurnManagerServiceSpy.gameStatus = 2;
-        spyOn(textBoxSpy.inputs, 'push');
-        const mySpy = spyOn(component, 'soloOpponentPlays');
-        component.skipTurn();
-        expect(mySpy).toHaveBeenCalled();
     });
 
     it('skipTurn should not call soloOpponentPlays when game status is not 2 and it is not his turn', () => {

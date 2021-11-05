@@ -31,6 +31,7 @@ export class SocketService {
     triggeredQuit: boolean = false;
     isWordValid: BehaviorSubject<boolean>;
     boards: Position[][][];
+    iswordvalid2: boolean;
 
     constructor() {
         this.gameLists = [[]];
@@ -121,12 +122,10 @@ export class SocketService {
             //     this.cancelGame();
             // }
         });
-        /*
         this.socket.on('wordValidation', (wordIsValid) => {
-            this.isWordValidationFinished = true;
-            this.wordIsValid = wordIsValid === 'true' ? true : false;
+            // this.isWordValidationFinished = true;
+            this.iswordvalid2 = wordIsValid;
         });
-        */
     }
     sendInitiateNewGameInformation(
         playTime: number,
@@ -179,14 +178,24 @@ export class SocketService {
         this.ableToJoin = true;
     }
 
-    validateWord(wordCreated: string) {
-        this.socket.emit('validateWordOnServer', wordCreated);
+    async validateWord(wordCreated: string): Promise<boolean> {
+        return new Promise<boolean>((resolve) => {
+            this.socket.emit('validateWordOnServer', wordCreated, (response: boolean) => {
+                resolve(response);
+            });
+        }).then((res: boolean) => {
+            // this.isWordValid.next(res);
+            //  this.iswordvalid2 = res;
+            return res;
+        });
     }
     setGameMode(gameMode: number) {
         this.gameMode = gameMode;
     }
 
     sendLetterReplaced(lettersToReplace: string, gameStatus: number) {
+        // eslint-disable-next-line no-console
+        console.log(gameStatus);
         if (gameStatus !== 2) {
             this.socket.emit('sendLettersReplaced', lettersToReplace, gameStatus, this.roomNumber);
         }
