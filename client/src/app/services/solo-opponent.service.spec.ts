@@ -110,12 +110,12 @@ describe('SoloOpponentService', () => {
         expect(spy3).toHaveBeenCalled();
     });
 
-    it('play should call calculate probability twice when it playing', () => {
+    it('play should call calculate probability twice when it playing', async () => {
         timerTurnManagerServiceSpy.turn = 1;
         const returnValue = 25;
         const spy = spyOn(service, 'calculateProbability').and.returnValue(returnValue);
         const spy2 = spyOn(service, 'endTurn');
-        service.play();
+        await service.play();
         expect(spy).toHaveBeenCalled();
         expect(spy2).toHaveBeenCalled();
         expect(soloOpponent2ServiceSpy.play).toHaveBeenCalled();

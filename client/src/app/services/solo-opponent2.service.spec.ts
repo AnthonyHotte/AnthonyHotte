@@ -98,7 +98,7 @@ describe('SoloOpponent2Service', () => {
     it('play should call is word playable once', () => {
         gameStateServiceSpy.isBoardEmpty = false;
         const spy = spyOn(service, 'findValidWords').and.returnValue(['allo', 'la', 'le', 'ok']);
-        const spy2 = spyOn(service, 'isWordPlayable').and.returnValue(true);
+        const spy2 = spyOn(service, 'isWordPlayable').and.returnValue(Promise.resolve(true));
         gameStateServiceSpy.lettersOnBoard[0][0] = 'a';
         service.play();
         expect(spy).toHaveBeenCalled();
@@ -107,8 +107,8 @@ describe('SoloOpponent2Service', () => {
     it('play should call isWordPlayable twice', () => {
         gameStateServiceSpy.isBoardEmpty = false;
         const spy = spyOn(service, 'findValidWords').and.returnValue(['allo', 'la', 'le', 'ok']);
-        const spy2 = spyOn(service, 'isWordPlayable').withArgs('allo', 0, 0, 'h').and.returnValue(false);
-        spy2.withArgs('allo', 0, 0, 'v').and.returnValue(true);
+        const spy2 = spyOn(service, 'isWordPlayable').withArgs('allo', 0, 0, 'h').and.returnValue(Promise.resolve(false));
+        spy2.withArgs('allo', 0, 0, 'v').and.returnValue(Promise.resolve(true));
         gameStateServiceSpy.lettersOnBoard[0][0] = 'a';
         service.play();
         expect(spy).toHaveBeenCalled();
@@ -118,58 +118,58 @@ describe('SoloOpponent2Service', () => {
         const result = service.findValidWords(['allo', 'okay'], ['l', 'e']);
         expect(result.length).toEqual(0);
     });
-    it('isWordPlayable should return false', () => {
-        const result = service.isWordPlayable('allo', 1, 1, 'h');
-        expect(result).toBe(false);
+    it('isWordPlayable should return false', async () => {
+        const result = await service.isWordPlayable('allo', 1, 1, 'h');
+        expect(result).toEqual(false);
     });
-    it('isWordPlayable should return false when not available', () => {
+    it('isWordPlayable should return false when not available', async () => {
         placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
         placeLettersServiceSpy.verifyAvailable.and.returnValue(false);
-        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        const result = await service.isWordPlayable('allo', 1, 1, 'h');
         expect(result).toBe(false);
     });
-    it('isWordPlayable should return false when not enought ressources', () => {
+    it('isWordPlayable should return false when not enought ressources', async () => {
         placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
         placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
         gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(false);
-        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        const result = await service.isWordPlayable('allo', 1, 1, 'h');
         expect(result).toBe(false);
     });
-    it('isWordPlayable should return false when not on h8', () => {
+    it('isWordPlayable should return false when not on h8', async () => {
         placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
         placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
         gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
         gameStateServiceSpy.isBoardEmpty = true;
         gameStateServiceSpy.isLetterOnh8.and.returnValue(false);
-        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        const result = await service.isWordPlayable('allo', 1, 1, 'h');
         expect(result).toBe(false);
     });
-    it('isWordPlayable should return true', () => {
+    it('isWordPlayable should return true', async () => {
         placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
         placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
         gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
         gameStateServiceSpy.isBoardEmpty = true;
         gameStateServiceSpy.isLetterOnh8.and.returnValue(true);
-        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        const result = await service.isWordPlayable('allo', 1, 1, 'h');
         expect(result).toBe(true);
     });
-    it('isWordPlayable should return false when las letter added lenght == 0', () => {
+    it('isWordPlayable should return false when las letter added lenght == 0', async () => {
         placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
         placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
         gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
         gameStateServiceSpy.isBoardEmpty = false;
         gameStateServiceSpy.lastLettersAdded = '';
-        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        const result = await service.isWordPlayable('allo', 1, 1, 'h');
         expect(result).toBe(false);
     });
-    it('isWordPlayable should return false when letter not touching board', () => {
+    it('isWordPlayable should return false when letter not touching board', async () => {
         placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
         placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
         gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
         gameStateServiceSpy.isBoardEmpty = false;
         gameStateServiceSpy.lastLettersAdded = 'adr';
         gameStateServiceSpy.isWordTouchingLetterOnBoard.and.returnValue(false);
-        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        const result = await service.isWordPlayable('allo', 1, 1, 'h');
         expect(result).toBe(false);
     });
     /* it('isWordPlayable should return false when word not validated', async () => {
@@ -192,26 +192,26 @@ describe('SoloOpponent2Service', () => {
         gameStateServiceSpy.isWordTouchingLetterOnBoard.and.returnValue(true);
         // const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(Promise.resolve(true));
         gameStateServiceSpy.validateWordCreatedByNewLetters.and.returnValue(Promise.resolve(true));
-        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        const result = await service.isWordPlayable('allo', 1, 1, 'h');
         expect(result).toBe(true);
     });
-    it('play should return !placer undefined', () => {
+    it('play should return !placer undefined', async () => {
         gameStateServiceSpy.isBoardEmpty = false;
         for (let i = 0; i < NUMBEROFCASE; i++) {
             for (let j = 0; j < NUMBEROFCASE; j++) {
                 gameStateServiceSpy.lettersOnBoard[i][j] = '';
             }
         }
-        const result = service.play();
+        const result = await service.play();
         expect(result).toEqual('!placer undefined');
     });
-    it('play should call findValide word', () => {
+    it('play should call findValide word', async () => {
         gameStateServiceSpy.isBoardEmpty = true;
         const spy = spyOn(service, 'findValidWords').and.returnValue([]);
-        service.play();
+        await service.play();
         expect(spy).toHaveBeenCalled();
     });
-    it('play should when board not empty', () => {
+    it('play should when board not empty', async () => {
         gameStateServiceSpy.isBoardEmpty = false;
         const spy = spyOn(service, 'findValidWords').and.returnValue([]);
         for (let i = 0; i < NUMBEROFCASE; i++) {
@@ -219,10 +219,10 @@ describe('SoloOpponent2Service', () => {
                 gameStateServiceSpy.lettersOnBoard[i][j] = 'a';
             }
         }
-        service.play();
+        await service.play();
         expect(spy).toHaveBeenCalled();
     });
-    it('play should call findValidWords with no letter on board match', () => {
+    it('play should call findValidWords with no letter on board match', async () => {
         gameStateServiceSpy.isBoardEmpty = false;
         const spy = spyOn(service, 'findValidWords').and.returnValue(['low']);
         for (let i = 0; i < NUMBEROFCASE; i++) {
@@ -230,19 +230,19 @@ describe('SoloOpponent2Service', () => {
                 gameStateServiceSpy.lettersOnBoard[i][j] = 'a';
             }
         }
-        service.play();
+        await service.play();
         expect(spy).toHaveBeenCalled();
     });
-    it('play should call is word playable', () => {
+    it('play should call is word playable', async () => {
         gameStateServiceSpy.isBoardEmpty = false;
         const spy = spyOn(service, 'findValidWords').and.returnValue(['allo']);
-        const spy2 = spyOn(service, 'isWordPlayable').and.returnValue(false);
+        const spy2 = spyOn(service, 'isWordPlayable').and.returnValue(Promise.resolve(false));
         for (let i = 0; i < NUMBEROFCASE; i++) {
             for (let j = 0; j < NUMBEROFCASE; j++) {
                 gameStateServiceSpy.lettersOnBoard[i][j] = 'a';
             }
         }
-        service.play();
+        await service.play();
         expect(spy).toHaveBeenCalled();
         expect(spy2).toHaveBeenCalled();
     });
