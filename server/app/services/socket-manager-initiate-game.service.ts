@@ -42,7 +42,6 @@ export class SocketManager {
                     });
                     // removes possibility to join room
                     this.roomsService.rooms[this.roomsService.indexNextRoom].setRoomOccupied();
-                    this.roomsService.listRoomWaiting.splice(this.roomsService.indexNextRoom, 1);
                 } else {
                     // put the room in the waiting room list
                     this.roomsService.listRoomWaiting.push(this.roomsService.rooms[this.roomsService.indexNextRoom]);
@@ -62,6 +61,9 @@ export class SocketManager {
                             this.roomsService.rooms[roomNumber].playerNames[1] = info.playerJoinName;
                             // adding socket id to the room
                             this.roomsService.rooms[roomNumber].socketsId[1] = socket.id;
+                            this.sio
+                                .to(this.roomsService.rooms[roomNumber].roomName)
+                                .emit('CancellationIndexes', [this.roomsService.indexNextRoom, this.roomsService.listRoomWaiting.length - 1]);
                             // start game for the joiner
                             socket.emit('startGame', {
                                 room: this.roomsService.rooms[roomNumber],
@@ -92,6 +94,13 @@ export class SocketManager {
             });
             socket.on('returnListOfGames', () => {
                 this.games.length = 0;
+                let k = 0;
+                while (k < this.roomsService.listRoomWaiting.length) {
+                    if (!this.roomsService.listRoomWaiting[k].roomIsAvailable) {
+                        this.roomsService.listRoomWaiting.splice(k, 1);
+                    }
+                    k++;
+                }
                 for (let i = 0; i < this.roomsService.listRoomWaiting.length; i++) {
                     if (this.roomsService.listRoomWaiting !== undefined) {
                         this.games.push(['name', 'bonus', 'time', 'lettersOfCreator', 'lettersJoiner']);
@@ -115,8 +124,7 @@ export class SocketManager {
             });
             socket.on('cancelWaitingGame', (indexes) => {
                 this.roomsService.indexNextRoom--;
-                this.roomsService.rooms.splice(indexes[0], 1);
-                this.roomsService.rooms.push(new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length));
+                this.roomsService.rooms[indexes[0]] = new Room('room number' + indexes[0], indexes[0]);
                 this.roomsService.listRoomWaiting.splice(indexes[1], 1);
             });
 
@@ -131,28 +139,39 @@ export class SocketManager {
             });
             socket.on('gameFinished', (roomNumber) => {
                 this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('gameIsFinished');
+                this.roomsService.rooms[roomNumber].setRoomOccupied();
+                let k = 0;
+                while (k < this.roomsService.listRoomWaiting.length) {
+                    if (!this.roomsService.listRoomWaiting[k].roomIsAvailable) {
+                        this.roomsService.listRoomWaiting.splice(k, 1);
+                    }
+                    k++;
+                }
                 this.roomsService.indexNextRoom--;
-                this.roomsService.rooms.splice(roomNumber, 1);
-                this.roomsService.rooms.push(new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length));
+                this.roomsService.rooms[roomNumber] = new Room('room number' + roomNumber, roomNumber);
             });
 
             socket.on('disconnect', () => {
-                    let index = 0;
-                    for (const room of this.roomsService.rooms) {
-                        for (const socketId of room.socketsId) {
-                            if (socketId === socket.id) {
-                                this.sio.to(this.roomsService.rooms[index].roomName).emit('gameIsFinished');
-                                this.roomsService.indexNextRoom--;
-                                this.roomsService.rooms.splice(index, 1);
-                                this.roomsService.rooms.push(
-                                    new Room('room number' + this.roomsService.rooms.length, this.roomsService.rooms.length),
-                                );
-                                break;
+                let index = 0;
+                for (const room of this.roomsService.rooms) {
+                    for (const socketId of room.socketsId) {
+                        if (socketId === socket.id) {
+                            this.sio.to(this.roomsService.rooms[index].roomName).emit('gameIsFinished');
+                            this.roomsService.rooms[index].setRoomOccupied();
+                            let k = 0;
+                            while (k < this.roomsService.listRoomWaiting.length) {
+                                if (!this.roomsService.listRoomWaiting[k].roomIsAvailable) {
+                                    this.roomsService.listRoomWaiting.splice(k, 1);
+                                }
+                                k++;
                             }
+                            this.roomsService.indexNextRoom--;
+                            this.roomsService.rooms[index] = new Room('room number' + index, index);
+                            break;
                         }
-                        ++index;
                     }
-                }, TIME_FOR_RESPONSE);
+                    ++index;
+                }
             });
         });
     }

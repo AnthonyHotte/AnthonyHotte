@@ -112,6 +112,9 @@ export class SocketService {
 
         this.socket.on('gameIsFinished', () => {
             this.updateOfEndGameValue.next(true);
+            // if (!this.triggeredQuit) {
+            //     this.cancelGame();
+            // }
         });
         /*
         this.socket.on('wordValidation', (wordIsValid) => {
@@ -158,9 +161,11 @@ export class SocketService {
     }
 
     cancelGame() {
-        this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
-        const INEXISTING_ROOM = -1;
-        this.cancellationIndexes = [INEXISTING_ROOM, INEXISTING_ROOM];
+        if (this.cancellationIndexes[0] >= 0 && this.cancellationIndexes[1] >= 0) {
+            this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
+            const INEXISTING_ROOM = -1;
+            this.cancellationIndexes = [INEXISTING_ROOM, INEXISTING_ROOM];
+        }
     }
 
     setAbleToJoinGame() {
@@ -186,6 +191,7 @@ export class SocketService {
     }
 
     handleDisconnect() {
+        this.triggeredQuit = true;
         this.socket.disconnect();
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { LetterService } from '@app/services/letter.service';
 import { SocketService } from '@app/services/socket.service';
@@ -17,6 +17,11 @@ export class OpponentWaitingRoomComponent implements OnInit {
         private indexWaitingRoomService: IndexWaitingRoomService,
         private letterService: LetterService,
     ) {}
+
+    @HostListener('window:beforeunload', ['$event'])
+    beforeUnloadHandler() {
+        this.socketInformation.handleDisconnect();
+    }
 
     ngOnInit(): void {
         this.fillGamesList();

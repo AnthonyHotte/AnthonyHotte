@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PopUpData } from '@app/classes/pop-up-data';
 import { PopUpComponent } from '@app/components/pop-up/pop-up.component';
@@ -45,6 +45,12 @@ export class SoloGameInitiatorComponent {
         this.easyDifficulty = true;
         this.messageService.gameStartingInfoSubscribe();
     }
+
+    @HostListener('window:beforeunload', ['$event'])
+    beforeUnloadHandler() {
+        this.socketService.handleDisconnect();
+    }
+
     joinGame() {
         this.setName();
         this.timeManager.timePerTurn = parseInt(this.socketService.gameLists[this.indexWaitingRoomService.getIndex()][2], 10); // timePerTurn

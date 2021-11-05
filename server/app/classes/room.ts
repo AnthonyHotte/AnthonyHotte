@@ -20,6 +20,7 @@ export class Room {
     // letters of players
     lettersCreator: Letter[];
     lettersJoiner: Letter[];
+    isGeneric = true;
     constructor(name: string, index: number) {
         this.roomName = name;
         this.timePerTurn = VALEUR_TEMPS_DEFAULT;
@@ -31,6 +32,8 @@ export class Room {
         this.turnsSkippedInARow = 0;
         this.lettersCreator = [];
         this.lettersJoiner = [];
+        this.isGeneric = true;
+        this.roomIsAvailable = true;
     }
     setStartingInfo(time: number, namePlayer: string, socketId: string, bonusOn: boolean, lettersCreator: Letter[], lettersOpponent: Letter[]) {
         this.timePerTurn = time;
@@ -43,6 +46,8 @@ export class Room {
         for (const letter of lettersOpponent) {
             this.lettersJoiner.push(letter);
         }
+        this.isGeneric = false;
+        this.roomIsAvailable = true;
     }
 
     cleanRoom() {
