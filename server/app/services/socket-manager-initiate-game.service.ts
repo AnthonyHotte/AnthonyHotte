@@ -123,14 +123,7 @@ export class SocketManager {
                 this.roomsService.rooms[endTurn.roomNumber].turnsSkippedInARow = endTurn.numberSkipTurn;
                 this.sio.to(this.roomsService.rooms[endTurn.roomNumber].socketsId[endTurn.playerTurnStatus]).emit('yourTurn');
             });
-            // eslint-disable-next-line no-unused-vars
             socket.on('validateWordOnServer', (wordCreated, ackCallback) => {
-                // eslint-disable-next-line no-console
-                console.log('recu');
-                // eslint-disable-next-line no-console
-                console.log('mot recu' + wordCreated);
-                // eslint-disable-next-line no-console
-                console.log(this.wordValidationService.isWordValid(wordCreated));
                 socket.emit('wordValidation', this.wordValidationService.isWordValid(wordCreated));
                 ackCallback(this.wordValidationService.isWordValid(wordCreated));
             });
