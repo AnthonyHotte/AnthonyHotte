@@ -154,9 +154,7 @@ export class SocketService {
             this.socket.emit('toOpponent', message, gameStatus, this.roomNumber);
         }
     }
-    endTurn(turnsSkippedInARow: number, nextPlayerTurn: GameStatus) {
-        this.socket.emit('endTurn', { roomNumber: this.roomNumber, turnSkipped: turnsSkippedInARow, playerTurnStatus: nextPlayerTurn });
-    }
+
     cancelGame() {
         this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
         const INEXISTING_ROOM = -1;
