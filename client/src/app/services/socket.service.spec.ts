@@ -58,8 +58,15 @@ describe('SocketService', () => {
         expect(emitSpy).not.toHaveBeenCalled();
     });
 
+    it('cancelGame should not call emit', () => {
+        const emitSpy = spyOn(service.socket, 'emit');
+        service.cancelGame();
+        expect(emitSpy).not.toHaveBeenCalled();
+    });
+
     it('cancelGame should call emit', () => {
         const emitSpy = spyOn(service.socket, 'emit');
+        service.cancellationIndexes = [0, 0];
         service.cancelGame();
         expect(emitSpy).toHaveBeenCalled();
     });
