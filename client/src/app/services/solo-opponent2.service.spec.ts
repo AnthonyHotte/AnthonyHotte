@@ -80,21 +80,39 @@ describe('SoloOpponent2Service', () => {
         const dictionnary = ['allo', 'test', 'bonjour'];
         const letters = ['a', 'l', 'l', 'o'];
         const returnedvalue = service.findValidWords(dictionnary, letters);
-        service.play();
         expect(returnedvalue[0]).toBe('allo');
     });
+    /*
     it('should find valid word', () => {
         const dictionnary = ['allo', 'test', 'bonjour'];
-        const letters = ['a', 'l', 'l', 'o'];
+        const letters = ['*', 'l', 'l', 'o'];
         const returnedvalue = service.findValidWords(dictionnary, letters);
-        service.play();
         expect(returnedvalue[0]).toBe('allo');
-    });
+    });*/
 
     it('should find place word for first word', () => {
         gameStateServiceSpy.isBoardEmpty = true;
         service.play();
         expect(placeLettersServiceSpy.placeWord).toHaveBeenCalled();
+    });
+    it('play should call is word playable once', () => {
+        gameStateServiceSpy.isBoardEmpty = false;
+        const spy = spyOn(service, 'findValidWords').and.returnValue(['allo', 'la', 'le', 'ok']);
+        const spy2 = spyOn(service, 'isWordPlayable').and.returnValue(true);
+        gameStateServiceSpy.lettersOnBoard[0][0] = 'a';
+        service.play();
+        expect(spy).toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalled();
+    });
+    it('play should call isWordPlayable twice', () => {
+        gameStateServiceSpy.isBoardEmpty = false;
+        const spy = spyOn(service, 'findValidWords').and.returnValue(['allo', 'la', 'le', 'ok']);
+        const spy2 = spyOn(service, 'isWordPlayable').withArgs('allo', 0, 0, 'h').and.returnValue(false);
+        spy2.withArgs('allo', 0, 0, 'v').and.returnValue(true);
+        gameStateServiceSpy.lettersOnBoard[0][0] = 'a';
+        service.play();
+        expect(spy).toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalled();
     });
     it("should verify word isn't valid", () => {
         const result = service.findValidWords(['allo', 'okay'], ['l', 'e']);
