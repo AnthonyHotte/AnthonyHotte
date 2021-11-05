@@ -1,5 +1,6 @@
 import { VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { Letter } from '@app/letter';
+import { Position } from './position-tile-interface';
 
 export class Room {
     // to handle the deconnection
@@ -21,6 +22,8 @@ export class Room {
     lettersCreator: Letter[];
     lettersJoiner: Letter[];
     isGeneric = true;
+    bonusTiles: Position[][];
+
     constructor(name: string, index: number) {
         this.roomName = name;
         this.timePerTurn = VALEUR_TEMPS_DEFAULT;
@@ -35,7 +38,15 @@ export class Room {
         this.isGeneric = true;
         this.roomIsAvailable = true;
     }
-    setStartingInfo(time: number, namePlayer: string, socketId: string, bonusOn: boolean, lettersCreator: Letter[], lettersOpponent: Letter[]) {
+    setStartingInfo(
+        time: number,
+        namePlayer: string,
+        socketId: string,
+        bonusOn: boolean,
+        lettersCreator: Letter[],
+        lettersOpponent: Letter[],
+        bonusTiles: Position[][],
+    ) {
         this.timePerTurn = time;
         this.bonusOn = bonusOn;
         this.playerNames[0] = namePlayer;
@@ -48,6 +59,8 @@ export class Room {
         }
         this.isGeneric = false;
         this.roomIsAvailable = true;
+        this.bonusTiles = [];
+        this.bonusTiles = bonusTiles;
     }
 
     cleanRoom() {
