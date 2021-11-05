@@ -137,8 +137,6 @@ export class SocketManager {
             });
 
             socket.on('disconnect', () => {
-                const TIME_FOR_RESPONSE = 5000;
-                setTimeout(() => {
                     let index = 0;
                     for (const room of this.roomsService.rooms) {
                         for (const socketId of room.socketsId) {
