@@ -4,7 +4,7 @@ import { CENTERCASE, NUMBEROFCASE } from '@app/constants';
 import { GameStateService } from '@app/services/game-state.service';
 import { WordValidationService } from '@app/services/word-validation.service';
 
-fdescribe('GameStateService', () => {
+describe('GameStateService', () => {
     let service: GameStateService;
     let wordValidationServiceSpy: jasmine.SpyObj<WordValidationService>;
     beforeEach(
