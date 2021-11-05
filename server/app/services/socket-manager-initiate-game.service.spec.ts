@@ -1,3 +1,4 @@
+/*
 // eslint-disable-next-line max-classes-per-file
 import { Room } from '@app/classes/room';
 import { NUMBEROFROOMS } from '@app/constants';
@@ -256,5 +257,69 @@ describe('Socket Manager', () => {
         socketServer.socket.peerSideEmit('sendLettersReplaced');
         // assert(mySpy.called);
         done();
+    });
+});
+*/
+// with { "type": "module" } in your package.json
+import { createServer } from 'http';
+import { io as Client } from 'socket.io-client';
+import { Server } from 'socket.io';
+import { assert } from 'chai';
+import { stub } from 'sinon';
+import { SocketManager } from './socket-manager-initiate-game.service';
+import { RoomsService } from './rooms.service';
+import { WordValidationService } from './word-validation.service';
+
+// with { "type": "commonjs" } in your package.json
+// const { createServer } = require("http");
+// const { Server } = require("socket.io");
+// const Client = require("socket.io-client");
+// const assert = require("chai").assert;
+
+describe('my awesome project', () => {
+    let io: Server;
+    let serverSocket: SocketManager;
+    let clientSocket: unknown;
+    let roomStub: RoomsService;
+    let wordStub: WordValidationService;
+    before((done) => {
+        roomStub = stub(RoomsService) as unknown as RoomsService;
+        wordStub = stub(WordValidationService) as unknown as WordValidationService;
+        const httpServer = createServer();
+        serverSocket = new SocketManager(httpServer, roomStub, wordStub) as SocketManager;
+        io = new Server(httpServer);
+        httpServer.listen(() => {
+            // const port = httpServer.address().port;
+            clientSocket = Client('http://localhost:3000');
+            // clientSocket = new Client(`http://localhost:${port}`);
+            io.on('connection', (socket) => {
+                serverSocket = socket;
+            });
+            clientSocket.on('connect', done);
+        });
+        serverSocket.sio = io;
+    });
+
+    after(() => {
+        io.close();
+        clientSocket.close();
+    });
+
+    it('should work', (done) => {
+        clientSocket.on('hello', (arg) => {
+            assert.equal(arg, 'world');
+            done();
+        });
+        serverSocket.emit('hello', 'world');
+    });
+
+    it('should work (with ack)', (done) => {
+        serverSocket.on('hi', (cb) => {
+            cb('hola');
+        });
+        clientSocket.emit('hi', (arg) => {
+            assert.equal(arg, 'hola');
+            done();
+        });
     });
 });
