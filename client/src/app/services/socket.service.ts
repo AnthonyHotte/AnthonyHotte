@@ -3,12 +3,12 @@ import { GameStatus } from '@app/game-status';
 import { Letter } from '@app/letter';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
     providedIn: 'root',
 })
 export class SocketService {
-    socket = io('http://localhost:3000');
+    socket = io(environment.serverUrl);
     gameLists: string[][];
     roomNumber: number;
     startGame: BehaviorSubject<boolean>;
