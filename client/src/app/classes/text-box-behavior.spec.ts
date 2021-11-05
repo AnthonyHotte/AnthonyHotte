@@ -191,9 +191,11 @@ describe('TextBox', () => {
     });
 
     it('isCommand should call set false if text = mot bien placé', () => {
+        const promise1 = new Promise<string>((resolve) => {
+            resolve('Mot placé avec succès.');
+        });
         timerTurnManagerServiceSpy.turn = 0;
-        // const test: Promise<string> ='Mot placé avec succès.';
-        const mySpyPlaceWord = spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('Mot placé avec succès.');
+        const mySpyPlaceWord = spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue(promise1);
         const mySpyEndTurn = spyOn(textBox, 'endTurn');
         const maChaine = '!placer';
         textBox.isCommand(maChaine);
@@ -218,14 +220,20 @@ describe('TextBox', () => {
     });
 
     it("placeWordOpponent should call verifyCommanPasser if place word doesn't return Mot placé avec succès.", () => {
-        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('allo');
+        const promise1 = new Promise<string>((resolve) => {
+            resolve('allo');
+        });
+        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue(promise1);
         const mySpy = spyOn(textBox, 'verifyCommandPasser');
         textBox.placeWordOpponent('!placer h8h allo', 'abcd');
         expect(mySpy).toHaveBeenCalled();
     });
 
     it('placeWordOpponent should call endTurn if place word returns Mot placé avec succès.', () => {
-        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('Mot placé avec succès.');
+        const promise1 = new Promise<string>((resolve) => {
+            resolve('Mot placé avec succès.');
+        });
+        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue(promise1);
         const mySpy = spyOn(textBox, 'endTurn');
         textBox.placeWordOpponent('!placer h8h allo', 'abcd');
         expect(mySpy).toHaveBeenCalled();
