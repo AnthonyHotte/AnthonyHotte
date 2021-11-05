@@ -10,11 +10,11 @@ import { NUMBEROFCASE, MAXLETTERINHAND } from '@app/constants';
 
 describe('SoloOpponent2Service', () => {
     let service: SoloOpponent2Service;
-    let placeLettersServiceSpy: PlaceLettersService;
-    let gameStateServiceSpy: GameStateService;
-    let lettersServiceSpy: LetterService;
-    let letterBankServiceSpy: LetterBankService;
-    let timeManagerServiceSpy: TimerTurnManagerService;
+    let placeLettersServiceSpy: jasmine.SpyObj<PlaceLettersService>;
+    let gameStateServiceSpy: jasmine.SpyObj<GameStateService>;
+    let lettersServiceSpy: jasmine.SpyObj<LetterService>;
+    let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
+    let timeManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
     beforeEach(
         waitForAsync(() => {
             timeManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
@@ -82,13 +82,13 @@ describe('SoloOpponent2Service', () => {
         const returnedvalue = service.findValidWords(dictionnary, letters);
         expect(returnedvalue[0]).toBe('allo');
     });
-    /*
+
     it('should find valid word', () => {
         const dictionnary = ['allo', 'test', 'bonjour'];
-        const letters = ['*', 'l', 'l', 'o'];
+        const letters = ['a', '*', 'l', 'o'];
         const returnedvalue = service.findValidWords(dictionnary, letters);
         expect(returnedvalue[0]).toBe('allo');
-    });*/
+    });
 
     it('should find place word for first word', () => {
         gameStateServiceSpy.isBoardEmpty = true;
@@ -121,5 +121,128 @@ describe('SoloOpponent2Service', () => {
     it('isWordPlayable should return false', () => {
         const result = service.isWordPlayable('allo', 1, 1, 'h');
         expect(result).toBe(false);
+    });
+    it('isWordPlayable should return false when not available', () => {
+        placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
+        placeLettersServiceSpy.verifyAvailable.and.returnValue(false);
+        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        expect(result).toBe(false);
+    });
+    it('isWordPlayable should return false when not enought ressources', () => {
+        placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
+        placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
+        gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(false);
+        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        expect(result).toBe(false);
+    });
+    it('isWordPlayable should return false when not on h8', () => {
+        placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
+        placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
+        gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
+        gameStateServiceSpy.isBoardEmpty = true;
+        gameStateServiceSpy.isLetterOnh8.and.returnValue(false);
+        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        expect(result).toBe(false);
+    });
+    it('isWordPlayable should return true', () => {
+        placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
+        placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
+        gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
+        gameStateServiceSpy.isBoardEmpty = true;
+        gameStateServiceSpy.isLetterOnh8.and.returnValue(true);
+        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        expect(result).toBe(true);
+    });
+    it('isWordPlayable should return false when las letter added lenght == 0', () => {
+        placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
+        placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
+        gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
+        gameStateServiceSpy.isBoardEmpty = false;
+        gameStateServiceSpy.lastLettersAdded = '';
+        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        expect(result).toBe(false);
+    });
+    it('isWordPlayable should return false when letter not touching board', () => {
+        placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
+        placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
+        gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
+        gameStateServiceSpy.isBoardEmpty = false;
+        gameStateServiceSpy.lastLettersAdded = 'adr';
+        gameStateServiceSpy.isWordTouchingLetterOnBoard.and.returnValue(false);
+        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        expect(result).toBe(false);
+    });
+    it('isWordPlayable should return false when word not validated', () => {
+        placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
+        placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
+        gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
+        gameStateServiceSpy.lastLettersAdded = 'adr';
+        gameStateServiceSpy.isBoardEmpty = false;
+        gameStateServiceSpy.isWordTouchingLetterOnBoard.and.returnValue(true);
+        gameStateServiceSpy.validateWordCreatedByNewLetters.and.returnValue(false);
+        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        expect(result).toBe(false);
+    });
+    it('isWordPlayable should return true when word validated', () => {
+        placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
+        placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
+        gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
+        gameStateServiceSpy.lastLettersAdded = 'adr';
+        gameStateServiceSpy.isBoardEmpty = false;
+        gameStateServiceSpy.isWordTouchingLetterOnBoard.and.returnValue(true);
+        gameStateServiceSpy.validateWordCreatedByNewLetters.and.returnValue(true);
+        const result = service.isWordPlayable('allo', 1, 1, 'h');
+        expect(result).toBe(true);
+    });
+    it('play should return !placer undefined', () => {
+        gameStateServiceSpy.isBoardEmpty = false;
+        for (let i = 0; i < NUMBEROFCASE; i++) {
+            for (let j = 0; j < NUMBEROFCASE; j++) {
+                gameStateServiceSpy.lettersOnBoard[i][j] = '';
+            }
+        }
+        const result = service.play();
+        expect(result).toEqual('!placer undefined');
+    });
+    it('play should call findValide word', () => {
+        gameStateServiceSpy.isBoardEmpty = true;
+        const spy = spyOn(service, 'findValidWords').and.returnValue([]);
+        service.play();
+        expect(spy).toHaveBeenCalled();
+    });
+    it('play should when board not empty', () => {
+        gameStateServiceSpy.isBoardEmpty = false;
+        const spy = spyOn(service, 'findValidWords').and.returnValue([]);
+        for (let i = 0; i < NUMBEROFCASE; i++) {
+            for (let j = 0; j < NUMBEROFCASE; j++) {
+                gameStateServiceSpy.lettersOnBoard[i][j] = 'a';
+            }
+        }
+        service.play();
+        expect(spy).toHaveBeenCalled();
+    });
+    it('play should call findValidWords with no letter on board match', () => {
+        gameStateServiceSpy.isBoardEmpty = false;
+        const spy = spyOn(service, 'findValidWords').and.returnValue(['low']);
+        for (let i = 0; i < NUMBEROFCASE; i++) {
+            for (let j = 0; j < NUMBEROFCASE; j++) {
+                gameStateServiceSpy.lettersOnBoard[i][j] = 'a';
+            }
+        }
+        service.play();
+        expect(spy).toHaveBeenCalled();
+    });
+    it('play should call is word playable', () => {
+        gameStateServiceSpy.isBoardEmpty = false;
+        const spy = spyOn(service, 'findValidWords').and.returnValue(['allo']);
+        const spy2 = spyOn(service, 'isWordPlayable').and.returnValue(false);
+        for (let i = 0; i < NUMBEROFCASE; i++) {
+            for (let j = 0; j < NUMBEROFCASE; j++) {
+                gameStateServiceSpy.lettersOnBoard[i][j] = 'a';
+            }
+        }
+        service.play();
+        expect(spy).toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalled();
     });
 });
