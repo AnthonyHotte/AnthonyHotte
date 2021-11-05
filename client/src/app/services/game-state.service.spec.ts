@@ -181,12 +181,12 @@ describe('GameStateService', () => {
         });
     });
 
-    it('validateWordCreatedByNewLetters should return true when horizontal valid word', () => {
+    it('validateWordCreatedByNewLetters should return true when horizontal valid word', async () => {
         service.orientationOfLastWord = 'v';
         wordValidationServiceSpy.isPartOfWordHorizontal.and.returnValue(true);
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(true);
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(true);
-        const result = service.validateWordCreatedByNewLetters();
+        wordValidationServiceSpy.validateVerticalWord.and.returnValue(Promise.resolve(true));
+        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(Promise.resolve(true));
+        const result = await service.validateWordCreatedByNewLetters(false);
         expect(result).toBe(true);
     });
     it('isWordCreationPossibleWithRessources should return true when not part of horizontal word', () => {
