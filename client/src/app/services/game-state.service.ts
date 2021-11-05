@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as constants from '@app/constants';
-import { WordValidationService } from '@app/services/word-validation.service';
-import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { LetterService } from '@app/services/letter.service';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { WordValidationService } from '@app/services/word-validation.service';
 
 @Injectable({
     providedIn: 'root',
@@ -54,27 +54,35 @@ export class GameStateService {
         }
     }
 
-    validateWordCreatedByNewLetters(): boolean {
+    async validateWordCreatedByNewLetters(): Promise<boolean> {
         this.wordValidator.indexLastLetters = this.indexLastLetters;
         this.wordValidator.pointsForLastWord = 0;
         if (this.orientationOfLastWord === 'h') {
-            if (!this.wordValidator.validateHorizontalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard)) {
+            if (!(await this.wordValidator.validateHorizontalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard))) {
                 return false;
             }
             for (let i = 0; i < this.indexLastLetters.length; i += 2) {
                 if (this.wordValidator.isPartOfWordVertical(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
-                    if (!this.wordValidator.validateVerticalWord(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
+                    if (
+                        !(await this.wordValidator.validateVerticalWord(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard))
+                    ) {
                         return false;
                     }
                 }
             }
         } else {
-            if (!this.wordValidator.validateVerticalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard)) {
+            if (!(await this.wordValidator.validateVerticalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard))) {
                 return false;
             }
             for (let i = 0; i < this.indexLastLetters.length; i += 2) {
                 if (this.wordValidator.isPartOfWordHorizontal(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
-                    if (!this.wordValidator.validateHorizontalWord(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
+                    if (
+                        !(await this.wordValidator.validateHorizontalWord(
+                            this.indexLastLetters[i],
+                            this.indexLastLetters[i + 1],
+                            this.lettersOnBoard,
+                        ))
+                    ) {
                         return false;
                     }
                 }

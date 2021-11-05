@@ -29,7 +29,7 @@ export class SocketService {
     updateOfEndGameValue = new BehaviorSubject(false); // to be observed by finishGameService
     triggeredQuit: boolean = false;
     isWordValid: BehaviorSubject<boolean>;
-
+    iswordvalid2: boolean;
     constructor() {
         this.gameLists = [[]];
         this.startGame = new BehaviorSubject<boolean>(false);
@@ -113,12 +113,10 @@ export class SocketService {
         this.socket.on('gameIsFinished', () => {
             this.updateOfEndGameValue.next(true);
         });
-        /*
         this.socket.on('wordValidation', (wordIsValid) => {
-            this.isWordValidationFinished = true;
-            this.wordIsValid = wordIsValid === 'true' ? true : false;
+            // this.isWordValidationFinished = true;
+            this.iswordvalid2 = wordIsValid;
         });
-        */
     }
     sendInitiateNewGameInformation(
         playTime: number,
@@ -175,7 +173,8 @@ export class SocketService {
                 resolve(response);
             });
         }).then((res: boolean) => {
-            this.isWordValid.next(res);
+            // this.isWordValid.next(res);
+            //  this.iswordvalid2 = res;
             return res;
         });
     }
