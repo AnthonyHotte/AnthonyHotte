@@ -1,19 +1,54 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-
+import { ISocketService } from './socket-wrapper.service';
 import { SocketService } from './socket.service';
+type CallbackSignature = (...params: unknown[]) => void;
+class SocketMock implements ISocketService {
+    private callbacks = new Map<string, CallbackSignature[]>();
+    on(event: string, listener: CallbackSignature): void {
+        if (!this.callbacks.has(event)) {
+            this.callbacks.set(event, []);
+        }
 
+        this.callbacks.get(event)?.push(listener);
+    }
+
+    emit(event: string, ...params: unknown[]): void {
+        return;
+    }
+
+    peerSideEmit(event: string, ...params: unknown[]) {
+        if (!this.callbacks.has(event)) {
+            return;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        for (const callback of this.callbacks.get(event)!) {
+            callback(params);
+        }
+    }
+
+    disconnect(): void {
+        throw new Error('Method not implemented.');
+    }
+}
 describe('SocketService', () => {
     let service: SocketService;
+    const socketMock = new SocketMock();
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [RouterTestingModule],
+        }).compileComponents();
+        TestBed.configureTestingModule({
+            providers: [],
         }).compileComponents();
     });
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(SocketService);
+        (service.socket as unknown) = socketMock;
+        service.configureBaseSocketFeatures();
     });
 
     it('should be created', () => {
@@ -110,5 +145,11 @@ describe('SocketService', () => {
         const emitSpy = spyOn(service.socket, 'emit');
         service.validateWord('allo');
         expect(emitSpy).toHaveBeenCalled();
+    });
+    it('should enter in configureBaseRequest', (done) => {
+        const spys = spyOn(console, 'log').and.callThrough();
+        socketMock.peerSideEmit('connect');
+        expect(spys).toHaveBeenCalled();
+        done();
     });
 });
