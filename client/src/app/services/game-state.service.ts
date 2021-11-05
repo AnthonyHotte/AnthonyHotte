@@ -54,24 +54,31 @@ export class GameStateService {
         }
     }
 
-    async validateWordCreatedByNewLetters(): Promise<boolean> {
+    async validateWordCreatedByNewLetters(onServer: boolean): Promise<boolean> {
         this.wordValidator.indexLastLetters = this.indexLastLetters;
         this.wordValidator.pointsForLastWord = 0;
         if (this.orientationOfLastWord === 'h') {
-            if (!(await this.wordValidator.validateHorizontalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard))) {
+            if (
+                !(await this.wordValidator.validateHorizontalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard, onServer))
+            ) {
                 return false;
             }
             for (let i = 0; i < this.indexLastLetters.length; i += 2) {
                 if (this.wordValidator.isPartOfWordVertical(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
                     if (
-                        !(await this.wordValidator.validateVerticalWord(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard))
+                        !(await this.wordValidator.validateVerticalWord(
+                            this.indexLastLetters[i],
+                            this.indexLastLetters[i + 1],
+                            this.lettersOnBoard,
+                            onServer,
+                        ))
                     ) {
                         return false;
                     }
                 }
             }
         } else {
-            if (!(await this.wordValidator.validateVerticalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard))) {
+            if (!(await this.wordValidator.validateVerticalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard, onServer))) {
                 return false;
             }
             for (let i = 0; i < this.indexLastLetters.length; i += 2) {
@@ -81,6 +88,7 @@ export class GameStateService {
                             this.indexLastLetters[i],
                             this.indexLastLetters[i + 1],
                             this.lettersOnBoard,
+                            onServer,
                         ))
                     ) {
                         return false;

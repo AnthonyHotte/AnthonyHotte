@@ -189,7 +189,7 @@ export class PlaceLettersService {
     }
 
     async validateWordPlaced(lettersToReplace?: string) {
-        if (!(await this.gameState.validateWordCreatedByNewLetters())) {
+        if (!(await this.gameState.validateWordCreatedByNewLetters(true))) {
             const delay = 3000;
             setTimeout(() => {
                 for (let i = 0; i < this.gameState.indexLastLetters.length; i += 2) {
@@ -201,7 +201,11 @@ export class PlaceLettersService {
             return false;
         } else {
             if (lettersToReplace === undefined) {
-                this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
+                if (this.timeManager.gameStatus === 2) {
+                    this.letterService.players[1].removeLetters(this.gameState.lastLettersAddedJoker);
+                } else {
+                    this.letterService.players[1].removeLetters(this.gameState.lastLettersAddedJoker);
+                }
                 this.socket.sendLetterReplaced(this.letterService.players[0].lettersReplaced, this.timeManager.gameStatus);
             } else {
                 this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker, lettersToReplace);

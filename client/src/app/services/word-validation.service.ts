@@ -64,7 +64,7 @@ export class WordValidationService {
         return true;
     }
 
-    async validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][]): Promise<boolean> {
+    async validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][], onServer: boolean): Promise<boolean> {
         let beginIndexWord = 0;
         let lastIndexWord = 0;
         let firstColumnOfWord = 0;
@@ -96,10 +96,14 @@ export class WordValidationService {
         // this.delay(timeToWait);
         // return this.validatedWord;
         // temporaire
-        return await this.socket.validateWord(wordCreated);
+        if (onServer) {
+            return await this.socket.validateWord(wordCreated);
+        } else {
+            return this.isWordValid(wordCreated);
+        }
     }
 
-    async validateVerticalWord(row: number, column: number, lettersOnBoard: string[][]): Promise<boolean> {
+    async validateVerticalWord(row: number, column: number, lettersOnBoard: string[][], onServer: boolean): Promise<boolean> {
         let beginIndexWord = 0;
         let lastIndexWord = 0;
         let firstRowOfWord = 0;
@@ -124,11 +128,15 @@ export class WordValidationService {
 
         // set timer
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        const timeToWait = 3000;
-        this.delay(timeToWait);
+        // const timeToWait = 3000;
+        // this.delay(timeToWait);
         // return this.validatedWord;
         // temporaire
-        return await this.socket.validateWord(wordCreated);
+        if (onServer) {
+            return await this.socket.validateWord(wordCreated);
+        } else {
+            return this.isWordValid(wordCreated);
+        }
     }
     async delay(ms: number) {
         return new Promise((resolve) => setTimeout(resolve, ms));

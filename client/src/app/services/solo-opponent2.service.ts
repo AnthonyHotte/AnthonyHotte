@@ -132,7 +132,7 @@ export class SoloOpponent2Service {
                     isPlayable = false;
                 } else if (!this.gameStateService.isWordTouchingLetterOnBoard(word, this.placeLetterService.orientation)) {
                     isPlayable = false;
-                } else if (!this.gameStateService.validateWordCreatedByNewLetters()) {
+                } else if (!this.gameStateService.validateWordCreatedByNewLetters(false)) {
                     isPlayable = false;
                 }
             } else {

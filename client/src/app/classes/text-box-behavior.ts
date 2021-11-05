@@ -196,7 +196,7 @@ export class TextBox {
         if (this.letterBankService.letterBank.length >= ALLOWED_NUMBER_OF_LETTERS) {
             const letters = word.substring('!échanger '.length, word.length);
             if (this.letterService.players[this.timeManager.turn].handContainLetters(letters)) {
-                if (lettersToReplace === undefined) {
+                if (lettersToReplace === undefined || this.timeManager.gameStatus === 2) {
                     const lettersReplacedExchange = this.letterService.players[this.timeManager.turn].exchangeLetters(letters);
                     this.socketService.sendLetterReplaced(lettersReplacedExchange, this.timeManager.gameStatus);
                     this.socketService.configureSendMessageToServer('!échanger ' + letters, this.timeManager.gameStatus);

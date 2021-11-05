@@ -21,7 +21,7 @@ export class SoloOpponentService {
     ) {
         this.letters.players[1].addLetters(MAXLETTERINHAND);
     }
-    play() {
+    async play(): Promise<void> {
         if (this.timeManager.gameStatus === GameStatus.SoloPlayer) {
             if (this.timeManager.turn === 1) {
                 const HUNDRED = 100;

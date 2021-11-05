@@ -192,10 +192,12 @@ describe('TextBox', () => {
 
     it('isCommand should call set false if text = mot bien placé', () => {
         timerTurnManagerServiceSpy.turn = 0;
+        // const test: Promise<string> ='Mot placé avec succès.';
         const mySpyPlaceWord = spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('Mot placé avec succès.');
         const mySpyEndTurn = spyOn(textBox, 'endTurn');
         const maChaine = '!placer';
         textBox.isCommand(maChaine);
+
         expect(mySpyPlaceWord).toHaveBeenCalled();
         expect(mySpyEndTurn).toHaveBeenCalled();
     });
