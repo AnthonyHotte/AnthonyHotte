@@ -204,7 +204,7 @@ export class PlaceLettersService {
                 if (this.timeManager.gameStatus === 2) {
                     this.letterService.players[1].removeLetters(this.gameState.lastLettersAddedJoker);
                 } else {
-                    this.letterService.players[1].removeLetters(this.gameState.lastLettersAddedJoker);
+                    this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
                 }
                 this.socket.sendLetterReplaced(this.letterService.players[0].lettersReplaced, this.timeManager.gameStatus);
             } else {
