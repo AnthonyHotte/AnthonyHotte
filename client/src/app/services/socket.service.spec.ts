@@ -21,7 +21,7 @@ describe('SocketService', () => {
     });
     it('sendInitiateNewGameInformation should call emit', () => {
         const emitSpy = spyOn(service.socket, 'emit');
-        service.sendInitiateNewGameInformation(1, true, 'name', 1, 'name', [], []);
+        service.sendInitiateNewGameInformation(1, true, 'name', 1, 'name', [], [], []);
         expect(emitSpy).toHaveBeenCalled();
     });
 
@@ -29,7 +29,7 @@ describe('SocketService', () => {
         const emitSpy = spyOn(service.socket, 'emit');
         const cancelSpy = spyOn(service, 'cancelGame');
         service.cancellationIndexes = [0, 0];
-        service.sendInitiateNewGameInformation(1, true, 'name', 2, 'name', [], []);
+        service.sendInitiateNewGameInformation(1, true, 'name', 2, 'name', [], [], []);
         expect(emitSpy).toHaveBeenCalled();
         expect(cancelSpy).toHaveBeenCalled();
     });
@@ -58,8 +58,15 @@ describe('SocketService', () => {
         expect(emitSpy).not.toHaveBeenCalled();
     });
 
+    it('cancelGame should not call emit', () => {
+        const emitSpy = spyOn(service.socket, 'emit');
+        service.cancelGame();
+        expect(emitSpy).not.toHaveBeenCalled();
+    });
+
     it('cancelGame should call emit', () => {
         const emitSpy = spyOn(service.socket, 'emit');
+        service.cancellationIndexes = [0, 0];
         service.cancelGame();
         expect(emitSpy).toHaveBeenCalled();
     });

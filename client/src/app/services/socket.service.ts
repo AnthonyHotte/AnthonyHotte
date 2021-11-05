@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GameStatus } from '@app/game-status';
 import { Letter } from '@app/letter';
+import { Position } from '@app/position-tile-interface';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
 
@@ -29,7 +30,9 @@ export class SocketService {
     updateOfEndGameValue = new BehaviorSubject(false); // to be observed by finishGameService
     triggeredQuit: boolean = false;
     isWordValid: BehaviorSubject<boolean>;
+    boards: Position[][][];
     iswordvalid2: boolean;
+
     constructor() {
         this.gameLists = [[]];
         this.startGame = new BehaviorSubject<boolean>(false);
@@ -49,6 +52,7 @@ export class SocketService {
         this.cancellationIndexes = [unexistingRooms, unexistingRooms]; // room number and waiting room number
         this.currentEndGameValue = this.updateOfEndGameValue.asObservable();
         this.isWordValid = new BehaviorSubject<boolean>(false);
+        this.boards = new Array(new Array(new Array()));
     }
 
     getMessageObservable() {
@@ -74,15 +78,17 @@ export class SocketService {
             this.turn.next(info.indexPlayerStart);
             this.startGame.next(true);
         });
-        this.socket.on('sendGamesInformation', (games) => {
+        this.socket.on('sendGamesInformation', (info) => {
             this.gameLists.length = 0;
-            for (let i = 0; i < games.length; i++) {
+            for (let i = 0; i < info.games.length; i++) {
                 this.gameLists.push(['name', 'bonus', 'time', 'lettersCreator', 'lettersJoiner']);
-                this.gameLists[i][0] = games[i][0]; // player name of who is the game initiator
-                this.gameLists[i][1] = games[i][1]; // is random bonus on
-                this.gameLists[i][2] = games[i][2]; // time per turn
-                this.gameLists[i][3] = games[i][3]; // letters of creator
-                this.gameLists[i][4] = games[i][4]; // letters of joiner
+                this.gameLists[i][0] = info.games[i][0]; // player name of who is the game initiator
+                this.gameLists[i][1] = info.games[i][1]; // is random bonus on
+                this.gameLists[i][2] = info.games[i][2]; // time per turn
+                this.gameLists[i][3] = info.games[i][3]; // letters of creator
+                this.gameLists[i][4] = info.games[i][4]; // letters of joiner
+                this.boards.push([]);
+                this.boards[i] = info.boards[i]; // bonusTiles of created games
             }
         });
         this.socket.on('yourTurn', () => {
@@ -112,6 +118,9 @@ export class SocketService {
 
         this.socket.on('gameIsFinished', () => {
             this.updateOfEndGameValue.next(true);
+            // if (!this.triggeredQuit) {
+            //     this.cancelGame();
+            // }
         });
         this.socket.on('wordValidation', (wordIsValid) => {
             // this.isWordValidationFinished = true;
@@ -126,6 +135,7 @@ export class SocketService {
         opponentName: string,
         lettersOfCreator: Letter[],
         lettersOfJoiner: Letter[],
+        bonusTiles: Position[][],
     ) {
         if (gameStatus === 2 && this.cancellationIndexes[0] >= 0 && this.cancellationIndexes[1] >= 0) {
             this.cancelGame();
@@ -138,6 +148,7 @@ export class SocketService {
             nameOpponent: opponentName,
             lettersCreator: lettersOfCreator,
             lettersOpponent: lettersOfJoiner,
+            bonus: bonusTiles,
         });
     }
     sendJoinGameInfo(name: string, indexWaitingRoom: number) {
@@ -156,9 +167,11 @@ export class SocketService {
     }
 
     cancelGame() {
-        this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
-        const INEXISTING_ROOM = -1;
-        this.cancellationIndexes = [INEXISTING_ROOM, INEXISTING_ROOM];
+        if (this.cancellationIndexes[0] >= 0 && this.cancellationIndexes[1] >= 0) {
+            this.socket.emit('cancelWaitingGame', this.cancellationIndexes);
+            const INEXISTING_ROOM = -1;
+            this.cancellationIndexes = [INEXISTING_ROOM, INEXISTING_ROOM];
+        }
     }
 
     setAbleToJoinGame() {
@@ -194,6 +207,7 @@ export class SocketService {
     }
 
     handleDisconnect() {
+        this.triggeredQuit = true;
         this.socket.disconnect();
     }
 }
