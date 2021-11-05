@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TileMap } from '@app/classes/grid-special-tile';
+import { Position } from '@app/position-tile-interface';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { LetterService } from '@app/services/letter.service';
 import { SocketService } from '@app/services/socket.service';
@@ -12,11 +14,12 @@ describe('OpponentWaitingRoomComponent', () => {
     let socketServiceSpy: jasmine.SpyObj<SocketService>;
     let indexWaitingRoomServiceSpy: jasmine.SpyObj<IndexWaitingRoomService>;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
-
+    let gridMapServiceSpy: jasmine.SpyObj<TileMap>;
     beforeEach(async () => {
         socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendGameListNeededNotification']);
         indexWaitingRoomServiceSpy = jasmine.createSpyObj('IndexWaitingRoomService', ['setIndex']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['synchLetters']);
+        gridMapServiceSpy = jasmine.createSpyObj('TileMap', ['isDoubleWordTile']);
         socketServiceSpy.gameLists = [['name', 'bonus', 'time', 'letters']];
         await TestBed.configureTestingModule({
             declarations: [OpponentWaitingRoomComponent],
@@ -24,6 +27,7 @@ describe('OpponentWaitingRoomComponent', () => {
                 { provide: IndexWaitingRoomService, useValue: indexWaitingRoomServiceSpy },
                 { provide: SocketService, useValue: socketServiceSpy },
                 { provide: LetterService, useValue: letterServiceSpy },
+                { provide: TileMap, useValue: gridMapServiceSpy },
             ],
             imports: [RouterTestingModule],
         }).compileComponents();
@@ -40,6 +44,16 @@ describe('OpponentWaitingRoomComponent', () => {
     });
 
     it('setIndex should call synchLetters ', () => {
+        socketServiceSpy.boards = [];
+        socketServiceSpy.boards.push([
+            [{ positionX: 1, positionY: 3 }],
+            [{ positionX: 1, positionY: 3 }],
+            [{ positionX: 1, positionY: 3 }],
+            [{ positionX: 1, positionY: 3 }],
+        ]);
+        gridMapServiceSpy.tileMap = new Map<string, Position[]>();
+        gridMapServiceSpy.tileMap.set('allo', [{ positionX: 1, positionY: 3 }]);
+        spyOn(gridMapServiceSpy.tileMap, 'set');
         component.setIndex(0);
         expect(letterServiceSpy.synchLetters).toHaveBeenCalled();
     });

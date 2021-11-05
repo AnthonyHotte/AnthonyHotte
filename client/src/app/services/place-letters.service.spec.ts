@@ -99,37 +99,49 @@ describe('PlaceLettersService', () => {
 
     // validateWordPlaced
     it('validateWordPlaced should return false when validateWordCreatedByNewLetters is false', fakeAsync(() => {
-        const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(false);
+        const promise1 = new Promise<boolean>((resolve) => {
+            resolve(false);
+        });
+        const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(promise1);
         const mySpy2 = spyOn(gridServiceSpy, 'drawtilebackground');
         gameStateServiceSpy.indexLastLetters = [1, 2, 3];
         const dumbUndefinedVariable = undefined;
-        const returnvalue = service.validateWordPlaced(dumbUndefinedVariable);
+        service.validateWordPlaced(dumbUndefinedVariable).then((res: boolean) => {
+            expect(res).toBe(false);
+        });
         flush();
-        expect(returnvalue).toBe(false);
         expect(mySpy).toHaveBeenCalled();
         expect(mySpy2).toHaveBeenCalled();
         gameStateServiceSpy.indexLastLetters = [];
     }));
     it('validateWordPlaced should return true when playerUsedAllLetters is true and validateWordCreatedByNewLetters is true ', fakeAsync(() => {
-        const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(true);
+        const promise1 = new Promise<boolean>((resolve) => {
+            resolve(true);
+        });
+        const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(promise1);
         gameStateServiceSpy.indexLastLetters = [1, 2, 3];
         gameStateServiceSpy.playerUsedAllLetters = true;
         const dumbUndefinedVariable = undefined;
-        const returnvalue = service.validateWordPlaced(dumbUndefinedVariable);
+        service.validateWordPlaced(dumbUndefinedVariable).then((res: boolean) => {
+            expect(res).toBe(true);
+        });
         flush();
-        expect(returnvalue).toBe(true);
         expect(mySpy).toHaveBeenCalled();
         gameStateServiceSpy.indexLastLetters = [];
     }));
 
     it('validateWordPlaced should return true ehen validateWordCreatedByNewLetters is true and letters replaced is defined', fakeAsync(() => {
-        const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(true);
+        const promise1 = new Promise<boolean>((resolve) => {
+            resolve(true);
+        });
+        const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(promise1);
         gameStateServiceSpy.indexLastLetters = [1, 2, 3];
         gameStateServiceSpy.playerUsedAllLetters = false;
         const lettersToReplace = 'allo';
-        const returnvalue = service.validateWordPlaced(lettersToReplace);
+        service.validateWordPlaced(lettersToReplace).then((res: boolean) => {
+            expect(res).toBe(true);
+        });
         flush();
-        expect(returnvalue).toBe(true);
         expect(mySpy).toHaveBeenCalled();
         gameStateServiceSpy.indexLastLetters = [];
     }));
@@ -158,12 +170,14 @@ describe('PlaceLettersService', () => {
     });
     // placeword function tests
     it("placeword should return 'Le mot dépasse du plateau de jeux.' for a word that goes beyond the board", () => {
-        const returnmessage = service.placeWord('o15v allo');
-        expect(returnmessage).toEqual('Le mot dépasse du plateau de jeux.');
+        service.placeWord('o15v allo').then((res: string) => {
+            expect(res).toEqual('Le mot dépasse du plateau de jeux.');
+        });
     });
     it("placeword should return 'Argument de commande invalide' for an invalid command", () => {
-        const returnmessage = service.placeWord('z16Z allo');
-        expect(returnmessage).toEqual('Argument de commande invalide');
+        service.placeWord('z16Z allo').then((res: string) => {
+            expect(res).toEqual('Argument de commande invalide');
+        });
     });
 
     it("placeword should return 'Au moins une des cases est déjà occupée.' when a tile of the word is already used", () => {
@@ -173,9 +187,10 @@ describe('PlaceLettersService', () => {
     });
     it("placeword should return 'Le premier mot doit toucher à la case h8' when the first word isn't placed on h8 tile", () => {
         const mySpy = spyOn(gameStateServiceSpy, 'isWordCreationPossibleWithRessources').and.returnValue(true);
-        const returnmessage = service.placeWord('a1v allo');
+        service.placeWord('a1v allo').then((res: string) => {
+            expect(res).toEqual('Le premier mot doit toucher à la case h8.');
+        });
         expect(mySpy).toHaveBeenCalled();
-        expect(returnmessage).toEqual('Le premier mot doit toucher à la case h8.');
     });
     it("placeword should return 'Ce mot ne touche à aucune lettre déjà en jeu.' when the word doesn't touch a tile", () => {
         const mySpy = spyOn(gameStateServiceSpy, 'isWordCreationPossibleWithRessources').and.returnValue(true);
@@ -183,38 +198,45 @@ describe('PlaceLettersService', () => {
         gameStateServiceSpy.lastLettersAdded = 'allo';
         service.wordToPlace = 'bonjour';
         const mySpy2 = spyOn(service, 'removeLetterInGameState');
-        const returnmessage = service.placeWord('a1v allo');
+        service.placeWord('a1v allo').then((res: string) => {
+            expect(res).toEqual('Ce mot ne touche à aucune lettre déjà en jeu.');
+        });
         expect(mySpy).toHaveBeenCalled();
         expect(mySpy2).toHaveBeenCalled();
-        expect(returnmessage).toEqual('Ce mot ne touche à aucune lettre déjà en jeu.');
     });
 
     it("placeword should return 'Mot placé avec succès.' when the word can be placed", () => {
         const mySpy = spyOn(gameStateServiceSpy, 'isWordCreationPossibleWithRessources').and.returnValue(true);
         const mySpy2 = spyOn(service, 'drawWord');
-        const returnmessage = service.placeWord('h8v allo');
+        service.placeWord('h8v allo').then((res: string) => {
+            expect(res).toEqual('Mot placé avec succès.');
+        });
         expect(mySpy).toHaveBeenCalled();
         expect(mySpy2).toHaveBeenCalled();
-        expect(returnmessage).toEqual('Mot placé avec succès.');
     });
 
     it("placeword should return 'Un mot placé n'est pas valide' when the word can be placed but doesn't exist in the dictionnary", () => {
+        const promise1 = new Promise<boolean>((resolve) => {
+            resolve(false);
+        });
         const mySpy = spyOn(gameStateServiceSpy, 'isWordCreationPossibleWithRessources').and.returnValue(true);
         const mySpy2 = spyOn(service, 'drawWord');
-        const mySpy3 = spyOn(service, 'validateWordPlaced').and.returnValue(false);
-        const returnmessage = service.placeWord('h8v allo');
+        const mySpy3 = spyOn(service, 'validateWordPlaced').and.returnValue(promise1);
+        service.placeWord('h8v allo').then((res: string) => {
+            expect(res).toEqual("Un mot placé n'est pas valide");
+        });
         expect(mySpy).toHaveBeenCalled();
         expect(mySpy2).toHaveBeenCalled();
         expect(mySpy3).toHaveBeenCalled();
-        expect(returnmessage).toEqual("Un mot placé n'est pas valide");
     });
     it("placeword should return 'Vous n'avez pas les lettres pour écrire ce mot' when the player doesn't have the letter in the word", () => {
         const mySpy = spyOn(gameStateServiceSpy, 'isWordCreationPossibleWithRessources').and.returnValue(false);
         const mySpy2 = spyOn(service, 'removeLetterInGameState');
-        const returnmessage = service.placeWord('h8v allo');
+        service.placeWord('h8v allo').then((res: string) => {
+            return res;
+        });
         expect(mySpy).toHaveBeenCalled();
         expect(mySpy2).toHaveBeenCalled();
-        expect(returnmessage).toEqual("Vous n'avez pas les lettres pour écrire ce mot");
     });
 
     // policeSizeChanged
@@ -252,7 +274,9 @@ describe('PlaceLettersService', () => {
         gameStateServiceSpy.lastLettersAdded = '';
         const mySpy2 = spyOn(service, 'removeLetterInGameState');
         const expectedResult = 'Vous devez utiliser au moins une lettre de votre main pour créer un mot';
-        expect(service.placeWord('!placer h8h allo')).toEqual(expectedResult);
+        service.placeWord('!placer h8h allo').then((res: string) => {
+            expect(res).toEqual(expectedResult);
+        });
         expect(mySpy).toHaveBeenCalled();
         expect(mySpy2).toHaveBeenCalled();
     });
@@ -272,7 +296,10 @@ describe('PlaceLettersService', () => {
         gameStateServiceSpy.lastLettersAdded = 'Allo';
         const mySpy3 = spyOn(service, 'drawWord');
         const mySpy4 = spyOn(socketSpy, 'configureSendMessageToServer');
-        spyOn(service, 'validateWordPlaced').and.returnValue(true);
+        const promise1 = new Promise<boolean>((resolve) => {
+            resolve(true);
+        });
+        spyOn(service, 'validateWordPlaced').and.returnValue(promise1);
         service.placeWord('!placer h8h Allo', 'abcd');
         expect(mySpy).toHaveBeenCalled();
         expect(mySpy3).toHaveBeenCalled();

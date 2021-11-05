@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { SocketService } from '@app/services/socket.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 
@@ -9,8 +9,15 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
 })
 export class WaitingRoomComponent {
     constructor(private timeTurnManager: TimerTurnManagerService, private socketService: SocketService) {}
+
+    @HostListener('window:beforeunload', ['$event'])
+    beforeUnloadHandler() {
+        this.socketService.handleDisconnect();
+    }
+
     setSoloType() {
         this.timeTurnManager.gameStatus = 2;
+        this.cancelGame();
     }
 
     cancelGame() {

@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { TileMap } from '@app/classes/grid-special-tile';
 import { PopUpData } from '@app/classes/pop-up-data';
 import { PopUpComponent } from '@app/components/pop-up/pop-up.component';
 import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
+import { Position } from '@app/position-tile-interface';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { LetterService } from '@app/services/letter.service';
 import { MessageService } from '@app/services/message.service';
@@ -45,6 +47,12 @@ export class SoloGameInitiatorComponent {
         this.easyDifficulty = true;
         this.messageService.gameStartingInfoSubscribe();
     }
+
+    @HostListener('window:beforeunload', ['$event'])
+    beforeUnloadHandler() {
+        this.socketService.handleDisconnect();
+    }
+
     joinGame() {
         this.setName();
         this.timeManager.timePerTurn = parseInt(this.socketService.gameLists[this.indexWaitingRoomService.getIndex()][2], 10); // timePerTurn
@@ -73,6 +81,12 @@ export class SoloGameInitiatorComponent {
     }
 
     sendNewGameStartInfo() {
+        const bonusTiles: Position[][] = [];
+        bonusTiles.push(TileMap.gridMap.tileMap.get('DoubleWord') as Position[]);
+        bonusTiles.push(TileMap.gridMap.tileMap.get('DoubleLetter') as Position[]);
+        bonusTiles.push(TileMap.gridMap.tileMap.get('TripleWord') as Position[]);
+        bonusTiles.push(TileMap.gridMap.tileMap.get('TripleLetter') as Position[]);
+
         this.socketService.sendInitiateNewGameInformation(
             this.playTime,
             this.isBonusRandom,
@@ -81,6 +95,7 @@ export class SoloGameInitiatorComponent {
             this.opponentName,
             this.letterService.players[0].allLettersInHand,
             this.letterService.players[1].allLettersInHand,
+            bonusTiles,
         );
     }
 

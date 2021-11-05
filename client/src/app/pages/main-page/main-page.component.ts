@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Message } from '@app/classes/message';
 import { CommunicationService } from '@app/services/communication.service';
+import { SocketService } from '@app/services/socket.service';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -13,7 +14,12 @@ export class MainPageComponent {
     readonly title: string = 'LOG2990';
     message: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-    constructor(private readonly communicationService: CommunicationService) {}
+    constructor(private readonly communicationService: CommunicationService, private socketService: SocketService) {}
+
+    @HostListener('window:beforeunload', ['$event'])
+    beforeUnloadHandler() {
+        this.socketService.handleDisconnect();
+    }
 
     sendTimeToServer(): void {
         const newTimeMessage: Message = {
