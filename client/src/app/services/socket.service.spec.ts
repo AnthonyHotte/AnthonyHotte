@@ -1,10 +1,39 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-
+import { Socket } from 'ngx-socket-io';
 import { SocketService } from './socket.service';
 
+class SocketMock extends Socket {
+    private callbacks = new Map<string, CallbackSignature[]>();
+    on(event: string, callback: CallbackSignature): void {
+        if (!this.callbacks.has(event)) {
+            this.callbacks.set(event, []);
+        }
+
+        this.callbacks.get(event)?.push(callback);
+    }
+
+    emit(event: string, ...params: unknown[]): void {
+        return;
+    }
+
+    peerSideEmit(event: string, ...params: unknown[]) {
+        if (!this.callbacks.has(event)) {
+            return;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        for (const callback of this.callbacks.get(event)!) {
+            callback(params);
+        }
+    }
+    join(room: Room): boolean {
+        return true;
+    }
+}
 describe('SocketService', () => {
     let service: SocketService;
+    let server = SocketMock;
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [RouterTestingModule],
@@ -14,6 +43,7 @@ describe('SocketService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(SocketService);
+        service.socket = new SocketMock();
     });
 
     it('should be created', () => {
@@ -103,5 +133,8 @@ describe('SocketService', () => {
         const emitSpy = spyOn(service.socket, 'emit');
         service.validateWord('allo');
         expect(emitSpy).toHaveBeenCalled();
+    });
+    it('should enter in configureBaseRequest', () => {
+        service.
     });
 });
