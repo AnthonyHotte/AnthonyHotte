@@ -190,12 +190,16 @@ describe('TextBox', () => {
         expect(pushSpy).not.toHaveBeenCalled();
     });
 
-    it('isCommand should call set false if text = mot bien placé', () => {
+    it('isCommand should call set false if text = mot bien placé', async () => {
+        const promise1 = new Promise<string>((resolve) => {
+            resolve('Mot placé avec succès.');
+        });
         timerTurnManagerServiceSpy.turn = 0;
-        const mySpyPlaceWord = spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('Mot placé avec succès.');
+        const mySpyPlaceWord = spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue(promise1);
         const mySpyEndTurn = spyOn(textBox, 'endTurn');
         const maChaine = '!placer';
-        textBox.isCommand(maChaine);
+        await textBox.isCommand(maChaine);
+
         expect(mySpyPlaceWord).toHaveBeenCalled();
         expect(mySpyEndTurn).toHaveBeenCalled();
     });
@@ -215,17 +219,23 @@ describe('TextBox', () => {
         expect(textBox.verifyCommandEchanger('a')).toEqual('Commande impossible à réaliser! La réserve ne contient pas assez de lettres.');
     });
 
-    it("placeWordOpponent should call verifyCommanPasser if place word doesn't return Mot placé avec succès.", () => {
-        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('allo');
+    it("placeWordOpponent should call verifyCommanPasser if place word doesn't return Mot placé avec succès.", async () => {
+        const promise1 = new Promise<string>((resolve) => {
+            resolve('allo');
+        });
+        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue(promise1);
         const mySpy = spyOn(textBox, 'verifyCommandPasser');
-        textBox.placeWordOpponent('!placer h8h allo', 'abcd');
+        await textBox.placeWordOpponent('!placer h8h allo', 'abcd');
         expect(mySpy).toHaveBeenCalled();
     });
 
-    it('placeWordOpponent should call endTurn if place word returns Mot placé avec succès.', () => {
-        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue('Mot placé avec succès.');
+    it('placeWordOpponent should call endTurn if place word returns Mot placé avec succès.', async () => {
+        const promise1 = new Promise<string>((resolve) => {
+            resolve('Mot placé avec succès.');
+        });
+        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue(promise1);
         const mySpy = spyOn(textBox, 'endTurn');
-        textBox.placeWordOpponent('!placer h8h allo', 'abcd');
+        await textBox.placeWordOpponent('!placer h8h allo', 'abcd');
         expect(mySpy).toHaveBeenCalled();
     });
 
@@ -281,6 +291,33 @@ describe('TextBox', () => {
     it('scrolldown should call getElementById when the element is null', () => {
         const mySpy = spyOn(document, 'getElementById').and.returnValue(null);
         textBox.scrollDown();
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('handleOpponentCommand should call verifyCommandPasser when the the command is !passer', async () => {
+        spyOn(textBox.inputs, 'push');
+        const mySpy = spyOn(textBox, 'verifyCommandPasser');
+        await textBox.handleOpponentCommand('!passer');
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('handleOpponentCommand should call exchangeLetterOpponent when the the command is !échanger', async () => {
+        spyOn(textBox.inputs, 'push');
+        const mySpy = spyOn(textBox, 'exchangeLetterOpponent');
+        await textBox.handleOpponentCommand('!échanger abc');
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('handleOpponentCommand should push something in inputs when the the command is !réserve', async () => {
+        const mySpy = spyOn(textBox.inputs, 'push');
+        await textBox.handleOpponentCommand('!réserve');
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('handleOpponentCommand should call placeWordOpponent when the the command is !placer', async () => {
+        spyOn(textBox.inputs, 'push');
+        const mySpy = spyOn(textBox, 'placeWordOpponent');
+        await textBox.handleOpponentCommand('!placer h8h abc');
         expect(mySpy).toHaveBeenCalled();
     });
 });

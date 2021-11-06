@@ -86,6 +86,7 @@ export class FinishGameService {
         return messageTextBox;
     }
     goToHomeAndRefresh() {
+        this.socketService.handleDisconnect();
         this.link.navigate(['']);
     }
 }

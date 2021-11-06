@@ -73,7 +73,7 @@ export class PlaceLettersService {
             }
             if (this.orientation === 'h') {
                 xtile++;
-            } else if (this.orientation === 'v') {
+            } else {
                 ytile++;
             }
         }
@@ -89,12 +89,14 @@ export class PlaceLettersService {
         }
     }
 
-    placeWord(commandrowInput: string, lettersToReplace?: string): string {
+    async placeWord(commandrowInput: string, lettersToReplace?: string): Promise<string> {
         const checkInput = this.checkInput(commandrowInput);
         if (checkInput === 'ok') {
             if (!this.verifyTileNotOutOfBound()) {
+                this.sendWordToServer(lettersToReplace);
                 return 'Le mot dépasse du plateau de jeux.';
             } else if (!this.verifyAvailable()) {
+                this.sendWordToServer(lettersToReplace);
                 return 'Au moins une des cases est déjà occupée.';
             } else {
                 this.placeWordGameState();
@@ -102,41 +104,52 @@ export class PlaceLettersService {
                     if (this.gameState.isBoardEmpty) {
                         if (!this.gameState.isLetterOnh8()) {
                             this.removeLetterInGameState();
+                            this.sendWordToServer(lettersToReplace);
                             return 'Le premier mot doit toucher à la case h8.';
                         }
                     }
                     if (this.gameState.lastLettersAdded.length === 0) {
                         this.removeLetterInGameState();
+                        this.sendWordToServer(lettersToReplace);
                         return 'Vous devez utiliser au moins une lettre de votre main pour créer un mot';
                     }
                     if (!this.gameState.isWordTouchingLetterOnBoard(this.wordToPlace, this.orientation)) {
                         this.removeLetterInGameState();
+                        this.sendWordToServer(lettersToReplace);
                         return 'Ce mot ne touche à aucune lettre déjà en jeu.';
                     }
                     this.drawWord();
-                    if (this.validateWordPlaced(lettersToReplace)) {
-                        if (lettersToReplace === undefined) {
-                            const row = String.fromCharCode(this.row + Constants.SIDELETTERS_TO_ASCII);
-                            const command = '!placer ' + row + (this.colomnNumber + 1).toString() + this.orientation + ' ' + this.wordToPlaceBrut;
-                            this.socket.configureSendMessageToServer(command, this.timeManager.gameStatus);
-                        }
+                    // await this.socket.validateWord(this.wordToPlace);
+                    const servervalidation: boolean = await this.validateWordPlaced(lettersToReplace);
+                    if (servervalidation) {
+                        // if (this.validateWordPlaced(lettersToReplace)) {
                         this.gameState.isBoardEmpty = false;
                         this.letterService.players[this.timeManager.turn].score += this.wordValidator.pointsForLastWord;
+                        this.sendWordToServer(lettersToReplace);
                         return 'Mot placé avec succès.';
                     } else {
+                        this.sendWordToServer(lettersToReplace);
                         this.letterService.players[this.timeManager.turn].removeLettersForThreeSeconds(this.gameState.lastLettersAddedJoker);
                         return "Un mot placé n'est pas valide";
                     }
                 } else {
                     this.removeLetterInGameState();
+                    this.sendWordToServer(lettersToReplace);
                     return "Vous n'avez pas les lettres pour écrire ce mot";
                 }
             }
         } else {
+            this.sendWordToServer(lettersToReplace);
             return 'Argument de commande invalide';
         }
     }
-
+    sendWordToServer(lettersToReplace?: string) {
+        if (lettersToReplace === undefined) {
+            const row = String.fromCharCode(this.row + Constants.SIDELETTERS_TO_ASCII);
+            const command = '!placer ' + row + (this.colomnNumber + 1).toString() + this.orientation + ' ' + this.wordToPlaceBrut;
+            this.socket.configureSendMessageToServer(command, this.timeManager.gameStatus);
+        }
+    }
     placeWordGameState() {
         let xtile: number = this.colomnNumber;
         let ytile: number = this.row;
@@ -149,7 +162,7 @@ export class PlaceLettersService {
             this.gameState.placeLetter(ytile, xtile, this.wordToPlace.charAt(i), this.lettersToPlace.charAt(i));
             if (this.orientation === 'h') {
                 xtile++;
-            } else if (this.orientation === 'v') {
+            } else {
                 ytile++;
             }
         }
@@ -169,22 +182,14 @@ export class PlaceLettersService {
             this.gridService.drawLetterwithpositionstring(this.wordToPlace.charAt(i), xtile, ytile, 'black');
             if (this.orientation === 'h') {
                 xtile++;
-            } else if (this.orientation === 'v') {
+            } else {
                 ytile++;
             }
         }
     }
 
-    drawWordwiththreeseconddelay() {
-        // this.tempword = tempword;
-        const TIME_OUT_TIME = 3000; // TODO debug this
-        setTimeout(() => {
-            this.drawWord();
-            // this.placeLetterService.placeWord(this.tempword);
-        }, TIME_OUT_TIME);
-    }
-    validateWordPlaced(lettersToReplace?: string) {
-        if (!this.gameState.validateWordCreatedByNewLetters()) {
+    async validateWordPlaced(lettersToReplace?: string) {
+        if (!(await this.gameState.validateWordCreatedByNewLetters(true))) {
             const delay = 3000;
             setTimeout(() => {
                 for (let i = 0; i < this.gameState.indexLastLetters.length; i += 2) {
@@ -196,7 +201,11 @@ export class PlaceLettersService {
             return false;
         } else {
             if (lettersToReplace === undefined) {
-                this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
+                if (this.timeManager.gameStatus === 2) {
+                    this.letterService.players[1].removeLetters(this.gameState.lastLettersAddedJoker);
+                } else {
+                    this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
+                }
                 this.socket.sendLetterReplaced(this.letterService.players[0].lettersReplaced, this.timeManager.gameStatus);
             } else {
                 this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker, lettersToReplace);

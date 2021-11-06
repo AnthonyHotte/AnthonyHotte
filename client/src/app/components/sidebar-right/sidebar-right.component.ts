@@ -71,7 +71,7 @@ export class SidebarRightComponent implements AfterViewInit {
         this.textBox.isCommand('!passer');
         this.placeLetterClick.reset();
         if (this.turnTimeController.turn === 1 && this.turnTimeController.gameStatus === GameStatus.SoloPlayer) {
-            this.soloOpponentPlays();
+            // this.soloOpponentPlays();
         }
     }
 
@@ -128,7 +128,7 @@ export class SidebarRightComponent implements AfterViewInit {
         if (this.turnTimeController.gameStatus === 2) {
             const fourseconds = 4000;
             await this.delay(fourseconds);
-            this.soloOpponent.play();
+            await this.soloOpponent.play();
             const message: MessagePlayer = {
                 message: this.soloOpponent.lastCommandEntered,
                 sender: this.letterService.players[1].name,

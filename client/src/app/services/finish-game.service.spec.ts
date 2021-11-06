@@ -19,7 +19,7 @@ describe('FinishGameService', () => {
 
     beforeEach(
         waitForAsync(() => {
-            socketSpy = jasmine.createSpyObj('SocketService', ['getMessageObservable']);
+            socketSpy = jasmine.createSpyObj('SocketService', ['getMessageObservable', 'handleDisconnect']);
             timeTurnManagerSpy = jasmine.createSpyObj('timeTurnManagerSpy', ['endTurn']);
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
             letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);

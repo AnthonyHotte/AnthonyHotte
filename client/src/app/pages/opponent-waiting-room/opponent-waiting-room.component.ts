@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { TileMap } from '@app/classes/grid-special-tile';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { LetterService } from '@app/services/letter.service';
 import { SocketService } from '@app/services/socket.service';
@@ -18,6 +19,11 @@ export class OpponentWaitingRoomComponent implements OnInit {
         private letterService: LetterService,
     ) {}
 
+    @HostListener('window:beforeunload', ['$event'])
+    beforeUnloadHandler() {
+        this.socketInformation.handleDisconnect();
+    }
+
     ngOnInit(): void {
         this.fillGamesList();
     }
@@ -25,6 +31,14 @@ export class OpponentWaitingRoomComponent implements OnInit {
         this.indexWaitingRoomService.setIndex(index);
         // synch letters once and for all for joiner
         this.letterService.synchLetters(this.socketInformation.gameLists[index][3], this.socketInformation.gameLists[index][4]);
+        const doubleWord = this.socketInformation.boards[index][0];
+        TileMap.gridMap.tileMap.set('DoubleWord', doubleWord);
+        const doubleLetter = this.socketInformation.boards[index][1];
+        TileMap.gridMap.tileMap.set('DoubleLetter', doubleLetter);
+        const tripleWord = this.socketInformation.boards[index][2];
+        TileMap.gridMap.tileMap.set('TripleWord', tripleWord);
+        const tripleLetter = this.socketInformation.boards[index][3];
+        TileMap.gridMap.tileMap.set('TripleLetter', tripleLetter);
     }
 
     fillGamesList() {

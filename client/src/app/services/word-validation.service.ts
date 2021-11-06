@@ -1,8 +1,8 @@
-import jsonDictionnary from 'src/assets/dictionnary.json';
 import { Injectable } from '@angular/core';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
-import { SocketService } from './socket.service';
 import { Subscription } from 'rxjs';
+import jsonDictionnary from 'src/assets/dictionnary.json';
+import { SocketService } from './socket.service';
 
 @Injectable({
     providedIn: 'root',
@@ -64,7 +64,8 @@ export class WordValidationService {
         return true;
     }
 
-    validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][]): boolean {
+    async validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][], onServer: boolean): Promise<boolean> {
+        // validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][], onServer: boolean): boolean {
         let beginIndexWord = 0;
         let lastIndexWord = 0;
         let firstColumnOfWord = 0;
@@ -88,18 +89,23 @@ export class WordValidationService {
         // this.socket.isWordValidationFinished = false;
         // emit to server word validation with word
         // while (!this.socket.isWordValidationFinished) {}
-        this.socket.validateWord(wordCreated);
+        // this.socket.validateWord(wordCreated);
 
         // set timer
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        const timeToWait = 3000;
-        this.delay(timeToWait);
+        //  const timeToWait = 3000;
+        // this.delay(timeToWait);
         // return this.validatedWord;
         // temporaire
-        return true;
+        if (onServer) {
+            return await this.socket.validateWord(wordCreated);
+            // return this.isWordValid(wordCreated);
+        } else {
+            return this.isWordValid(wordCreated);
+        }
     }
 
-    validateVerticalWord(row: number, column: number, lettersOnBoard: string[][]): boolean {
+    async validateVerticalWord(row: number, column: number, lettersOnBoard: string[][], onServer: boolean): Promise<boolean> {
         let beginIndexWord = 0;
         let lastIndexWord = 0;
         let firstRowOfWord = 0;
@@ -120,15 +126,19 @@ export class WordValidationService {
             lastIndexWord = firstRowOfWord;
         }
         this.pointsForLastWord += this.scoreCalculator.calculateScoreForVertical(beginIndexWord, lastIndexWord, column, wordCreated);
-        this.socket.validateWord(wordCreated);
+        // this.socket.validateWord(wordCreated);
 
         // set timer
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        const timeToWait = 3000;
-        this.delay(timeToWait);
+        // const timeToWait = 3000;
+        // this.delay(timeToWait);
         // return this.validatedWord;
         // temporaire
-        return true;
+        if (onServer) {
+            return await this.socket.validateWord(wordCreated);
+        } else {
+            return this.isWordValid(wordCreated);
+        }
     }
     async delay(ms: number) {
         return new Promise((resolve) => setTimeout(resolve, ms));

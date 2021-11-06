@@ -13,7 +13,15 @@ describe('Room', () => {
 
     it('setStartingInfo should set the room', () => {
         const timeGame = 30;
-        room.setStartingInfo(timeGame, 'Antho', 'hdf6547', false, [{ letter: 'a', quantity: 1, point: 1 }], [{ letter: 'a', quantity: 1, point: 1 }]);
+        room.setStartingInfo(
+            timeGame,
+            'Antho',
+            'hdf6547',
+            false,
+            [{ letter: 'a', quantity: 1, point: 1 }],
+            [{ letter: 'a', quantity: 1, point: 1 }],
+            [],
+        );
 
         expect(room.roomName).equal('room1');
         expect(room.playerNames[0]).equal('Antho');
