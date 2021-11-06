@@ -177,11 +177,12 @@ describe('Socket Manager', () => {
     });
     it('should enter in the if of joinGame', (done: Mocha.Done) => {
         for (let i = 0; i < 10; i++) {
-            socketManager.roomsService.listRoomWaiting.push(new Room('room number', 0));
+            roomSpy.listRoomWaiting.push(new Room('room number', 0));
         }
         // console.log(socketManager.roomsService);
         roomSpy.listRoomWaiting[0].index = 0;
         roomSpy.rooms[0].roomIsAvailable = true;
+        socketManager.roomsService = roomSpy;
         socketManager.handleSockets();
         socketServer.emit('connection');
         socketServer.socket.peerSideEmit('joinGame', {
