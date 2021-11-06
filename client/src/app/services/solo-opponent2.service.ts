@@ -19,7 +19,7 @@ export class SoloOpponent2Service {
         public wordValidatorService: WordValidationService,
     ) {}
 
-    play(): string {
+    async play(): Promise<string> {
         let tempword = '';
         const arrayHand: string[] = [];
         for (const letter of this.letterService.players[this.timeManagerService.turn].allLettersInHand) {
@@ -46,12 +46,12 @@ export class SoloOpponent2Service {
                                 for (let k = 0; k < word2.length; k++) {
                                     if (letteronbord[i][j] === word2.charAt(k)) {
                                         // find which position is the letter on board in the word
-                                        if (this.isWordPlayable(word2, i, j - k, 'h')) {
+                                        if (await this.isWordPlayable(word2, i, j - k, 'h')) {
                                             const rowstring = String.fromCharCode(i + Constants.SIDELETTERS_TO_ASCII);
                                             tempword = rowstring + (j - k + 1).toString() + 'h' + ' ' + word2;
                                             //  wordfound = true;
                                             break loop1;
-                                        } else if (this.isWordPlayable(word2, i - k, j, 'v')) {
+                                        } else if (await this.isWordPlayable(word2, i - k, j, 'v')) {
                                             const rowstring = String.fromCharCode(i - k + Constants.SIDELETTERS_TO_ASCII);
                                             tempword = rowstring + (j + 1).toString() + 'v' + ' ' + word2;
                                             //  wordfound = true;
@@ -113,7 +113,7 @@ export class SoloOpponent2Service {
         return result;
     }
 
-    isWordPlayable(word: string, row: number, column: number, orientation: string): boolean {
+    async isWordPlayable(word: string, row: number, column: number, orientation: string): Promise<boolean> {
         this.placeLetterService.row = row;
         this.placeLetterService.colomnNumber = column;
         this.placeLetterService.orientation = orientation;
@@ -135,7 +135,7 @@ export class SoloOpponent2Service {
                     isPlayable = false;
                 } else if (!this.gameStateService.isWordTouchingLetterOnBoard(word, this.placeLetterService.orientation)) {
                     isPlayable = false;
-                } else if (!this.gameStateService.validateWordCreatedByNewLetters(false)) {
+                } else if (!(await this.gameStateService.validateWordCreatedByNewLetters(false))) {
                     isPlayable = false;
                 }
             } else {

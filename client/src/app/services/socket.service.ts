@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root',
 })
 export class SocketService {
+    // socket = io('http://localhost:3000');
     socket = io(environment.serverUrl);
     gameLists: string[][];
     roomNumber: number;
@@ -194,8 +195,6 @@ export class SocketService {
     }
 
     sendLetterReplaced(lettersToReplace: string, gameStatus: number) {
-        // eslint-disable-next-line no-console
-        console.log(gameStatus);
         if (gameStatus !== 2) {
             this.socket.emit('sendLettersReplaced', lettersToReplace, gameStatus, this.roomNumber);
         }
