@@ -80,6 +80,7 @@ describe('Socket Manager', () => {
     const myLetters: Letter[] = [];
     const myLetters1: Letter[] = [];
     let roomSpy: RoomsService;
+    const TEN = 10;
 
     beforeEach(async () => {
         roomSpy = new RoomsService();
@@ -103,7 +104,7 @@ describe('Socket Manager', () => {
     it('should call cleanroom function in startingNewGameInfo', (done: Mocha.Done) => {
         roomSpy.indexNextRoom = 0;
         const spyy = spy(roomSpy.listRoomWaiting, 'push');
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < TEN; i++) {
             const l: Letter = { letter: '', quantity: 0, point: 0 };
             myLetters.push(l);
             myLetters1.push(l);
@@ -178,7 +179,7 @@ describe('Socket Manager', () => {
         done();
     });
     it('should enter in the if of joinGame', (done: Mocha.Done) => {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < TEN; i++) {
             roomSpy.listRoomWaiting.push(new Room('room number', 0));
         }
         // console.log(socketManager.roomsService);
@@ -225,7 +226,7 @@ describe('Socket Manager', () => {
         done();
     });
     it('should enter in toOpponent', (done: Mocha.Done) => {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < TEN; i++) {
             roomSpy.listRoomWaiting.push(new Room('room number', 0));
         }
         roomSpy.rooms[0].roomIsAvailable = true;
@@ -236,7 +237,7 @@ describe('Socket Manager', () => {
         done();
     });
     it('should enter in gameFinished', (done: Mocha.Done) => {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < TEN; i++) {
             roomSpy.rooms.push(new Room('room number', 0));
         }
         socketManager.handleSockets();
@@ -246,7 +247,7 @@ describe('Socket Manager', () => {
         done();
     });
     it('should enter in disconnect', (done: Mocha.Done) => {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < TEN; i++) {
             roomSpy.rooms.push(new Room('room number', 0));
         }
         socketManager.handleSockets();
@@ -256,7 +257,7 @@ describe('Socket Manager', () => {
         done();
     });
     it('should enter in sendLettersReplaced', (done: Mocha.Done) => {
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < TEN; i++) {
             roomSpy.rooms.push(new Room('room number', 0));
         }
         roomSpy.rooms[0].socketsId[0] = '';
