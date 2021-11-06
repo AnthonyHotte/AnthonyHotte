@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
+import { TileMap } from '@app/classes/grid-special-tile';
 import { ScoreCalculatorService } from './score-calculator.service';
 
 describe('ScoreCalculatorService', () => {
@@ -7,6 +7,7 @@ describe('ScoreCalculatorService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
+        TileMap.gridMap = new TileMap();
         service = TestBed.inject(ScoreCalculatorService);
         const thirdRow = 3;
         const fourthRow = 4;

@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { CanvasTestHelper } from '@app/classes/canvas-test-helper';
+import { TileMap } from '@app/classes/grid-special-tile';
 import { DEFAULT_WIDTH } from '@app/constants';
 import { GridService } from '@app/services/grid.service';
 
@@ -13,6 +14,7 @@ describe('GridService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(GridService);
+        TileMap.gridMap = new TileMap();
         ctxStub = CanvasTestHelper.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT).getContext('2d') as CanvasRenderingContext2D;
         service.gridContext = ctxStub;
     });
