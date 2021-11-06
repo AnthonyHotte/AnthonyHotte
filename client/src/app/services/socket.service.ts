@@ -4,13 +4,13 @@ import { Letter } from '@app/letter';
 import { Position } from '@app/position-tile-interface';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
-import { environment } from 'src/environments/environment';
+// import { environment } from 'src/environments/environment';
 @Injectable({
     providedIn: 'root',
 })
 export class SocketService {
-    // socket = io('http://localhost:3000');
-    socket = io(environment.serverUrl);
+    socket = io('http://localhost:3000');
+    // socket = io(environment.serverUrl);
     gameLists: string[][];
     roomNumber: number;
     startGame: BehaviorSubject<boolean>;
