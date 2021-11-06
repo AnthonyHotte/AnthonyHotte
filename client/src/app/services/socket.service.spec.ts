@@ -208,7 +208,7 @@ describe('SocketService', () => {
     });
 
     it('wordValidation  should set wordIsValid', (done) => {
-        socketMock.peerSideEmit('receiveLettersReplaced', true);
+        socketMock.peerSideEmit('wordValidation', true);
         expect(service.iswordvalid2).not.toBeFalse();
         done();
     });
