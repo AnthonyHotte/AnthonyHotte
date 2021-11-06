@@ -175,6 +175,7 @@ export class TextBox {
             return 'Tour passé avec succès.';
         } else {
             this.finishGameService.isGameFinished = true;
+            this.finishGameService.updateOfEndGameValue.next(true);
             return '';
         }
     }
@@ -188,6 +189,7 @@ export class TextBox {
         this.commandSuccessful = true;
         if (this.letterService.players[this.timeManager.turn].allLettersInHand.length === 0) {
             this.finishGameService.isGameFinished = true;
+            this.finishGameService.updateOfEndGameValue.next(true);
         }
     }
 

@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FinishedGameComponent } from './finished-game.component';
 import { FinishGameService } from '@app/services/finish-game.service';
+import { BehaviorSubject } from 'rxjs';
 
 describe('FinishedGameComponent', () => {
     let component: FinishedGameComponent;
@@ -10,6 +11,8 @@ describe('FinishedGameComponent', () => {
 
     beforeEach(async () => {
         spy = jasmine.createSpyObj(FinishGameService, ['goToHomeAndRefresh', 'getCongratulation']);
+        spy.updateOfEndGameValue = new BehaviorSubject<boolean>(false);
+        spy.currentEndGameValue = spy.updateOfEndGameValue.asObservable();
         await TestBed.configureTestingModule({
             declarations: [FinishedGameComponent],
             providers: [{ provide: FinishGameService, useValue: spy }],
@@ -20,6 +23,8 @@ describe('FinishedGameComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(FinishedGameComponent);
         component = fixture.componentInstance;
+
+        component.subscription = spy.currentEndGameValue.subscribe((valueOfEndGame) => (component.isGameFinished = valueOfEndGame));
         fixture.detectChanges();
     });
 
