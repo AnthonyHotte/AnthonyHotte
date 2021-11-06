@@ -1,31 +1,34 @@
-/*
-// eslint-disable-next-line max-classes-per-file
+/* eslint-disable max-classes-per-file */
+// // eslint-disable-next-line max-classes-per-file
+// import { Room } from '@app/classes/room';
+// import { NUMBEROFROOMS } from '@app/constants';
 import { Room } from '@app/classes/room';
 import { NUMBEROFROOMS } from '@app/constants';
 import { Letter } from '@app/letter';
-import { Server } from '@app/server';
 import { assert } from 'console';
+import * as http from 'http';
 import { spy } from 'sinon';
 import * as io from 'socket.io';
-import { Container } from 'typedi';
+import { RoomsService } from './rooms.service';
 import { SocketManager } from './socket-manager-initiate-game.service';
+import { WordValidationService } from './word-validation.service';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type CallbackSignature = (...params: unknown[]) => {};
 
-class RoomsServiceMock {
-    rooms: Room[];
-    listRoomWaiting: Room[];
-    indexNextRoom: number;
-    constructor() {
-        this.indexNextRoom = 0;
-        this.rooms = [];
-        this.listRoomWaiting = [];
-        for (let i = 0; i < NUMBEROFROOMS; i++) {
-            this.rooms.push(new Room('room number' + i, i));
-        }
-    }
-}
+// class RoomsServiceMock {
+//     rooms: Room[];
+//     listRoomWaiting: Room[];
+//     indexNextRoom: number;
+//     constructor() {
+//         this.indexNextRoom = 0;
+//         this.rooms = [];
+//         this.listRoomWaiting = [];
+//         for (let i = 0; i < NUMBEROFROOMS; i++) {
+//             this.rooms.push(new Room('room number' + i, i));
+//         }
+//     }
+// }
 
 class SocketServer {
     socket = new SocketMock();
@@ -34,7 +37,7 @@ class SocketServer {
         this.callbacks.set(event, [this.socket, callback]);
     }
 
-    emit(event: string, ...params: unknown[]): void {
+    emit(event: string): void {
         const tuple = this.callbacks.get(event) as [SocketMock, CallbackSignature];
         tuple[1](tuple[0]);
     }
@@ -50,7 +53,7 @@ class SocketMock {
         this.callbacks.get(event)?.push(callback);
     }
 
-    emit(event: string, ...params: unknown[]): void {
+    emit(event: string): void {
         return;
     }
 
@@ -64,32 +67,33 @@ class SocketMock {
             callback(params);
         }
     }
-    join(room: Room): boolean {
+    join(): boolean {
         return true;
     }
 }
 
 describe('Socket Manager', () => {
     let socketManager: SocketManager;
-    let client;
     const socketServer = new SocketServer();
     const myLetters: Letter[] = [];
     const myLetters1: Letter[] = [];
-    let roomSpy: RoomsServiceMock;
+    let roomSpy: RoomsService;
 
     beforeEach(async () => {
-        socket = new SocketMock();
-        const server: Server = Container.get(Server);
-        server.init();
-
-        // roomSpy = new RoomsServiceMock();
-        // const ioSPy = new http.Server();
-        // const wordValidation = new WordValidationService();
-        // socketManager = new SocketManager(
-        //     ioSPy as unknown as http.Server,
-        //     roomSpy as unknown as RoomsService,
-        //     wordValidation as unknown as WordValidationService,
-        // );
+        roomSpy = new RoomsService();
+        roomSpy.indexNextRoom = 0;
+        roomSpy.rooms = [];
+        roomSpy.listRoomWaiting = [];
+        for (let i = 0; i < NUMBEROFROOMS; i++) {
+            roomSpy.rooms.push(new Room('room number' + i, i));
+        }
+        const ioSPy = new http.Server();
+        const wordValidation = new WordValidationService();
+        socketManager = new SocketManager(
+            ioSPy as unknown as http.Server,
+            roomSpy as unknown as RoomsService,
+            wordValidation as unknown as WordValidationService,
+        );
 
         socketManager.sio = socketServer as unknown as io.Server;
     });
@@ -173,9 +177,10 @@ describe('Socket Manager', () => {
     });
     it('should enter in the if of joinGame', (done: Mocha.Done) => {
         for (let i = 0; i < 10; i++) {
-            roomSpy.listRoomWaiting.push(new Room('room number', 0));
+            socketManager.roomsService.listRoomWaiting.push(new Room('room number', 0));
         }
-        // roomSpy.listRoomWaiting[0].index = 0;
+        // console.log(socketManager.roomsService);
+        roomSpy.listRoomWaiting[0].index = 0;
         roomSpy.rooms[0].roomIsAvailable = true;
         socketManager.handleSockets();
         socketServer.emit('connection');
@@ -257,69 +262,5 @@ describe('Socket Manager', () => {
         socketServer.socket.peerSideEmit('sendLettersReplaced');
         // assert(mySpy.called);
         done();
-    });
-});
-*/
-// with { "type": "module" } in your package.json
-import { createServer } from 'http';
-import { io as Client } from 'socket.io-client';
-import { Server } from 'socket.io';
-import { assert } from 'chai';
-import { stub } from 'sinon';
-import { SocketManager } from './socket-manager-initiate-game.service';
-import { RoomsService } from './rooms.service';
-import { WordValidationService } from './word-validation.service';
-
-// with { "type": "commonjs" } in your package.json
-// const { createServer } = require("http");
-// const { Server } = require("socket.io");
-// const Client = require("socket.io-client");
-// const assert = require("chai").assert;
-
-describe('my awesome project', () => {
-    let io: Server;
-    let serverSocket: SocketManager;
-    let clientSocket: unknown;
-    let roomStub: RoomsService;
-    let wordStub: WordValidationService;
-    before((done) => {
-        roomStub = stub(RoomsService) as unknown as RoomsService;
-        wordStub = stub(WordValidationService) as unknown as WordValidationService;
-        const httpServer = createServer();
-        serverSocket = new SocketManager(httpServer, roomStub, wordStub) as SocketManager;
-        io = new Server(httpServer);
-        httpServer.listen(() => {
-            // const port = httpServer.address().port;
-            clientSocket = Client('http://localhost:3000');
-            // clientSocket = new Client(`http://localhost:${port}`);
-            io.on('connection', (socket) => {
-                serverSocket = socket;
-            });
-            clientSocket.on('connect', done);
-        });
-        serverSocket.sio = io;
-    });
-
-    after(() => {
-        io.close();
-        clientSocket.close();
-    });
-
-    it('should work', (done) => {
-        clientSocket.on('hello', (arg) => {
-            assert.equal(arg, 'world');
-            done();
-        });
-        serverSocket.emit('hello', 'world');
-    });
-
-    it('should work (with ack)', (done) => {
-        serverSocket.on('hi', (cb) => {
-            cb('hola');
-        });
-        clientSocket.emit('hi', (arg) => {
-            assert.equal(arg, 'hola');
-            done();
-        });
     });
 });
