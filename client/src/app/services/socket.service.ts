@@ -185,8 +185,6 @@ export class SocketService {
                 resolve(response);
             });
         }).then((res: boolean) => {
-            // this.isWordValid.next(res);
-            //  this.iswordvalid2 = res;
             return res;
         });
     }

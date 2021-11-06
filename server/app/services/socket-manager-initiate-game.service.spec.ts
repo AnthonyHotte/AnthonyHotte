@@ -37,7 +37,8 @@ class SocketServer {
         this.callbacks.set(event, [this.socket, callback]);
     }
 
-    emit(event: string): void {
+    // eslint-disable-next-line no-unused-vars
+    emit(event: string, ...params: unknown[]): void {
         const tuple = this.callbacks.get(event) as [SocketMock, CallbackSignature];
         tuple[1](tuple[0]);
     }
@@ -54,7 +55,7 @@ class SocketMock {
     }
 
     // eslint-disable-next-line no-unused-vars
-    emit(event: string): void {
+    emit(event: string, ...params: unknown[]): void {
         return;
     }
 

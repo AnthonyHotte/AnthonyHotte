@@ -1,19 +1,55 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-
+import { ISocketService } from './socket-wrapper.service';
 import { SocketService } from './socket.service';
+type CallbackSignature = (...params: unknown[]) => void;
+class SocketMock implements ISocketService {
+    private callbacks = new Map<string, CallbackSignature[]>();
+    on(event: string, listener: CallbackSignature): void {
+        if (!this.callbacks.has(event)) {
+            this.callbacks.set(event, []);
+        }
 
+        this.callbacks.get(event)?.push(listener);
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    emit(_event: string, ..._params: unknown[]): void {
+        return;
+    }
+
+    peerSideEmit(event: string, ...params: unknown[]) {
+        if (!this.callbacks.has(event)) {
+            return;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        for (const callback of this.callbacks.get(event)!) {
+            callback(params);
+        }
+    }
+
+    disconnect(): void {
+        throw new Error('Method not implemented.');
+    }
+}
 describe('SocketService', () => {
     let service: SocketService;
+    const socketMock = new SocketMock();
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [RouterTestingModule],
+        }).compileComponents();
+        TestBed.configureTestingModule({
+            providers: [],
         }).compileComponents();
     });
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(SocketService);
+        (service.socket as unknown) = socketMock;
+        service.configureBaseSocketFeatures();
     });
 
     it('should be created', () => {
@@ -110,5 +146,70 @@ describe('SocketService', () => {
         const emitSpy = spyOn(service.socket, 'emit');
         service.validateWord('allo');
         expect(emitSpy).toHaveBeenCalled();
+    });
+    it('should enter in configureBaseRequest and call log', (done) => {
+        const spys = spyOn(console, 'log').and.callThrough();
+        socketMock.peerSideEmit('connect');
+        expect(spys).toHaveBeenCalled();
+        done();
+    });
+
+    it('handle in configureBaseRequest and call log', (done) => {
+        const spys = spyOn(service.turn, 'next');
+        socketMock.peerSideEmit('yourTurn');
+        expect(spys).toHaveBeenCalled();
+        done();
+    });
+
+    it('cancellation indexes should change cancellation indexes', (done) => {
+        service.cancellationIndexes = [2, 2];
+        socketMock.peerSideEmit('CancellationIndexes', [1, 0]);
+        expect(service.cancellationIndexes[0]).not.toEqual(2);
+        done();
+    });
+
+    it('cancellation indexes should change cancellation indexes', (done) => {
+        socketMock.peerSideEmit('roomOccupied');
+        expect(service.ableToJoin).toBeFalse();
+        done();
+    });
+
+    it('toPlayer should call next', (done) => {
+        const gameSatusSpy = spyOn(service.messageSubject, 'next');
+        socketMock.peerSideEmit('toPlayer', 'allo');
+        expect(gameSatusSpy).toHaveBeenCalled();
+        done();
+    });
+
+    it('roomOccupied  should set to false', (done) => {
+        socketMock.peerSideEmit('roomOccupied');
+        expect(service.ableToJoin).toBeFalse();
+        done();
+    });
+
+    it('toPlayer  should call next', (done) => {
+        const mySpy = spyOn(service.messageSubject, 'next');
+        socketMock.peerSideEmit('toPlayer', 'allo');
+        expect(mySpy).toHaveBeenCalled();
+        done();
+    });
+
+    it('receiveLettersReplaced  should set letters Replaced', (done) => {
+        socketMock.peerSideEmit('receiveLettersReplaced', 'allo');
+        expect(service.lettersToReplace).not.toEqual('');
+        done();
+    });
+
+    it('gameIsFinished  should call next', (done) => {
+        const mySpy = spyOn(service.updateOfEndGameValue, 'next');
+        socketMock.peerSideEmit('gameIsFinished');
+        expect(mySpy).toHaveBeenCalled();
+        done();
+    });
+
+    it('wordValidation  should set wordIsValid', (done) => {
+        socketMock.peerSideEmit('wordValidation', true);
+        expect(service.iswordvalid2).not.toBeFalse();
+        done();
     });
 });
