@@ -20,10 +20,16 @@ export class AdminPageComponent {
     showNewNameMessageError: boolean;
     showNewDescriptionInput: boolean;
     showNewDescriptionMessageError: boolean;
+
+    nameJVEasy: string[];
+    nameJVHard: string[];
     constructor() {
         this.dictionaryList = [];
+        // index 0 is default dictionary
         this.dictionaryList.push(new Dictionary('dict de base', 'description 0'));
         this.dictionaryList.push(new Dictionary('dict1', 'description 1'));
+        this.nameJVEasy = ['JV1', 'JV2', 'JV3'];
+        this.nameJVHard = ['JVHard1', 'JVHard2'];
         this.showModifyButton = true;
         this.showDeleteDictionaryButton = true;
         this.showNumberInput = false;
@@ -39,6 +45,8 @@ export class AdminPageComponent {
             this.showNumberMessageError = true;
         } else if (this.isDeleteMode) {
             this.dictionaryList.splice(this.dictionaryNumberInput, 1);
+            // TODO
+            // delete the dict dictionaryNumberInput on server
             this.showNumberInput = false;
             this.isDeleteMode = false;
             this.showModifyButton = true;
@@ -62,5 +70,11 @@ export class AdminPageComponent {
             this.showNewNameInput = false;
             this.showNewDescriptionInput = true;
         }
+    }
+    sendChangesToServer() {
+        this.showNewDescriptionInput = false;
+        this.showModifyButton = true;
+        // TODO
+        // send changes to server
     }
 }

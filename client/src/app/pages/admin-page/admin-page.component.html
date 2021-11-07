@@ -1,5 +1,5 @@
 <body ng-app="app" style="text-align: Center">
-    <p>List des dictionnaires disponibles:</p>
+    <p><br>List des dictionnaires disponibles:</p>
     <div *ngFor="let dictionary of this.dictionaryList; let dictIndex = index;">
         <p>Numéro du dictionnaire:{{dictIndex}}<br> Nom: {{ dictionary.name }}<br>Description: {{ dictionary.description }}<br><br></p>
     </div>
@@ -23,10 +23,18 @@
     <fieldset *ngIf="showNewDescriptionInput">
         <label>Description du dictionnaire: </label>
         <input [(ngModel)]="newDescriptionInput" type="string" />
-        <button (click)="showNewDescriptionInput = false; showModifyButton = true;">Enregistrer les changements</button>
+        <button (click)="sendChangesToServer()">Enregistrer les changements</button>
         <button (click)="showNewDescriptionInput = false; showModifyButton = true;">Annuler</button>
     </fieldset>
-        
     <button>Téléverser un nouveau dictionnaire</button>
-    <button>Télécharger un dictionaire</button>
+    <button>Télécharger un dictionaire</button><br>
+
+    <p><br><br>List de nom des joueur virtuel débutant:</p>
+    <div *ngFor="let name of this.nameJVEasy ; let dictIndex = index;">
+        <p>Numéro du joueur virtuel:{{dictIndex}}<br> Nom: {{ name }}<br><br></p>
+    </div>
+    <p><br>List de nom des joueur virtuel expert:</p>
+    <div *ngFor="let name of this.nameJVHard ; let dictIndex = index;">
+        <p>Numéro du joueur virtuel:{{dictIndex}}<br> Nom: {{ name }}<br><br></p>
+    </div>
 </body>
