@@ -23,6 +23,13 @@ export class AdminPageComponent {
 
     nameJVEasy: string[];
     nameJVHard: string[];
+    showInputJVName: boolean;
+    nameJVToAdd: string;
+    isJVEasyName: boolean;
+    showJVNameMessageError: boolean;
+    showAddJVnameButton: boolean;
+    showModifyJVNameButton: boolean;
+    showDeleteJVNameButton: boolean;
     constructor() {
         this.dictionaryList = [];
         // index 0 is default dictionary
@@ -39,6 +46,8 @@ export class AdminPageComponent {
         this.showNewNameMessageError = false;
         this.showNewDescriptionMessageError = false;
         this.isDeleteMode = false;
+        this.showInputJVName = false;
+        this.showJVNameMessageError = false;
     }
     validateNumber() {
         if (this.dictionaryNumberInput < 1 || this.dictionaryNumberInput >= this.dictionaryList.length) {
@@ -56,6 +65,11 @@ export class AdminPageComponent {
             this.showNewNameInput = true;
         }
     }
+    showOrHideJVButton(show: boolean) {
+        this.showAddJVnameButton = show;
+        this.showModifyJVNameButton = show;
+        this.showDeleteJVNameButton = show;
+    }
     validateNewName() {
         let nameExiste = false;
         for (const dictionary of this.dictionaryList) {
@@ -69,6 +83,33 @@ export class AdminPageComponent {
         } else {
             this.showNewNameInput = false;
             this.showNewDescriptionInput = true;
+        }
+    }
+    saveJVName() {
+        if (this.validateJVName()) {
+            // fait un enum pour le mode
+        }
+    }
+    validateJVName(): boolean {
+        if ((this.isJVEasyName && this.nameJVEasy === undefined) || (!this.isJVEasyName && this.nameJVHard === undefined)) {
+            return false;
+        }
+        if (this.isJVEasyName) {
+            // verify JVEasy
+            for (const dictionary of this.dictionaryList) {
+                if (this.newNameInput === dictionary.name) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            // verify JVHard
+            for (const dictionary of this.dictionaryList) {
+                if (this.newNameInput === dictionary.name) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
     sendChangesToServer() {

@@ -31,10 +31,25 @@
 
     <p><br><br>List de nom des joueur virtuel débutant:</p>
     <div *ngFor="let name of this.nameJVEasy ; let dictIndex = index;">
-        <p>Numéro du joueur virtuel:{{dictIndex}}<br> Nom: {{ name }}<br><br></p>
+        <p>Numéro du joueur virtuel:{{dictIndex}}<br> Nom: {{ name }}<br></p>
     </div>
+    <button *ngIf="showAddJVnameButton" (click)="showOrHideJVButton(false); showInputJVName = true;">ajouter un nom</button>
+    <button *ngIf="showModifyJVNameButton">modifier un nom</button>
+    <button *ngIf="showDeleteJVNameButton">suppprimer un nom</button>
+    
     <p><br>List de nom des joueur virtuel expert:</p>
     <div *ngFor="let name of this.nameJVHard ; let dictIndex = index;">
-        <p>Numéro du joueur virtuel:{{dictIndex}}<br> Nom: {{ name }}<br><br></p>
+        <p>Numéro du joueur virtuel:{{dictIndex}}<br> Nom: {{ name }}<br></p>
     </div>
+    <button *ngIf="showAddJVnameButton" (click)="showOrHideJVButton(false); showInputJVName = true;">ajouter un nom</button>
+    <button *ngIf="showModifyJVNameButton">modifier un nom</button>
+    <button *ngIf="showDeleteJVNameButton">suppprimer un nom</button>
+
+    <fieldset *ngIf="showInputJVName">
+        <label>Nom du joueur virtuel: </label>
+        <input [(ngModel)]="nameJVToAdd" type="string" />
+        <button (click)="validateJVName()">Valider le nom</button>
+        <button (click)="showInputJVName = false; showOrHideJVButton(true);">Annuler</button>
+        <div *ngIf="showJVNameMessageError"><p>Le nom du joueur virtuel est invalide, il est soit deja associer a un joueur ou le nom est vide.<br>Essayer de nouveau...</p></div>
+    </fieldset>
 </body>
