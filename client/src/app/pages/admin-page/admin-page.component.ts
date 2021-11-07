@@ -107,11 +107,13 @@ export class AdminPageComponent {
                 this.nameJV[this.modeJV].push(this.newNameJV);
                 this.showInputJVName = false;
                 this.showOrHideJVButton(true);
+                this.sendJVNameChanges(this.modeJV);
             } else {
                 this.showJVNameMessageError = false;
                 this.nameJV[this.modeJV][this.indexJVName] = this.newNameJV;
                 this.showInputJVName = false;
                 this.showOrHideJVButton(true);
+                this.sendJVNameChanges(this.modeJV);
             }
         } else {
             this.showJVNameMessageError = true;
@@ -136,6 +138,7 @@ export class AdminPageComponent {
             this.showInputJVIndex = false;
             this.showOrHideJVButton(true);
             this.nameJV[this.modeJV].splice(this.indexJVName, 1);
+            this.sendJVNameChanges(this.modeJV);
         } else {
             this.showInputJVIndex = false;
             this.showJVIndexMessageError = false;
@@ -165,5 +168,10 @@ export class AdminPageComponent {
         this.showModifyButton = true;
         // TODO
         // send changes to server
+    }
+    // eslint-disable-next-line no-unused-vars
+    sendJVNameChanges(mode: number) {
+        // TODO
+        // send to mongo name
     }
 }
