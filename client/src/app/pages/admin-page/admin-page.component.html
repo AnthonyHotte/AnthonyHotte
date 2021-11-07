@@ -1,1 +1,27 @@
-<p>admin-page works!</p>
+<body ng-app="app" style="text-align: Center">
+    <p>List des dictionnaires disponibles:</p>
+    <div *ngFor="let dictionary of this.dictionaryList; let dictIndex = index;">
+        <p>Numéro du dictionnaire:{{dictIndex}}<br> Nom: {{ dictionary.name }}<br>Description: {{ dictionary.description }}<br><br></p>
+    </div>
+    <button *ngIf="showModifyButton" (click)="showNumberInput = true; showModifyButton = false;">Modifier un dictionnaire</button><br><br>
+
+    <fieldset *ngIf="showNumberInput">
+        <label>Numéro du dictionnaire: </label>
+        <input [(ngModel)]="dictionaryNumberInput" type="number" />
+        <button (click)="showNumberInput = false; showNewNameInput = true;">Modifier le nom</button>
+    </fieldset>
+    <fieldset *ngIf="showNewNameInput">
+        <label>Nom du dictionnaire: </label>
+        <input [(ngModel)]="newNameInput" type="string" />
+        <button (click)="showNewNameInput = false; showNewDescriptionInput = true;">Modifier la description</button>
+    </fieldset>
+    <fieldset *ngIf="showNewDescriptionInput">
+        <label>Nom du dictionnaire: </label>
+        <input [(ngModel)]="newNameInput" type="string" />
+        <button (click)="showNewDescriptionInput = false; showModifyButton = true;">Enregistrer les changements</button>
+        <button (click)="showNewDescriptionInput = false; showModifyButton = true;">Annuler</button>
+    </fieldset>
+        
+    <button>Téléverser un nouveau dictionnaire</button>
+    <button>Télécharger un dictionaire</button>
+</body>
