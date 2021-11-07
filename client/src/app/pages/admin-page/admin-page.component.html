@@ -3,21 +3,26 @@
     <div *ngFor="let dictionary of this.dictionaryList; let dictIndex = index;">
         <p>Numéro du dictionnaire:{{dictIndex}}<br> Nom: {{ dictionary.name }}<br>Description: {{ dictionary.description }}<br><br></p>
     </div>
-    <button *ngIf="showModifyButton" (click)="showNumberInput = true; showModifyButton = false;">Modifier un dictionnaire</button><br><br>
+    <button *ngIf="showDeleteDictionaryButton" (click)="showNumberInput=true; showModifyButton = false; this.showDeleteDictionaryButton = false; this.isDeleteMode = true;">Supprimer un dictionnaire</button>
+    <button *ngIf="showModifyButton" (click)="showNumberInput = true; showModifyButton = false; this.showDeleteDictionaryButton = false;">Modifier un dictionnaire</button><br><br>
 
     <fieldset *ngIf="showNumberInput">
         <label>Numéro du dictionnaire: </label>
         <input [(ngModel)]="dictionaryNumberInput" type="number" />
-        <button (click)="showNumberInput = false; showNewNameInput = true;">Modifier le nom</button>
+        <button (click)="validateNumber()">Valider le numéro</button>
+        <button (click)="showNumberInput = false; showModifyButton = true;">Annuler</button>
+        <div *ngIf="showNumberMessageError"><p>Le numéro du dictionnaire est invalide, il doit figurer dans la liste afficher mais ne peut pas etre 0.<br>Essayer de nouveau...</p></div>
     </fieldset>
     <fieldset *ngIf="showNewNameInput">
         <label>Nom du dictionnaire: </label>
         <input [(ngModel)]="newNameInput" type="string" />
-        <button (click)="showNewNameInput = false; showNewDescriptionInput = true;">Modifier la description</button>
+        <button (click)="validateNewName()">Valider le nom</button>
+        <button (click)="showNewNameInput = false; showModifyButton = true;">Annuler</button>
+        <div *ngIf="showNewNameMessageError"><p>Le nom du dictionnaire est invalide, il est soit deja associer a un disctionnaire ou le nom est vide.<br>Essayer de nouveau...</p></div>
     </fieldset>
     <fieldset *ngIf="showNewDescriptionInput">
-        <label>Nom du dictionnaire: </label>
-        <input [(ngModel)]="newNameInput" type="string" />
+        <label>Description du dictionnaire: </label>
+        <input [(ngModel)]="newDescriptionInput" type="string" />
         <button (click)="showNewDescriptionInput = false; showModifyButton = true;">Enregistrer les changements</button>
         <button (click)="showNewDescriptionInput = false; showModifyButton = true;">Annuler</button>
     </fieldset>
