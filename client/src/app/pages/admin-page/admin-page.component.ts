@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Dictionary } from '@app/classes/dictionary';
+import { ERRORCODE } from '@app/constants';
 
 @Component({
     selector: 'app-admin-page',
@@ -21,12 +22,15 @@ export class AdminPageComponent {
     showNewDescriptionInput: boolean;
     showNewDescriptionMessageError: boolean;
 
-    nameJVEasy: string[];
-    nameJVHard: string[];
+    nameJV: string[][]; // JV easy name index 0, JVHard name index 1
+    newNameJV: string;
+    modeJV: number; // 0 for easyJV 1 for HardJV
+    indexJVName: number; // -1 if we want to add it at the end
+    isToDeleteJV: boolean;
     showInputJVName: boolean;
-    nameJVToAdd: string;
-    isJVEasyName: boolean;
+    showInputJVIndex: boolean;
     showJVNameMessageError: boolean;
+    showJVIndexMessageError: boolean;
     showAddJVnameButton: boolean;
     showModifyJVNameButton: boolean;
     showDeleteJVNameButton: boolean;
@@ -35,8 +39,13 @@ export class AdminPageComponent {
         // index 0 is default dictionary
         this.dictionaryList.push(new Dictionary('dict de base', 'description 0'));
         this.dictionaryList.push(new Dictionary('dict1', 'description 1'));
-        this.nameJVEasy = ['JV1', 'JV2', 'JV3'];
-        this.nameJVHard = ['JVHard1', 'JVHard2'];
+        this.nameJV = [
+            ['JV1', 'JV2', 'JV3'],
+            ['JVHard1', 'JVHard2'],
+        ];
+        this.newNameJV = '';
+        this.newNameInput = '';
+        this.isToDeleteJV = false;
         this.showModifyButton = true;
         this.showDeleteDictionaryButton = true;
         this.showNumberInput = false;
@@ -48,6 +57,9 @@ export class AdminPageComponent {
         this.isDeleteMode = false;
         this.showInputJVName = false;
         this.showJVNameMessageError = false;
+        this.showInputJVIndex = false;
+        this.showJVIndexMessageError = false;
+        this.showOrHideJVButton(true);
     }
     validateNumber() {
         if (this.dictionaryNumberInput < 1 || this.dictionaryNumberInput >= this.dictionaryList.length) {
@@ -60,7 +72,9 @@ export class AdminPageComponent {
             this.isDeleteMode = false;
             this.showModifyButton = true;
             this.showDeleteDictionaryButton = true;
+            this.showNumberMessageError = false;
         } else {
+            this.showNumberMessageError = false;
             this.showNumberInput = false;
             this.showNewNameInput = true;
         }
@@ -78,39 +92,73 @@ export class AdminPageComponent {
                 break;
             }
         }
-        if (this.newNameInput === undefined || nameExiste) {
+        if (this.newNameInput === '' || nameExiste) {
             this.showNewNameMessageError = true;
         } else {
             this.showNewNameInput = false;
             this.showNewDescriptionInput = true;
+            this.showNewNameMessageError = false;
         }
     }
     saveJVName() {
         if (this.validateJVName()) {
-            // fait un enum pour le mode
+            if (this.indexJVName === ERRORCODE) {
+                this.showJVNameMessageError = false;
+                this.nameJV[this.modeJV].push(this.newNameJV);
+                this.showInputJVName = false;
+                this.showOrHideJVButton(true);
+            } else {
+                this.showJVNameMessageError = false;
+                this.nameJV[this.modeJV][this.indexJVName] = this.newNameJV;
+                this.showInputJVName = false;
+                this.showOrHideJVButton(true);
+            }
+        } else {
+            this.showJVNameMessageError = true;
         }
     }
     validateJVName(): boolean {
-        if ((this.isJVEasyName && this.nameJVEasy === undefined) || (!this.isJVEasyName && this.nameJVHard === undefined)) {
+        if (this.newNameJV === '') {
             return false;
         }
-        if (this.isJVEasyName) {
-            // verify JVEasy
-            for (const dictionary of this.dictionaryList) {
-                if (this.newNameInput === dictionary.name) {
-                    return false;
-                }
+        for (const name of this.nameJV[this.modeJV]) {
+            if (this.newNameJV === name) {
+                return false;
             }
-            return true;
-        } else {
-            // verify JVHard
-            for (const dictionary of this.dictionaryList) {
-                if (this.newNameInput === dictionary.name) {
-                    return false;
-                }
-            }
-            return true;
         }
+        return true;
+    }
+    validateIndexJV() {
+        if (this.indexJVName < 3 || this.indexJVName >= this.nameJV[this.modeJV].length) {
+            this.showJVIndexMessageError = true;
+        } else if (this.isToDeleteJV) {
+            this.showJVIndexMessageError = false;
+            this.showInputJVIndex = false;
+            this.showOrHideJVButton(true);
+            this.nameJV[this.modeJV].splice(this.indexJVName, 1);
+        } else {
+            this.showInputJVIndex = false;
+            this.showJVIndexMessageError = false;
+            this.showInputJVName = true;
+        }
+    }
+    addNameJV(mode: number) {
+        this.showOrHideJVButton(false);
+        this.showInputJVName = true;
+        this.modeJV = mode;
+        this.indexJVName = -1;
+    }
+    modifyJVName(mode: number) {
+        this.showOrHideJVButton(false);
+        this.showInputJVIndex = true;
+        this.modeJV = mode;
+        this.isToDeleteJV = false;
+    }
+    deleteJVName(mode: number) {
+        this.showOrHideJVButton(false);
+        this.showInputJVIndex = true;
+        this.modeJV = mode;
+        this.isToDeleteJV = true;
     }
     sendChangesToServer() {
         this.showNewDescriptionInput = false;
