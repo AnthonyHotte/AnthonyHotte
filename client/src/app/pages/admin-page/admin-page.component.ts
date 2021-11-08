@@ -41,7 +41,7 @@ export class AdminPageComponent {
         this.dictionaryList.push(new Dictionary('dict1', 'description 1'));
         this.nameJV = [
             ['JV1', 'JV2', 'JV3'],
-            ['JVHard1', 'JVHard2'],
+            ['JVHard1', 'JVHard2', 'JVHard3'],
         ];
         this.newNameJV = '';
         this.newNameInput = '';
@@ -163,11 +163,16 @@ export class AdminPageComponent {
         this.modeJV = mode;
         this.isToDeleteJV = true;
     }
+    reinitialize() {
+        this.dictionaryList.splice(1);
+        this.nameJV[0].splice(3);
+        this.nameJV[1].splice(3);
+    }
     sendChangesToServer() {
         this.showNewDescriptionInput = false;
         this.showModifyButton = true;
         // TODO
-        // send changes to server
+        // send changes to server in dictionary
     }
     // eslint-disable-next-line no-unused-vars
     sendJVNameChanges(mode: number) {

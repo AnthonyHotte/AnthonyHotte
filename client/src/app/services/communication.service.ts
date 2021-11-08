@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Dictionary } from '@app/classes/dictionary';
 import { Message } from '@app/classes/message';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -12,6 +13,9 @@ export class CommunicationService {
     private readonly baseUrl: string = environment.serverUrl;
 
     constructor(private readonly http: HttpClient) {}
+    getDictionary(): Observable<Dictionary> {
+        return this.http.get<Dictionary>(`${this.baseUrl}/dictionary`).pipe(catchError(this.handleError<Dictionary>('getDictionary')));
+    }
 
     basicGet(): Observable<Message> {
         return this.http.get<Message>(`${this.baseUrl}/example`).pipe(catchError(this.handleError<Message>('basicGet')));
