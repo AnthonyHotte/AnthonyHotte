@@ -4,11 +4,22 @@ import jsonDictionnary from '@app/dictionnary.json';
 
 @Service()
 export class DictionaryService {
-    dictionaryList: Dictionary[];
+    private dictionaryList: Dictionary[];
     constructor() {
         const temp = JSON.parse(JSON.stringify(jsonDictionnary));
         this.dictionaryList = [new Dictionary(temp.title, temp.description)];
         this.dictionaryList[0].content = temp.words;
+    }
+    getDictionaryTitleAndDescription(): Dictionary[] {
+        const dictToSend: Dictionary[] = [];
+        for (const dict of this.dictionaryList) {
+            dict.content = [];
+            dictToSend.push(dict);
+        }
+        return dictToSend;
+    }
+    getDictWithContent(index: number): Dictionary {
+        return this.dictionaryList[index];
     }
     addDictionary(dictionary: Dictionary) {
         this.dictionaryList.push(dictionary);
