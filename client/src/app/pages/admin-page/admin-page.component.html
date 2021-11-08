@@ -23,7 +23,7 @@
     <fieldset *ngIf="showNewDescriptionInput">
         <label>Description du dictionnaire: </label>
         <input [(ngModel)]="newDescriptionInput" type="string" />
-        <button (click)="sendChangesToServer()">Enregistrer les changements</button>
+        <button (click)="saveDictionaryModification()">Enregistrer les changements</button>
         <button (click)="showNewDescriptionInput = false; showModifyButton = true;">Annuler</button>
     </fieldset>
     <button>Téléverser un nouveau dictionnaire</button>

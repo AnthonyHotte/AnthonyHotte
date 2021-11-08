@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Dictionary } from '@app/classes/dictionary';
 import { ERRORCODE } from '@app/constants';
+import { CommunicationService } from '@app/services/communication.service';
 
 @Component({
     selector: 'app-admin-page',
@@ -34,15 +35,21 @@ export class AdminPageComponent {
     showAddJVnameButton: boolean;
     showModifyJVNameButton: boolean;
     showDeleteJVNameButton: boolean;
-    constructor() {
+    constructor(private readonly communicationService: CommunicationService) {
         this.dictionaryList = [];
         // index 0 is default dictionary
-        this.dictionaryList.push(new Dictionary('dict de base', 'description 0'));
-        this.dictionaryList.push(new Dictionary('dict1', 'description 1'));
+        // this.dictionaryList.push(new Dictionary('dict de base', 'description 0'));
+        // this.dictionaryList.push(new Dictionary('dict1', 'description 1'));
         this.nameJV = [
             ['JV1', 'JV2', 'JV3'],
             ['JVHard1', 'JVHard2', 'JVHard3'],
         ];
+        // TODO
+        this.communicationService.getDictionary().subscribe((result: Dictionary[]) => {
+            result.forEach((res) => {
+                this.dictionaryList.push(res);
+            });
+        });
         this.newNameJV = '';
         this.newNameInput = '';
         this.isToDeleteJV = false;
@@ -168,11 +175,22 @@ export class AdminPageComponent {
         this.nameJV[0].splice(3);
         this.nameJV[1].splice(3);
     }
-    sendChangesToServer() {
+    saveDictionaryModification() {
         this.showNewDescriptionInput = false;
         this.showModifyButton = true;
+        this.dictionaryList[this.dictionaryNumberInput].name = this.newNameInput;
+        this.dictionaryList[this.dictionaryNumberInput].description = this.newDescriptionInput;
+        this.sendModificationNamesToServer();
+    }
+    sendModificationNamesToServer() {
         // TODO
         // send changes to server in dictionary
+        this.communicationService
+            .sendDictionaryNameChanged({
+                index: this.dictionaryNumberInput,
+                dictionary: this.dictionaryList[this.dictionaryNumberInput],
+            })
+            .subscribe();
     }
     // eslint-disable-next-line no-unused-vars
     sendJVNameChanges(mode: number) {

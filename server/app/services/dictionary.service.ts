@@ -9,6 +9,7 @@ export class DictionaryService {
         const temp = JSON.parse(JSON.stringify(jsonDictionnary));
         this.dictionaryList = [new Dictionary(temp.title, temp.description)];
         this.dictionaryList[0].content = temp.words;
+        this.dictionaryList[1] = new Dictionary('titre1', 'description1');
     }
     getDictionaryTitleAndDescription(): Dictionary[] {
         const dictToSend: Dictionary[] = [];

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Dictionary } from '@app/classes/dictionary';
 import { Message } from '@app/classes/message';
+import { SendModifyDictionary } from '@app/classes/send-dictionary-interface';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -13,8 +14,13 @@ export class CommunicationService {
     private readonly baseUrl: string = environment.serverUrl;
 
     constructor(private readonly http: HttpClient) {}
-    getDictionary(): Observable<Dictionary> {
-        return this.http.get<Dictionary>(`${this.baseUrl}/dictionary`).pipe(catchError(this.handleError<Dictionary>('getDictionary')));
+    getDictionary(): Observable<Dictionary[]> {
+        return this.http.get<Dictionary[]>(`${this.baseUrl}/dictionary/list`).pipe(catchError(this.handleError<Dictionary[]>('getDictionary')));
+    }
+    sendDictionaryNameChanged(dictionaryInfo: SendModifyDictionary): Observable<void> {
+        return this.http
+            .post<void>(`${this.baseUrl}/dictionary/sendnamechange`, dictionaryInfo)
+            .pipe(catchError(this.handleError<void>('sendDictionaryNameChanged')));
     }
 
     basicGet(): Observable<Message> {
