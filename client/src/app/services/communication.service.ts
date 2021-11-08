@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Dictionary } from '@app/classes/dictionary';
 import { Message } from '@app/classes/message';
@@ -14,9 +14,16 @@ export class CommunicationService {
     private readonly baseUrl: string = environment.serverUrl;
 
     constructor(private readonly http: HttpClient) {}
-    getDictionary(): Observable<Dictionary[]> {
+    getDictionaryList(): Observable<Dictionary[]> {
         return this.http.get<Dictionary[]>(`${this.baseUrl}/dictionary/list`).pipe(catchError(this.handleError<Dictionary[]>('getDictionary')));
     }
+    getFullDictionary(index: number): Observable<Dictionary> {
+        const params = new HttpParams().append('indexNumber', index);
+        return this.http
+            .get<Dictionary>(`${this.baseUrl}/dictionary/fulldictionary`, { params })
+            .pipe(catchError(this.handleError<Dictionary>('getFullDictionary')));
+    }
+
     sendDictionaryNameChanged(dictionaryInfo: SendModifyDictionary): Observable<void> {
         return this.http
             .post<void>(`${this.baseUrl}/dictionary/sendnamechange`, dictionaryInfo)
@@ -28,7 +35,11 @@ export class CommunicationService {
             .post<void>(`${this.baseUrl}/dictionary/senddeletedictionary`, objNumber)
             .pipe(catchError(this.handleError<void>('sendDeleteDictionary')));
     }
-
+    reinitialiseDictionary(): Observable<void> {
+        return this.http
+            .post<void>(`${this.baseUrl}/dictionary/sendreinitialise`, { reinitialise: true })
+            .pipe(catchError(this.handleError<void>('reinitialiseDictionary')));
+    }
     basicGet(): Observable<Message> {
         return this.http.get<Message>(`${this.baseUrl}/example`).pipe(catchError(this.handleError<Message>('basicGet')));
     }

@@ -31,4 +31,7 @@ export class DictionaryService {
     deleteDictionary(index: number) {
         this.dictionaryList.splice(index, 1);
     }
+    reinitialize() {
+        this.dictionaryList.splice(1);
+    }
 }

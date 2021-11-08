@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Dictionary } from '@app/classes/dictionary';
 import { ERRORCODE } from '@app/constants';
 import { CommunicationService } from '@app/services/communication.service';
@@ -10,10 +11,13 @@ import { CommunicationService } from '@app/services/communication.service';
 })
 export class AdminPageComponent {
     dictionaryList: Dictionary[];
+    downloadUrl: SafeUrl;
+    showDownloadUrl: boolean;
     isDeleteMode: boolean;
     dictionaryNumberInput: number;
     newNameInput: string;
     newDescriptionInput: string;
+    isDownloadMode: boolean;
     showModifyButton: boolean;
     showDeleteDictionaryButton: boolean;
     showNumberInput: boolean;
@@ -22,6 +26,8 @@ export class AdminPageComponent {
     showNewNameMessageError: boolean;
     showNewDescriptionInput: boolean;
     showNewDescriptionMessageError: boolean;
+    showDownloadButton: boolean;
+    showUpLoadButton: boolean;
 
     nameJV: string[][]; // JV easy name index 0, JVHard name index 1
     newNameJV: string;
@@ -35,17 +41,13 @@ export class AdminPageComponent {
     showAddJVnameButton: boolean;
     showModifyJVNameButton: boolean;
     showDeleteJVNameButton: boolean;
-    constructor(private readonly communicationService: CommunicationService) {
+    constructor(private readonly communicationService: CommunicationService, private readonly sanitizer: DomSanitizer) {
         this.dictionaryList = [];
-        // index 0 is default dictionary
-        // this.dictionaryList.push(new Dictionary('dict de base', 'description 0'));
-        // this.dictionaryList.push(new Dictionary('dict1', 'description 1'));
         this.nameJV = [
             ['JV1', 'JV2', 'JV3'],
             ['JVHard1', 'JVHard2', 'JVHard3'],
         ];
-        // TODO
-        this.communicationService.getDictionary().subscribe((result: Dictionary[]) => {
+        this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
             result.forEach((res) => {
                 this.dictionaryList.push(res);
             });
@@ -53,8 +55,6 @@ export class AdminPageComponent {
         this.newNameJV = '';
         this.newNameInput = '';
         this.isToDeleteJV = false;
-        this.showModifyButton = true;
-        this.showDeleteDictionaryButton = true;
         this.showNumberInput = false;
         this.showNewNameInput = false;
         this.showNewDescriptionInput = false;
@@ -66,18 +66,33 @@ export class AdminPageComponent {
         this.showJVNameMessageError = false;
         this.showInputJVIndex = false;
         this.showJVIndexMessageError = false;
+        this.showDownloadUrl = false;
+        this.isDownloadMode = false;
+        this.showOrHideDictionaryButton(true);
         this.showOrHideJVButton(true);
     }
+    showOrHideDictionaryButton(show: boolean) {
+        this.showModifyButton = show;
+        this.showDeleteDictionaryButton = show;
+        this.showDownloadButton = show;
+        this.showUpLoadButton = show;
+    }
+
     validateNumber() {
-        if (this.dictionaryNumberInput < 1 || this.dictionaryNumberInput >= this.dictionaryList.length) {
+        if (this.isDownloadMode) {
+            this.isDownloadMode = false;
+            this.showNumberMessageError = false;
+            this.showNumberInput = false;
+            this.getFullDictionary();
+            this.showDownloadUrl = true;
+        } else if (this.dictionaryNumberInput < 1 || this.dictionaryNumberInput >= this.dictionaryList.length) {
             this.showNumberMessageError = true;
         } else if (this.isDeleteMode) {
             this.dictionaryList.splice(this.dictionaryNumberInput, 1);
             this.sendDeleteDictionaryServer();
             this.showNumberInput = false;
             this.isDeleteMode = false;
-            this.showModifyButton = true;
-            this.showDeleteDictionaryButton = true;
+            this.showOrHideDictionaryButton(true);
             this.showNumberMessageError = false;
         } else {
             this.showNumberMessageError = false;
@@ -173,10 +188,13 @@ export class AdminPageComponent {
         this.dictionaryList.splice(1);
         this.nameJV[0].splice(3);
         this.nameJV[1].splice(3);
+        this.communicationService.reinitialiseDictionary().subscribe();
+        // TODO
+        // mogo gerer nameJV
     }
     saveDictionaryModification() {
         this.showNewDescriptionInput = false;
-        this.showModifyButton = true;
+        this.showOrHideDictionaryButton(true);
         this.dictionaryList[this.dictionaryNumberInput].name = this.newNameInput;
         this.dictionaryList[this.dictionaryNumberInput].description = this.newDescriptionInput;
         this.sendModificationNamesToServer();
@@ -188,6 +206,12 @@ export class AdminPageComponent {
                 dictionary: this.dictionaryList[this.dictionaryNumberInput],
             })
             .subscribe();
+    }
+    getFullDictionary() {
+        this.communicationService.getFullDictionary(this.dictionaryNumberInput).subscribe((res) => {
+            const data = JSON.stringify(res);
+            this.downloadUrl = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(data));
+        });
     }
     sendDeleteDictionaryServer() {
         this.communicationService.sendDeleteDictionary(this.dictionaryNumberInput).subscribe();

@@ -35,6 +35,26 @@ export class DictionaryController {
         /**
          * @swagger
          *
+         * /api/fulldictionary:
+         *   get:
+         *     description: Return dictionary
+         *     tags:
+         *       - Dictionary
+         *     produces:
+         *       - application/json
+         *     responses:
+         *       200:
+         *
+         */
+        this.router.get('/fulldictionary', (req: Request, res: Response) => {
+            // Send the request to the service and send the response
+            // res.json(this.dictionaryService.getDictWithContent(parseInt(req.query.indexValue, 10)));
+            // TODO
+            res.json();
+        });
+        /**
+         * @swagger
+         *
          * /api/dictionary/sendnamechange:
          *   post:
          *     description: Send a dictionary
@@ -82,6 +102,28 @@ export class DictionaryController {
          */
         this.router.post('/senddeletedictionary', (req: Request, res: Response) => {
             this.dictionaryService.deleteDictionary(req.body.index);
+            res.sendStatus(HTTP_STATUS_CREATED);
+        });
+        /**
+         * @swagger
+         *
+         * /api/dictionary/sendreinitialise:
+         *   post:
+         *     description: reinitialise dictionaryList
+         *     tags:
+         *       - Dictionary
+         *     requestBody:
+         *         required: true
+         *         content:
+         *           application/json:
+         *     produces:
+         *       - application/json
+         *     responses:
+         *       201:
+         *         description: Created
+         */
+        this.router.post('/sendreinitialise', (req: Request, res: Response) => {
+            this.dictionaryService.reinitialize();
             res.sendStatus(HTTP_STATUS_CREATED);
         });
     }
