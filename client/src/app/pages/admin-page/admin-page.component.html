@@ -26,8 +26,8 @@
         <button (click)="saveDictionaryModification()">Enregistrer les changements</button>
         <button (click)="showNewDescriptionInput = false; showOrHideDictionaryButton(true);">Annuler</button>
     </fieldset>
-    <button *ngIf="showUpLoadButton">Téléverser un nouveau dictionnaire</button>
-    <button *ngIf="showDownloadButton" (click)="isDownloadMode = true; showNumberInput = true;">Télécharger un dictionaire</button><br>
+    <button *ngIf="showUpLoadButton" (click)="showOrHideDictionaryButton(false);">Téléverser un nouveau dictionnaire</button>
+    <button *ngIf="showDownloadButton" (click)="isDownloadMode = true; showNumberInput = true; showOrHideDictionaryButton(false);">Télécharger un dictionaire</button><br>
     <a *ngIf="showDownloadUrl" [href]="downloadUrl" download="dictionary.json">Download</a>
 
     <p><br><br>List de nom des joueur virtuel débutant:</p>
