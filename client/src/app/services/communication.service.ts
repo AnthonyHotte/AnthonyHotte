@@ -22,6 +22,12 @@ export class CommunicationService {
             .post<void>(`${this.baseUrl}/dictionary/sendnamechange`, dictionaryInfo)
             .pipe(catchError(this.handleError<void>('sendDictionaryNameChanged')));
     }
+    sendDeleteDictionary(index: number): Observable<void> {
+        const objNumber = { indexNumber: index };
+        return this.http
+            .post<void>(`${this.baseUrl}/dictionary/senddeletedictionary`, objNumber)
+            .pipe(catchError(this.handleError<void>('sendDeleteDictionary')));
+    }
 
     basicGet(): Observable<Message> {
         return this.http.get<Message>(`${this.baseUrl}/example`).pipe(catchError(this.handleError<Message>('basicGet')));

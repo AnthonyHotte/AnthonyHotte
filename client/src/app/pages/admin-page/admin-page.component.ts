@@ -73,8 +73,7 @@ export class AdminPageComponent {
             this.showNumberMessageError = true;
         } else if (this.isDeleteMode) {
             this.dictionaryList.splice(this.dictionaryNumberInput, 1);
-            // TODO
-            // delete the dict dictionaryNumberInput on server
+            this.sendDeleteDictionaryServer();
             this.showNumberInput = false;
             this.isDeleteMode = false;
             this.showModifyButton = true;
@@ -183,14 +182,15 @@ export class AdminPageComponent {
         this.sendModificationNamesToServer();
     }
     sendModificationNamesToServer() {
-        // TODO
-        // send changes to server in dictionary
         this.communicationService
             .sendDictionaryNameChanged({
                 index: this.dictionaryNumberInput,
                 dictionary: this.dictionaryList[this.dictionaryNumberInput],
             })
             .subscribe();
+    }
+    sendDeleteDictionaryServer() {
+        this.communicationService.sendDeleteDictionary(this.dictionaryNumberInput).subscribe();
     }
     // eslint-disable-next-line no-unused-vars
     sendJVNameChanges(mode: number) {

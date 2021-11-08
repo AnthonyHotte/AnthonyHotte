@@ -58,5 +58,31 @@ export class DictionaryController {
             this.dictionaryService.modifyDictionary(req.body.index, req.body.dictionary);
             res.sendStatus(HTTP_STATUS_CREATED);
         });
+
+        /**
+         * @swagger
+         *
+         * /api/dictionary/senddeletedictionary:
+         *   post:
+         *     description: delete a dictionary
+         *     tags:
+         *       - Dictionary
+         *     requestBody:
+         *         description: index
+         *         required: true
+         *         content:
+         *           application/json:
+         *             example:
+         *               index: 2
+         *     produces:
+         *       - application/json
+         *     responses:
+         *       201:
+         *         description: Created
+         */
+        this.router.post('/senddeletedictionary', (req: Request, res: Response) => {
+            this.dictionaryService.deleteDictionary(req.body.index);
+            res.sendStatus(HTTP_STATUS_CREATED);
+        });
     }
 }
