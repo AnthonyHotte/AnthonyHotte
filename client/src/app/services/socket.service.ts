@@ -118,6 +118,7 @@ export class SocketService {
         });
 
         this.socket.on('gameIsFinished', () => {
+            this.triggeredQuit = true;
             this.updateOfEndGameValue.next(true);
             // if (!this.triggeredQuit) {
             //     this.cancelGame();
@@ -199,12 +200,10 @@ export class SocketService {
     }
 
     finishedGameMessageTransmission() {
-        this.triggeredQuit = true;
         this.socket.emit('gameFinished', this.roomNumber);
     }
 
     handleDisconnect() {
-        this.triggeredQuit = true;
         this.socket.disconnect();
     }
 }

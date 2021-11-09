@@ -51,18 +51,15 @@ export class FinishGameService {
 
     getWinner(): number[] {
         const winner: number[] = [];
-        if (this.socketService.triggeredQuit) {
+        if (this.finalScore[0] > this.finalScore[1]) {
+            winner.push(0);
+        } else if (this.finalScore[0] < this.finalScore[1]) {
             winner.push(1);
         } else {
-            if (this.finalScore[0] > this.finalScore[1]) {
-                winner.push(0);
-            } else if (this.finalScore[0] < this.finalScore[1]) {
-                winner.push(1);
-            } else {
-                winner.push(0);
-                winner.push(1);
-            }
+            winner.push(0);
+            winner.push(1);
         }
+
         return winner;
     }
 
@@ -78,6 +75,11 @@ export class FinishGameService {
 
         return congratulationMsg;
     }
+
+    getMessageCongratulationsAbandon(): string {
+        return 'Félicitation, ' + this.letterService.players[0].name + ' vous avez gagné. ' + this.letterService.players[1].name + ' a abandonné';
+    }
+
     getMessageTextBox(): string {
         let messageTextBox = 'Fin de partie - lettres restantes\n';
         for (const player of this.letterService.players) {

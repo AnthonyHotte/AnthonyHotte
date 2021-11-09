@@ -60,6 +60,7 @@ export class TextBox {
             text = await this.placeWordOpponent(myMessage.message, this.socket.lettersToReplace);
             printCommand = true;
         } else if (myMessage.message === '!abandonner') {
+            this.finishGameService.isGameFinished = true;
             this.inputs.push(myMessage);
             text = this.letterService.players[1].name + ' a abandonné la partie';
             const messageSystem: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
