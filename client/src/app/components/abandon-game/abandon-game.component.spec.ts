@@ -43,13 +43,4 @@ describe('AbandonGameComponent', () => {
         component.finishCurrentGame();
         expect(socketSpy.finishedGameMessageTransmission).toHaveBeenCalled();
     });
-
-    it('setIsGameUnderway should return Finie when game is finished', () => {
-        spy.isGameFinished = true;
-        expect(component.setIsGameUnderway()).toEqual('Finie');
-    });
-    it('setIsGameUnderway should return En cours when game is not finished', () => {
-        spy.isGameFinished = false;
-        expect(component.setIsGameUnderway()).toEqual('En cours');
-    });
 });

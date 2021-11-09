@@ -59,6 +59,12 @@ export class TextBox {
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
             text = await this.placeWordOpponent(myMessage.message, this.socket.lettersToReplace);
             printCommand = true;
+        } else if (myMessage.message === '!abandonner') {
+            this.inputs.push(myMessage);
+            text = this.letterService.players[1].name + ' a abandonné la partie';
+            const messageSystem: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
+            this.inputs.push(messageSystem);
+            this.handleEnter(this.finishGameService.getMessageTextBox());
         }
         if (printCommand) {
             this.inputs.push(myMessage);
@@ -140,6 +146,14 @@ export class TextBox {
                 this.debugCommand = false;
                 text = 'Affichages de débogage désactivés';
             }
+        } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
+            text = '';
+            this.handleEnter(this.activateReserve());
+            this.socket.configureSendMessageToServer('!réserve', this.timeManager.gameStatus);
+        } else if (myWord === '!abandonner') {
+            text = '';
+            this.socket.configureSendMessageToServer('!abandonner', this.timeManager.gameStatus);
+            this.finishGameService.goToHomeAndRefresh();
         } else if (this.timeManager.turn === 0) {
             if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 text = await this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
@@ -153,10 +167,6 @@ export class TextBox {
                 this.socket.configureSendMessageToServer('!passer', this.timeManager.gameStatus);
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
                 text = this.verifyCommandEchanger(myWord);
-            } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
-                text = '';
-                this.handleEnter(this.activateReserve());
-                this.socket.configureSendMessageToServer('!réserve', this.timeManager.gameStatus);
             } else {
                 text = 'Erreur de syntaxe...';
             }
