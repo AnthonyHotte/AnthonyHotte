@@ -1,64 +1,92 @@
 <body ng-app="app" style="text-align: Center">
-    <p><br>List des dictionnaires disponibles:</p>
-    <div *ngFor="let dictionary of this.dictionaryList; let dictIndex = index;">
-        <p>Numéro du dictionnaire:{{dictIndex}}<br> Nom: {{ dictionary.name }}<br>Description: {{ dictionary.description }}<br><br></p>
+    <p><br />List des dictionnaires disponibles:</p>
+    <div *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
+        <p>
+            Numéro du dictionnaire:{{ dictIndex }}<br />
+            Nom: {{ dictionary.name }}<br />Description: {{ dictionary.description }}<br /><br />
+        </p>
     </div>
-    <button *ngIf="showDeleteDictionaryButton" (click)="showNumberInput=true; showOrHideDictionaryButton(false); this.isDeleteMode = true;">Supprimer un dictionnaire</button>
-    <button *ngIf="showModifyButton" (click)="showNumberInput = true; showOrHideDictionaryButton(false); this.isDeleteMode = false;">Modifier un dictionnaire</button><br><br>
+    <button *ngIf="showDeleteDictionaryButton" (click)="showNumberInput = true; showOrHideDictionaryButton(false); this.isDeleteMode = true">
+        Supprimer un dictionnaire
+    </button>
+    <button *ngIf="showModifyButton" (click)="showNumberInput = true; showOrHideDictionaryButton(false); this.isDeleteMode = false">
+        Modifier un dictionnaire</button
+    ><br /><br />
 
     <fieldset *ngIf="showNumberInput">
         <label>Numéro du dictionnaire: </label>
         <input [(ngModel)]="dictionaryNumberInput" type="number" />
         <button (click)="validateNumber()">Valider le numéro</button>
-        <button (click)="showNumberInput = false; showOrHideDictionaryButton(true);">Annuler</button>
-        <div *ngIf="showNumberMessageError"><p>Le numéro du dictionnaire est invalide, il doit figurer dans la liste afficher mais ne peut pas etre 0.<br>Essayer de nouveau...</p></div>
+        <button (click)="showNumberInput = false; showOrHideDictionaryButton(true)">Annuler</button>
+        <div *ngIf="showNumberMessageError">
+            <p>Le numéro du dictionnaire est invalide, il doit figurer dans la liste afficher mais ne peut pas etre 0.<br />Essayer de nouveau...</p>
+        </div>
     </fieldset>
     <fieldset *ngIf="showNewNameInput">
         <label>Nom du dictionnaire: </label>
         <input [(ngModel)]="newNameInput" type="string" />
         <button (click)="validateNewName()">Valider le nom</button>
-        <button (click)="showNewNameInput = false; showOrHideDictionaryButton(true);">Annuler</button>
-        <div *ngIf="showNewNameMessageError"><p>Le nom du dictionnaire est invalide, il est soit deja associer a un disctionnaire ou le nom est vide.<br>Essayer de nouveau...</p></div>
+        <button (click)="showNewNameInput = false; showOrHideDictionaryButton(true)">Annuler</button>
+        <div *ngIf="showNewNameMessageError">
+            <p>Le nom du dictionnaire est invalide, il est soit deja associer a un disctionnaire ou le nom est vide.<br />Essayer de nouveau...</p>
+        </div>
     </fieldset>
     <fieldset *ngIf="showNewDescriptionInput">
         <label>Description du dictionnaire: </label>
         <input [(ngModel)]="newDescriptionInput" type="string" />
         <button (click)="saveDictionaryModification()">Enregistrer les changements</button>
-        <button (click)="showNewDescriptionInput = false; showOrHideDictionaryButton(true);">Annuler</button>
+        <button (click)="showNewDescriptionInput = false; showOrHideDictionaryButton(true)">Annuler</button>
     </fieldset>
-    <button *ngIf="showUpLoadButton" (click)="showOrHideDictionaryButton(false);">Téléverser un nouveau dictionnaire</button>
-    <button *ngIf="showDownloadButton" (click)="isDownloadMode = true; showNumberInput = true; showOrHideDictionaryButton(false);">Télécharger un dictionaire</button><br>
+    <button *ngIf="showUpLoadButton" (click)="showOrHideDictionaryButton(false)">Téléverser un nouveau dictionnaire</button>
+    <button *ngIf="showDownloadButton" (click)="isDownloadMode = true; showNumberInput = true; showOrHideDictionaryButton(false)">
+        Télécharger un dictionaire</button
+    ><br />
     <a *ngIf="showDownloadUrl" [href]="downloadUrl" download="dictionary.json">Download</a>
 
-    <p><br><br>List de nom des joueur virtuel débutant:</p>
-    <div *ngFor="let name of this.nameJV[0] ; let dictIndex = index;">
-        <p>Numéro du joueur virtuel:{{dictIndex}}<br> Nom: {{ name }}<br></p>
+    <p><br /><br />List de nom des joueur virtuel débutant:</p>
+    <div *ngFor="let name of this.nameJV[0]; let dictIndex = index">
+        <p>
+            Numéro du joueur virtuel:{{ dictIndex }}<br />
+            Nom: {{ name }}<br />
+        </p>
     </div>
-    <button *ngIf="showAddJVnameButton" (click)="addNameJV(0);">ajouter un nom</button>
-    <button *ngIf="showModifyJVNameButton" (click)="modifyJVName(0);">modifier un nom</button>
-    <button *ngIf="showDeleteJVNameButton" (click)="deleteJVName(0);">suppprimer un nom</button>
+    <button *ngIf="showAddJVnameButton" (click)="addNameJV(0)">ajouter un nom</button>
+    <button *ngIf="showModifyJVNameButton" (click)="modifyJVName(0)">modifier un nom</button>
+    <button *ngIf="showDeleteJVNameButton" (click)="deleteJVName(0)">suppprimer un nom</button>
 
-    <p><br>List de nom des joueur virtuel expert:</p>
-    <div *ngFor="let name of this.nameJV[1] ; let dictIndex = index;">
-        <p>Numéro du joueur virtuel:{{dictIndex}}<br> Nom: {{ name }}<br></p>
+    <p><br />List de nom des joueur virtuel expert:</p>
+    <div *ngFor="let name of this.nameJV[1]; let dictIndex = index">
+        <p>
+            Numéro du joueur virtuel:{{ dictIndex }}<br />
+            Nom: {{ name }}<br />
+        </p>
     </div>
-    <button *ngIf="showAddJVnameButton" (click)="addNameJV(1);">ajouter un nom</button>
-    <button *ngIf="showModifyJVNameButton" (click)="modifyJVName(1);">modifier un nom</button>
-    <button *ngIf="showDeleteJVNameButton" (click)="deleteJVName(1);">suppprimer un nom</button>
+    <button *ngIf="showAddJVnameButton" (click)="addNameJV(1)">ajouter un nom</button>
+    <button *ngIf="showModifyJVNameButton" (click)="modifyJVName(1)">modifier un nom</button>
+    <button *ngIf="showDeleteJVNameButton" (click)="deleteJVName(1)">suppprimer un nom</button>
 
     <fieldset *ngIf="showInputJVName">
         <label>Nom du joueur virtuel: </label>
         <input [(ngModel)]="newNameJV" type="string" />
         <button (click)="saveJVName()">Enregistrer les modifications</button>
-        <button (click)="showInputJVName = false; showOrHideJVButton(true);">Annuler</button>
-        <div *ngIf="showJVNameMessageError"><p>Le nom du joueur virtuel est invalide, il est soit deja associer a un joueur ou le nom est vide.<br>Essayer de nouveau...</p></div>
+        <button (click)="showInputJVName = false; showOrHideJVButton(true)">Annuler</button>
+        <div *ngIf="showJVNameMessageError">
+            <p>Le nom du joueur virtuel est invalide, il est soit deja associer a un joueur ou le nom est vide.<br />Essayer de nouveau...</p>
+        </div>
     </fieldset>
     <fieldset *ngIf="showInputJVIndex">
         <label>Index du joueur virtuel: </label>
         <input [(ngModel)]="indexJVName" type="number" />
         <button (click)="validateIndexJV()">Enregistrer les modifications</button>
-        <button (click)="showInputJVIndex = false; showOrHideJVButton(true);">Annuler</button>
-        <div *ngIf="showJVIndexMessageError"><p>L'index du joueur virtuel est invalide, vous ne pouvez pas modifier les 3 premier joueur virtuel de la liste.<br>Essayer de nouveau...</p></div>
+        <button (click)="showInputJVIndex = false; showOrHideJVButton(true)">Annuler</button>
+        <div *ngIf="showJVIndexMessageError">
+            <p>
+                L'index du joueur virtuel est invalide, vous ne pouvez pas modifier les 3 premier joueur virtuel de la liste.<br />Essayer de
+                nouveau...
+            </p>
+        </div>
     </fieldset>
-    <br><br><button (click)="reinitialize();">Réinitialiser</button>
+    <br /><br /><button (click)="reinitialize()">Réinitialiser</button>
+    <!--<br><br><br><app-upload></app-upload>-->
+    <br><br><br><br><app-file-upload requiredFileType=".json"></app-file-upload>
 </body>

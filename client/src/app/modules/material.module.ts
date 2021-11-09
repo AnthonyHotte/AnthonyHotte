@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 // import { MatListModule } from '@angular/material/list';
 // import { MatMenuModule } from '@angular/material/menu';
 // import { MatPaginatorModule } from '@angular/material/paginator';
-// import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 // import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 // import { MatSelectModule } from '@angular/material/select';
@@ -48,7 +48,7 @@ const modules = [
     // MatListModule,
     // MatMenuModule,
     // MatPaginatorModule,
-    // MatProgressBarModule,
+    MatProgressBarModule,
     // MatProgressSpinnerModule,
     MatRadioModule,
     // MatSelectModule,

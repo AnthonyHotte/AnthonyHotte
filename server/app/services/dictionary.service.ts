@@ -34,4 +34,7 @@ export class DictionaryService {
     reinitialize() {
         this.dictionaryList.splice(1);
     }
+    addFullDictionary(dictionary: Dictionary) {
+        this.dictionaryList.push(dictionary);
+    }
 }

@@ -1,3 +1,4 @@
+import { Dictionary } from '@app/classes/dictionary';
 import { DictionaryService } from '@app/services/dictionary.service';
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
@@ -102,6 +103,34 @@ export class DictionaryController {
          */
         this.router.post('/senddeletedictionary', (req: Request, res: Response) => {
             this.dictionaryService.deleteDictionary(req.body.index);
+            res.sendStatus(HTTP_STATUS_CREATED);
+        });
+
+        /**
+         * @swagger
+         *
+         * /api/dictionary/newdictionary:
+         *   post:
+         *     description: send a dictionary
+         *     tags:
+         *       - Dictionary
+         *     requestBody:
+         *         description: formData
+         *         required: true
+         *         content:
+         *           application/json:
+         *             example:
+         *               formData: file
+         *     produces:
+         *       - application/json
+         *     responses:
+         *       201:
+         *         description: Created
+         */
+        this.router.post('/newdictionary', (req: Request, res: Response) => {
+            const dictionary: Dictionary = new Dictionary('title', 'description');
+            dictionary.content = req.body;
+            this.dictionaryService.addFullDictionary(dictionary);
             res.sendStatus(HTTP_STATUS_CREATED);
         });
         /**

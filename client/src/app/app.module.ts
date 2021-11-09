@@ -28,6 +28,8 @@ import { PopUpComponent } from './components/pop-up/pop-up.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { UploadComponent } from './components/upload/upload.component';
 
 /**
  * Main module that is used in main.ts.
@@ -56,6 +58,8 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
         AbandonGameComponent,
         PopUpComponent,
         AdminPageComponent,
+        FileUploadComponent,
+        UploadComponent,
     ],
     imports: [
         AppMaterialModule,
