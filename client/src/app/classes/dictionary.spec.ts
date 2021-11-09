@@ -1,11 +1,10 @@
-import { TestBed } from '@angular/core/testing';
 import { Dictionary } from '@app/classes/dictionary';
 
 describe('dictionary', () => {
     let dictionary: Dictionary;
 
     beforeEach(() => {
-        dictionary = TestBed.inject(Dictionary);
+        dictionary = new Dictionary('title', 'description');
     });
 
     it('should be created', () => {

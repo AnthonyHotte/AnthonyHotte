@@ -4,7 +4,7 @@ import { FileUploadService } from '@app/services/file-upload.service';
 @Component({
     selector: 'app-upload',
     templateUrl: './upload.component.html',
-    styleUrls: ['./upload.component.css'],
+    styleUrls: ['./upload.component.scss'],
 })
 export class UploadComponent {
     // Variable to store shortLink from api response
