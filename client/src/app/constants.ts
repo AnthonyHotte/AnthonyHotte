@@ -10,8 +10,9 @@ export const ELEVEN = 11;
 export const TWELVE = 12;
 export const THIRTEEN = 13;
 export const FOURTEEN = 14;
+export const FIFTEEN = 15;
 export const SIXTEEN = 16;
-
+export const TWENTY = 20;
 // export const SIDESPACE = 30;
 export const NUMBEROFCASE = 15;
 export const DEFAULT_WIDTH = 750;
