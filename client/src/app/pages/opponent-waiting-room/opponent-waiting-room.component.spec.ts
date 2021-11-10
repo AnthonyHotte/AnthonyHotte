@@ -18,7 +18,7 @@ describe('OpponentWaitingRoomComponent', () => {
     beforeEach(async () => {
         socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendGameListNeededNotification']);
         indexWaitingRoomServiceSpy = jasmine.createSpyObj('IndexWaitingRoomService', ['setIndex']);
-        letterServiceSpy = jasmine.createSpyObj('LetterService', ['synchLetters']);
+        letterServiceSpy = jasmine.createSpyObj('LetterService', ['synchInformation']);
         gridMapServiceSpy = jasmine.createSpyObj('TileMap', ['isDoubleWordTile']);
         socketServiceSpy.gameLists = [['name', 'bonus', 'time', 'letters']];
         await TestBed.configureTestingModule({
@@ -43,7 +43,7 @@ describe('OpponentWaitingRoomComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('setIndex should call synchLetters ', () => {
+    it('setIndex should call synchInformation ', () => {
         socketServiceSpy.boards = [];
         socketServiceSpy.boards.push([
             [{ positionX: 1, positionY: 3 }],
@@ -55,7 +55,7 @@ describe('OpponentWaitingRoomComponent', () => {
         gridMapServiceSpy.tileMap.set('allo', [{ positionX: 1, positionY: 3 }]);
         spyOn(gridMapServiceSpy.tileMap, 'set');
         component.setIndex(0);
-        expect(letterServiceSpy.synchLetters).toHaveBeenCalled();
+        expect(letterServiceSpy.synchInformation).toHaveBeenCalled();
     });
 
     it('fillList should call push ', () => {
