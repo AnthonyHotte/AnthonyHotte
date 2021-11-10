@@ -193,7 +193,7 @@ describe('LetterService', () => {
         const mySpy = spyOn(service.players[0], 'addLetterToHand');
         const mySpy1 = spyOn(service.players[1], 'addLetterToHand');
         const mySpy2 = spyOn(service, 'resetLetterBankForSynch');
-        service.synchInformation('abc', 'eac');
+        service.synchInformation('abc', 'eac', '123', '125');
         expect(mySpy).toHaveBeenCalled();
         expect(mySpy1).toHaveBeenCalled();
         expect(mySpy2).toHaveBeenCalled();

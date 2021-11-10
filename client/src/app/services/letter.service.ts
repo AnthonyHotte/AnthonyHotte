@@ -72,10 +72,14 @@ export class LetterService {
         }
     }
     // only function for synch : only used by joiner
-    synchInformation(lettersCreator: string, lettersJoiner: string) {
+    synchInformation(lettersCreator: string, lettersJoiner: string, objectivesCreator: string, objectivesJoiner: string) {
         this.resetLetterBankForSynch();
         this.players[1].addLetterToHand(lettersCreator); // local letters of creator (opponent)
         this.players[0].addLetterToHand(lettersJoiner); // local letters of joiner (player)
+        for (let i = 0; i < 3; i++) {
+            this.players[1].objectives.push(Number(objectivesCreator.charAt(i)));
+            this.players[0].objectives.push(Number(objectivesJoiner.charAt(i)));
+        }
     }
 
     resetLetterBankForSynch() {

@@ -21,6 +21,9 @@ export class Room {
     // letters of players
     lettersCreator: Letter[];
     lettersJoiner: Letter[];
+    // objectives of players
+    objectivesCreator: number[];
+    objectivesJoiner: number[];
     isGeneric = true;
     bonusTiles: Position[][];
 
@@ -35,6 +38,8 @@ export class Room {
         this.turnsSkippedInARow = 0;
         this.lettersCreator = [];
         this.lettersJoiner = [];
+        this.objectivesCreator = [];
+        this.objectivesJoiner = [];
         this.isGeneric = true;
         this.roomIsAvailable = true;
     }
@@ -45,6 +50,8 @@ export class Room {
         bonusOn: boolean,
         lettersCreator: Letter[],
         lettersOpponent: Letter[],
+        objectivesCreator: number[],
+        objectivesJoiner: number[],
         bonusTiles: Position[][],
     ) {
         this.timePerTurn = time;
@@ -57,6 +64,8 @@ export class Room {
         for (const letter of lettersOpponent) {
             this.lettersJoiner.push(letter);
         }
+        this.objectivesCreator = objectivesCreator;
+        this.objectivesJoiner = objectivesJoiner;
         this.isGeneric = false;
         this.roomIsAvailable = true;
         this.bonusTiles = [];
