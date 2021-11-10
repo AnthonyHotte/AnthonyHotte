@@ -8,6 +8,8 @@ export class ObjectivesService {
     objectiveMap: Map<number, string>;
     objectivePoint: Map<number, number>;
     constructor() {
+        this.objectiveMap = new Map<number, string>();
+        this.objectivePoint = new Map<number, number>();
         const FOUR = 4;
         const FIVE = 5;
         const SIX = 6;
