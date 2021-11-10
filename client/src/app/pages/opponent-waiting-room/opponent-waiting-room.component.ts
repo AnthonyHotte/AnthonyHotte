@@ -30,7 +30,12 @@ export class OpponentWaitingRoomComponent implements OnInit {
     setIndex(index: number) {
         this.indexWaitingRoomService.setIndex(index);
         // synch letters once and for all for joiner
-        this.letterService.synchLetters(this.socketInformation.gameLists[index][3], this.socketInformation.gameLists[index][4]);
+        this.letterService.synchInformation(
+            this.socketInformation.gameLists[index][3],
+            this.socketInformation.gameLists[index][4],
+            this.socketInformation.gameLists[index][5],
+            this.socketInformation.gameLists[index][6],
+        );
         const doubleWord = this.socketInformation.boards[index][0];
         TileMap.gridMap.tileMap.set('DoubleWord', doubleWord);
         const doubleLetter = this.socketInformation.boards[index][1];

@@ -95,6 +95,8 @@ export class SoloGameInitiatorComponent {
             this.opponentName,
             this.letterService.players[0].allLettersInHand,
             this.letterService.players[1].allLettersInHand,
+            this.letterService.players[0].objectives,
+            this.letterService.players[1].objectives,
             bonusTiles,
         );
     }

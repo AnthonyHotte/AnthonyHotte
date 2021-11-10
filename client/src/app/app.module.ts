@@ -27,6 +27,7 @@ import { AbandonGameComponent } from './components/abandon-game/abandon-game.com
 import { PopUpComponent } from './components/pop-up/pop-up.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ObjectivesComponent } from './components/objectives/objectives.component';
 
 /**
  * Main module that is used in main.ts.
@@ -54,6 +55,7 @@ import { MatDialogModule } from '@angular/material/dialog';
         PlaceWordWithClickGuiComponent,
         AbandonGameComponent,
         PopUpComponent,
+        ObjectivesComponent,
     ],
     imports: [
         AppMaterialModule,

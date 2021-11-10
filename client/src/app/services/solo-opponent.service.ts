@@ -3,7 +3,7 @@ import { MAXLETTERINHAND } from '@app/constants';
 import { GameStatus } from '@app/game-status';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { FinishGameService } from './finish-game.service';
-import { LetterService } from './letter.service';
+import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from './place-letters.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
