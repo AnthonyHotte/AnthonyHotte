@@ -33,6 +33,7 @@ export class SocketService {
     isWordValid: BehaviorSubject<boolean>;
     boards: Position[][][];
     iswordvalid2: boolean;
+    is2990: boolean;
 
     constructor() {
         this.gameLists = [[]];
@@ -54,6 +55,7 @@ export class SocketService {
         this.currentEndGameValue = this.updateOfEndGameValue.asObservable();
         this.isWordValid = new BehaviorSubject<boolean>(false);
         this.boards = new Array(new Array(new Array()));
+        this.is2990 = false;
     }
 
     getMessageObservable() {
