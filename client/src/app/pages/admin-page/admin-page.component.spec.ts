@@ -215,4 +215,19 @@ fdescribe('AdminPageComponent', () => {
         component.saveDictionaryModification();
         expect(component.showNewDescriptionInput).toBe(false);
     });
+    it('sendModificationNamesToServer should call sendDictionaryNameChanged', () => {
+        communicationServiceSpy.sendDictionaryNameChanged.and.returnValue(new Observable());
+        component.sendModificationNamesToServer();
+        expect(communicationServiceSpy.sendDictionaryNameChanged).toHaveBeenCalled();
+    });
+    it('getFullDictionary should call getFullDictionary', () => {
+        communicationServiceSpy.getFullDictionary.and.returnValue(new Observable());
+        component.getFullDictionary();
+        expect(communicationServiceSpy.getFullDictionary).toHaveBeenCalled();
+    });
+    it('sendDeleteDictionaryServer should call getFullDictionary', () => {
+        communicationServiceSpy.sendDeleteDictionary.and.returnValue(new Observable());
+        component.sendDeleteDictionaryServer();
+        expect(communicationServiceSpy.sendDeleteDictionary).toHaveBeenCalled();
+    });
 });
