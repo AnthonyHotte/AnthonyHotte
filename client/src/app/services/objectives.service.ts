@@ -91,6 +91,19 @@ export class ObjectivesService {
     }
 
     palindrom7(): boolean {
+        for (const word of this.wordsCreated) {
+            let beginIndex = 0;
+            let endIndex = word.length - 1;
+            let isPalindrom = true;
+            while (beginIndex < endIndex) {
+                if (word.charAt(beginIndex++) !== word.charAt(endIndex--)) {
+                    isPalindrom = false;
+                }
+            }
+            if (isPalindrom) {
+                return true;
+            }
+        }
         return false;
     }
 }
