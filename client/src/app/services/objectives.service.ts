@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as Constants from '@app/constants';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
-
+import { TileMap } from '@app/classes/grid-special-tile';
+import { Position } from '@app/position-tile-interface';
 @Injectable({
     providedIn: 'root',
 })
@@ -85,6 +86,24 @@ export class ObjectivesService {
     }
 
     wordsNoBonus1(): boolean {
+        const allBonuses: Position[] = [];
+        TileMap.gridMap.tileMap.forEach((value) => {
+            for (const position of value) {
+                allBonuses.push(position);
+            }
+        });
+
+        for (let i = 0; i < this.indexLastLetters.length; i += 2) {
+            for (const position of allBonuses) {
+                if (position.positionY - 1 === this.indexLastLetters[i] && position.positionX - 1 === this.indexLastLetters[i + 1]) {
+                    this.consNoBonus[this.timeManager.turn] = 0;
+                    return false;
+                }
+            }
+        }
+        if (this.consNoBonus[this.timeManager.turn]++ === 3) {
+            return true;
+        }
         return false;
     }
 
