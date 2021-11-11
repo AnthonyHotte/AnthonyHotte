@@ -59,3 +59,13 @@ html, body {   margin:0;   height:100%;   overflow:hidden; }
     background-color: white;
     color:green;
 }
+
+// source : https://www.w3schools.com/howto/howto_js_read_more.asp
+.limitTextHeight {
+    height: 0px;
+    overflow: hidden;
+}
+
+.info {
+    color:crimson;
+}
