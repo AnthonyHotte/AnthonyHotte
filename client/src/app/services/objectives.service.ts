@@ -8,6 +8,8 @@ export class ObjectivesService {
     static objectives = new ObjectivesService();
     objectiveMap: Map<number, string>;
     objectivePoint: Map<number, number>;
+    wordsCreated: string[];
+    indexLastLetters: number[];
     constructor() {
         this.objectiveMap = new Map<number, string>();
         this.objectivePoint = new Map<number, number>();
