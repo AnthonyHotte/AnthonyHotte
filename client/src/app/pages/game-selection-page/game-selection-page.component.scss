@@ -1,0 +1,35 @@
+.body {
+    background-color: green;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+}
+
+.header-item {
+    background-color: blue;
+    justify-content: center;
+    color: white;
+    background: linear-gradient(to right, rgb(115, 128, 0),rgb(0, 128, 122));
+    text-align: center;
+}
+
+// source : https://www.coderepublics.com/CSS/css-buttons.php#:~:text=Button%20Hover%20effect%20means%20changing%20CSS%20of%20an,%3Ahover%20selector%20is%20used%20to%20create%20hover%20effect.
+.button {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: green;
+    border: dotted;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    font-size: 28px;
+    padding: 10px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 4px 2px;
+}
+
+.button:hover {
+    background-color: white;
+    color:green;
+}

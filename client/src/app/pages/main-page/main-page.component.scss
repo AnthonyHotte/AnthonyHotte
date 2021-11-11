@@ -4,6 +4,7 @@
 }
 
 .justified {
+    position:relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -24,6 +25,7 @@
     border: none;
     border-radius: 15px;
     box-shadow: 0 9px orangered;
+    font-family: serif;
 }
 
 .team-name {
@@ -35,21 +37,25 @@
 .header-item {
     background-color: blue;
     justify-content: center;
-    background: linear-gradient(to right, blue, #71eeff);
+    background: linear-gradient(to right, rgb(111, 0, 255), #71eeff);
     text-align: center;
+    font-family: fantasy;
 }
 
 .footer-item {
     text-align: center;
     background-color: red;
-    background: linear-gradient(to left, red, rgb(165, 76, 17));
+    background: linear-gradient(to left, rgb(255, 0, 0), rgb(165, 113, 17));
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .footer-item p :nth-child(even) {
     color: orange;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 .footer-item p :nth-child(odd) {
     color: blue;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .server-message {
@@ -66,6 +72,7 @@
     width:100%;   
     height:100%; 
     text-align:center; 
+    position:relative;
 }
 
 html, body {   margin:0;   height:100%;   overflow:hidden; }
@@ -74,4 +81,10 @@ html, body {   margin:0;   height:100%;   overflow:hidden; }
 
 .button:active {
     box-shadow: 0 5px #666;
-    transform: translateY(4px); }
+    transform: translateY(4px); 
+}
+
+.img {
+    width: 100%;
+    height: auto;
+}
