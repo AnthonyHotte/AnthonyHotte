@@ -4,8 +4,10 @@ import jsonDictionnary from '@app/dictionnary.json';
 
 @Service()
 export class DictionaryService {
+    indexDictionaryInUse: number;
     private dictionaryList: Dictionary[];
     constructor() {
+        this.indexDictionaryInUse = 0;
         const temp = JSON.parse(JSON.stringify(jsonDictionnary));
         this.dictionaryList = [new Dictionary(temp.title, temp.description)];
         this.dictionaryList[0].content = temp.words;

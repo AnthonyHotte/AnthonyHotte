@@ -1,17 +1,13 @@
-import jsonDictionnary from '@app/dictionnary.json';
-// import * as dict_path from 'assets/dictionnary.json';
 import { Service } from 'typedi';
+import { DictionaryService } from './dictionary.service';
 
 @Service()
 export class WordValidationService {
     dictionnary: string[];
     dicLength: number;
 
-    constructor() {
-        // when importing the json, typescript doesnt let me read it as a json object. To go around this, we stringify it then parse it
-        const temp = JSON.stringify(jsonDictionnary);
-        const temp2 = JSON.parse(temp);
-        this.dictionnary = temp2.words;
+    constructor(private dictionaryService: DictionaryService) {
+        this.dictionnary = dictionaryService.getDictWithContent(this.dictionaryService.indexDictionaryInUse).content;
         this.dicLength = this.dictionnary.length;
     }
 
