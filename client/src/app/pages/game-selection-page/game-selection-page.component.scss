@@ -4,6 +4,7 @@
     height: 100%;
     width: 100%;
     background-image: url(https://resources.stuff.co.nz/content/dam/images/1/s/f/6/b/3/image.related.StuffLandscapeSixteenByNine.1420x800.1sf63j.png/1540827339517.jpg);
+    background-size: cover;
 }
 
 .header-item {
@@ -21,10 +22,10 @@
 .button {
     display: inline-block;
     border-radius: 4px;
-    background-color: green;
+    background-color: transparent;
     border: dotted;
-    border-radius: 5px;
-    color: white;
+    border-radius: 50%;
+    color: black;
     text-align: center;
     font-size: 28px;
     padding: 10px;
@@ -34,8 +35,8 @@
 }
 
 .button:hover {
-    background-color: white;
-    color:green;
+    background-color: red;
+    color: white;
 }
 
 html, body {   margin:0;   height:100%;   overflow:hidden; }
@@ -45,7 +46,7 @@ html, body {   margin:0;   height:100%;   overflow:hidden; }
     border-radius: 4px;
     background-color: white;
     border: dotted;
-    border-radius: 5px;
+    border-radius: 50%;
     color: green;
     text-align: center;
     font-size: 28px;
@@ -56,8 +57,8 @@ html, body {   margin:0;   height:100%;   overflow:hidden; }
 }
 
 .buttonInfo:hover {
-    background-color: white;
-    color:green;
+    background-color: black;
+    color:white;
 }
 
 // source : https://www.cloudhadoop.com/angular-dynamically-shorten-long-text/
