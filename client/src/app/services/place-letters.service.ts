@@ -126,18 +126,21 @@ export class PlaceLettersService {
                     if (servervalidation) {
                         // if (this.validateWordPlaced(lettersToReplace)) {
                         this.gameState.isBoardEmpty = false;
-                        this.objectivesService.wordsCreated = this.wordValidator.wordsCreatedLastTurn;
-                        this.objectivesService.indexLastLetters = this.wordValidator.indexLastLetters;
-                        for (const obj of this.letterService.players[this.timeManager.turn].objectives) {
-                            if (this.objectivesService.objVerif(obj)) {
-                                if (!this.letterService.objCompleted.includes(obj)) {
-                                    this.letterService.players[this.timeManager.turn].score += this.objectivesService.objectivePoint.get(
-                                        obj,
-                                    ) as number;
-                                    this.letterService.objCompleted.push(obj);
+                        if (this.socket.is2990) {
+                            this.objectivesService.wordsCreated = this.wordValidator.wordsCreatedLastTurn;
+                            this.objectivesService.indexLastLetters = this.wordValidator.indexLastLetters;
+                            for (const obj of this.letterService.players[this.timeManager.turn].objectives) {
+                                if (this.objectivesService.objVerif(obj)) {
+                                    if (!this.letterService.objCompleted.includes(obj)) {
+                                        this.letterService.players[this.timeManager.turn].score += this.objectivesService.objectivePoint.get(
+                                            obj,
+                                        ) as number;
+                                        this.letterService.objCompleted.push(obj);
+                                    }
                                 }
                             }
                         }
+
                         this.letterService.players[this.timeManager.turn].score += this.wordValidator.pointsForLastWord;
                         this.sendWordToServer(lettersToReplace);
                         return 'Mot placé avec succès.';
