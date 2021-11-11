@@ -5,25 +5,26 @@
     <h1 class="header-item">Bienvenue cher joueur!</h1>
         <p><img src="https://bit.ly/3m206ss" width="400" height="80" alt="Scrabble Logo"/></p>
         <div [ngClass]="{'limitTextHeight': readInfo}">
-        <p><span id="info" class="info"><p>Meet Nigel Richards: The Scrabble Champ Making History</p>
-            <p>In every competitive setting, there is often one person who stands as the best of the best. Basketball has Michael Jordan. American football has Tom Brady. The title of best Scrabble player rests squarely on the shoulders of one man: Nigel Richards. Nigel is a multiple-time worldwide Scrabble champion. No other player has ever come close to the same level of dominance as he has.</p>
-            <p>Who Is Nigel Richards?</p>
-            <p>Nigel Richards has been a world-renowned Scrabble player for more than 20 years. Born in 1967 in New Zealand, Nigel was actually a late arrival to the competitive Scrabble scene. His interest in the game didn’t begin till he was 28 years old and his mother gifted him a copy of the board game.
+        <p><span id="info" class="info"><p><mark>Meet Nigel Richards: The Scrabble Champ Making History</mark></p>
+            <p><mark> every competitive setting, there is often one person who stands as the best of the best. Basketball has Michael Jordan. American football has Tom Brady. The title of best Scrabble player rests squarely on the shoulders of one man: Nigel Richards. Nigel is a multiple-time worldwide Scrabble champion. No other player has ever come close to the same level of dominance as he has.</mark></p>
+            <p><mark>Who Is Nigel Richards?</mark></p>
+            <p><mark>Nigel Richards has been a world-renowned Scrabble player for more than 20 years. Born in 1967 in New Zealand, Nigel was actually a late arrival to the competitive Scrabble scene. His interest in the game didn’t begin till he was 28 years old and his mother gifted him a copy of the board game.
                 Currently, Nigel resides in Kuala Lumpur, Malaysia and represents the country in tournaments.
-                Despite his late start (compared to many other prominent players), Nigel Richards quickly asserted himself as one of the most skilled and dominant competitors in Scrabble. From playing in his local Scrabble club in Christchurch, New Zealand to the numerous tournaments he’s competed in around the world, Nigel claimed an unprecedented number of game wins and high tournament placings.</p>
-            <p>A French Scrabble Champ Too!</p>
-            <p>If you weren’t impressed before, hearing about this additional feat will certainly change that. Nigel Richards has put his memorization and Scrabble skills to good use by competing in numerous French Scrabble tournaments. He’s not only competed in French tournaments; he’s won them too. 
+                Despite his late start (compared to many other prominent players), Nigel Richards quickly asserted himself as one of the most skilled and dominant competitors in Scrabble. From playing in his local Scrabble club in Christchurch, New Zealand to the numerous tournaments he’s competed in around the world, Nigel claimed an unprecedented number of game wins and high tournament placings.</mark></p>
+            <p><mark>A French Scrabble Champ Too!</mark></p>
+            <p><mark>If you weren’t impressed before, hearing about this additional feat will certainly change that. Nigel Richards has put his memorization and Scrabble skills to good use by competing in numerous French Scrabble tournaments. He’s not only competed in French tournaments; he’s won them too. 
                 Currently, Nigel Richards has 11 tournament wins in France. What makes this even more impressive is that Nigel does not speak French. To compete in these tournaments, he literally memorized the French Scrabble dictionary. He managed to learn the words well enough to even challenge his opponent’s words. His opponents actually spoke the language.
-                Nigel’s success with a language he does not understand is irrefutable proof of his Scrabble prowess. It’s also proof of a remarkable mind in general.</p>
-            <p>Will You Be the Next Scrabble Legend?</p>
-            <p>If Nigel Richards’ story inspires you to up your own Scrabble game, then you should make the most of it. Maybe, with a lot of practice and discipline, you can become the next dominant force in competitive Scrabble. If that’s something you want, then you’ll need to do some studying.</p>
+                Nigel’s success with a language he does not understand is irrefutable proof of his Scrabble prowess. It’s also proof of a remarkable mind in general.</mark></p>
+            <p><mark>Will You Be the Next Scrabble Legend?</mark></p>
+            <p><mark>If Nigel Richards’ story inspires you to up your own Scrabble game, then you should make the most of it. Maybe, with a lot of practice and discipline, you can become the next dominant force in competitive Scrabble. If that’s something you want, then you’ll need to do some studying.</mark></p>
+            <p><mark>Source : <a href="https://wordfinder.yourdictionary.com/blog/meet-nigel-richards-the-scrabble-champ-making-history/">Lire l'article au complet ici.</a></mark></p>
         </span>
         </p>
         </div>
-        <p><button class="buttonInfo" (click)="infoAboutNigelRichardsDisplay()">Qui est-ce?</button></p>
-        <p><button class="button" (click)="setSoloType()" routerLink="/soloInitiator"><i class="fa fa-bars"></i>Jouer en solo</button></p>
-        <p><button class="button" (click)="setCreateMultiPlayerGame()" routerLink="/soloInitiator"><i class="fa fa-bars"></i>Créer une partie multijoueur</button></p>
-        <p><button class="button" (click)="setJoinMultiPayerGame()" routerLink="/gameSelection"><i class="fa fa-bars"></i>Joindre une partie multijoueur</button></p>
-        <p><button class="button" routerLink="/home"><i class="fa fa-home"></i>Revenir en arrière</button></p>>
+        <p><button class="buttonInfo" (click)="infoAboutNigelRichardsDisplay()">{{this.readInfo ? 'Qui est-ce?' : 'Finir la lecture.'}}</button></p>
+        <p><button *ngIf="this.readInfo" class="button" (click)="setSoloType()" routerLink="/soloInitiator"><i class="fa fa-bars"></i>Jouer en solo</button></p>
+        <p><button *ngIf="this.readInfo" class="button" (click)="setCreateMultiPlayerGame()" routerLink="/soloInitiator"><i class="fa fa-bars"></i>Créer une partie multijoueur</button></p>
+        <p><button *ngIf="this.readInfo" class="button" (click)="setJoinMultiPayerGame()" routerLink="/gameSelection"><i class="fa fa-bars"></i>Joindre une partie multijoueur</button></p>
+        <p><button *ngIf="this.readInfo" class="button" routerLink="/home"><i class="fa fa-home"></i>Revenir en arrière</button></p>
     </body>
 </div>
