@@ -1,3 +1,4 @@
+<div class="bg-container" >
 <div class="container justified">
     <h1 class="header-item">Bienvenue au cours {{ title }}</h1>
     <img src="https://bit.ly/3m206ss" width="400" height="80" alt="Logo Scrabble" />
@@ -5,15 +6,18 @@
         <div class="justified">
         </div>
     </section>
-    <button class="button" routerLink="/selection" (click)="setMode2990(false)">Scrabble classique</button>
-    <button class="button" routerLink="/selection" (click)="setMode2990(true)">Scrabble 2990</button>
-    <button class="button" >Meilleurs scores</button>
-
-    <div class="footer-item">
-        <h4 class="team-name">104 - Les Québecois et quelques survenants</h4>
-        <p>
-            <span>Anthony Hotte</span>, <span>Julien Jaillet</span>, <span>Ismael Saidi</span>, <span>Mouhamed Abdoul Aziz Diop</span>,
-            <span>Artour Benevolenski</span>, <span>L'homme invisible</span>
-        </p>
-    </div>
+    <body>
+        <p><button class="button" routerLink="/selection" (click)="setMode2990(false)">Scrabble classique</button> </p>
+        <p><button class="button" routerLink="/selection" (click)="setMode2990(true)">Scrabble 2990</button> </p>
+        <p><button class="button">Meilleurs scores</button> </p>
+        
+        <div class="footer-item">
+            <h4 class="team-name">104 - Les Québecois et quelques survenants</h4>
+            <p>
+                <span>Anthony Hotte</span>, <span>Julien Jaillet</span>, <span>Ismael Saidi</span>, <span>Mouhamed Abdoul Aziz Diop</span>,
+                <span>Artour Benevolenski</span>, <span>L'homme invisible</span>
+            </p>
+        </div>
+    </body>
+    </div>    
 </div>
