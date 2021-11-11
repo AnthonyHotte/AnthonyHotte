@@ -1,7 +1,11 @@
-<body class="body">
-    <h1 class="header-item" style="text-align:Center">Bienvenue cher joueur!</h1>
-    <p><button class="button" (click)="setSoloType()" routerLink="/soloInitiator">Jouer en solo</button></p>
-    <p><button class="button" (click)="setCreateMultiPlayerGame()" routerLink="/soloInitiator">Créer une partie multijoueur</button></p>
-    <p><button class="button" (click)="setJoinMultiPayerGame()" routerLink="/gameSelection">Joindre une partie multijoueur</button></p>
-    <button class="button" routerLink="/home">Revenir en arrière</button>
-</body>
+<div class="bg-container">
+    <body>
+    <h1 class="header-item">Bienvenue cher joueur!</h1>
+        <p><img src="https://bit.ly/3m206ss" width="400" height="80" alt="Scrabble Logo"/></p>
+        <p><button class="buttonInfo">Qui est-ce?</button></p>
+        <p><button class="button" (click)="setSoloType()" routerLink="/soloInitiator">Jouer en solo</button></p>
+        <p><button class="button" (click)="setCreateMultiPlayerGame()" routerLink="/soloInitiator">Créer une partie multijoueur</button></p>
+        <p><button class="button" (click)="setJoinMultiPayerGame()" routerLink="/gameSelection">Joindre une partie multijoueur</button></p>
+        <button class="button" routerLink="/home">Revenir en arrière</button>
+    </body>
+</div>
