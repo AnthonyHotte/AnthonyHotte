@@ -15,7 +15,7 @@ import { CommunicationService } from '@app/services/communication.service';
 import { Observable } from 'rxjs';
 import { DictionaryService } from '@app/services/dictionary.service';
 
-fdescribe('SoloGameInitiatorComponent', () => {
+describe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
     let fixture: ComponentFixture<SoloGameInitiatorComponent>;
     let socketServiceSpy: jasmine.SpyObj<SocketService>;
