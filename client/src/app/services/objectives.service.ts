@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import * as Constants from '@app/constants';
+import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ObjectivesService {
-    static objectives = new ObjectivesService();
     objectiveMap: Map<number, string>;
     objectivePoint: Map<number, number>;
     wordsCreated: string[];
     indexLastLetters: number[];
     pointsLastWord: number;
-    constructor() {
+    consectivePlacementPlayers = [0, 0];
+    constructor(private timeManager: TimerTurnManagerService) {
         this.objectiveMap = new Map<number, string>();
         this.objectivePoint = new Map<number, number>();
         this.objectiveMap = new Map<number, string>();
@@ -76,6 +77,9 @@ export class ObjectivesService {
     }
 
     consecutivePlace3(): boolean {
+        if (this.consectivePlacementPlayers[this.timeManager.turn] === 2) {
+            return true;
+        }
         return false;
     }
 

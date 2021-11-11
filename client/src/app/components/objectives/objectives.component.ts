@@ -9,14 +9,14 @@ import { SocketService } from '@app/services/socket.service';
     styleUrls: ['./objectives.component.scss'],
 })
 export class ObjectivesComponent {
-    constructor(private letterService: LetterService, private socketService: SocketService) {}
+    constructor(private letterService: LetterService, private socketService: SocketService, private objectiveService: ObjectivesService) {}
 
     getObjective(index: number) {
-        return ObjectivesService.objectives.objectiveMap.get(this.letterService.players[0].objectives[index]);
+        return this.objectiveService.objectiveMap.get(this.letterService.players[0].objectives[index]);
     }
 
     getPointObjective(index: number) {
-        return ObjectivesService.objectives.objectivePoint.get(this.letterService.players[0].objectives[index]);
+        return this.objectiveService.objectivePoint.get(this.letterService.players[0].objectives[index]);
     }
 
     getGameMode() {
