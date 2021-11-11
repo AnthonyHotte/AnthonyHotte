@@ -83,6 +83,16 @@ export class ObjectivesService {
     }
 
     corner5(): boolean {
+        for (let i = 0; i < this.indexLastLetters.length; i += 2) {
+            if (
+                (this.indexLastLetters[i] === 0 && this.indexLastLetters[i + 1] === 0) ||
+                (this.indexLastLetters[i] === 0 && this.indexLastLetters[i + 1] === Constants.FOURTEEN) ||
+                (this.indexLastLetters[i] === Constants.FOURTEEN && this.indexLastLetters[i + 1] === 0) ||
+                (this.indexLastLetters[i] === Constants.FOURTEEN && this.indexLastLetters[i + 1] === Constants.FOURTEEN)
+            ) {
+                return true;
+            }
+        }
         return false;
     }
 
