@@ -1,7 +1,17 @@
 <fieldset *ngIf = "getGameMode()">
-    <p>Objectifs public</p>
-    <p>{{getObjective(0)}}: {{getPointObjective(0)}} points</p>
-    <p>{{getObjective(1)}}: {{getPointObjective(1)}} points</p>
-    <p>Objectifs privé</p>
-    <p>{{getObjective(2)}}: {{getPointObjective(2)}} points</p>
+    <div *ngIf = "publicLeft()">
+        <b>Objectifs public</b>
+        <p>{{getObjective(0)}}</p>
+        <p>{{getObjective(1)}}</p>
+    </div>
+    <div *ngIf = "privateLeft()">
+        <b>Objectifs privés</b>
+        <p>{{getObjective(2)}}</p>
+    </div>
+    <div *ngIf = "areSomeCompleted()">
+        <b>Objectifs complétés</b>
+        <p *ngFor="let objective of objCompleted; let indexOfElem = index" [ngStyle]="{
+         'color': objCompletor[indexOfElem] === 0 ? 'green' : 'red'
+         }" >{{getSingleObjCompleted(objective)}} complété par {{getPlayerName(objCompletor[indexOfElem])}}</p>
+    </div>
 </fieldset>

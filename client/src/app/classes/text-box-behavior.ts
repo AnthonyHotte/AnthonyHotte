@@ -4,6 +4,7 @@ import { MessagePlayer } from '@app/message';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
+import { ObjectivesService } from '@app/services/objectives.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SocketService } from '@app/services/socket.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
@@ -29,6 +30,7 @@ export class TextBox {
         private socketService: SocketService,
         private letterBankService: LetterBankService,
         private socket: SocketService,
+        private objectiveService: ObjectivesService,
     ) {
         this.inputs = [];
         this.character = false;
@@ -196,6 +198,11 @@ export class TextBox {
     }
 
     endTurn(reason: string) {
+        if (reason === 'place') {
+            this.objectiveService.consectivePlacementPlayers[this.timeManager.turn]++;
+        } else {
+            this.objectiveService.consectivePlacementPlayers[this.timeManager.turn] = 0;
+        }
         this.timeManager.endTurn(reason);
         this.commandSuccessful = true;
         if (this.letterService.players[this.timeManager.turn].allLettersInHand.length === 0) {
