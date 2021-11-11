@@ -65,3 +65,4 @@ export const NUMBER_TRIPLE_LETTER = 12;
 export const ERRORCODE = -1;
 
 export const MAXPERCENTAGE = 100;
+export const TIMETOWAITFORVALIDATION = 2000;

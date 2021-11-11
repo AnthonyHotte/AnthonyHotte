@@ -13,8 +13,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { CommunicationService } from '@app/services/communication.service';
 import { Observable } from 'rxjs';
+import { DictionaryService } from '@app/services/dictionary.service';
 
-describe('SoloGameInitiatorComponent', () => {
+fdescribe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
     let fixture: ComponentFixture<SoloGameInitiatorComponent>;
     let socketServiceSpy: jasmine.SpyObj<SocketService>;
@@ -26,7 +27,9 @@ describe('SoloGameInitiatorComponent', () => {
     let dialogSpy: jasmine.SpyObj<MatDialog>;
     let indexWaintingRoomService: jasmine.SpyObj<IndexWaitingRoomService>;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
+    let dictionaryServiceSpy: jasmine.SpyObj<DictionaryService>;
     beforeEach(async () => {
+        dictionaryServiceSpy = jasmine.createSpyObj('DictionaryService', ['getDictionary']);
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', ['getDictionaryList']);
         communicationServiceSpy.getDictionaryList.and.returnValue(new Observable());
         indexWaintingRoomService = jasmine.createSpyObj('IndexWaitingRoomService', ['getIndex']);
@@ -64,6 +67,7 @@ describe('SoloGameInitiatorComponent', () => {
                 { provide: MatDialog, useValue: dialogSpy },
                 { provide: IndexWaitingRoomService, useValue: indexWaintingRoomService },
                 { provide: CommunicationService, useValue: communicationServiceSpy },
+                { provide: DictionaryService, useValue: dictionaryServiceSpy },
             ],
             imports: [RouterTestingModule],
         }).compileComponents();

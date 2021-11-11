@@ -79,7 +79,7 @@ export class AdminPageComponent {
     }
 
     validateNumber() {
-        if (this.isDownloadMode) {
+        if (this.isDownloadMode && this.dictionaryNumberInput >= 0 && this.dictionaryNumberInput < this.dictionaryList.length) {
             this.isDownloadMode = false;
             this.showNumberMessageError = false;
             this.showNumberInput = false;

@@ -1,10 +1,10 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Dictionary } from '@app/classes/dictionary';
 import { TileMap } from '@app/classes/grid-special-tile';
 import { PopUpData } from '@app/classes/pop-up-data';
 import { PopUpComponent } from '@app/components/pop-up/pop-up.component';
-import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
+import { LONGUEURNOMMAX, TIMETOWAITFORVALIDATION, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { Position } from '@app/position-tile-interface';
 import { CommunicationService } from '@app/services/communication.service';
 import { DictionaryService } from '@app/services/dictionary.service';
@@ -21,6 +21,7 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
     styleUrls: ['./solo-game-initiator.component.scss'],
 })
 export class SoloGameInitiatorComponent {
+    @ViewChild('listDict') listDict: HTMLDivElement;
     temporaryName: string;
     name: string;
     opponentName: string;
@@ -53,7 +54,7 @@ export class SoloGameInitiatorComponent {
                 this.dictionaryList.push(res);
             });
         });
-        this.isDictionaryValid = true;
+        this.isDictionaryValid = false;
         this.validationDictionaryMessage = "l'index est valide!!!";
         this.indexDictionaryNumber = 0;
         this.temporaryName = 'Joueur';
@@ -72,6 +73,7 @@ export class SoloGameInitiatorComponent {
     }
 
     joinGame() {
+        this.dictionaryService.getDictionary();
         this.setName();
         this.timeManager.timePerTurn = parseInt(this.socketService.gameLists[this.indexWaitingRoomService.getIndex()][2], 10); // timePerTurn
         this.socketService.setGameMode(this.getGameStatus());
@@ -216,14 +218,23 @@ export class SoloGameInitiatorComponent {
     returnNameOfCreator() {
         return this.socketService.nameOfRoomCreator;
     }
-    validateDictionaryNumber() {
-        if (this.indexDictionaryNumber < 0 || this.indexDictionaryNumber >= this.dictionaryList.length) {
-            this.validationDictionaryMessage = "l'index est invalide... il doit etre dans la liste, essayer de nouveau.";
-            this.isDictionaryValid = false;
-        } else {
-            this.validationDictionaryMessage = "l'index est valide!!!";
-            this.dictionaryService.indexDictionary = this.indexDictionaryNumber;
-            this.isDictionaryValid = true;
-        }
+    async validateDictionaryNumber() {
+        this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
+            result.forEach((res) => {
+                this.dictionaryList = [];
+                this.dictionaryList.push(res);
+            });
+        });
+        this.validationDictionaryMessage = "validation de l'index en cours...";
+        setTimeout(() => {
+            if (this.indexDictionaryNumber < 0 || this.indexDictionaryNumber >= this.dictionaryList.length) {
+                this.validationDictionaryMessage = "l'index est invalide... il doit etre dans la liste, essayer de nouveau.";
+                this.isDictionaryValid = false;
+            } else {
+                this.validationDictionaryMessage = "l'index est valide!!!";
+                this.dictionaryService.indexDictionary = this.indexDictionaryNumber;
+                this.isDictionaryValid = true;
+            }
+        }, TIMETOWAITFORVALIDATION);
     }
 }

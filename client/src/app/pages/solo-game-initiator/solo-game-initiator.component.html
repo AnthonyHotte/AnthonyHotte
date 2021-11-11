@@ -51,7 +51,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 <fieldset>
                     <legend>Choisissez le dictionnaire utilisé</legend>
                     <p><br />List des dictionnaires disponibles:</p>
-                    <div *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
+                    <div id="listDict" *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
                         <p>
                             Numéro du dictionnaire:{{ dictIndex }}<br />
                             Nom: {{ dictionary.name }}<br />Description: {{ dictionary.description }}<br /><br />

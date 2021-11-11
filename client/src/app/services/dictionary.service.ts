@@ -13,6 +13,8 @@ export class DictionaryService {
         this.indexDictionary = 0;
     }
     getDictionary() {
-        this.communicationService.getFullDictionary(this.indexDictionary);
+        this.communicationService.getFullDictionary(this.indexDictionary).subscribe((res) => {
+            this.dictionary = res;
+        });
     }
 }
