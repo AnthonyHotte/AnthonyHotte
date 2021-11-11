@@ -77,7 +77,7 @@ export class ObjectivesService {
     }
 
     consecutivePlace3(): boolean {
-        if (this.consectivePlacementPlayers[this.timeManager.turn] === 2) {
+        if (this.consectivePlacementPlayers[this.timeManager.turn] === Constants.FOUR) {
             return true;
         }
         return false;
