@@ -130,6 +130,7 @@ export class PlaceLettersService {
                             this.objectivesService.wordsCreated = this.wordValidator.wordsCreatedLastTurn;
                             this.objectivesService.indexLastLetters = this.wordValidator.indexLastLetters;
                             this.objectivesService.pointsLastWord = this.wordValidator.pointsForLastWord;
+                            this.objectivesService.lastLettersAdded = this.gameState.lastLettersAdded;
                             for (const obj of this.letterService.players[this.timeManager.turn].objectives) {
                                 if (this.objectivesService.objVerif(obj)) {
                                     if (!this.letterService.objCompleted.includes(obj)) {

@@ -10,14 +10,19 @@ export class ObjectivesService {
     objectivePoint: Map<number, number>;
     wordsCreated: string[];
     indexLastLetters: number[];
+    lastLettersAdded = '';
     pointsLastWord: number;
     consectivePlacementPlayers = [0, 0];
+    consNoBonus = [0, 0];
     constructor(private timeManager: TimerTurnManagerService) {
         this.objectiveMap = new Map<number, string>();
         this.objectivePoint = new Map<number, number>();
         this.objectiveMap = new Map<number, string>();
         this.objectiveMap.set(0, 'Utliser au moins 6 lettres différentes dans un seul placement (sur le jeu ou en main)');
-        this.objectiveMap.set(1, "Placer 3 mots de suite sans avoir un bonus d'une case bonus");
+        this.objectiveMap.set(
+            1,
+            "Placer 3 mots de suite sans avoir un bonus d'une case bonus (échange ou passage de tour ne réinitialise pas le compte)",
+        );
         this.objectiveMap.set(2, 'Créer un mot en utilisant aucune consonne provenant de la main');
         this.objectiveMap.set(3, 'Placer un mot 5 tour de suite sans échanger ou passer son tour');
         this.objectiveMap.set(Constants.FOUR, 'Faites un placement de 20 points ou plus avec moins de 3 lettres provenant de la main');
@@ -73,7 +78,11 @@ export class ObjectivesService {
     }
 
     noConsonant2(): boolean {
-        return false;
+        const regexConsonnant = /[bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ]/;
+        if (regexConsonnant.exec(this.lastLettersAdded)) {
+            return false;
+        }
+        return true;
     }
 
     consecutivePlace3(): boolean {
