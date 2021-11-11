@@ -70,6 +70,17 @@ export class ObjectivesService {
         }
     }
     diffLetters0(): boolean {
+        let diffLetters = '';
+        for (const word of this.wordsCreated) {
+            for (const letter of word) {
+                if (!diffLetters.includes(letter)) {
+                    diffLetters += letter;
+                    if (diffLetters.length === Constants.SIX) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
