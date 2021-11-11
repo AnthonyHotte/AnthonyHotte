@@ -129,6 +129,7 @@ export class PlaceLettersService {
                         if (this.socket.is2990) {
                             this.objectivesService.wordsCreated = this.wordValidator.wordsCreatedLastTurn;
                             this.objectivesService.indexLastLetters = this.wordValidator.indexLastLetters;
+                            this.objectivesService.pointsLastWord = this.wordValidator.pointsForLastWord;
                             for (const obj of this.letterService.players[this.timeManager.turn].objectives) {
                                 if (this.objectivesService.objVerif(obj)) {
                                     if (!this.letterService.objCompleted.includes(obj)) {

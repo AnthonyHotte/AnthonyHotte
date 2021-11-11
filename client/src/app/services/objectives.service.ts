@@ -10,6 +10,7 @@ export class ObjectivesService {
     objectivePoint: Map<number, number>;
     wordsCreated: string[];
     indexLastLetters: number[];
+    pointsLastWord: number;
     constructor() {
         this.objectiveMap = new Map<number, string>();
         this.objectivePoint = new Map<number, number>();
@@ -79,6 +80,9 @@ export class ObjectivesService {
     }
 
     highPointsLowLetter4(): boolean {
+        if (this.indexLastLetters.length < Constants.SIX && this.pointsLastWord >= Constants.TWENTY) {
+            return true;
+        }
         return false;
     }
 
