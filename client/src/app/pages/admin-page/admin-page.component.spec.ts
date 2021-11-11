@@ -40,6 +40,8 @@ describe('AdminPageComponent', () => {
     });
     it('validateNumber should call getFullDictionary', () => {
         component.isDownloadMode = true;
+        component.dictionaryList = [new Dictionary('t1', 'd1'), new Dictionary('t2', 'd2')];
+        component.dictionaryNumberInput = 0;
         const spy = spyOn(component, 'getFullDictionary');
         component.validateNumber();
         expect(spy).toHaveBeenCalled();
