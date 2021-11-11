@@ -1,10 +1,13 @@
 import { Component, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Dictionary } from '@app/classes/dictionary';
 import { TileMap } from '@app/classes/grid-special-tile';
 import { PopUpData } from '@app/classes/pop-up-data';
 import { PopUpComponent } from '@app/components/pop-up/pop-up.component';
 import { LONGUEURNOMMAX, VALEUR_TEMPS_DEFAULT } from '@app/constants';
 import { Position } from '@app/position-tile-interface';
+import { CommunicationService } from '@app/services/communication.service';
+import { DictionaryService } from '@app/services/dictionary.service';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { LetterService } from '@app/services/letter.service';
 import { MessageService } from '@app/services/message.service';
@@ -25,7 +28,11 @@ export class SoloGameInitiatorComponent {
     nameIsValid: boolean;
     playTime: number;
     easyDifficulty: boolean;
+    dictionaryList: Dictionary[];
+    indexDictionaryNumber: number;
+    validationDictionaryMessage: string;
     startingNewGame = false;
+    isDictionaryValid: boolean;
 
     isBonusRandom = false;
 
@@ -37,7 +44,18 @@ export class SoloGameInitiatorComponent {
         private messageService: MessageService,
         private indexWaitingRoomService: IndexWaitingRoomService,
         private dialog: MatDialog,
+        private communicationService: CommunicationService,
+        private dictionaryService: DictionaryService,
     ) {
+        this.dictionaryList = [];
+        this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
+            result.forEach((res) => {
+                this.dictionaryList.push(res);
+            });
+        });
+        this.isDictionaryValid = true;
+        this.validationDictionaryMessage = "l'index est valide!!!";
+        this.indexDictionaryNumber = 0;
         this.temporaryName = 'Joueur';
         this.name = 'Joueur';
         this.assignOpponentName();
@@ -197,5 +215,15 @@ export class SoloGameInitiatorComponent {
 
     returnNameOfCreator() {
         return this.socketService.nameOfRoomCreator;
+    }
+    validateDictionaryNumber() {
+        if (this.indexDictionaryNumber < 0 || this.indexDictionaryNumber >= this.dictionaryList.length) {
+            this.validationDictionaryMessage = "l'index est invalide... il doit etre dans la liste, essayer de nouveau.";
+            this.isDictionaryValid = false;
+        } else {
+            this.validationDictionaryMessage = "l'index est valide!!!";
+            this.dictionaryService.indexDictionary = this.indexDictionaryNumber;
+            this.isDictionaryValid = true;
+        }
     }
 }

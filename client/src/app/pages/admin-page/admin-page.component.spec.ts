@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { AdminPageComponent } from './admin-page.component';
 
-fdescribe('AdminPageComponent', () => {
+describe('AdminPageComponent', () => {
     let component: AdminPageComponent;
     let fixture: ComponentFixture<AdminPageComponent>;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;

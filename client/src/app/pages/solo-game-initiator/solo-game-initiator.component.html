@@ -12,7 +12,9 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <h3><strong>3 -</strong> Ne pas entrer un nom de plus de 17 caractères</h3>
                     <h3><strong>4 -</strong> Sélectionner les options de la partie</h3>
                     <h3><strong>5 -</strong> S'amuser!</h3>
-                    <h3 *ngIf="getGameStatus() === 1"><strong>6 -</strong> Ne pas choisir le même nom que celui du créateur : {{returnNameOfCreator()}}</h3>
+                    <h3 *ngIf="getGameStatus() === 1">
+                        <strong>6 -</strong> Ne pas choisir le même nom que celui du créateur : {{ returnNameOfCreator() }}
+                    </h3>
                 </article>
                 <div>
                     <fieldset>
@@ -23,7 +25,9 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         <input [(ngModel)]="temporaryName" type="string" />
                         <p>Nom du joueur: {{ this.name }}</p>
                         <p *ngIf="getGameStatus() === 2">{{ "Nom de l'adversaire: " + opponentName }}</p>
-                        <button *ngIf="getGameStatus() === 2 || getGameStatus() === 1" class="button" (click)="setName()">Validation de l'identifiant</button>
+                        <button *ngIf="getGameStatus() === 2 || getGameStatus() === 1" class="button" (click)="setName()">
+                            Validation de l'identifiant
+                        </button>
                     </fieldset>
                 </div>
                 <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2">
@@ -44,17 +48,36 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         </form>
                     </fieldset>
                 </div>
+                <fieldset>
+                    <legend>Choisissez le dictionnaire utilisé</legend>
+                    <p><br />List des dictionnaires disponibles:</p>
+                    <div *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
+                        <p>
+                            Numéro du dictionnaire:{{ dictIndex }}<br />
+                            Nom: {{ dictionary.name }}<br />Description: {{ dictionary.description }}<br /><br />
+                        </p>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <label>Numéro du dictionnaire: </label>
+                    <input [(ngModel)]="indexDictionaryNumber" type="number" />
+                    <button (click)="validateDictionaryNumber()">Valider le numéro</button>
+                    <div>
+                        <p>{{validationDictionaryMessage}}</p>
+                    </div>
+                </fieldset>
                 <p>
                     <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()">
                         Démarrer la partie {{ getGameStatusInString() }}!
                     </button>
-                    <button *ngIf="nameIsValid && getGameStatus() === 0" (click)="startNewGame()" routerLink="/waiting">
+                    <button *ngIf="nameIsValid && getGameStatus() === 0 && isDictionaryValid" (click)="startNewGame()" routerLink="/waiting">Démarrer la partie!</button>
+                    <button
+                        *ngIf="nameIsValid && getGameStatus() === 1 && this.returnIsGameToBeJoined() && this.verifyNameIsNotSameAsRoomCreator()"
+                        (click)="joinGame()"
+                    >
                         Démarrer la partie!
                     </button>
-                    <button *ngIf="nameIsValid && getGameStatus() === 1 && this.returnIsGameToBeJoined() && this.verifyNameIsNotSameAsRoomCreator()" (click)="joinGame()">
-                        Démarrer la partie!
-                    </button>
-                    <button *ngIf="!this.returnIsGameToBeJoined()" (click) = "this.createPopUp()">Mettre à jour la situation</button>
+                    <button *ngIf="!this.returnIsGameToBeJoined()" (click)="this.createPopUp()">Mettre à jour la situation</button>
                 </p>
                 <button class="button" routerLink="/selection">Revenir en arrière</button>
             </article>
