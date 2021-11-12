@@ -13,6 +13,7 @@ export const FOURTEEN = 14;
 export const FIFTEEN = 15;
 export const SIXTEEN = 16;
 export const TWENTY = 20;
+export const THIRTY = 30;
 // export const SIDESPACE = 30;
 export const NUMBEROFCASE = 15;
 export const DEFAULT_WIDTH = 750;

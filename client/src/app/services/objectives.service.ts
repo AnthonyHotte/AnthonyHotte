@@ -19,25 +19,25 @@ export class ObjectivesService {
         this.objectiveMap = new Map<number, string>();
         this.objectivePoint = new Map<number, number>();
         this.objectiveMap = new Map<number, string>();
-        this.objectiveMap.set(0, 'Utliser au moins 6 lettres différentes dans un seul placement (sur le jeu ou en main)');
+        this.objectiveMap.set(0, 'Utliser au moins 6 lettres différentes dans un seul placement (provenant du jeu ou du chevalet)');
         this.objectiveMap.set(
             1,
             "Placer 3 mots de suite sans avoir un bonus d'une case bonus (échange ou passage de tour ne réinitialise pas le compte)",
         );
-        this.objectiveMap.set(2, 'Créer un mot en utilisant aucune consonne provenant de la main');
-        this.objectiveMap.set(3, 'Placer un mot 5 tour de suite sans échanger ou passer son tour');
-        this.objectiveMap.set(Constants.FOUR, 'Faites un placement de 20 points ou plus avec moins de 3 lettres provenant de la main');
+        this.objectiveMap.set(2, 'Former un mot en utilisant aucune consonne provenant du chevalet');
+        this.objectiveMap.set(3, 'Former un mot 5 tour de suite sans échanger ou passer son tour');
+        this.objectiveMap.set(Constants.FOUR, 'Faites un placement de 20 points ou plus avec moins de 3 lettres provenant du chevalet');
         this.objectiveMap.set(Constants.FIVE, 'Placer une lettre sur un des coins');
         this.objectiveMap.set(Constants.SIX, "Placer des lettres de bord en bord d'une lettre déjà en jeu pour former un mot");
-        this.objectiveMap.set(Constants.SEVEN, 'Placer un palindrome');
-        this.objectivePoint.set(0, Constants.FIFTEEN);
-        this.objectivePoint.set(1, Constants.TWELVE);
-        this.objectivePoint.set(2, Constants.TEN);
-        this.objectivePoint.set(3, Constants.TEN);
-        this.objectivePoint.set(Constants.FOUR, Constants.EIGHT);
-        this.objectivePoint.set(Constants.FIVE, Constants.FIFTEEN);
-        this.objectivePoint.set(Constants.SIX, Constants.FIVE);
-        this.objectivePoint.set(Constants.SEVEN, Constants.TWENTY);
+        this.objectiveMap.set(Constants.SEVEN, 'Former un palindrome');
+        this.objectivePoint.set(0, Constants.TWENTY);
+        this.objectivePoint.set(1, Constants.FIFTEEN);
+        this.objectivePoint.set(2, Constants.TWELVE);
+        this.objectivePoint.set(3, Constants.TWELVE);
+        this.objectivePoint.set(Constants.FOUR, Constants.TEN);
+        this.objectivePoint.set(Constants.FIVE, Constants.TWENTY);
+        this.objectivePoint.set(Constants.SIX, Constants.EIGHT);
+        this.objectivePoint.set(Constants.SEVEN, Constants.THIRTY);
     }
     objVerif(obj: number): boolean {
         switch (obj) {
