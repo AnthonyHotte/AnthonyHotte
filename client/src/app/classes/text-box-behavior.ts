@@ -87,7 +87,14 @@ export class TextBox {
     }
 
     verfifyAide(): string {
-        return 'Voici les commandes disponibles : \n !passer: Permet de passer son tour. \n !échanger: permet d echanger des lettres \n !réserve : Permet d afficher sa reserve \n !placer: permet de placer des lettres sur le plateau. \n !abandonner : permet d abandonner la partie.';
+        return (
+            'Voici les commandes disponibles : \n' +
+            '!passer: Permet de passer son tour. \n' +
+            '!échanger: permet d echanger des lettres \n ' +
+            '!réserve : Permet d afficher sa reserve \n ' +
+            '!placer: permet de placer des lettres sur le plateau. \n ' +
+            '!abandonner : permet d abandonner la partie.'
+        );
     }
 
     exchangeLetterOpponent(command: string) {
