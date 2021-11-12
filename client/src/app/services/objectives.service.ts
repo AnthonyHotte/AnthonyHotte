@@ -9,6 +9,7 @@ import { Position } from '@app/position-tile-interface';
 export class ObjectivesService {
     objectiveMap: Map<number, string>;
     objectivePoint: Map<number, number>;
+    objectiveVerif: Map<number, () => boolean>;
     wordsCreated: string[];
     indexLastLetters: number[];
     lastLettersAdded = '';
@@ -18,7 +19,7 @@ export class ObjectivesService {
     constructor(private timeManager: TimerTurnManagerService) {
         this.objectiveMap = new Map<number, string>();
         this.objectivePoint = new Map<number, number>();
-        this.objectiveMap = new Map<number, string>();
+        this.objectiveVerif = new Map<number, () => boolean>();
         this.objectiveMap.set(0, 'Utliser au moins 6 lettres différentes dans un seul placement (provenant du jeu ou du chevalet)');
         this.objectiveMap.set(
             1,
@@ -38,38 +39,16 @@ export class ObjectivesService {
         this.objectivePoint.set(Constants.FIVE, Constants.TWENTY);
         this.objectivePoint.set(Constants.SIX, Constants.EIGHT);
         this.objectivePoint.set(Constants.SEVEN, Constants.THIRTY);
+        this.objectiveVerif.set(0, this.diffLetters0);
+        this.objectiveVerif.set(1, this.wordsNoBonus1);
+        this.objectiveVerif.set(2, this.noConsonant2);
+        this.objectiveVerif.set(3, this.consecutivePlace3);
+        this.objectiveVerif.set(Constants.FOUR, this.highPointsLowLetter4);
+        this.objectiveVerif.set(Constants.FIVE, this.corner5);
+        this.objectiveVerif.set(Constants.SIX, this.sideToSide6);
+        this.objectiveVerif.set(Constants.SEVEN, this.palindrom7);
     }
-    objVerif(obj: number): boolean {
-        switch (obj) {
-            case 0: {
-                return this.diffLetters0();
-            }
-            case 1: {
-                return this.wordsNoBonus1();
-            }
-            case 2: {
-                return this.noConsonant2();
-            }
-            case 3: {
-                return this.consecutivePlace3();
-            }
-            case Constants.FOUR: {
-                return this.highPointsLowLetter4();
-            }
-            case Constants.FIVE: {
-                return this.corner5();
-            }
-            case Constants.SIX: {
-                return this.sideToSide6();
-            }
-            case Constants.SEVEN: {
-                return this.palindrom7();
-            }
-            default: {
-                return false;
-            }
-        }
-    }
+
     diffLetters0(): boolean {
         let diffLetters = '';
         for (const word of this.wordsCreated) {
