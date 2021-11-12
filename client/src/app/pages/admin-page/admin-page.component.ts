@@ -3,6 +3,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Dictionary } from '@app/classes/dictionary';
 import { ERRORCODE } from '@app/constants';
 import { CommunicationService } from '@app/services/communication.service';
+import { DictionaryService } from '@app/services/dictionary.service';
 
 @Component({
     selector: 'app-admin-page',
@@ -41,7 +42,11 @@ export class AdminPageComponent {
     showAddJVnameButton: boolean;
     showModifyJVNameButton: boolean;
     showDeleteJVNameButton: boolean;
-    constructor(private readonly communicationService: CommunicationService, private readonly sanitizer: DomSanitizer) {
+    constructor(
+        private readonly communicationService: CommunicationService,
+        private readonly sanitizer: DomSanitizer,
+        public dictionaryService: DictionaryService,
+    ) {
         this.dictionaryList = [];
         this.nameJV = [
             ['JV1', 'JV2', 'JV3'],

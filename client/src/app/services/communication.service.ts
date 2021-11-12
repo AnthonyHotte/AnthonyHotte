@@ -40,6 +40,11 @@ export class CommunicationService {
             .post<void>(`${this.baseUrl}/dictionary/sendreinitialise`, { reinitialise: true })
             .pipe(catchError(this.handleError<void>('reinitialiseDictionary')));
     }
+    sendNewDictionary(dictionary: Dictionary): Observable<void> {
+        return this.http
+            .post<void>(`${this.baseUrl}/dictionary/newdictionary`, dictionary)
+            .pipe(catchError(this.handleError<void>('sendNewDictionary')));
+    }
     basicGet(): Observable<Message> {
         return this.http.get<Message>(`${this.baseUrl}/example`).pipe(catchError(this.handleError<Message>('basicGet')));
     }

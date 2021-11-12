@@ -1,8 +1,5 @@
-import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
-import { MAXPERCENTAGE } from '@app/constants';
-import { Subscription } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { CommunicationService } from '@app/services/communication.service';
 
 // inspired from https://blog.angular-university.io/angular-file-upload/
 
@@ -16,10 +13,7 @@ export class FileUploadComponent {
     requiredFileType: string;
 
     fileName = '';
-    uploadProgress: number | null;
-    uploadSub: Subscription | null;
-
-    constructor(private http: HttpClient) {}
+    constructor(private communicationService: CommunicationService) {}
 
     onFileSelected(event: Event) {
         const target = event.target as HTMLInputElement;
@@ -27,35 +21,13 @@ export class FileUploadComponent {
             const file: File | null = target.files[0];
 
             if (file) {
-                this.fileName = file.name;
-                const formData = new FormData();
-                formData.append('newFile', file);
-
-                const upload$ = this.http
-                    .post('/api/dictionary/newdictionary', formData, {
-                        reportProgress: true,
-                        observe: 'events',
-                    })
-                    .pipe(finalize(() => this.reset()));
-
-                this.uploadSub = upload$.subscribe((eventReceive) => {
-                    if (eventReceive.type === HttpEventType.UploadProgress && eventReceive.total !== undefined) {
-                        this.uploadProgress = Math.round(MAXPERCENTAGE * (eventReceive.loaded / eventReceive.total));
-                    }
-                });
+                const fileReader = new FileReader();
+                fileReader.readAsText(file, 'utf8');
+                fileReader.onload = () => {
+                    const dictionary = JSON.parse(JSON.stringify(fileReader.result));
+                    this.communicationService.sendNewDictionary(dictionary).subscribe();
+                };
             }
         }
-    }
-
-    cancelUpload() {
-        if (this.uploadSub !== null) {
-            this.uploadSub.unsubscribe();
-        }
-        this.reset();
-    }
-
-    reset() {
-        this.uploadProgress = null;
-        this.uploadSub = null;
     }
 }
