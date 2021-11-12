@@ -84,7 +84,7 @@ export class SocketService {
         this.socket.on('sendGamesInformation', (info) => {
             this.gameLists.length = 0;
             for (let i = 0; i < info.games.length; i++) {
-                this.gameLists.push(['name', 'bonus', 'time', 'lettersCreator', 'lettersJoiner', 'objectivesCreator', 'objectivesJoiner']);
+                this.gameLists.push(['name', 'bonus', 'time', 'lettersCreator', 'lettersJoiner', 'objectivesCreator', 'objectivesJoiner', 'is2990']);
                 this.gameLists[i][0] = info.games[i][0]; // player name of who is the game initiator
                 this.gameLists[i][1] = info.games[i][1]; // is random bonus on
                 this.gameLists[i][2] = info.games[i][2]; // time per turn
@@ -92,6 +92,7 @@ export class SocketService {
                 this.gameLists[i][4] = info.games[i][4]; // letters of joiner
                 this.gameLists[i][5] = info.games[i][5]; // objectives creator
                 this.gameLists[i][6] = info.games[i][6]; // objectives joiner
+                this.gameLists[i][7] = info.games[i][7]; // 2990 or not
                 this.boards.push([]);
                 this.boards[i] = info.boards[i]; // bonusTiles of created games
             }
@@ -144,6 +145,7 @@ export class SocketService {
         objectivesOfCreator: number[],
         objectivesOfJoiner: number[],
         bonusTiles: Position[][],
+        is2990: boolean,
     ) {
         if (gameStatus === 2 && this.cancellationIndexes[0] >= 0 && this.cancellationIndexes[1] >= 0) {
             this.cancelGame();
@@ -159,6 +161,7 @@ export class SocketService {
             objectivesCreator: objectivesOfCreator,
             objectivesJoiner: objectivesOfJoiner,
             bonus: bonusTiles,
+            isGameMode2990: is2990,
         });
     }
     sendJoinGameInfo(name: string, indexWaitingRoom: number) {
