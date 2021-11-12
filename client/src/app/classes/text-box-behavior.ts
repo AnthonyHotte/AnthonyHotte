@@ -67,6 +67,7 @@ export class TextBox {
             this.handleEnter(this.finishGameService.getMessageTextBox());
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!aide') {
             text = this.letterService.players[1].name + ' a affiché la liste de ses commandes';
+            printCommand = true;
         }
         if (printCommand) {
             this.inputs.push(myMessage);
@@ -86,7 +87,7 @@ export class TextBox {
     }
 
     verfifyAide(): string {
-        return 'Voici les commandes disponibles \n !passer: Permet de passer son tour. \n Echanger permet d echanger des lettres \n !réserve : Permet d afficher sa reserve \n !placer: permet de placer des lettres sur le plateau. \n !abandonner : permet d abandonner la partie.';
+        return 'Voici les commandes disponibles : \n !passer: Permet de passer son tour. \n !échanger: permet d echanger des lettres \n !réserve : Permet d afficher sa reserve \n !placer: permet de placer des lettres sur le plateau. \n !abandonner : permet d abandonner la partie.';
     }
 
     exchangeLetterOpponent(command: string) {
@@ -155,7 +156,7 @@ export class TextBox {
         } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!aide') {
             text = '';
             this.handleEnter(this.verfifyAide());
-            this.socket.configureSendMessageToServer('!réserve', this.timeManager.gameStatus);
+            this.socket.configureSendMessageToServer('!aide', this.timeManager.gameStatus);
         } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
             text = '';
             this.handleEnter(this.activateReserve());
