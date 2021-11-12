@@ -62,12 +62,20 @@ export class TextBox {
             text = await this.placeWordOpponent(myMessage.message, this.socket.lettersToReplace);
             printCommand = true;
         } else if (myMessage.message === '!abandonner') {
-            this.finishGameService.isGameFinished = true;
             this.inputs.push(myMessage);
             text = this.letterService.players[1].name + ' a abandonné la partie';
             const messageSystem: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
             this.inputs.push(messageSystem);
-            this.handleEnter(this.finishGameService.getMessageTextBox());
+            if (this.timeManager.turn === 1) {
+                this.endTurn('skip');
+            }
+            if (this.letterService.players[0].name !== 'Tryphon Tournesol') {
+                this.letterService.players[1].name = 'Tryphon Tournesol';
+            } else {
+                this.letterService.players[1].name = 'Pacôme de Champignac';
+            }
+            this.timeManager.gameStatus = 2;
+            this.commandSuccessful = true;
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!aide') {
             text = this.letterService.players[1].name + ' a affiché la liste de ses commandes';
             printCommand = true;
@@ -174,6 +182,7 @@ export class TextBox {
         } else if (myWord === '!abandonner') {
             text = '';
             this.socket.configureSendMessageToServer('!abandonner', this.timeManager.gameStatus);
+            this.socketService.finishedGameMessageTransmission();
             this.finishGameService.goToHomeAndRefresh();
         } else if (this.timeManager.turn === 0) {
             if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
