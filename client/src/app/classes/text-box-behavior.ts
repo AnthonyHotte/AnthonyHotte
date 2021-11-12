@@ -69,6 +69,11 @@ export class TextBox {
             if (this.timeManager.turn === 1) {
                 this.endTurn('skip');
             }
+            if (this.letterService.players[0].name !== 'Tryphon Tournesol') {
+                this.letterService.players[1].name = 'Tryphon Tournesol';
+            } else {
+                this.letterService.players[1].name = 'Pacôme de Champignac';
+            }
             this.timeManager.gameStatus = 2;
             this.commandSuccessful = true;
         }
