@@ -158,7 +158,6 @@ export class SocketManager {
                 this.sio.to(this.roomsService.rooms[roomNumber].socketsId[gameStatusToSendTo]).emit('receiveLettersReplaced', lettersReplaced);
             });
             socket.on('gameFinished', (roomNumber) => {
-                this.sio.to(this.roomsService.rooms[roomNumber].roomName).emit('gameIsFinished');
                 this.roomsService.rooms[roomNumber].setRoomOccupied();
                 let k = 0;
                 while (k < this.roomsService.listRoomWaiting.length) {

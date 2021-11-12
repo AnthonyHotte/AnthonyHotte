@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GameStatus } from '@app/game-status';
 import { Letter } from '@app/letter';
 import { Position } from '@app/position-tile-interface';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { io } from 'socket.io-client';
 // import { environment } from 'src/environments/environment';
 @Injectable({
@@ -27,8 +27,6 @@ export class SocketService {
     lettersOfJoiner: Letter[] = [];
     lettersOfJoinerInStringForSynch: string = '';
     lettersToReplace = '';
-    currentEndGameValue: Observable<boolean>; // to be observed by finishGameService
-    updateOfEndGameValue = new BehaviorSubject(false); // to be observed by finishGameService
     triggeredQuit: boolean = false;
     isWordValid: BehaviorSubject<boolean>;
     boards: Position[][][];
@@ -52,7 +50,6 @@ export class SocketService {
         this.messageSubject = new Subject();
         const unexistingRooms = -1;
         this.cancellationIndexes = [unexistingRooms, unexistingRooms]; // room number and waiting room number
-        this.currentEndGameValue = this.updateOfEndGameValue.asObservable();
         this.isWordValid = new BehaviorSubject<boolean>(false);
         this.boards = new Array(new Array(new Array()));
         this.is2990 = false;
@@ -122,13 +119,6 @@ export class SocketService {
             this.lettersToReplace = lettersReplaced;
         });
 
-        this.socket.on('gameIsFinished', () => {
-            this.triggeredQuit = true;
-            this.updateOfEndGameValue.next(true);
-            // if (!this.triggeredQuit) {
-            //     this.cancelGame();
-            // }
-        });
         this.socket.on('wordValidation', (wordIsValid) => {
             // this.isWordValidationFinished = true;
             this.iswordvalid2 = wordIsValid;
@@ -173,6 +163,7 @@ export class SocketService {
     sendGameListNeededNotification() {
         this.socket.emit('returnListOfGames');
     }
+
     configureSendMessageToServer(message: string, gameStatus: number) {
         if (gameStatus !== 2) {
             this.socket.emit('toOpponent', message, gameStatus, this.roomNumber);
@@ -200,6 +191,7 @@ export class SocketService {
             return res;
         });
     }
+
     setGameMode(gameMode: number) {
         this.gameMode = gameMode;
     }
