@@ -98,6 +98,7 @@ export class SoloGameInitiatorComponent {
             this.letterService.players[0].objectives,
             this.letterService.players[1].objectives,
             bonusTiles,
+            this.socketService.is2990,
         );
     }
 
