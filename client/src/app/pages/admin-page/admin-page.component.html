@@ -1,6 +1,6 @@
 <body ng-app="app" style="text-align: Center">
     <p><br />List des dictionnaires disponibles:</p>
-    <div *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
+    <div *ngFor="let dictionary of this.dictionaryService.dictionaryList; let dictIndex = index">
         <p>
             Numéro du dictionnaire:{{ dictIndex }}<br />
             Nom: {{ dictionary.name }}<br />Description: {{ dictionary.description }}<br /><br />
@@ -37,11 +37,12 @@
         <button (click)="saveDictionaryModification()">Enregistrer les changements</button>
         <button (click)="showNewDescriptionInput = false; showOrHideDictionaryButton(true)">Annuler</button>
     </fieldset>
-    <button *ngIf="showUpLoadButton" (click)="showOrHideDictionaryButton(false)">Téléverser un nouveau dictionnaire</button>
-    <button *ngIf="showDownloadButton" (click)="isDownloadMode = true; showNumberInput = true; showOrHideDictionaryButton(false)">
+    <button *ngIf="showUpLoadButton" (click)="showOrHideDictionaryButton(false); showUpload = true; dictionaryService.isUploadComplete = false;">Téléverser un nouveau dictionnaire</button>
+    <button *ngIf="showDownloadButton" (click)="isDownloadMode = true; showNumberInput = true; showOrHideDictionaryButton(false);">
         Télécharger un dictionaire</button
     ><br />
     <a *ngIf="showDownloadUrl" [href]="downloadUrl" download="dictionary.json">Download</a>
+    <br /><app-file-upload *ngIf="showUpload && !dictionaryService.isUploadComplete" requiredFileType=".json" ></app-file-upload>
 
     <p><br /><br />List de nom des joueur virtuel débutant:</p>
     <div *ngFor="let name of this.nameJV[0]; let dictIndex = index">
@@ -87,6 +88,4 @@
         </div>
     </fieldset>
     <br /><br /><button (click)="reinitialize()">Réinitialiser</button>
-    <!--<br><br><br><app-upload></app-upload>-->
-    <br /><br /><br /><br /><app-file-upload requiredFileType=".json" ></app-file-upload>
 </body>

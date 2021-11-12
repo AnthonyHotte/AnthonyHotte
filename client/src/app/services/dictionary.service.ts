@@ -7,10 +7,14 @@ import { CommunicationService } from './communication.service';
 })
 export class DictionaryService {
     indexDictionary: number;
+    dictionaryList: Dictionary[];
     dictionary: Dictionary;
+    isUploadComplete: boolean;
     constructor(private communicationService: CommunicationService) {
         // default dictionary
+        this.dictionaryList = [];
         this.indexDictionary = 0;
+        this.isUploadComplete = false;
     }
     getDictionary() {
         this.communicationService.getFullDictionary(this.indexDictionary).subscribe((res) => {

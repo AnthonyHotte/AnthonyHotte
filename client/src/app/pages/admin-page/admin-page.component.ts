@@ -11,7 +11,6 @@ import { DictionaryService } from '@app/services/dictionary.service';
     styleUrls: ['./admin-page.component.scss'],
 })
 export class AdminPageComponent {
-    dictionaryList: Dictionary[];
     downloadUrl: SafeUrl;
     showDownloadUrl: boolean;
     isDeleteMode: boolean;
@@ -29,6 +28,7 @@ export class AdminPageComponent {
     showNewDescriptionMessageError: boolean;
     showDownloadButton: boolean;
     showUpLoadButton: boolean;
+    showUpload: boolean;
 
     nameJV: string[][]; // JV easy name index 0, JVHard name index 1
     newNameJV: string;
@@ -47,14 +47,14 @@ export class AdminPageComponent {
         private readonly sanitizer: DomSanitizer,
         public dictionaryService: DictionaryService,
     ) {
-        this.dictionaryList = [];
+        this.dictionaryService.dictionaryList = [];
         this.nameJV = [
             ['JV1', 'JV2', 'JV3'],
             ['JVHard1', 'JVHard2', 'JVHard3'],
         ];
         this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
             result.forEach((res) => {
-                this.dictionaryList.push(res);
+                this.dictionaryService.dictionaryList.push(res);
             });
         });
         this.newNameJV = '';
@@ -73,6 +73,7 @@ export class AdminPageComponent {
         this.showJVIndexMessageError = false;
         this.showDownloadUrl = false;
         this.isDownloadMode = false;
+        this.showUpload = false;
         this.showOrHideDictionaryButton(true);
         this.showOrHideJVButton(true);
     }
@@ -84,16 +85,16 @@ export class AdminPageComponent {
     }
 
     validateNumber() {
-        if (this.isDownloadMode && this.dictionaryNumberInput >= 0 && this.dictionaryNumberInput < this.dictionaryList.length) {
+        if (this.isDownloadMode && this.dictionaryNumberInput >= 0 && this.dictionaryNumberInput < this.dictionaryService.dictionaryList.length) {
             this.isDownloadMode = false;
             this.showNumberMessageError = false;
             this.showNumberInput = false;
             this.getFullDictionary();
             this.showDownloadUrl = true;
-        } else if (this.dictionaryNumberInput < 1 || this.dictionaryNumberInput >= this.dictionaryList.length) {
+        } else if (this.dictionaryNumberInput < 1 || this.dictionaryNumberInput >= this.dictionaryService.dictionaryList.length) {
             this.showNumberMessageError = true;
         } else if (this.isDeleteMode) {
-            this.dictionaryList.splice(this.dictionaryNumberInput, 1);
+            this.dictionaryService.dictionaryList.splice(this.dictionaryNumberInput, 1);
             this.sendDeleteDictionaryServer();
             this.showNumberInput = false;
             this.isDeleteMode = false;
@@ -112,7 +113,7 @@ export class AdminPageComponent {
     }
     validateNewName() {
         let nameExiste = false;
-        for (const dictionary of this.dictionaryList) {
+        for (const dictionary of this.dictionaryService.dictionaryList) {
             if (this.newNameInput === dictionary.name) {
                 nameExiste = true;
                 break;
@@ -190,7 +191,7 @@ export class AdminPageComponent {
         this.isToDeleteJV = true;
     }
     reinitialize() {
-        this.dictionaryList.splice(1);
+        this.dictionaryService.dictionaryList.splice(1);
         this.nameJV[0].splice(3);
         this.nameJV[1].splice(3);
         this.communicationService.reinitialiseDictionary().subscribe();
@@ -200,15 +201,15 @@ export class AdminPageComponent {
     saveDictionaryModification() {
         this.showNewDescriptionInput = false;
         this.showOrHideDictionaryButton(true);
-        this.dictionaryList[this.dictionaryNumberInput].name = this.newNameInput;
-        this.dictionaryList[this.dictionaryNumberInput].description = this.newDescriptionInput;
+        this.dictionaryService.dictionaryList[this.dictionaryNumberInput].name = this.newNameInput;
+        this.dictionaryService.dictionaryList[this.dictionaryNumberInput].description = this.newDescriptionInput;
         this.sendModificationNamesToServer();
     }
     sendModificationNamesToServer() {
         this.communicationService
             .sendDictionaryNameChanged({
                 index: this.dictionaryNumberInput,
-                dictionary: this.dictionaryList[this.dictionaryNumberInput],
+                dictionary: this.dictionaryService.dictionaryList[this.dictionaryNumberInput],
             })
             .subscribe();
     }
