@@ -10,7 +10,11 @@ export class DictionaryService {
         this.indexDictionaryInUse = 0;
         const temp = JSON.parse(JSON.stringify(jsonDictionnary));
         this.dictionaryList = [new Dictionary(temp.title, temp.description)];
-        this.dictionaryList[0].content = temp.words;
+        this.dictionaryList[0].content = [];
+        for (const word of temp.words) {
+            this.dictionaryList[0].content.push(word);
+        }
+        // this.dictionaryList[0].content = temp.words;
         this.dictionaryList[1] = new Dictionary('titre1', 'description1');
     }
     getDictionaryTitleAndDescription(): Dictionary[] {

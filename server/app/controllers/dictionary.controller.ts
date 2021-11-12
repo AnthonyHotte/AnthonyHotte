@@ -49,9 +49,10 @@ export class DictionaryController {
          */
         this.router.get('/fulldictionary', (req: Request, res: Response) => {
             // Send the request to the service and send the response
-            // res.json(this.dictionaryService.getDictWithContent(parseInt(req.query.indexValue, 10)));
+            const index = req.query.indexNumber;
+            res.json(this.dictionaryService.getDictWithContent(parseInt(index as string, 10)));
             // TODO
-            res.json();
+            // res.json();
         });
         /**
          * @swagger

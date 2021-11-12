@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 import { Subscription } from 'rxjs';
-import jsonDictionnary from 'src/assets/dictionnary.json';
+import { CommunicationService } from './communication.service';
+import { DictionaryService } from './dictionary.service';
 import { SocketService } from './socket.service';
 
 @Injectable({
@@ -15,12 +16,19 @@ export class WordValidationService {
     validatedWord: boolean;
     validatedSubscription: Subscription;
 
-    constructor(readonly scoreCalculator: ScoreCalculatorService, private socket: SocketService) {
-        // when importing the json, typescript doesnt let me read it as a json object. To go around this, we stringify it then parse it
-        const temp = JSON.stringify(jsonDictionnary);
-        const temp2 = JSON.parse(temp);
-        this.dictionnary = temp2.words;
-        this.dicLength = this.dictionnary.length;
+    constructor(
+        readonly scoreCalculator: ScoreCalculatorService,
+        private socket: SocketService,
+        private communicationService: CommunicationService,
+        private dictionaryService: DictionaryService,
+    ) {
+        this.communicationService.getFullDictionary(this.dictionaryService.indexDictionary).subscribe((dictionary) => {
+            this.dictionnary = [];
+            for (const word of dictionary.content) {
+                this.dictionnary.push(word);
+                this.dicLength = this.dictionnary.length;
+            }
+        });
         this.validatedSubscription = this.socket.isWordValid.subscribe((value: boolean) => {
             this.validatedWord = value;
         });

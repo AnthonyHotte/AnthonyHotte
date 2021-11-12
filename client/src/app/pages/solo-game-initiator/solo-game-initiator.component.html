@@ -67,7 +67,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     </div>
                 </fieldset>
                 <p>
-                    <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()">
+                    <button *ngIf="nameIsValid && getGameStatus() === 2 && isDictionaryValid" (click)="startNewGame()">
                         Démarrer la partie {{ getGameStatusInString() }}!
                     </button>
                     <button *ngIf="nameIsValid && getGameStatus() === 0 && isDictionaryValid" (click)="startNewGame()" routerLink="/waiting">Démarrer la partie!</button>
