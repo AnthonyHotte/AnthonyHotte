@@ -69,7 +69,7 @@ export class SoloOpponent2Service {
             this.tempword = tempword;
             // const TIME_OUT_TIME = 3000; // TODO debug this
             // setTimeout(() => {
-            this.placeLetterService.placeWord(this.tempword);
+            await this.placeLetterService.placeWord(this.tempword);
             // }, TIME_OUT_TIME);
 
             return '!placer ' + tempword;
