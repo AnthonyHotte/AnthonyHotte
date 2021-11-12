@@ -71,7 +71,7 @@ export class SidebarRightComponent implements AfterViewInit {
         this.textBox.isCommand('!passer');
         this.placeLetterClick.reset();
         if (this.turnTimeController.turn === 1 && this.turnTimeController.gameStatus === GameStatus.SoloPlayer) {
-            this.soloOpponentPlays();
+            // this.soloOpponentPlays();
         }
     }
 
