@@ -4,6 +4,7 @@ import { MessagePlayer } from '@app/message';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
+import { ObjectivesService } from '@app/services/objectives.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SocketService } from '@app/services/socket.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
@@ -29,6 +30,7 @@ export class TextBox {
         private socketService: SocketService,
         private letterBankService: LetterBankService,
         private socket: SocketService,
+        private objectiveService: ObjectivesService,
     ) {
         this.inputs = [];
         this.character = false;
@@ -59,6 +61,13 @@ export class TextBox {
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
             text = await this.placeWordOpponent(myMessage.message, this.socket.lettersToReplace);
             printCommand = true;
+        } else if (myMessage.message === '!abandonner') {
+            this.finishGameService.isGameFinished = true;
+            this.inputs.push(myMessage);
+            text = this.letterService.players[1].name + ' a abandonné la partie';
+            const messageSystem: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
+            this.inputs.push(messageSystem);
+            this.handleEnter(this.finishGameService.getMessageTextBox());
         }
         if (printCommand) {
             this.inputs.push(myMessage);
@@ -140,6 +149,14 @@ export class TextBox {
                 this.debugCommand = false;
                 text = 'Affichages de débogage désactivés';
             }
+        } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
+            text = '';
+            this.handleEnter(this.activateReserve());
+            this.socket.configureSendMessageToServer('!réserve', this.timeManager.gameStatus);
+        } else if (myWord === '!abandonner') {
+            text = '';
+            this.socket.configureSendMessageToServer('!abandonner', this.timeManager.gameStatus);
+            this.finishGameService.goToHomeAndRefresh();
         } else if (this.timeManager.turn === 0) {
             if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 text = await this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));
@@ -153,10 +170,6 @@ export class TextBox {
                 this.socket.configureSendMessageToServer('!passer', this.timeManager.gameStatus);
             } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
                 text = this.verifyCommandEchanger(myWord);
-            } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
-                text = '';
-                this.handleEnter(this.activateReserve());
-                this.socket.configureSendMessageToServer('!réserve', this.timeManager.gameStatus);
             } else {
                 text = 'Erreur de syntaxe...';
             }
@@ -185,6 +198,11 @@ export class TextBox {
     }
 
     endTurn(reason: string) {
+        if (reason === 'place') {
+            this.objectiveService.consectivePlacementPlayers[this.timeManager.turn]++;
+        } else {
+            this.objectiveService.consectivePlacementPlayers[this.timeManager.turn] = 0;
+        }
         this.timeManager.endTurn(reason);
         this.commandSuccessful = true;
         if (this.letterService.players[this.timeManager.turn].allLettersInHand.length === 0) {

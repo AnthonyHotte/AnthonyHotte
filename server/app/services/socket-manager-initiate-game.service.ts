@@ -33,6 +33,8 @@ export class SocketManager {
                     message.bonusOn,
                     message.lettersCreator,
                     message.lettersOpponent,
+                    message.objectivesCreator,
+                    message.objectivesJoiner,
                     message.bonus,
                 );
                 // start game if in solo mode
@@ -108,12 +110,14 @@ export class SocketManager {
                 }
                 for (let i = 0; i < this.roomsService.listRoomWaiting.length; i++) {
                     if (this.roomsService.listRoomWaiting !== undefined) {
-                        this.games.push(['name', 'bonus', 'time', 'lettersOfCreator', 'lettersJoiner']);
+                        this.games.push(['name', 'bonus', 'time', 'lettersOfCreator', 'lettersJoiner', 'objectivesCreator', 'objectivesJoiner']);
                         this.games[i][0] = this.roomsService.listRoomWaiting[i].playerNames[0];
                         this.games[i][1] = this.roomsService.listRoomWaiting[i].bonusOn.toString();
                         this.games[i][2] = this.roomsService.listRoomWaiting[i].timePerTurn.toString();
                         this.games[i][3] = this.roomsService.listRoomWaiting[i].returnLettersInString(true); // letters of creator
                         this.games[i][4] = this.roomsService.listRoomWaiting[i].returnLettersInString(false); // letters of joiner
+                        this.games[i][5] = this.roomsService.listRoomWaiting[i].objectivesCreator.join('');
+                        this.games[i][6] = this.roomsService.listRoomWaiting[i].objectivesJoiner.join('');
                         this.boards.push(this.roomsService.listRoomWaiting[i].bonusTiles);
                     }
                 }

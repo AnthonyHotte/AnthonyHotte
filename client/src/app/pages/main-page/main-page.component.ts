@@ -41,4 +41,8 @@ export class MainPageComponent {
             )
             .subscribe(this.message);
     }
+
+    setMode2990(is2990: boolean) {
+        this.socketService.is2990 = is2990;
+    }
 }
