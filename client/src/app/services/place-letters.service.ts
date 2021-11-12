@@ -222,12 +222,8 @@ export class PlaceLettersService {
             return false;
         } else {
             if (lettersToReplace === undefined) {
-                if (this.timeManager.gameStatus === 2) {
-                    this.letterService.players[1].removeLetters(this.gameState.lastLettersAddedJoker);
-                } else {
-                    this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
-                }
-                this.socket.sendLetterReplaced(this.letterService.players[0].lettersReplaced, this.timeManager.gameStatus);
+                this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
+                this.socket.sendLetterReplaced(this.letterService.players[this.timeManager.turn].lettersReplaced, this.timeManager.gameStatus);
             } else {
                 this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker, lettersToReplace);
             }
