@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 import { Subscription } from 'rxjs';
-import { CommunicationService } from './communication.service';
 import { DictionaryService } from './dictionary.service';
 import { SocketService } from './socket.service';
 
@@ -9,26 +8,14 @@ import { SocketService } from './socket.service';
     providedIn: 'root',
 })
 export class WordValidationService {
-    dictionnary: string[];
-    dicLength: number;
     pointsForLastWord: number;
     indexLastLetters: number[] = [];
     validatedWord: boolean;
     validatedSubscription: Subscription;
 
-    constructor(
-        readonly scoreCalculator: ScoreCalculatorService,
-        private socket: SocketService,
-        private communicationService: CommunicationService,
-        private dictionaryService: DictionaryService,
-    ) {
-        this.communicationService.getFullDictionary(this.dictionaryService.indexDictionary).subscribe((dictionary) => {
-            this.dictionnary = [];
-            for (const word of dictionary.content) {
-                this.dictionnary.push(word);
-                this.dicLength = this.dictionnary.length;
-            }
-        });
+    constructor(readonly scoreCalculator: ScoreCalculatorService, private socket: SocketService, private dictionaryService: DictionaryService) {
+        this.dictionaryService.getDictionary();
+
         this.validatedSubscription = this.socket.isWordValid.subscribe((value: boolean) => {
             this.validatedWord = value;
         });
@@ -164,10 +151,10 @@ export class WordValidationService {
         let normalizedDicWord: string;
         let m: number;
         let l = 0;
-        let r = this.dicLength - 1;
+        let r = this.dictionaryService.dictionary.content.length - 1;
         while (l <= r) {
             m = l + Math.floor((r - l) / 2);
-            normalizedDicWord = this.dictionnary[m].normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            normalizedDicWord = this.dictionaryService.dictionary.content[m].normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
             if (normalizedDicWord === normalizedWord) {
                 return true;

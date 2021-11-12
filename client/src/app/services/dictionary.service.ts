@@ -14,7 +14,12 @@ export class DictionaryService {
     }
     getDictionary() {
         this.communicationService.getFullDictionary(this.indexDictionary).subscribe((res) => {
-            this.dictionary = res;
+            this.dictionary.name = res.name;
+            this.dictionary.description = res.description;
+            this.dictionary.content = [];
+            for (const word of res.content) {
+                this.dictionary.content.push(word);
+            }
         });
     }
 }
