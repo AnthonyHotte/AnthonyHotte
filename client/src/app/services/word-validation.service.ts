@@ -14,7 +14,7 @@ export class WordValidationService {
     validatedSubscription: Subscription;
 
     constructor(readonly scoreCalculator: ScoreCalculatorService, private socket: SocketService, private dictionaryService: DictionaryService) {
-        this.dictionaryService.getDictionary();
+        // this.dictionaryService.getDictionary();
 
         this.validatedSubscription = this.socket.isWordValid.subscribe((value: boolean) => {
             this.validatedWord = value;
@@ -154,7 +154,9 @@ export class WordValidationService {
         let r = this.dictionaryService.dictionaryList[this.dictionaryService.indexDictionary].words.length - 1;
         while (l <= r) {
             m = l + Math.floor((r - l) / 2);
-            normalizedDicWord = this.dictionaryService.dictionary.words[m].normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            normalizedDicWord = this.dictionaryService.dictionaryList[this.dictionaryService.indexDictionary].words[m]
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
 
             if (normalizedDicWord === normalizedWord) {
                 return true;

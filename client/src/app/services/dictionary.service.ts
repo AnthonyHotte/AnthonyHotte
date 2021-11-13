@@ -8,7 +8,6 @@ import { CommunicationService } from './communication.service';
 export class DictionaryService {
     indexDictionary: number;
     dictionaryList: Dictionary[];
-    dictionary: Dictionary;
     isUploadComplete: boolean;
     constructor(private communicationService: CommunicationService) {
         // default dictionary
@@ -18,12 +17,20 @@ export class DictionaryService {
     }
     getDictionary() {
         this.communicationService.getFullDictionary(this.indexDictionary).subscribe((res) => {
-            this.dictionary.title = res.title;
-            this.dictionary.description = res.description;
-            this.dictionary.words = [];
+            const dict = new Dictionary('', '');
+            dict.title = res.title;
+            dict.description = res.description;
             for (const word of res.words) {
-                this.dictionary.words.push(word);
+                dict.words.push(word);
             }
+            this.dictionaryList.push(dict);
+            /*
+            this.dictionaryList[this.indexDictionary].title = res.title;
+            this.dictionaryList[this.indexDictionary].description = res.description;
+            this.dictionaryList[this.indexDictionary].words = [];
+            for (const word of res.words) {
+                this.dictionaryList[this.indexDictionary].words.push(word);
+            }*/
         });
     }
 }
