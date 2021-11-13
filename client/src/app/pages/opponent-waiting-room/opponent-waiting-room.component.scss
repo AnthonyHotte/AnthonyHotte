@@ -1,0 +1,41 @@
+.body{
+    width: 100%;
+    height: 100%;
+    background-color: chartreuse;
+    text-align: Center;
+}
+
+.button {
+    background-color: chartreuse;
+    color:white;
+    border: double;
+    font-size: 24px;
+    width: 500px;
+    border-radius: 12px;
+}
+
+.selection-button {
+    background-color: blue;
+    color: black;
+    border: double;
+    font-size: 14px;
+    width: 500px;
+    border-radius: 12px;
+}
+
+.header {
+    justify-content: center;
+    background: linear-gradient(to left, rgb(229, 255, 0), #71fff8);
+    text-align: center;
+    font-family: fantasy;
+}
+
+.button:hover{
+    background-color: white;
+    color: chartreuse;
+}
+
+.selection-button:hover{
+    background-color: black;
+    color:white;
+}
