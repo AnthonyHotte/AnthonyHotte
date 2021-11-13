@@ -5,7 +5,7 @@ import jsonDictionnary from '@app/dictionnary.json';
 @Service()
 export class DictionaryService {
     indexDictionaryInUse: number;
-    private dictionaryList: Dictionary[];
+    dictionaryList: Dictionary[];
     constructor() {
         this.indexDictionaryInUse = 0;
         const temp = JSON.parse(JSON.stringify(jsonDictionnary));
@@ -14,19 +14,14 @@ export class DictionaryService {
         for (const word of temp.words) {
             this.dictionaryList[0].content.push(word);
         }
-        // this.dictionaryList[0].content = temp.words;
-        this.dictionaryList[1] = new Dictionary('titre1', 'description1');
+        this.dictionaryList.push(new Dictionary('titre1', 'description1'));
     }
     getDictionaryTitleAndDescription(): Dictionary[] {
         const dictToSend: Dictionary[] = [];
         for (const dict of this.dictionaryList) {
-            dict.content = [];
-            dictToSend.push(dict);
+            dictToSend.push(new Dictionary(dict.name, dict.description));
         }
         return dictToSend;
-    }
-    getDictWithContent(index: number): Dictionary {
-        return this.dictionaryList[index];
     }
     addDictionary(dictionary: Dictionary) {
         this.dictionaryList.push(dictionary);

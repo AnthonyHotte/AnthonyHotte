@@ -8,7 +8,7 @@ const HTTP_STATUS_CREATED = 201;
 export class DictionaryController {
     router: Router;
 
-    constructor(private readonly dictionaryService: DictionaryService) {
+    constructor(private dictionaryService: DictionaryService) {
         this.configureRouter();
     }
 
@@ -50,9 +50,7 @@ export class DictionaryController {
         this.router.get('/fulldictionary', (req: Request, res: Response) => {
             // Send the request to the service and send the response
             const index = req.query.indexNumber;
-            res.json(this.dictionaryService.getDictWithContent(parseInt(index as string, 10)));
-            // TODO
-            // res.json();
+            res.json(this.dictionaryService.dictionaryList[parseInt(index as string, 10)]);
         });
         /**
          * @swagger

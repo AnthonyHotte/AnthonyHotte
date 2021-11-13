@@ -3,13 +3,7 @@ import { DictionaryService } from './dictionary.service';
 
 @Service()
 export class WordValidationService {
-    dictionnary: string[];
-    dicLength: number;
-
-    constructor(private dictionaryService: DictionaryService) {
-        this.dictionnary = dictionaryService.getDictWithContent(this.dictionaryService.indexDictionaryInUse).content;
-        this.dicLength = this.dictionnary.length;
-    }
+    constructor(private dictionaryService: DictionaryService) {}
 
     // The binary search was inspired by the binarysearch method provided here https://www.geeksforgeeks.org/binary-search/
     isWordValid(word: string): boolean {
@@ -29,10 +23,12 @@ export class WordValidationService {
         let normalizedDicWord: string;
         let m: number;
         let l = 0;
-        let r = this.dicLength - 1;
+        let r = this.dictionaryService.dictionaryList[this.dictionaryService.indexDictionaryInUse].content.length - 1;
         while (l <= r) {
             m = l + Math.floor((r - l) / 2);
-            normalizedDicWord = this.dictionnary[m].normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            normalizedDicWord = this.dictionaryService.dictionaryList[this.dictionaryService.indexDictionaryInUse].content[m]
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
 
             if (normalizedDicWord === normalizedWord) {
                 return true;
