@@ -3,7 +3,7 @@
     <div *ngFor="let dictionary of this.dictionaryService.dictionaryList; let dictIndex = index">
         <p>
             Numéro du dictionnaire:{{ dictIndex }}<br />
-            Nom: {{ dictionary.name }}<br />Description: {{ dictionary.description }}<br /><br />
+            Nom: {{ dictionary.title }}<br />Description: {{ dictionary.description }}<br /><br />
         </p>
     </div>
     <button *ngIf="showDeleteDictionaryButton" (click)="showNumberInput = true; showOrHideDictionaryButton(false); this.isDeleteMode = true">

@@ -35,9 +35,9 @@ export class FileUploadComponent {
 
                     const title = dictionaryJson.title;
                     const dictionary = new Dictionary(title, dictionaryJson.description);
-                    dictionary.content = [];
+                    dictionary.words = [];
                     for (const word of dictionaryJson.words) {
-                        dictionary.content.push(word);
+                        dictionary.words.push(word);
                     }
                     this.communicationService.sendNewDictionary(dictionary).subscribe();
                     this.dictionaryService.dictionaryList.push(dictionary);

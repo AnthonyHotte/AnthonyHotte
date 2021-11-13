@@ -1,10 +1,10 @@
 export class Dictionary {
-    name: string;
+    title: string;
     description: string;
-    content: string[];
+    words: string[];
     constructor(name: string, description: string) {
-        this.name = name;
+        this.title = name;
         this.description = description;
-        this.content = [];
+        this.words = [];
     }
 }

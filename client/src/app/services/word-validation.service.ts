@@ -151,10 +151,10 @@ export class WordValidationService {
         let normalizedDicWord: string;
         let m: number;
         let l = 0;
-        let r = this.dictionaryService.dictionary.content.length - 1;
+        let r = this.dictionaryService.dictionaryList[this.dictionaryService.indexDictionary].words.length - 1;
         while (l <= r) {
             m = l + Math.floor((r - l) / 2);
-            normalizedDicWord = this.dictionaryService.dictionary.content[m].normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            normalizedDicWord = this.dictionaryService.dictionary.words[m].normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
             if (normalizedDicWord === normalizedWord) {
                 return true;

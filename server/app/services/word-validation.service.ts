@@ -23,10 +23,10 @@ export class WordValidationService {
         let normalizedDicWord: string;
         let m: number;
         let l = 0;
-        let r = this.dictionaryService.dictionaryList[this.dictionaryService.indexDictionaryInUse].content.length - 1;
+        let r = this.dictionaryService.dictionaryList[this.dictionaryService.indexDictionaryInUse].words.length - 1;
         while (l <= r) {
             m = l + Math.floor((r - l) / 2);
-            normalizedDicWord = this.dictionaryService.dictionaryList[this.dictionaryService.indexDictionaryInUse].content[m]
+            normalizedDicWord = this.dictionaryService.dictionaryList[this.dictionaryService.indexDictionaryInUse].words[m]
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '');
 

@@ -28,7 +28,7 @@ export class SoloOpponent2Service {
             arrayHand.push(letter.letter.toLowerCase());
         }
         if (this.gameStateService.isBoardEmpty) {
-            const wordToPlay = this.findValidWords(this.dictionatyService.dictionary.content, arrayHand);
+            const wordToPlay = this.findValidWords(this.dictionatyService.dictionary.words, arrayHand);
             if (wordToPlay.length > 0) {
                 tempword = 'h8v ' + wordToPlay[0];
             }
@@ -42,7 +42,7 @@ export class SoloOpponent2Service {
                     if (letteronbord[i][j] !== '') {
                         const temparrayHand = arrayHand;
                         temparrayHand.push(letteronbord[i][j]); // add the letter on board with the letter in hand
-                        const wordToPlay = this.findValidWords(this.dictionatyService.dictionary.content, temparrayHand);
+                        const wordToPlay = this.findValidWords(this.dictionatyService.dictionary.words, temparrayHand);
                         if (wordToPlay.length > 0) {
                             for (const word2 of wordToPlay) {
                                 for (let k = 0; k < word2.length; k++) {

@@ -114,7 +114,7 @@ export class AdminPageComponent {
     validateNewName() {
         let nameExiste = false;
         for (const dictionary of this.dictionaryService.dictionaryList) {
-            if (this.newNameInput === dictionary.name) {
+            if (this.newNameInput === dictionary.title) {
                 nameExiste = true;
                 break;
             }
@@ -201,7 +201,7 @@ export class AdminPageComponent {
     saveDictionaryModification() {
         this.showNewDescriptionInput = false;
         this.showOrHideDictionaryButton(true);
-        this.dictionaryService.dictionaryList[this.dictionaryNumberInput].name = this.newNameInput;
+        this.dictionaryService.dictionaryList[this.dictionaryNumberInput].title = this.newNameInput;
         this.dictionaryService.dictionaryList[this.dictionaryNumberInput].description = this.newDescriptionInput;
         this.sendModificationNamesToServer();
     }

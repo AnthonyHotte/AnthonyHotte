@@ -128,9 +128,9 @@ export class DictionaryController {
          */
         this.router.post('/newdictionary', (req: Request, res: Response) => {
             const dictionary: Dictionary = new Dictionary('title', 'description');
-            dictionary.content = req.body.content;
+            dictionary.words = req.body.content;
             dictionary.description = req.body.description;
-            dictionary.name = req.body.name;
+            dictionary.title = req.body.name;
             this.dictionaryService.addFullDictionary(dictionary);
             res.sendStatus(HTTP_STATUS_CREATED);
         });

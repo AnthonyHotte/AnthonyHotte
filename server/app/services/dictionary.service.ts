@@ -10,16 +10,16 @@ export class DictionaryService {
         this.indexDictionaryInUse = 0;
         const temp = JSON.parse(JSON.stringify(jsonDictionnary));
         this.dictionaryList = [new Dictionary(temp.title, temp.description)];
-        this.dictionaryList[0].content = [];
+        this.dictionaryList[0].words = [];
         for (const word of temp.words) {
-            this.dictionaryList[0].content.push(word);
+            this.dictionaryList[0].words.push(word);
         }
         this.dictionaryList.push(new Dictionary('titre1', 'description1'));
     }
     getDictionaryTitleAndDescription(): Dictionary[] {
         const dictToSend: Dictionary[] = [];
         for (const dict of this.dictionaryList) {
-            dictToSend.push(new Dictionary(dict.name, dict.description));
+            dictToSend.push(new Dictionary(dict.title, dict.description));
         }
         return dictToSend;
     }

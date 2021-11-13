@@ -18,11 +18,11 @@ export class DictionaryService {
     }
     getDictionary() {
         this.communicationService.getFullDictionary(this.indexDictionary).subscribe((res) => {
-            this.dictionary.name = res.name;
+            this.dictionary.title = res.title;
             this.dictionary.description = res.description;
-            this.dictionary.content = [];
-            for (const word of res.content) {
-                this.dictionary.content.push(word);
+            this.dictionary.words = [];
+            for (const word of res.words) {
+                this.dictionary.words.push(word);
             }
         });
     }
