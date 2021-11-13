@@ -7,6 +7,5 @@
         <button *ngIf="game.length !== 0" [class]="game" pressed (click) = "this.changeValidity(game[0])" (click) = "this.setIndex(indexElement)"> Nom : {{game[0]}}, Bonus aléatoire : {{this.getBonusInLetters(game[1])}}, Temps de jeu : {{this.getTimePerTurn(game[2])}} </button>
     </div>
     <button class="button" *ngIf="isValidSelection" routerLink="/soloInitiator"> Allez à la sélection du nom </button>
-    <button routerLink = "/selection"> Revenir en arrière </button>
-    </body>
-    
+    <button class = "button" routerLink = "/selection"> Revenir en arrière </button>
+</body>    
