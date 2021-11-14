@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ClickManagementService } from '@app/services/click-management.service';
 
 @Component({
@@ -8,6 +8,11 @@ import { ClickManagementService } from '@app/services/click-management.service';
 })
 export class GamePageComponent {
     constructor(private clickManager: ClickManagementService) {}
+
+    @HostListener('contextmenu', ['$event'])
+    onRightClick(event: { preventDefault: () => void }) {
+        event.preventDefault();
+    }
 
     clickLocation(location: string) {
         this.clickManager.click(location);

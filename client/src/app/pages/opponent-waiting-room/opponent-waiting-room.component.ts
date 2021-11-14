@@ -23,6 +23,10 @@ export class OpponentWaitingRoomComponent implements OnInit {
     beforeUnloadHandler() {
         this.socketInformation.handleDisconnect();
     }
+    @HostListener('contextmenu', ['$event'])
+    onRightClick(event: { preventDefault: () => void }) {
+        event.preventDefault();
+    }
 
     ngOnInit(): void {
         this.fillGamesList();

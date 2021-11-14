@@ -53,6 +53,11 @@ export class SoloGameInitiatorComponent {
         this.socketService.handleDisconnect();
     }
 
+    @HostListener('contextmenu', ['$event'])
+    onRightClick(event: { preventDefault: () => void }) {
+        event.preventDefault();
+    }
+
     joinGame() {
         this.setName();
         this.timeManager.timePerTurn = parseInt(this.socketService.gameLists[this.indexWaitingRoomService.getIndex()][2], 10); // timePerTurn
