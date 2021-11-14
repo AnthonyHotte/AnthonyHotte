@@ -1,8 +1,10 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { Dictionary } from '@app/classes/dictionary';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND, NUMBEROFCASE } from '@app/constants';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
+import { DictionaryService } from './dictionary.service';
 import { GameStateService } from './game-state.service';
 import { PlaceLettersService } from './place-letters.service';
 import { SoloOpponent2Service } from './solo-opponent2.service';
@@ -15,8 +17,47 @@ describe('SoloOpponent2Service', () => {
     let lettersServiceSpy: jasmine.SpyObj<LetterService>;
     let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
     let timeManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
+    let dictionaryServiceSpy: jasmine.SpyObj<DictionaryService>;
     beforeEach(
         waitForAsync(() => {
+            dictionaryServiceSpy = jasmine.createSpyObj('DictionaryService', ['getDictionary']);
+            dictionaryServiceSpy.dictionaryList = [];
+            dictionaryServiceSpy.dictionaryList.push(new Dictionary('t1', 'd1'));
+            dictionaryServiceSpy.dictionaryList[0].words = [
+                'aa',
+                'aalenien',
+                'aalenienne',
+                'aaleniennes',
+                'aaleniens',
+                'aas',
+                'abaca',
+                'abacas',
+                'abacost',
+                'abacosts',
+                'abacule',
+                'abacules',
+                'abaissa',
+                'abaissable',
+                'abaissables',
+                'abaissai',
+                'abaissaient',
+                'abaissais',
+                'abaissait',
+                'abaissames',
+                'abaissant',
+                'abaissante',
+                'abaissantes',
+                'abaissants',
+                'abaissas',
+                'abaissasse',
+                'abaissassent',
+                'abaissasses',
+                'abaissassiez',
+                'abaissassions',
+                'abaissat',
+                'abaissates',
+            ];
+            dictionaryServiceSpy.indexDictionary = 0;
             timeManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
             timeManagerServiceSpy.turn = 0;
             gameStateServiceSpy = jasmine.createSpyObj('GameStateService', [
@@ -64,6 +105,7 @@ describe('SoloOpponent2Service', () => {
                     { provide: LetterService, useValue: lettersServiceSpy },
                     { provide: LetterBankService, useValue: letterBankServiceSpy },
                     { provide: TimerTurnManagerService, useValue: timeManagerServiceSpy },
+                    { provide: DictionaryService, useValue: dictionaryServiceSpy },
                 ],
             }).compileComponents();
         }),

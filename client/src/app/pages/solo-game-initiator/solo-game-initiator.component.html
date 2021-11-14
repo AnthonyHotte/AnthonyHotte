@@ -50,11 +50,31 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         </form>
                     </fieldset>
                 </div>
+                <div *ngIf="getGameStatus() !== 1">
+                    <fieldset>
+                        <legend>Choisissez le dictionnaire utilisé</legend>
+                        <p><br />List des dictionnaires disponibles:</p>
+                        <div id="listDict" *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
+                            <p>
+                                Numéro du dictionnaire:{{ dictIndex }}<br />
+                                Nom: {{ dictionary.title }}<br />Description: {{ dictionary.description }}<br /><br />
+                            </p>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <label>Numéro du dictionnaire: </label>
+                        <input [(ngModel)]="indexDictionaryNumber" type="number" />
+                        <button (click)="validateDictionaryNumber()">Valider le numéro</button>
+                        <div>
+                            <p>{{ validationDictionaryMessage }}</p>
+                        </div>
+                    </fieldset>
+                </div>
                 <p>
-                    <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()" class="button"><i class="fa fa-play"></i>
+                    <button *ngIf="nameIsValid && getGameStatus() === 2 && isDictionaryValid" (click)="startNewGame()" class="button"><i class="fa fa-play"></i>
                         Démarrer la partie {{ getGameStatusInString() }}!
                     </button>
-                    <button *ngIf="nameIsValid && getGameStatus() === 0" (click)="startNewGame()" routerLink="/waiting" class="button"><i class="fa fa-play"></i>
+                    <button *ngIf="nameIsValid && getGameStatus() === 0 && isDictionaryValid" (click)="startNewGame()" routerLink="/waiting" class="button"><i class="fa fa-play"></i>
                         Démarrer la partie!
                     </button>
                     <button *ngIf="nameIsValid && getGameStatus() === 1 && this.returnIsGameToBeJoined() && this.verifyNameIsNotSameAsRoomCreator()" (click)="joinGame()" class="button">
