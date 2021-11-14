@@ -8,10 +8,11 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { BehaviorSubject } from 'rxjs';
 import { PlayerLetterHand } from './player-letter-hand';
 import { TextBox } from './text-box-behavior';
 
-fdescribe('TextBox', () => {
+describe('TextBox', () => {
     let textBox: TextBox;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let placerLetterServiceSpy: jasmine.SpyObj<PlaceLettersService>;
@@ -28,26 +29,29 @@ fdescribe('TextBox', () => {
             letterBankServiceSpy.letterBank.push({ letter: 'A', quantity: 9, point: 1 });
         }
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
-        placerLetterServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['verifyTileNotOutOfBound']);
-        const player1 = new PlayerLetterHand(letterBankServiceSpy);
-        player1.allLettersInHand = [];
+        placerLetterServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['verifyTileNotOutOfBound', 'placeWord']);
+        letterServiceSpy.players = [];
+        letterServiceSpy.players.push(new PlayerLetterHand(letterBankServiceSpy));
+        letterServiceSpy.players.push(new PlayerLetterHand(letterBankServiceSpy));
+        letterServiceSpy.players[0].allLettersInHand = [];
         for (let i = 0; i < MAXLETTERINHAND; i++) {
-            player1.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+            letterServiceSpy.players[0].allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
         }
-        const player2 = new PlayerLetterHand(letterBankServiceSpy);
-        player2.allLettersInHand = [];
+        letterServiceSpy.players[0].name = 'tony';
+        letterServiceSpy.players[1].name = 'tony';
+        letterServiceSpy.players[1].allLettersInHand = [];
         for (let i = 0; i < MAXLETTERINHAND; i++) {
-            player2.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+            letterServiceSpy.players[1].allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
         }
-        letterServiceSpy.players = [player1, player2];
         timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
         timerTurnManagerServiceSpy.turn = 0;
         finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
+        finishGameServiceSpy.updateOfEndGameValue = new BehaviorSubject<boolean>(true);
         await TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             providers: [
                 { provide: PlaceLettersService, useValue: placerLetterServiceSpy },
-                { provide: LetterService, useValue: letterBankServiceSpy },
+                { provide: LetterService, useValue: letterServiceSpy },
                 { provide: LetterBankService, useValue: letterBankServiceSpy },
                 { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
                 { provide: FinishGameService, useValue: finishGameServiceSpy },
@@ -121,11 +125,10 @@ fdescribe('TextBox', () => {
         expect(textBox.debugCommand).toEqual(true);
     });
     it('isCommand should call placeWord', () => {
-        const mySPy = spyOn(placerLetterServiceSpy, 'placeWord');
         timerTurnManagerServiceSpy.turn = 0;
         const maChaine = '!placer';
         textBox.isCommand(maChaine);
-        expect(mySPy).toHaveBeenCalled();
+        expect(placerLetterServiceSpy.placeWord).toHaveBeenCalled();
     });
     it('isCommand should call verifyCommandPasser', () => {
         const mySpy = spyOn(textBox, 'verifyCommandPasser');
@@ -168,16 +171,15 @@ fdescribe('TextBox', () => {
     });
     it('verifyCommandPasser should call endTurn', () => {
         const mySpy = spyOn(textBox, 'endTurn');
-
+        timerTurnManagerServiceSpy.turnsSkippedInARow = 0;
         textBox.valueToEndGame = 0;
         textBox.verifyCommandPasser();
         expect(mySpy).toHaveBeenCalled();
     });
 
     it('endTurn should call endTurn of timeManager', () => {
-        const mySpy = spyOn(timerTurnManagerServiceSpy, 'endTurn');
         textBox.endTurn('place');
-        expect(mySpy).toHaveBeenCalled();
+        expect(timerTurnManagerServiceSpy.endTurn).toHaveBeenCalled();
     });
     it('getMessageSoloOpponent should ne inputSoloOpponent', () => {
         const mySpy = textBox.getMessagesSoloOpponent();
@@ -206,12 +208,12 @@ fdescribe('TextBox', () => {
             resolve('Mot placé avec succès.');
         });
         timerTurnManagerServiceSpy.turn = 0;
-        const mySpyPlaceWord = spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue(promise1);
+        placerLetterServiceSpy.placeWord.and.returnValue(promise1);
         const mySpyEndTurn = spyOn(textBox, 'endTurn');
         const maChaine = '!placer';
         await textBox.isCommand(maChaine);
 
-        expect(mySpyPlaceWord).toHaveBeenCalled();
+        expect(placerLetterServiceSpy.placeWord).toHaveBeenCalled();
         expect(mySpyEndTurn).toHaveBeenCalled();
     });
     it("Can't exchange when you dont have the letters in hand", () => {
@@ -234,7 +236,7 @@ fdescribe('TextBox', () => {
         const promise1 = new Promise<string>((resolve) => {
             resolve('allo');
         });
-        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue(promise1);
+        placerLetterServiceSpy.placeWord.and.returnValue(promise1);
         const mySpy = spyOn(textBox, 'verifyCommandPasser');
         await textBox.placeWordOpponent('!placer h8h allo', 'abcd');
         expect(mySpy).toHaveBeenCalled();
@@ -244,7 +246,7 @@ fdescribe('TextBox', () => {
         const promise1 = new Promise<string>((resolve) => {
             resolve('Mot placé avec succès.');
         });
-        spyOn(placerLetterServiceSpy, 'placeWord').and.returnValue(promise1);
+        placerLetterServiceSpy.placeWord.and.returnValue(promise1);
         const mySpy = spyOn(textBox, 'endTurn');
         await textBox.placeWordOpponent('!placer h8h allo', 'abcd');
         expect(mySpy).toHaveBeenCalled();
@@ -281,7 +283,8 @@ fdescribe('TextBox', () => {
 
     it('endturn should set isgamefinished to true if player hand is empty', () => {
         letterServiceSpy.players[0].allLettersInHand = [];
-        timerTurnManagerServiceSpy.turn = 1;
+        finishGameServiceSpy.isGameFinished = false;
+        timerTurnManagerServiceSpy.turn = 0;
         textBox.endTurn('place');
         expect(finishGameServiceSpy.isGameFinished).toBeTrue();
     });
