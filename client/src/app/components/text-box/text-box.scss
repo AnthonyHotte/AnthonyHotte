@@ -2,13 +2,14 @@
     height: 20px;
     border-color: black;
     border-width: 2px;
-    width: 400px;
+    width: 26vw;
     border-style: ridge;
     margin-bottom: 10px;
     margin-bottom: 0px;
     background-color: black;
     color: white;
     padding-bottom: 10px;
+    max-width: 26vw;
 }
 
 .title {
@@ -16,12 +17,13 @@
     background-color: rgb(104, 20, 20);
     color: white;
     font-family: cursive;
+    max-width: 26vw;
 }
 #DisplayZone {
     height: 610px;
     border-color: black;
     border-width: 2px;
-    width: 400px;
+    width: 27vw;
     border-style: groove;
     margin-bottom: 10px;
     overflow-y: scroll;
@@ -34,44 +36,44 @@
 .PlayerMessage {
     color: blue;
     font-size: 20px;
-    max-width: 380px;
+    max-width: 26vw;
     font-family: sans-serif;
 }
 
 .AlertMessage {
     color: red;
     font-size:20px;
-    max-width: 380px;
+    max-width: 26vw;
     font-family: sans-serif;
 }
 
 .Joueur {
     color: rgb(34, 121, 34);
     font-size: 20px;
-    max-width: 380px;
+    max-width: 26vw;
     font-family: sans-serif;
 }
 
 .Adversaire {
     color: rgb(92, 20, 20);
     font-size: 20px;
-    max-width: 380px;
+    max-width: 26vw;
     font-family: sans-serif;
 }
 .Systeme {
     color: rgb(25, 25, 126);
     font-size: 20px;
-    max-width: 380px;
+    max-width: 26vw;
     font-family: sans-serif;
 }
 .input{
-    font-size: 22px;
+    font-size: 26px;
     color: black;
     background-color: yellow;
     border:double;
     border-radius: 16px;
     text-align: center;
-    width: 350px;
+    max-width: 25vw;
 }
 .form{
     text-align: center;
