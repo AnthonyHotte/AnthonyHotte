@@ -57,7 +57,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <fieldset class="fieldset">
                         <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
                         <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()" class="button"><i class="fa fa-play"></i>
-                            Démarrer la partie {{ getGameStatusInString() }}!
+                            Démarrer la partie!
                         </button>
                         <button *ngIf="nameIsValid && getGameStatus() === 0" (click)="startNewGame()" routerLink="/waiting" class="button"><i class="fa fa-play"></i>
                             Démarrer la partie!
@@ -69,6 +69,6 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <div *ngIf="this.getGameStatus()===1" class="bonus-fill"> </div>
                     </fieldset>
                 </div>
-    <footer class="footer"> Appreciez votre partie SVP! </footer>
+    <footer class="footer" *ngIf="getGameStatus() !== 2"> Appreciez votre partie SVP! </footer>
 </body>
 </div>
