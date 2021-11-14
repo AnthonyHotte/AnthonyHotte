@@ -1,4 +1,4 @@
 <!-- Source pour les icones sur les buttons : https://www.w3schools.com/howto/howto_css_icon_buttons.asp -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<fieldset *ngIf = "getGameStatus()"> {{getMessageCongratulation()}} <br><button (click)="this.quitGame()" class="button"><i class="fa fa-home"></i>Quitter</button></fieldset>
-<fieldset *ngIf = "getAbandonStatus()"> {{getMessageCongratulationsAbandon()}} <br><button (click)="this.quitGame()" class="button"><i class="fa fa-home"></i>Quitter</button></fieldset>
+<fieldset *ngIf = "getGameStatus()" class="fieldset"> {{getMessageCongratulation()}} <br><button (click)="this.quitGame()" class="button"><i class="fa fa-home"></i>Quitter</button></fieldset>
+<fieldset *ngIf = "getAbandonStatus()" class="fieldset"> {{getMessageCongratulationsAbandon()}} <br><button (click)="this.quitGame()" class="button"><i class="fa fa-home"></i>Quitter</button></fieldset>

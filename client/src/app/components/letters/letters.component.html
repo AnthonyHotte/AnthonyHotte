@@ -1,22 +1,24 @@
-<fieldset>
-<table>
-    <tr>
-        <td
-            class="letter"
-            *ngFor="let letter of letters; let indexOfElem = index"
-              [ngStyle]="{
-                  'text-align': 'center',
-                'width.px': letterSize,
-               'height.px': letterSize,
-               'border-color': indexOfElem === getIndexSelectedSwapping() ? 'red' : 'black',
-               'background-color': getIndexSelectedExchange().includes(indexOfElem) ? 'green' : 'white'
-               }"
-            >
-                <div (click)="selectLetterWithLeftClick(letter.letter, indexOfElem)" (contextmenu)="selectLetterWithRightClick(letter.letter, indexOfElem)">
-                {{ letter.letter }}<sub>{{ letter.point }}</sub>
-                </div>
-        </td>
-    </tr>
-    <table></table>
-</table>
+<fieldset class="fieldset">
+<div class="wood">
+    <table>
+        <tr>
+            <td
+                class="letter"
+                *ngFor="let letter of letters; let indexOfElem = index"
+                [ngStyle]="{
+                    'text-align': 'center',
+                    'width.px': letterSize,
+                'height.px': letterSize,
+                'border-color': indexOfElem === getIndexSelectedSwapping() ? 'red' : 'black',
+                'background-color': getIndexSelectedExchange().includes(indexOfElem) ? 'green' : 'white'
+                }"
+                >
+                    <div (click)="selectLetterWithLeftClick(letter.letter, indexOfElem)" (contextmenu)="selectLetterWithRightClick(letter.letter, indexOfElem)">
+                    {{ letter.letter }}<sub>{{ letter.point }}</sub>
+                    </div>
+            </td>
+        </tr>
+        <table></table>
+    </table>
+</div>
 </fieldset>

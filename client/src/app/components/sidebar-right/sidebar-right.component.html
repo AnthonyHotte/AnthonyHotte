@@ -1,6 +1,6 @@
 <div class="container">
     <body ng-app="app" style="text-align: Center">
-        <fieldset>
+        <fieldset class="fieldset">
             <div class="score-filler">
             <h1 class="header">Score</h1>
             <table class="table">
@@ -23,7 +23,7 @@
             </table>
             </div>
         </fieldset>
-        <fieldset>
+        <fieldset class="fieldset">
             <h1 class="header1">C'est le tour de {{ getPlayerNameAndVerifyTurn() }}</h1>
             <h2 class="header2">Temps restant au tour:</h2>
             <div class="Counter">
@@ -41,10 +41,10 @@
             <br />
             <button *ngIf="showPassButton()" class="buttonfontsize" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button>
         </fieldset>
-        <fieldset>
+        <fieldset class="fieldset">
             <label class="label"> Nombre de lettres dans la réserve: {{ getNumberRemainingLetters() }} </label>
         </fieldset>
-        <fieldset *ngIf="getNumberOfLettersForPlayer(0) < 7 || getNumberOfLettersForPlayer(1) < 7">
+        <fieldset *ngIf="getNumberOfLettersForPlayer(0) < 7 || getNumberOfLettersForPlayer(1) < 7" class="fieldset">
             <p>
                 <label *ngIf="getNumberOfLettersForPlayer(0) < 7" class="label2">
                     Nombre de lettres sur le chevalet pour le joueur: {{ getNumberOfLettersForPlayer(0) }}
@@ -54,7 +54,7 @@
                 Nombre de lettres sur le chevalet pour l'adversaire: {{ getNumberOfLettersForPlayer(1) }}
             </label>
         </fieldset>
-        <fieldset>
+        <fieldset class="fieldset">
             <label class="header3"> Agrandir la taille des lettres sur la grille</label>
             <p>
                 <button class="buttonfontsize" (click)="increaseFontSize()"> + </button>

@@ -1,9 +1,9 @@
-<fieldset *ngIf = "validationNecessary">
+<fieldset *ngIf = "validationNecessary" class="fieldset">
     <p><label class="label"> Voulez-vous vraiment abandonner?</label></p>
     <button class="buttonsurrenderconfirmed" (click)="this.finishCurrentGame()">Confirmer</button>
     <span></span>
     <button (click)="this.validationNecessary = false" class="buttonsurrenderconfirmed">Annuler</button>
 </fieldset>
-<fieldset *ngIf = "!validationNecessary">
+<fieldset *ngIf = "!validationNecessary" class="fieldset">
     <button class="buttonsurrender" (click)="this.validationNecessary = true">Abandonner</button>
 </fieldset>
