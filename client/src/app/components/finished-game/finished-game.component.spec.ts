@@ -23,8 +23,6 @@ describe('FinishedGameComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(FinishedGameComponent);
         component = fixture.componentInstance;
-
-        component.subscription = spy.currentEndGameValue.subscribe((valueOfEndGame) => (component.isGameFinished = valueOfEndGame));
         fixture.detectChanges();
     });
 
