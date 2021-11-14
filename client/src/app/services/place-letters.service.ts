@@ -7,6 +7,7 @@ import { LetterService } from '@app/services/letter.service';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { WordValidationService } from '@app/services/word-validation.service';
+import { ObjectivesService } from './objectives.service';
 import { PlaceLetterClickService } from './place-letter-click.service';
 import { SocketService } from './socket.service';
 @Injectable({
@@ -37,6 +38,7 @@ export class PlaceLettersService {
         private scoreCalculator: ScoreCalculatorService,
         private placeLetterClick: PlaceLetterClickService,
         private socket: SocketService,
+        private objectivesService: ObjectivesService,
     ) {}
     verifyTileNotOutOfBound(): boolean {
         if ((this.orientation === 'h' && this.colomnNumber + this.wordToPlace.length > Constants.NUMBEROFCASE) || this.colomnNumber < 0) {
@@ -124,6 +126,7 @@ export class PlaceLettersService {
                     if (servervalidation) {
                         // if (this.validateWordPlaced(lettersToReplace)) {
                         this.gameState.isBoardEmpty = false;
+                        this.handleObjective();
                         this.letterService.players[this.timeManager.turn].score += this.wordValidator.pointsForLastWord;
                         this.sendWordToServer(lettersToReplace);
                         return 'Mot placé avec succès.';
@@ -141,6 +144,24 @@ export class PlaceLettersService {
         } else {
             this.sendWordToServer(lettersToReplace);
             return 'Argument de commande invalide';
+        }
+    }
+
+    handleObjective() {
+        if (this.socket.is2990) {
+            this.objectivesService.wordsCreated = this.wordValidator.wordsCreatedLastTurn;
+            this.objectivesService.indexLastLetters = this.wordValidator.indexLastLetters;
+            this.objectivesService.pointsLastWord = this.wordValidator.pointsForLastWord;
+            this.objectivesService.lastLettersAdded = this.gameState.lastLettersAdded;
+            for (const obj of this.letterService.players[this.timeManager.turn].objectives) {
+                if ((this.objectivesService.objectiveVerif.get(obj) as () => boolean).apply(this.objectivesService)) {
+                    if (!this.letterService.objCompleted.includes(obj)) {
+                        this.letterService.players[this.timeManager.turn].score += this.objectivesService.objectivePoint.get(obj) as number;
+                        this.letterService.objCompleted.push(obj);
+                        this.letterService.objCompletor.push(this.timeManager.turn);
+                    }
+                }
+            }
         }
     }
     sendWordToServer(lettersToReplace?: string) {
@@ -201,12 +222,8 @@ export class PlaceLettersService {
             return false;
         } else {
             if (lettersToReplace === undefined) {
-                if (this.timeManager.gameStatus === 2) {
-                    this.letterService.players[1].removeLetters(this.gameState.lastLettersAddedJoker);
-                } else {
-                    this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
-                }
-                this.socket.sendLetterReplaced(this.letterService.players[0].lettersReplaced, this.timeManager.gameStatus);
+                this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker);
+                this.socket.sendLetterReplaced(this.letterService.players[this.timeManager.turn].lettersReplaced, this.timeManager.gameStatus);
             } else {
                 this.letterService.players[this.timeManager.turn].removeLetters(this.gameState.lastLettersAddedJoker, lettersToReplace);
             }

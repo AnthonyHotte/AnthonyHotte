@@ -19,12 +19,16 @@ export class LetterService {
     areLetterSelectedExchange: boolean;
     playerNameZeroSubscription: Subscription;
     playerNameOneSubscription: Subscription;
+    objCompleted: number[];
+    objCompletor: number[];
 
     constructor(private letterBankService: LetterBankService, private socketService: SocketService) {
         this.players = [new PlayerLetterHand(letterBankService), new PlayerLetterHand(letterBankService)];
         this.isLetterSelectedSwapping = false;
         this.areLetterSelectedExchange = false;
         this.indexSelectedExchange = [];
+        this.objCompleted = [];
+        this.objCompletor = [];
         this.playerNameZeroSubscription = this.socketService.playerNameIndexZer0.subscribe((playerName) => {
             this.players[0].name = playerName;
         });

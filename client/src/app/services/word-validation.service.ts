@@ -14,6 +14,7 @@ export class WordValidationService {
     indexLastLetters: number[] = [];
     validatedWord: boolean;
     validatedSubscription: Subscription;
+    wordsCreatedLastTurn: string[];
 
     constructor(readonly scoreCalculator: ScoreCalculatorService, private socket: SocketService) {
         // when importing the json, typescript doesnt let me read it as a json object. To go around this, we stringify it then parse it
@@ -24,6 +25,7 @@ export class WordValidationService {
         this.validatedSubscription = this.socket.isWordValid.subscribe((value: boolean) => {
             this.validatedWord = value;
         });
+        this.wordsCreatedLastTurn = [];
     }
     // The binary search was inspired by the binarysearch method provided here https://www.geeksforgeeks.org/binary-search/
     isWordValid(word: string): boolean {
@@ -98,6 +100,7 @@ export class WordValidationService {
         // return this.validatedWord;
         // temporaire
         if (onServer) {
+            this.wordsCreatedLastTurn.push(wordCreated);
             return await this.socket.validateWord(wordCreated);
             // return this.isWordValid(wordCreated);
         } else {
@@ -135,6 +138,7 @@ export class WordValidationService {
         // return this.validatedWord;
         // temporaire
         if (onServer) {
+            this.wordsCreatedLastTurn.push(wordCreated);
             return await this.socket.validateWord(wordCreated);
         } else {
             return this.isWordValid(wordCreated);

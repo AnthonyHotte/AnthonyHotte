@@ -62,6 +62,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
             this.gamesList[i][0] = this.socketInformation.gameLists[i][0]; // name
             this.gamesList[i][1] = this.socketInformation.gameLists[i][1]; // bonus
             this.gamesList[i][2] = this.socketInformation.gameLists[i][2]; // time per turn
+            this.gamesList[i][3] = this.socketInformation.gameLists[i][7]; // is2990
         }
     }
 
@@ -71,6 +72,13 @@ export class OpponentWaitingRoomComponent implements OnInit {
 
     getTimePerTurn(time: string) {
         return parseInt(time, 10);
+    }
+    changeStringToBool2990(actuallyBoolean: string) {
+        return actuallyBoolean === 'true';
+    }
+
+    getIs2990() {
+        return this.socketInformation.is2990;
     }
 
     changeValidity(name: string) {
