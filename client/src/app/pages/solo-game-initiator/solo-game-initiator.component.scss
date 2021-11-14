@@ -1,3 +1,167 @@
+.preventer {
+    overflow: hidden;
+}
 #waiting {
     display:none;
 }
+.body {
+    text-align: center;
+    background-color: green;
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: hidden;
+    overscroll-behavior: contain;
+}
+.header {
+    text-align: center;
+    font-size: 28px;
+    font-style: oblique;
+    font-family: Papyrus;
+    color: red;
+    background-color:gold;
+}
+.label {
+    font-size: 16px;
+    background-color: pink;
+    color:brown;
+    border-radius: 12px;
+    margin-bottom: 5px;
+}
+.button {
+    background-color:gold;
+    color: red;
+    font-size: 20px;
+    border-radius: 16px;
+}
+.button:hover {
+    background-color: red;
+    color: gold;
+}
+.header2{
+    background-color: red;
+    color: gold;
+    font-size: 16px;
+    width: 300px;
+    position: relative;
+    left: 40%;
+}
+.rules{
+    background-color: red;
+    width: 300px;
+    text-align: center;
+    position: relative;
+    left: 40%;
+}
+.header3 {
+    color: gold;
+}
+.image-rules {
+    background-image: url(https://www.thebluediamondgallery.com/wooden-tile/images/rules.jpg);
+}
+.image-names {
+    background-image: url(https://th.bing.com/th/id/R.de758bf22942691bd54d0d6e840d800a?rik=GuYS%2bwcz7LsQTA&riu=http%3a%2f%2f3.bp.blogspot.com%2f-f4BnaQp0TtI%2fUBvioJrWXUI%2fAAAAAAAADMw%2fBO9aG5Gbo_0%2fs1600%2fa-640-whats-in-a-name.jpg&ehk=S4c4DBDD9d3akxLO6F60wA%2f%2buJWMuK5JVm%2bLt6ZgEk0%3d&risl=&pid=ImgRaw&r=0);
+}
+.legend {
+    color:white;
+}
+
+.image-bonus {
+    background-image: url(https://th.bing.com/th/id/OIP.wWIcgDUIpYxDALID97fdJwHaE7?pid=ImgDet&rs=1);
+    color: white;
+}
+
+.image-time {
+    background-image: linear-gradient(180deg, red, blue);
+    color:white;
+}
+
+.input {
+    text-align: center;
+    font-size: 32;
+    border-radius: 16px;
+    padding: 10px;
+}
+
+input, select, textarea{
+    color: green;
+    font-size: 32px;
+}
+
+// radio code customization
+// source : https://thestizmedia.com/radio-buttons-as-toggle-buttons-with-css/
+.switch-field {
+    
+  }
+  
+  .switch-field input {
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    width: 1px;
+    border: 0;
+    overflow: hidden;
+  }
+  
+  .switch-field label {
+    background-color: #e4e4e4;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 20px;
+    line-height: 1;
+    text-align: center;
+    padding: 6px 32px;
+    margin-right: -1px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+    transition: all 0.1s ease-in-out;
+  }
+  
+  .switch-field label:hover {
+    cursor: pointer;
+  }
+  
+  .switch-field input:checked + label {
+    background-color: #a5dc86;
+    box-shadow: none;
+  }
+  
+  .switch-field label:first-of-type {
+    border-radius: 4px 0 0 4px;
+  }
+  
+  .switch-field label:last-of-type {
+    border-radius: 0 4px 4px 0;
+  }
+
+// custom slider
+// source : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_rangeslider
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 25px;
+    background: lightblue;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    opacity: 0.5;
+  }
+  
+  .slider:hover {
+    opacity: 1;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: blue;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #04AA6D;
+    cursor: pointer;
+  }
