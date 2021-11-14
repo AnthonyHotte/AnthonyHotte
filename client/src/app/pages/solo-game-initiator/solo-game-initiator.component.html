@@ -2,7 +2,6 @@
 https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%20let%20a%20user%20select%20only%20one,group%20can%20be%20selected%20at%20the%20same%20time.-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="preventer">
-<body class="body">
     <h1 class="header">Bienvenue dans le mode {{ getGameStatusInString() }}!</h1>
         <div class="image-rules">
             <h2 class="header2">Entrez votre identifiant. Les règles à suivre:</h2>
@@ -61,8 +60,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         <i class="fa fa-play"></i>Joindre la partie!
                     </button>
                     <button *ngIf="!this.returnIsGameToBeJoined()" (click) = "this.createPopUp()" class="button"><i class="fa fa-refresh"></i>Mettre à jour la situation</button>
-                <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
-            </p>
+                    <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
             <div *ngIf="this.getGameStatus()===1" class="bonus-fill"> </div>
 </body>
 </div>
