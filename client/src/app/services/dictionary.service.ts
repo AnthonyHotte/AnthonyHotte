@@ -24,13 +24,6 @@ export class DictionaryService {
                 dict.words.push(word);
             }
             this.dictionaryList.push(dict);
-            /*
-            this.dictionaryList[this.indexDictionary].title = res.title;
-            this.dictionaryList[this.indexDictionary].description = res.description;
-            this.dictionaryList[this.indexDictionary].words = [];
-            for (const word of res.words) {
-                this.dictionaryList[this.indexDictionary].words.push(word);
-            }*/
         });
     }
 }

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Dictionary } from '@app/classes/dictionary';
 import { CommunicationService } from '@app/services/communication.service';
+import { DictionaryService } from '@app/services/dictionary.service';
 import { Observable } from 'rxjs';
 
 import { AdminPageComponent } from './admin-page.component';
@@ -9,6 +10,7 @@ describe('AdminPageComponent', () => {
     let component: AdminPageComponent;
     let fixture: ComponentFixture<AdminPageComponent>;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
+    let dictionaryServiceSpy: jasmine.SpyObj<DictionaryService>;
 
     beforeEach(async () => {
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', [
@@ -19,15 +21,28 @@ describe('AdminPageComponent', () => {
             'getFullDictionary',
         ]);
         communicationServiceSpy.getDictionaryList.and.returnValue(new Observable());
+        dictionaryServiceSpy = jasmine.createSpyObj('DictionaryService', ['getDictionary']);
+        dictionaryServiceSpy.dictionaryList = [];
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t1', 'd1'));
+        dictionaryServiceSpy.dictionaryList[0].title = 't1';
+        dictionaryServiceSpy.dictionaryList[0].description = 'd1';
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t2', 'd2'));
+        dictionaryServiceSpy.dictionaryList[1].title = 't2';
+        dictionaryServiceSpy.dictionaryList[1].description = 'd2';
+        dictionaryServiceSpy.indexDictionary = 0;
         await TestBed.configureTestingModule({
             declarations: [AdminPageComponent],
-            providers: [{ provide: CommunicationService, useValue: communicationServiceSpy }],
+            providers: [
+                { provide: CommunicationService, useValue: communicationServiceSpy },
+                { provide: DictionaryService, useValue: dictionaryServiceSpy },
+            ],
         }).compileComponents();
     });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(AdminPageComponent);
         component = fixture.componentInstance;
+        component.dictionaryNumberInput = 0;
         fixture.detectChanges();
     });
 
@@ -40,8 +55,13 @@ describe('AdminPageComponent', () => {
     });
     it('validateNumber should call getFullDictionary', () => {
         component.isDownloadMode = true;
-        component.dictionaryList = [new Dictionary('t1', 'd1'), new Dictionary('t2', 'd2')];
-        component.dictionaryNumberInput = 0;
+        dictionaryServiceSpy.dictionaryList = [];
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t1', 'd1'));
+        dictionaryServiceSpy.dictionaryList[0].title = 't1';
+        dictionaryServiceSpy.dictionaryList[0].description = 'd1';
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t2', 'd2'));
+        dictionaryServiceSpy.dictionaryList[1].title = 't2';
+        dictionaryServiceSpy.dictionaryList[1].description = 'd2';
         const spy = spyOn(component, 'getFullDictionary');
         component.validateNumber();
         expect(spy).toHaveBeenCalled();
@@ -55,15 +75,21 @@ describe('AdminPageComponent', () => {
     });
     it('validateNumber should send error message when dictionary list empty', () => {
         component.isDownloadMode = false;
-        component.dictionaryList = [];
+        dictionaryServiceSpy.dictionaryList = [];
         component.dictionaryNumberInput = 2;
         component.showNumberMessageError = false;
         component.validateNumber();
         expect(component.showNumberMessageError).toBe(true);
     });
-    it('validateNumber should send error message when dictionary list empty', () => {
+    it('validateNumber should call send delete', () => {
+        dictionaryServiceSpy.dictionaryList = [];
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t1', 'd1'));
+        dictionaryServiceSpy.dictionaryList[0].title = 't1';
+        dictionaryServiceSpy.dictionaryList[0].description = 'd1';
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t2', 'd2'));
+        dictionaryServiceSpy.dictionaryList[1].title = 't2';
+        dictionaryServiceSpy.dictionaryList[1].description = 'd2';
         component.isDownloadMode = false;
-        component.dictionaryList = [new Dictionary('t1', 'd1'), new Dictionary('t2', 'd2')];
         component.dictionaryNumberInput = 1;
         const spy = spyOn(component, 'sendDeleteDictionaryServer');
         component.isDeleteMode = true;
@@ -71,8 +97,14 @@ describe('AdminPageComponent', () => {
         expect(spy).toHaveBeenCalled();
     });
     it('validateNumber should switch showNewNameInput to true', () => {
+        dictionaryServiceSpy.dictionaryList = [];
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t1', 'd1'));
+        dictionaryServiceSpy.dictionaryList[0].title = 't1';
+        dictionaryServiceSpy.dictionaryList[0].description = 'd1';
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t2', 'd2'));
+        dictionaryServiceSpy.dictionaryList[1].title = 't2';
+        dictionaryServiceSpy.dictionaryList[1].description = 'd2';
         component.isDownloadMode = false;
-        component.dictionaryList = [new Dictionary('t1', 'd1'), new Dictionary('t2', 'd2')];
         component.dictionaryNumberInput = 1;
         component.isDeleteMode = false;
         component.showNewNameInput = false;
@@ -85,16 +117,18 @@ describe('AdminPageComponent', () => {
         expect(component.showAddJVnameButton).toBe(false);
     });
     it('validateNewName should show error message when name existe', () => {
+        dictionaryServiceSpy.dictionaryList = [];
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t1', 'd1'));
+        dictionaryServiceSpy.dictionaryList[0].title = 't1';
+        dictionaryServiceSpy.dictionaryList[0].description = 'd1';
         component.showAddJVnameButton = true;
-        component.dictionaryList = [new Dictionary('t1', 'd1'), new Dictionary('t2', 'd2')];
-        component.newNameInput = 't2';
+        component.newNameInput = 't1';
         component.showNewNameMessageError = false;
         component.validateNewName();
         expect(component.showNewNameMessageError).toBe(true);
     });
     it('validateNewName should not show error message when name does not existe', () => {
         component.showAddJVnameButton = true;
-        component.dictionaryList = [new Dictionary('t1', 'd1'), new Dictionary('t2', 'd2')];
         component.newNameInput = 't4';
         component.showNewNameMessageError = false;
         component.validateNewName();
@@ -200,20 +234,28 @@ describe('AdminPageComponent', () => {
         expect(component.isToDeleteJV).toBe(true);
     });
     it('reinitialize should reinitialize propely', () => {
-        component.dictionaryList = [new Dictionary('t1', 'd1'), new Dictionary('t2', 'd2')];
         component.nameJV = [
             ['j1', 'j2', 'j3'],
             ['j1', 'j2', 'j3'],
         ];
+        dictionaryServiceSpy.dictionaryList = [];
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t1', 'd1'));
+        dictionaryServiceSpy.dictionaryList[0].title = 't1';
+        dictionaryServiceSpy.dictionaryList[0].description = 'd1';
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t2', 'd2'));
+        dictionaryServiceSpy.dictionaryList[1].title = 't2';
+        dictionaryServiceSpy.dictionaryList[1].description = 'd2';
         communicationServiceSpy.reinitialiseDictionary.and.returnValue(new Observable());
         component.reinitialize();
-        expect(component.dictionaryList.length).toEqual(1);
+        expect(dictionaryServiceSpy.dictionaryList.length).toEqual(1);
     });
     it('saveDictionaryModificatione should put showNewDescriptionInput to false', () => {
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t1', 'd1'));
+        dictionaryServiceSpy.dictionaryList[0].title = 't1';
+        dictionaryServiceSpy.dictionaryList[0].description = 'd1';
         component.showNewDescriptionInput = true;
         component.dictionaryNumberInput = 0;
         communicationServiceSpy.sendDictionaryNameChanged.and.returnValue(new Observable());
-        component.dictionaryList = [new Dictionary('t1', 'd1'), new Dictionary('t2', 'd2')];
         component.saveDictionaryModification();
         expect(component.showNewDescriptionInput).toBe(false);
     });

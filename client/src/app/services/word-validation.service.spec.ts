@@ -16,8 +16,9 @@ fdescribe('WordValidationService', () => {
         waitForAsync(() => {
             dictionaryServiceSpy = jasmine.createSpyObj('DictionaryService', ['getDictionary']);
             dictionaryServiceSpy.indexDictionary = 0;
-            dictionaryServiceSpy.dictionary = new Dictionary('base', 'baseDict');
-            dictionaryServiceSpy.dictionary.content = [
+            dictionaryServiceSpy.dictionaryList = [];
+            dictionaryServiceSpy.dictionaryList.push(new Dictionary('base', 'baseDict'));
+            dictionaryServiceSpy.dictionaryList[0].words = [
                 'aa',
                 'aalenien',
                 'aalenienne',
@@ -99,10 +100,10 @@ fdescribe('WordValidationService', () => {
         expect(service).toBeTruthy();
     });
     it('should have a dictionary lenght of at least one', () => {
-        expect(dictionaryServiceSpy.dictionary.content.length).toBeGreaterThanOrEqual(1);
+        expect(dictionaryServiceSpy.dictionaryList[0].words.length).toBeGreaterThanOrEqual(1);
     });
     it('should have a word in the dictionary', () => {
-        expect(dictionaryServiceSpy.dictionary.content.length).toBeGreaterThanOrEqual(1);
+        expect(dictionaryServiceSpy.dictionaryList[0].words.length).toBeGreaterThanOrEqual(1);
     });
     it('isWordValid should return true with aa', () => {
         const isValid = service.isWordValid('aa');
