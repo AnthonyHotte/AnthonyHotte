@@ -154,7 +154,7 @@ export class PlaceLettersService {
             this.objectivesService.pointsLastWord = this.wordValidator.pointsForLastWord;
             this.objectivesService.lastLettersAdded = this.gameState.lastLettersAdded;
             for (const obj of this.letterService.players[this.timeManager.turn].objectives) {
-                if (this.objectivesService.objVerif(obj)) {
+                if ((this.objectivesService.objectiveVerif.get(obj) as () => boolean).apply(this.objectivesService)) {
                     if (!this.letterService.objCompleted.includes(obj)) {
                         this.letterService.players[this.timeManager.turn].score += this.objectivesService.objectivePoint.get(obj) as number;
                         this.letterService.objCompleted.push(obj);
