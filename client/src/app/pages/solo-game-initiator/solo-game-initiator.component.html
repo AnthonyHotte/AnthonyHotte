@@ -23,7 +23,6 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         <input [(ngModel)]="temporaryName" type="string" />
                         <p>Nom du joueur: {{ this.name }}</p>
                         <p *ngIf="getGameStatus() === 2">{{ "Nom de l'adversaire: " + opponentName }}</p>
-                        <button *ngIf="getGameStatus() === 2 || getGameStatus() === 1" class="button" (click)="setName()">Validation de l'identifiant</button>
                     </fieldset>
                 </div>
                 <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2">
@@ -54,10 +53,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <button *ngIf="nameIsValid && getGameStatus() === 1 && this.returnIsGameToBeJoined() && this.verifyNameIsNotSameAsRoomCreator()" (click)="joinGame()">
                         Démarrer la partie!
                     </button>
-                    <button *ngIf="!this.returnIsGameToBeJoined()" (click) = "this.createPopUp()">Mettre à jour la situation</button>
-                </p>
-                <button class="button" routerLink="/selection">Revenir en arrière</button>
-            </article>
-        </div>
-    </div>
+                    <button *ngIf="!this.returnIsGameToBeJoined()" (click) = "this.createPopUp()" class="button"><i class="fa fa-refresh"></i>Mettre à jour la situation</button>
+                <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
+            </p>
 </body>
