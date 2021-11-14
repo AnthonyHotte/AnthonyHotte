@@ -2,7 +2,9 @@
 https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%20let%20a%20user%20select%20only%20one,group%20can%20be%20selected%20at%20the%20same%20time.-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="preventer">
-    <h1 class="header">Bienvenue dans le mode {{ getGameStatusInString() }}!</h1>
+<h1 class="header">Bienvenue dans le mode {{ getGameStatusInString() }}!</h1>
+<div class="fill-top"></div>
+<body class="body">
         <div class="image-rules">
             <h2 class="header2">Entrez votre identifiant. Les règles à suivre:</h2>
             <article>
@@ -17,8 +19,8 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             </article>
             <label class="label">Nom du joueur pour la partie : {{ this.name }}</label>
             </div>
-                <div>
-                    <fieldset class="image-names">
+                <div class="image-names">
+                    <fieldset class="fielset">
                         <label class="label"> {{ 'Validité du nom: ' + nameValidityInChar() }}</label>
                         <p><label class="label"> Entrez votre nom : </label> 
                             <input [(ngModel)]="temporaryName" type="string" class="input"/> 
@@ -27,8 +29,8 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         <label class="label" *ngIf="getGameStatus() === 2">{{ "Nom de l'adversaire: " + opponentName }}</label>
                     </fieldset>
                 </div>
-                <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2">
-                    <fieldset class="image-bonus">
+                <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2" class="image-bonus">
+                    <fieldset class="fieldset">
                         <legend class="legend">Bonus aléatoire</legend>
                         <div class="switch-field">
                             <p>
@@ -40,27 +42,33 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         </div>
                     </fieldset>
                 </div>
-                <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2">
-                    <fieldset class="image-time">
-                        <legend class="legend">Choisissez le temps par tour de jeu</legend>
-                        <form oninput="tempsDeJeu = Math.max(parseInt(barre.value),parseInt(increment.value))">
-                            <input [(ngModel)]="playTime" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" class="slider"/>
-                            <label class="label"><output name="temps" for="tempsDeJeu" style="color:black">{{ playTime }}</output> secondes par tour de jeu </label>
-                        </form>
+                <div class="image-time">
+                    <fieldset class="fieldset">
+                        <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2">
+                            <legend class="legend">Choisissez le temps par tour de jeu</legend>
+                            <form oninput="tempsDeJeu = Math.max(parseInt(barre.value),parseInt(increment.value))">
+                                <input [(ngModel)]="playTime" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" class="slider"/>
+                                <label class="label"><output name="temps" for="tempsDeJeu" style="color:black">{{ playTime }}</output> secondes par tour de jeu </label>
+                            </form>
+                        </div>
                     </fieldset>
                 </div>
-                <p>
-                    <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()" class="button"><i class="fa fa-play"></i>
-                        Démarrer la partie {{ getGameStatusInString() }}!
-                    </button>
-                    <button *ngIf="nameIsValid && getGameStatus() === 0" (click)="startNewGame()" routerLink="/waiting" class="button"><i class="fa fa-play"></i>
-                        Démarrer la partie!
-                    </button>
-                    <button *ngIf="nameIsValid && getGameStatus() === 1 && this.returnIsGameToBeJoined() && this.verifyNameIsNotSameAsRoomCreator()" (click)="joinGame()" class="button">
-                        <i class="fa fa-play"></i>Joindre la partie!
-                    </button>
-                    <button *ngIf="!this.returnIsGameToBeJoined()" (click) = "this.createPopUp()" class="button"><i class="fa fa-refresh"></i>Mettre à jour la situation</button>
-                    <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
-            <div *ngIf="this.getGameStatus()===1" class="bonus-fill"> </div>
+                <div class="image-button">
+                    <fieldset class="fieldset">
+                        <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
+                        <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()" class="button"><i class="fa fa-play"></i>
+                            Démarrer la partie {{ getGameStatusInString() }}!
+                        </button>
+                        <button *ngIf="nameIsValid && getGameStatus() === 0" (click)="startNewGame()" routerLink="/waiting" class="button"><i class="fa fa-play"></i>
+                            Démarrer la partie!
+                        </button>
+                        <button *ngIf="nameIsValid && getGameStatus() === 1 && this.returnIsGameToBeJoined() && this.verifyNameIsNotSameAsRoomCreator()" (click)="joinGame()" class="button">
+                            <i class="fa fa-play"></i>Joindre la partie!
+                        </button>
+                        <button *ngIf="!this.returnIsGameToBeJoined()" (click) = "this.createPopUp()" class="button"><i class="fa fa-refresh"></i>Mettre à jour la situation</button>
+                    <div *ngIf="this.getGameStatus()===1" class="bonus-fill"> </div>
+                    </fieldset>
+                </div>
+    <footer class="footer"> Appreciez votre partie SVP! </footer>
 </body>
 </div>

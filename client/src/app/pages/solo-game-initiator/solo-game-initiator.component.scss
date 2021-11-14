@@ -1,5 +1,10 @@
 .preventer {
     overflow: hidden;
+    max-height: 100vw;
+    max-height: 100vh;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(90deg, rgba(255, 0, 119, 0.384), rgb(0, 128, 75));
 }
 #waiting {
     display:none;
@@ -12,6 +17,7 @@
     display: block;
     overflow: hidden;
     overscroll-behavior: contain;
+    max-height: 100vh;
 }
 .header {
     text-align: center;
@@ -31,8 +37,11 @@
 .button {
     background-color:gold;
     color: red;
-    font-size: 20px;
+    font-size: 24px;
     border-radius: 16px;
+    left: 30vw;
+    margin-left: 6vw;
+    margin-right: 6vw;
 }
 .button:hover {
     background-color: red;
@@ -45,22 +54,29 @@
     width: 300px;
     position: relative;
     left: 40%;
+    width: 26vw;
+    max-width: 26vw;
 }
 .rules{
     background-color: red;
-    width: 300px;
+    width: 26vw;
     text-align: center;
     position: relative;
     left: 40%;
+    max-width: 26vw;
 }
 .header3 {
     color: gold;
 }
 .image-rules {
     background-image: url(https://www.thebluediamondgallery.com/wooden-tile/images/rules.jpg);
+    max-height: 100vh;
+    max-width: 100vw;
 }
 .image-names {
     background-image: url(https://th.bing.com/th/id/R.de758bf22942691bd54d0d6e840d800a?rik=GuYS%2bwcz7LsQTA&riu=http%3a%2f%2f3.bp.blogspot.com%2f-f4BnaQp0TtI%2fUBvioJrWXUI%2fAAAAAAAADMw%2fBO9aG5Gbo_0%2fs1600%2fa-640-whats-in-a-name.jpg&ehk=S4c4DBDD9d3akxLO6F60wA%2f%2buJWMuK5JVm%2bLt6ZgEk0%3d&risl=&pid=ImgRaw&r=0);
+    max-height: 100vh;
+    max-width: 100vw;
 }
 .legend {
     color:white;
@@ -68,12 +84,12 @@
 
 .image-bonus {
     background-image: url(https://th.bing.com/th/id/OIP.wWIcgDUIpYxDALID97fdJwHaE7?pid=ImgDet&rs=1);
-    color: white;
+    background-color: yellow;
 }
 
 .image-time {
     background-image: linear-gradient(180deg, red, blue);
-    color:white;
+    background-color:pink;
 }
 
 .input {
@@ -90,7 +106,25 @@ input, select, textarea{
 
 .bonus-fill {
     background-image: url(https://th.bing.com/th/id/R.ce056d77e9923e913d76c6f52b3ac37a?rik=lv8eKJLBXMSCmg&riu=http%3a%2f%2ficons.iconarchive.com%2ficons%2fwackypixel%2fdogs-n-puppies%2f128%2fPuppy-1-icon.png&ehk=clOQsCCbWQVoTraAW0L8vQ5EfPR3VsFl4EbckG7%2foE0%3d&risl=&pid=ImgRaw&r=0);
-    height: 100px;
+    height: 100vh;
+}
+.image-button{
+    border: none;
+    background-image: linear-gradient(180deg, rgb(81, 0, 128), rgb(128, 0, 0));
+}
+.fieldset {
+    border:transparent;
+}
+.fill-top{
+    background-image: linear-gradient(180deg, red, blue);
+    width: 100vw;
+    height: 5vh;
+}
+.footer{
+    background-color: black;
+    color: white;
+    font-family: sans-serif;
+    font-size: 16px;
 }
 // radio code customization
 // source : https://thestizmedia.com/radio-buttons-as-toggle-buttons-with-css/
