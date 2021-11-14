@@ -61,7 +61,7 @@ export class SoloGameInitiatorComponent {
         this.name = 'Joueur';
         this.assignOpponentName();
         this.idNameOpponent = 0;
-        this.nameIsValid = true;
+        this.initiateIsNameValid();
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
         this.messageService.gameStartingInfoSubscribe();
@@ -72,6 +72,14 @@ export class SoloGameInitiatorComponent {
         this.socketService.handleDisconnect();
     }
 
+    initiateIsNameValid() {
+        if (this.getGameStatus() === 1) {
+            this.nameIsValid = false;
+        } else {
+            this.nameIsValid = true;
+        }
+    }
+
     joinGame() {
         this.setName();
         this.timeManager.timePerTurn = parseInt(this.socketService.gameLists[this.indexWaitingRoomService.getIndex()][2], 10); // timePerTurn
@@ -79,8 +87,6 @@ export class SoloGameInitiatorComponent {
         this.socketService.sendJoinGameInfo(this.name, this.indexWaitingRoomService.getIndex());
     }
     startNewGame() {
-        // eslint-disable-next-line no-console
-        console.log('whattttt');
         this.dictionaryService.getDictionary();
         this.startingNewGame = true;
         this.setName();
@@ -222,8 +228,8 @@ export class SoloGameInitiatorComponent {
     }
     async validateDictionaryNumber() {
         this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
+            this.dictionaryList = [];
             result.forEach((res) => {
-                this.dictionaryList = [];
                 this.dictionaryList.push(res);
             });
         });

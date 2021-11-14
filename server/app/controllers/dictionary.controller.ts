@@ -4,6 +4,7 @@ import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
 
 const HTTP_STATUS_CREATED = 201;
+const HTTP_STATUS_OK = 200;
 @Service()
 export class DictionaryController {
     router: Router;
@@ -49,8 +50,9 @@ export class DictionaryController {
          */
         this.router.get('/fulldictionary', (req: Request, res: Response) => {
             // Send the request to the service and send the response
-            const index = req.query.indexNumber;
-            res.json(this.dictionaryService.dictionaryList[parseInt(index as string, 10)]);
+            const index = parseInt(req.query.indexNumber as string, 10);
+            this.dictionaryService.indexDictionaryInUse = index;
+            res.json(this.dictionaryService.dictionaryList[index]);
         });
         /**
          * @swagger
@@ -76,7 +78,7 @@ export class DictionaryController {
          */
         this.router.post('/sendnamechange', (req: Request, res: Response) => {
             this.dictionaryService.modifyDictionary(req.body.index, req.body.dictionary);
-            res.sendStatus(HTTP_STATUS_CREATED);
+            res.sendStatus(HTTP_STATUS_OK);
         });
 
         /**
@@ -102,7 +104,7 @@ export class DictionaryController {
          */
         this.router.post('/senddeletedictionary', (req: Request, res: Response) => {
             this.dictionaryService.deleteDictionary(req.body.index);
-            res.sendStatus(HTTP_STATUS_CREATED);
+            res.sendStatus(HTTP_STATUS_OK);
         });
 
         /**
@@ -154,7 +156,7 @@ export class DictionaryController {
          */
         this.router.post('/sendreinitialise', (req: Request, res: Response) => {
             this.dictionaryService.reinitialize();
-            res.sendStatus(HTTP_STATUS_CREATED);
+            res.sendStatus(HTTP_STATUS_OK);
         });
     }
 }
