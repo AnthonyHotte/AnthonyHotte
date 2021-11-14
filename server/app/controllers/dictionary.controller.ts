@@ -103,7 +103,7 @@ export class DictionaryController {
          *         description: Created
          */
         this.router.post('/senddeletedictionary', (req: Request, res: Response) => {
-            this.dictionaryService.deleteDictionary(req.body.index);
+            this.dictionaryService.deleteDictionary(req.body.indexNumber);
             res.sendStatus(HTTP_STATUS_OK);
         });
 
