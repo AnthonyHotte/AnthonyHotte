@@ -16,12 +16,12 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 <h3 *ngIf="getGameStatus() === 1" class="header3"><strong>6 -</strong> Ne pas choisir le même nom que celui du créateur : {{returnNameOfCreator()}}</h3>
                 </div>
             </article>
-            <label class="label">Nom du joueur pour la partie: {{ this.name }}</label>
+            <label class="label">Nom du joueur pour la partie : {{ this.name }}</label>
             </div>
                 <div>
                     <fieldset class="image-names">
                         <label class="label"> {{ 'Validité du nom: ' + nameValidityInChar() }}</label>
-                        <p><label class="label"> Entrez votre nom: </label> 
+                        <p><label class="label"> Entrez votre nom : </label> 
                             <input [(ngModel)]="temporaryName" type="string" class="input"/> 
                         </p>
                         <p><button class="button" (click)="setName()"><i class="fa fa-check"></i>Validation de l'identifiant</button></p>
@@ -63,5 +63,6 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <button *ngIf="!this.returnIsGameToBeJoined()" (click) = "this.createPopUp()" class="button"><i class="fa fa-refresh"></i>Mettre à jour la situation</button>
                 <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
             </p>
+            <div *ngIf="this.getGameStatus()===1" class="bonus-fill"> </div>
 </body>
 </div>

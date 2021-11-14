@@ -39,10 +39,10 @@ export class SoloGameInitiatorComponent {
         private dialog: MatDialog,
     ) {
         this.temporaryName = 'Joueur';
-        this.name = 'Joueur';
+        this.name = 'Appuyez sur la validation pour valider votre nom';
         this.assignOpponentName();
         this.idNameOpponent = 0;
-        this.nameIsValid = true;
+        this.nameIsValid = false;
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
         this.messageService.gameStartingInfoSubscribe();
@@ -157,6 +157,9 @@ export class SoloGameInitiatorComponent {
             this.name = this.temporaryName;
         } else {
             this.name = 'Joueur';
+            if (this.getGameStatus() === 1) {
+                this.name = 'Entrez votre nom de nouveau, vous aviez fait une erreur...';
+            }
         }
         this.letterService.players[0].name = this.name;
     }
