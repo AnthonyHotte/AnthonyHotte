@@ -16,6 +16,7 @@ export class GameStateService {
     lastLettersAddedJoker: string;
     playerUsedAllLetters: boolean;
     isBoardEmpty: boolean;
+    wordsCreatedLastTurn: string[];
 
     constructor(
         private readonly wordValidator: WordValidationService,
@@ -24,6 +25,7 @@ export class GameStateService {
         private scoreCalculator: ScoreCalculatorService,
     ) {
         this.lettersOnBoard = [];
+        this.wordsCreatedLastTurn = [];
         this.isBoardEmpty = true;
         this.lastLettersAddedJoker = '';
         for (let i = 0; i < constants.NUMBEROFCASE; i++) {
@@ -57,6 +59,7 @@ export class GameStateService {
     async validateWordCreatedByNewLetters(onServer: boolean): Promise<boolean> {
         this.wordValidator.indexLastLetters = this.indexLastLetters;
         this.wordValidator.pointsForLastWord = 0;
+        this.wordValidator.wordsCreatedLastTurn = [];
         if (this.orientationOfLastWord === 'h') {
             if (
                 !(await this.wordValidator.validateHorizontalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard, onServer))
@@ -96,6 +99,7 @@ export class GameStateService {
                 }
             }
         }
+        this.wordsCreatedLastTurn = this.wordValidator.wordsCreatedLastTurn;
         return true;
     }
 

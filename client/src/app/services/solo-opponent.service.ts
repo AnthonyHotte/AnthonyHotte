@@ -6,6 +6,7 @@ import { FinishGameService } from './finish-game.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from './place-letters.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
+import { ObjectivesService } from './objectives.service';
 
 @Injectable({
     providedIn: 'root',
@@ -18,6 +19,7 @@ export class SoloOpponentService {
         public soloOpponent2: SoloOpponent2Service,
         public finishGameService: FinishGameService,
         public placeLettersService: PlaceLettersService,
+        public objectiveService: ObjectivesService,
     ) {
         this.letters.players[1].addLetters(MAXLETTERINHAND);
     }
@@ -80,6 +82,11 @@ export class SoloOpponentService {
     }
 
     endTurn(reason: string) {
+        if (reason === 'place') {
+            this.objectiveService.consectivePlacementPlayers[this.timeManager.turn]++;
+        } else {
+            this.objectiveService.consectivePlacementPlayers[this.timeManager.turn] = 0;
+        }
         this.timeManager.endTurn(reason);
         if (this.letters.players[this.timeManager.turn].allLettersInHand.length === 0) {
             this.finishGameService.isGameFinished = true;
