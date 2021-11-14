@@ -13,6 +13,9 @@
 
 .title {
     text-align: center;
+    background-color: rgb(104, 20, 20);
+    color: white;
+    font-family: cursive;
 }
 #DisplayZone {
     height: 400px;
@@ -22,14 +25,18 @@
     border-style: groove;
     margin-bottom: 10px;
     overflow: scroll;
+    background-color:white;
+    border-radius: 16px;
 }
 
 .PlayerMessage {
     color: blue;
+    font-size: 20px;
 }
 
 .AlertMessage {
     color: red;
+    font-size:20px;
 }
 
 .ButtonCommandActivated {
@@ -46,8 +53,9 @@
 
 .ButtonMessageActivated {
     font-size: medium;
-    background-color: black;
+    background-color: rgb(167, 144, 144);
     color: white;
+    
 }
 
 .ButtonCommandReleased {
@@ -58,11 +66,33 @@
 
 .Joueur {
     color: green;
+    font-size: 20px;
 }
 
 .Adversaire {
     color: red;
+    font-size: 20px;
 }
 .Systeme {
     color: blue;
+    font-size: 20px;
+}
+.input{
+    font-size: 30px;
+    color: black;
+    background-color: yellow;
+    border:double;
+    border-radius: 16px;
+    text-align: center;
+}
+.form{
+    text-align: center;
+}
+.label{
+    color:black;
+    background-color: blanchedalmond;
+    border-radius: 16px;
+    border: double;
+    font-size: 24px;
+    text-align: center;
 }

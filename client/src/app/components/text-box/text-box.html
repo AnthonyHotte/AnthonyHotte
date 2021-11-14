@@ -1,5 +1,8 @@
+<!-- Sources : https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ (en IEEE plus tard)
+https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%20let%20a%20user%20select%20only%20one,group%20can%20be%20selected%20at%20the%20same%20time.-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="textBox">
-    <h1 class="title">Boite de communication</h1>
+    <h1 class="title"><i class="fa fa-mail-forward"></i><i class="fa fa-mail-reply"></i>Boite de communication</h1>
 </div>
 <div id="DisplayZone">
     <div *ngFor="let word of this.input.inputs">
@@ -9,7 +12,7 @@
 <div *ngIf="input.character">
     <p class="AlertMessage">Votre commande ou message est trop longue</p>
 </div>
-<form #myInput="ngForm">
+<form #myInput="ngForm" class="form">
     <input
         type="text"
         autocomplete="off"
@@ -17,6 +20,12 @@
         name="commandsAndMessages"
         [(ngModel)]="this.word"
         (keyup.enter)="this.buttonDetect()"
+        class="input"
     />
 </form>
-
+<p></p>
+<p></p>
+<p><label class="label">Envoyez votre commande avec un</label></p>
+<p><label class="label">point d'exclamation(!), ou votre</label></p>
+<p><label class="label">message directement, à l'aide de</label></p>
+<p><label class="label">la touche d'entrée.</label></p>
