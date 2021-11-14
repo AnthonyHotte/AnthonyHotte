@@ -9,8 +9,13 @@
     font-size: 16px;
     border-radius: 16px;
     box-shadow: 0 5px blue;
+    margin-left: 2vw;
+    margin-right: 2vw;
 }
 .button:hover {
     color: white;
     background-color: blue;
+}
+.fieldset{
+    border:transparent;
 }
