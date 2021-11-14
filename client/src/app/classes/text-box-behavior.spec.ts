@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MAXLETTERINHAND } from '@app/constants';
 import { MessagePlayer } from '@app/message';
@@ -10,30 +11,24 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
 import { PlayerLetterHand } from './player-letter-hand';
 import { TextBox } from './text-box-behavior';
 
-describe('TextBox', () => {
+fdescribe('TextBox', () => {
     let textBox: TextBox;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let placerLetterServiceSpy: jasmine.SpyObj<PlaceLettersService>;
     let timerTurnManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let finishGameServiceSpy: jasmine.SpyObj<FinishGameService>;
     let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
+    let routerSpy: jasmine.SpyObj<Router>;
     beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
-        }).compileComponents();
-    });
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({});
-        textBox = TestBed.inject(TextBox);
-        letterBankServiceSpy = TestBed.inject(LetterBankService) as jasmine.SpyObj<LetterBankService>;
+        routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+        letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
         letterBankServiceSpy.letterBank = [];
         const numberLetterInBank = 13;
         for (let i = 0; i < numberLetterInBank; i++) {
             letterBankServiceSpy.letterBank.push({ letter: 'A', quantity: 9, point: 1 });
         }
-        letterServiceSpy = TestBed.inject(LetterService) as jasmine.SpyObj<LetterService>;
-        placerLetterServiceSpy = TestBed.inject(PlaceLettersService) as jasmine.SpyObj<PlaceLettersService>;
+        letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
+        placerLetterServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['verifyTileNotOutOfBound']);
         const player1 = new PlayerLetterHand(letterBankServiceSpy);
         player1.allLettersInHand = [];
         for (let i = 0; i < MAXLETTERINHAND; i++) {
@@ -45,9 +40,25 @@ describe('TextBox', () => {
             player2.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
         }
         letterServiceSpy.players = [player1, player2];
-        timerTurnManagerServiceSpy = TestBed.inject(TimerTurnManagerService) as jasmine.SpyObj<TimerTurnManagerService>;
+        timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
         timerTurnManagerServiceSpy.turn = 0;
-        finishGameServiceSpy = TestBed.inject(FinishGameService) as jasmine.SpyObj<FinishGameService>;
+        finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
+        await TestBed.configureTestingModule({
+            imports: [RouterTestingModule],
+            providers: [
+                { provide: PlaceLettersService, useValue: placerLetterServiceSpy },
+                { provide: LetterService, useValue: letterBankServiceSpy },
+                { provide: LetterBankService, useValue: letterBankServiceSpy },
+                { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
+                { provide: FinishGameService, useValue: finishGameServiceSpy },
+                { provide: Router, useValue: routerSpy },
+            ],
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+        textBox = TestBed.inject(TextBox);
     });
 
     it('should create an instance', () => {
