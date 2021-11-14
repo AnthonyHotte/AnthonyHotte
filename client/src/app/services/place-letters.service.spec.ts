@@ -1,4 +1,4 @@
-import { fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
 import { GameStateService } from '@app/services/game-state.service';
@@ -9,7 +9,8 @@ import { PlaceLetterClickService } from './place-letter-click.service';
 import { PlaceLettersService } from './place-letters.service';
 import { SocketService } from './socket.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
-describe('PlaceLettersService', () => {
+import { WordValidationService } from './word-validation.service';
+fdescribe('PlaceLettersService', () => {
     let service: PlaceLettersService;
     let gameStateServiceSpy: GameStateService;
     let gridServiceSpy: GridService;
@@ -18,27 +19,45 @@ describe('PlaceLettersService', () => {
     let timeManagerSpy: TimerTurnManagerService;
     let placeLetterClickServiceSpy: PlaceLetterClickService;
     let socketSpy: SocketService;
+    let wordValidationServiceSpy: WordValidationService;
+
+    beforeEach(
+        waitForAsync(() => {
+            wordValidationServiceSpy = jasmine.createSpyObj('WordValidationService', ['isWordValid']);
+            gameStateServiceSpy = jasmine.createSpyObj('GameStateService', ['placeLetter', 'validateWordCreatedByNewLetters', 'removeLetter']);
+            gridServiceSpy = jasmine.createSpyObj('GridService', ['drawGrid', 'drawLetterwithpositionstring', 'drawtilebackground']);
+            letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
+            letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+            timeManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
+            placeLetterClickServiceSpy = jasmine.createSpyObj('PlaceLetterClickService', ['placeLetter']);
+            socketSpy = jasmine.createSpyObj('SocketService', ['getMessageObservable']);
+            timeManagerSpy.turn = 0;
+            const player1 = new PlayerLetterHand(letterBankServiceSpy);
+            for (let i = 0; i < MAXLETTERINHAND; i++) {
+                player1.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+            }
+            const player2 = new PlayerLetterHand(letterBankServiceSpy);
+            for (let i = 0; i < MAXLETTERINHAND; i++) {
+                player2.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
+            }
+            letterServiceSpy.players = [player1, player2];
+            TestBed.configureTestingModule({
+                providers: [
+                    { provide: WordValidationService, useValue: wordValidationServiceSpy },
+                    { provide: GameStateService, useValue: gameStateServiceSpy },
+                    { provide: LetterService, useValue: letterServiceSpy },
+                    { provide: PlaceLetterClickService, useValue: placeLetterClickServiceSpy },
+                    { provide: letterBankServiceSpy, useValue: LetterBankService },
+                    { provide: TimerTurnManagerService, useValue: timeManagerSpy },
+                    { provide: SocketService, useValue: socketSpy },
+                    { provide: GridService, useValue: gridServiceSpy },
+                ],
+            }).compileComponents();
+        }),
+    );
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
         service = TestBed.inject(PlaceLettersService);
-        gameStateServiceSpy = TestBed.inject(GameStateService) as jasmine.SpyObj<GameStateService>;
-        gridServiceSpy = TestBed.inject(GridService) as jasmine.SpyObj<GridService>;
-        letterServiceSpy = TestBed.inject(LetterService) as jasmine.SpyObj<LetterService>;
-        letterBankServiceSpy = TestBed.inject(LetterBankService) as jasmine.SpyObj<LetterBankService>;
-        timeManagerSpy = TestBed.inject(TimerTurnManagerService) as jasmine.SpyObj<TimerTurnManagerService>;
-        placeLetterClickServiceSpy = TestBed.inject(PlaceLetterClickService) as jasmine.SpyObj<PlaceLetterClickService>;
-        socketSpy = TestBed.inject(SocketService) as jasmine.SpyObj<SocketService>;
-        timeManagerSpy.turn = 0;
-        const player1 = new PlayerLetterHand(letterBankServiceSpy);
-        for (let i = 0; i < MAXLETTERINHAND; i++) {
-            player1.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
-        }
-        const player2 = new PlayerLetterHand(letterBankServiceSpy);
-        for (let i = 0; i < MAXLETTERINHAND; i++) {
-            player2.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
-        }
-        letterServiceSpy.players = [player1, player2];
     });
 
     it('should be created', () => {
@@ -75,46 +94,39 @@ describe('PlaceLettersService', () => {
         service.orientation = 'h';
         service.wordToPlace = 'allo';
         service.lettersToPlace = 'allo';
-        const mySpy = spyOn(gameStateServiceSpy, 'placeLetter');
         service.placeWordGameState();
-        expect(mySpy).toHaveBeenCalled();
+        expect(gameStateServiceSpy.placeLetter).toHaveBeenCalled();
     });
 
     // drawword
     it('drawword with h orientation should call placeletter', () => {
         service.orientation = 'h';
         service.wordToPlace = 'allo';
-        const mySpy = spyOn(gridServiceSpy, 'drawLetterwithpositionstring');
         service.drawWord();
-        expect(mySpy).toHaveBeenCalled();
+        expect(gridServiceSpy.drawLetterwithpositionstring).toHaveBeenCalled();
     });
 
     it('drawword with v orientation should call placeletter', () => {
         service.orientation = 'v';
         service.wordToPlace = 'allo';
-        const mySpy = spyOn(gridServiceSpy, 'drawLetterwithpositionstring');
         service.drawWord();
-        expect(mySpy).toHaveBeenCalled();
+        expect(gridServiceSpy.drawLetterwithpositionstring).toHaveBeenCalled();
     });
 
     // validateWordPlaced
-    it('validateWordPlaced should return false when validateWordCreatedByNewLetters is false', fakeAsync(() => {
-        const promise1 = new Promise<boolean>((resolve) => {
-            resolve(false);
-        });
-        const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(promise1);
-        const mySpy2 = spyOn(gridServiceSpy, 'drawtilebackground');
+    it('validateWordPlaced should return false when validateWordCreatedByNewLetters is false', fakeAsync(async () => {
+        // gameStateServiceSpy.validateWordCreatedByNewLetters.and.returnValue(Promise.resolve(promise1));
         gameStateServiceSpy.indexLastLetters = [1, 2, 3];
         const dumbUndefinedVariable = undefined;
-        service.validateWordPlaced(dumbUndefinedVariable).then((res: boolean) => {
-            expect(res).toBe(false);
-        });
+        const res = await service.validateWordPlaced(dumbUndefinedVariable);
+        expect(res).toBe(await Promise.resolve(false));
         flush();
-        expect(mySpy).toHaveBeenCalled();
-        expect(mySpy2).toHaveBeenCalled();
+        expect(gameStateServiceSpy.validateWordCreatedByNewLetters).toHaveBeenCalled();
+        expect(gridServiceSpy.drawtilebackground).toHaveBeenCalled();
         gameStateServiceSpy.indexLastLetters = [];
     }));
-    it('validateWordPlaced should return true when playerUsedAllLetters is true and validateWordCreatedByNewLetters is true ', fakeAsync(() => {
+    fit('validateWordPlaced should return true when playerUsedAllLetters is true and validateWordCreatedByNewLetters is true ', fakeAsync(() => {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
         });
@@ -131,6 +143,7 @@ describe('PlaceLettersService', () => {
     }));
 
     it('validateWordPlaced should return true ehen validateWordCreatedByNewLetters is true and letters replaced is defined', fakeAsync(() => {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
         });
@@ -216,6 +229,7 @@ describe('PlaceLettersService', () => {
     });
 
     it("placeword should return 'Un mot placé n'est pas valide' when the word can be placed but doesn't exist in the dictionnary", () => {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(false);
         });
@@ -296,6 +310,7 @@ describe('PlaceLettersService', () => {
         gameStateServiceSpy.lastLettersAdded = 'Allo';
         const mySpy3 = spyOn(service, 'drawWord');
         const mySpy4 = spyOn(socketSpy, 'configureSendMessageToServer');
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
         });
