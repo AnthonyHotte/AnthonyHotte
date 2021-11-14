@@ -18,13 +18,15 @@
     font-family: cursive;
 }
 #DisplayZone {
-    height: 400px;
+    height: 610px;
     border-color: black;
     border-width: 2px;
     width: 400px;
     border-style: groove;
     margin-bottom: 10px;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: block;
     background-color:white;
     border-radius: 16px;
 }
@@ -32,58 +34,44 @@
 .PlayerMessage {
     color: blue;
     font-size: 20px;
+    max-width: 380px;
+    font-family: sans-serif;
 }
 
 .AlertMessage {
     color: red;
     font-size:20px;
-}
-
-.ButtonCommandActivated {
-    font-size: medium;
-    background-color: black;
-    color: white;
-}
-
-.ButtonMessageReleased {
-    font-size: medium;
-    background-color: white;
-    color: black;
-}
-
-.ButtonMessageActivated {
-    font-size: medium;
-    background-color: rgb(167, 144, 144);
-    color: white;
-    
-}
-
-.ButtonCommandReleased {
-    font-size: medium;
-    background-color: white;
-    color: black;
+    max-width: 380px;
+    font-family: sans-serif;
 }
 
 .Joueur {
-    color: green;
+    color: rgb(34, 121, 34);
     font-size: 20px;
+    max-width: 380px;
+    font-family: sans-serif;
 }
 
 .Adversaire {
-    color: red;
+    color: rgb(92, 20, 20);
     font-size: 20px;
+    max-width: 380px;
+    font-family: sans-serif;
 }
 .Systeme {
-    color: blue;
+    color: rgb(25, 25, 126);
     font-size: 20px;
+    max-width: 380px;
+    font-family: sans-serif;
 }
 .input{
-    font-size: 30px;
+    font-size: 22px;
     color: black;
     background-color: yellow;
     border:double;
     border-radius: 16px;
     text-align: center;
+    width: 350px;
 }
 .form{
     text-align: center;

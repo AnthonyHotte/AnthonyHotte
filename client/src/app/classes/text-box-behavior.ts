@@ -97,14 +97,14 @@ export class TextBox {
         return text;
     }
 
-    verfifyAide(): string {
+    verifyAide(): string {
         return (
             'Voici les commandes disponibles : \n' +
-            '!passer: Permet de passer son tour. \n' +
-            '!échanger: permet d echanger des lettres \n ' +
-            '!réserve : Permet d afficher sa reserve \n ' +
+            '!passer: permet de passer son tour. \n' +
+            "!échanger: permet d'échanger des lettres \n " +
+            "!réserve : Permet d'afficher sa réserve \n " +
             '!placer: permet de placer des lettres sur le plateau. \n ' +
-            '!abandonner : permet d abandonner la partie.'
+            "!abandonner : permet d'abandonner la partie."
         );
     }
 
@@ -173,7 +173,7 @@ export class TextBox {
             }
         } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!aide') {
             text = '';
-            this.handleEnter(this.verfifyAide());
+            this.handleEnter(this.verifyAide());
             this.socket.configureSendMessageToServer('!aide', this.timeManager.gameStatus);
         } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
             text = '';
