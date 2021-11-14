@@ -6,7 +6,7 @@ import { ScoreCalculatorService } from './score-calculator.service';
 import { SocketService } from './socket.service';
 import { WordValidationService } from './word-validation.service';
 
-fdescribe('WordValidationService', () => {
+describe('WordValidationService', () => {
     let service: WordValidationService;
     let scoreCalculatorService: jasmine.SpyObj<ScoreCalculatorService>;
     let socketSpy: jasmine.SpyObj<SocketService>;
