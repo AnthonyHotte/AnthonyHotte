@@ -19,12 +19,16 @@ export class LetterService {
     areLetterSelectedExchange: boolean;
     playerNameZeroSubscription: Subscription;
     playerNameOneSubscription: Subscription;
+    objCompleted: number[];
+    objCompletor: number[];
 
     constructor(private letterBankService: LetterBankService, private socketService: SocketService) {
         this.players = [new PlayerLetterHand(letterBankService), new PlayerLetterHand(letterBankService)];
         this.isLetterSelectedSwapping = false;
         this.areLetterSelectedExchange = false;
         this.indexSelectedExchange = [];
+        this.objCompleted = [];
+        this.objCompletor = [];
         this.playerNameZeroSubscription = this.socketService.playerNameIndexZer0.subscribe((playerName) => {
             this.players[0].name = playerName;
         });
@@ -42,13 +46,44 @@ export class LetterService {
         for (let i = 0; i < 2; i++) {
             this.players[i].reset();
         }
+        this.setObjectives();
     }
-
+    setObjectives() {
+        const numberOfObjectives = 8;
+        // adding global objectives
+        for (let i = 0; i < 2; i++) {
+            while (this.players[0].objectives.length < 2) {
+                const objective = Math.floor(Math.random() * numberOfObjectives);
+                if (!this.players[0].objectives.includes(objective)) {
+                    this.players[0].objectives.push(objective);
+                    this.players[1].objectives.push(objective);
+                }
+            }
+        }
+        // adding private objective for player 0
+        while (this.players[0].objectives.length < 3) {
+            const objective = Math.floor(Math.random() * numberOfObjectives);
+            if (!this.players[1].objectives.includes(objective)) {
+                this.players[0].objectives.push(objective);
+            }
+        }
+        // adding private objective for player 1
+        while (this.players[1].objectives.length < 3) {
+            const objective = Math.floor(Math.random() * numberOfObjectives);
+            if (!this.players[0].objectives.includes(objective)) {
+                this.players[1].objectives.push(objective);
+            }
+        }
+    }
     // only function for synch : only used by joiner
-    synchLetters(lettersCreator: string, lettersJoiner: string) {
+    synchInformation(lettersCreator: string, lettersJoiner: string, objectivesCreator: string, objectivesJoiner: string) {
         this.resetLetterBankForSynch();
         this.players[1].addLetterToHand(lettersCreator); // local letters of creator (opponent)
         this.players[0].addLetterToHand(lettersJoiner); // local letters of joiner (player)
+        for (let i = 0; i < 3; i++) {
+            this.players[1].objectives.push(Number(objectivesCreator.charAt(i)));
+            this.players[0].objectives.push(Number(objectivesJoiner.charAt(i)));
+        }
     }
 
     resetLetterBankForSynch() {

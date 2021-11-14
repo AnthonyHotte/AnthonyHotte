@@ -29,6 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { ObjectivesComponent } from './components/objectives/objectives.component';
 
 /**
  * Main module that is used in main.ts.
@@ -58,6 +59,7 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
         PopUpComponent,
         AdminPageComponent,
         FileUploadComponent,
+        ObjectivesComponent,
     ],
     imports: [
         AppMaterialModule,

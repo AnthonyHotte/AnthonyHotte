@@ -6,6 +6,8 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 export class PlayerLetterHand {
     allLettersInHand: Letter[];
     lettersReplaced = '';
+    // objectives is an array of 3 number. each number represents an objective. the first 2 are common and the last one is individual
+    objectives: number[] = [];
     score: number;
     name: string;
 

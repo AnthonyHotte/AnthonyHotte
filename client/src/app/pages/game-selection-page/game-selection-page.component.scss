@@ -1,0 +1,72 @@
+.bg-container {
+    background-color: green;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    background-image: url(https://resources.stuff.co.nz/content/dam/images/1/s/f/6/b/3/image.related.StuffLandscapeSixteenByNine.1420x800.1sf63j.png/1540827339517.jpg);
+    background-size: cover;
+}
+
+.header-item {
+    justify-content: center;
+    color: white;
+    background: linear-gradient(to right, rgb(115, 128, 0),rgb(0, 128, 122));
+    text-align: center;
+    font-size: 35px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    width: 100%;
+    height: 60px;
+}
+
+// source : https://www.coderepublics.com/CSS/css-buttons.php#:~:text=Button%20Hover%20effect%20means%20changing%20CSS%20of%20an,%3Ahover%20selector%20is%20used%20to%20create%20hover%20effect.
+.button {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: transparent;
+    border: dotted;
+    border-radius: 50%;
+    color: black;
+    text-align: center;
+    font-size: 28px;
+    padding: 10px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 4px 2px;
+}
+
+.button:hover {
+    background-color: red;
+    color: white;
+}
+
+html, body {   margin:0;   height:100%;   overflow:hidden; }
+
+.buttonInfo {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: white;
+    border: dotted;
+    border-radius: 50%;
+    color: green;
+    text-align: center;
+    font-size: 28px;
+    padding: 10px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 4px 2px;
+}
+
+.buttonInfo:hover {
+    background-color: black;
+    color:white;
+}
+
+// source : https://www.cloudhadoop.com/angular-dynamically-shorten-long-text/
+.limitTextHeight {
+    height: 0px;
+    overflow: hidden;
+}
+
+.info {
+    color: blueviolet;
+}

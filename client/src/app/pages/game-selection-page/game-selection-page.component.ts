@@ -9,6 +9,7 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
     styleUrls: ['./game-selection-page.component.scss'],
 })
 export class GameSelectionPageComponent {
+    readInfo = true;
     constructor(private socket: SocketService, private timeTurnManager: TimerTurnManagerService, private letterService: LetterService) {}
 
     @HostListener('window:beforeunload', ['$event'])
@@ -26,5 +27,8 @@ export class GameSelectionPageComponent {
     setJoinMultiPayerGame() {
         this.timeTurnManager.gameStatus = 1;
         this.socket.sendGameListNeededNotification();
+    }
+    infoAboutNigelRichardsDisplay() {
+        this.readInfo = !this.readInfo;
     }
 }

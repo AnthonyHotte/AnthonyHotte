@@ -58,7 +58,7 @@ export class SoloGameInitiatorComponent {
         this.validationDictionaryMessage = "l'index est valide!!!";
         this.indexDictionaryNumber = 0;
         this.temporaryName = 'Joueur';
-        this.name = 'Joueur';
+        this.name = 'Appuyez sur la validation pour valider votre nom';
         this.assignOpponentName();
         this.idNameOpponent = 0;
         this.initiateIsNameValid();
@@ -123,7 +123,10 @@ export class SoloGameInitiatorComponent {
             this.opponentName,
             this.letterService.players[0].allLettersInHand,
             this.letterService.players[1].allLettersInHand,
+            this.letterService.players[0].objectives,
+            this.letterService.players[1].objectives,
             bonusTiles,
+            this.socketService.is2990,
         );
     }
 
@@ -183,6 +186,9 @@ export class SoloGameInitiatorComponent {
             this.name = this.temporaryName;
         } else {
             this.name = 'Joueur';
+            if (this.getGameStatus() === 1) {
+                this.name = 'Entrez votre nom de nouveau, vous aviez fait une erreur...';
+            }
         }
         this.letterService.players[0].name = this.name;
     }

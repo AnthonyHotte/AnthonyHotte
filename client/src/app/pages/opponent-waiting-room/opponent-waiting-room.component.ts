@@ -30,7 +30,12 @@ export class OpponentWaitingRoomComponent implements OnInit {
     setIndex(index: number) {
         this.indexWaitingRoomService.setIndex(index);
         // synch letters once and for all for joiner
-        this.letterService.synchLetters(this.socketInformation.gameLists[index][3], this.socketInformation.gameLists[index][4]);
+        this.letterService.synchInformation(
+            this.socketInformation.gameLists[index][3],
+            this.socketInformation.gameLists[index][4],
+            this.socketInformation.gameLists[index][5],
+            this.socketInformation.gameLists[index][6],
+        );
         const doubleWord = this.socketInformation.boards[index][0];
         TileMap.gridMap.tileMap.set('DoubleWord', doubleWord);
         const doubleLetter = this.socketInformation.boards[index][1];
@@ -53,6 +58,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
             this.gamesList[i][0] = this.socketInformation.gameLists[i][0]; // name
             this.gamesList[i][1] = this.socketInformation.gameLists[i][1]; // bonus
             this.gamesList[i][2] = this.socketInformation.gameLists[i][2]; // time per turn
+            this.gamesList[i][3] = this.socketInformation.gameLists[i][7]; // is2990
         }
     }
 
@@ -62,6 +68,13 @@ export class OpponentWaitingRoomComponent implements OnInit {
 
     getTimePerTurn(time: string) {
         return parseInt(time, 10);
+    }
+    changeStringToBool2990(actuallyBoolean: string) {
+        return actuallyBoolean === 'true';
+    }
+
+    getIs2990() {
+        return this.socketInformation.is2990;
     }
 
     changeValidity(name: string) {
