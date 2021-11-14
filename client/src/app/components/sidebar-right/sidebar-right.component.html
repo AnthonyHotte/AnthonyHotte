@@ -1,13 +1,14 @@
 <div class="container">
     <body ng-app="app" style="text-align: Center">
         <fieldset>
-            <h1>Score</h1>
-            <table>
+            <div class="score-filler">
+            <h1 class="header">Score</h1>
+            <table class="table">
                 <tr>
-                    <th>
+                    <th class="th">
                         <h2>{{ getPlayerName(0) }}</h2>
                     </th>
-                    <th>
+                    <th class="th">
                         <h2>{{ getPlayerName(1) }}</h2>
                     </th>
                 </tr>
@@ -20,10 +21,11 @@
                     </td>
                 </tr>
             </table>
+            </div>
         </fieldset>
         <fieldset>
-            <h1>C'est le tour de {{ getPlayerNameAndVerifyTurn() }}</h1>
-            <h2>Temps restant au tour:</h2>
+            <h1 class="header1">C'est le tour de {{ getPlayerNameAndVerifyTurn() }}</h1>
+            <h2 class="header2">Temps restant au tour:</h2>
             <div class="Counter">
                 <ngx-countdown
                     #counter
@@ -34,27 +36,30 @@
                     (finish)="counter.start()"
                     (tick)="this.verifyChangedTurns(counter)"
                 ></ngx-countdown
-                >s
+                > s.
             </div>
             <br />
             <button *ngIf="showPassButton()" class="buttonfontsize" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button>
         </fieldset>
         <fieldset>
-            <label> Nombre de lettres dans la réserve: {{ getNumberRemainingLetters() }} </label>
+            <label class="label"> Nombre de lettres dans la réserve: {{ getNumberRemainingLetters() }} </label>
         </fieldset>
         <fieldset *ngIf="getNumberOfLettersForPlayer(0) < 7 || getNumberOfLettersForPlayer(1) < 7">
             <p>
-                <label *ngIf="getNumberOfLettersForPlayer(0) < 7">
+                <label *ngIf="getNumberOfLettersForPlayer(0) < 7" class="label2">
                     Nombre de lettres sur le chevalet pour le joueur: {{ getNumberOfLettersForPlayer(0) }}
                 </label>
             </p>
-            <label *ngIf="getNumberOfLettersForPlayer(1) < 7">
+            <label *ngIf="getNumberOfLettersForPlayer(1) < 7" class="label2">
                 Nombre de lettres sur le chevalet pour l'adversaire: {{ getNumberOfLettersForPlayer(1) }}
             </label>
         </fieldset>
         <fieldset>
-            <button class="buttonfontsize" (click)="increaseFontSize()">+</button>
-            <button class="buttonfontsize" (click)="decreaseFontSize()">-</button>
+            <label class="header3"> Agrandir la taille des lettres sur la grille</label>
+            <p>
+                <button class="buttonfontsize" (click)="increaseFontSize()"> + </button>
+                <button class="buttonfontsize" (click)="decreaseFontSize()"> - </button>
+            </p>
         </fieldset>
         
             <app-abandon-game></app-abandon-game>

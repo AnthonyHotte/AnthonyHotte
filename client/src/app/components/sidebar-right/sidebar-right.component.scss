@@ -1,15 +1,77 @@
 .container {
     height: auto;
     min-height: 98vh;
-    border: 1px solid black;
+    border: double;
     padding: 0 5px 0 5px;
     margin-right: 5px;
+    width: 300px;
+    background-image: url(https://th.bing.com/th/id/OIP.TlGqc4af0LUi23jrmqHVlAHaH7?pid=ImgDet&rs=1);
+    text-align: center;
 }
 
 .Counter {
-    font-size: x-large;
+    font-size: 42px;
+    font-family: sans-serif;
+    color: green;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    border:double;
+    background-color: black;
 }
 .buttonfontsize {
-    font-size: x-large;
+    font-size: 30px;
+    background-color: yellow;
+    color: rebeccapurple;
+    border-radius: 24px;
+    box-shadow: 0 5px green;
+}
+.buttonfontsize:hover{
+    background-color: rebeccapurple;
+    color:yellow;
+}
+.header {
+    color: gold;
+    background-color: black;
+    font-size: 36px;
+}
+.header1{
+   background-image: linear-gradient(90deg, rgb(128, 105, 0), rgb(0, 102, 128));
+   color:red;
+   font-size: 30px; 
+}
+.header2{
+    background-image: linear-gradient(90deg, rgb(0, 128, 107), rgb(124, 0, 128));
+    color:white;
+    font-size: 24px;
+}
+
+.label {
+    background-color:green;
+    color:white;
+    font-size: 24px;
+}
+.label2 {
+    background-color: red;
+    color: white;
+    font-size: 20px;
+}
+.header3 {
+    background-color: greenyellow;
+    color: black;
+    font-size: 20px;
+}
+.score-filler{
+    background-color: black;
+}
+.table{
+    width: 100%;
+    color:gold;
+    border: double;
+}
+.th, td {
+    color: gold;
+    border: double;
 }
 
