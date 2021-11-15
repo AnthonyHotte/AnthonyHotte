@@ -28,6 +28,7 @@ import { PopUpComponent } from './components/pop-up/pop-up.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { ObjectivesComponent } from './components/objectives/objectives.component';
 
 /**
@@ -57,6 +58,7 @@ import { ObjectivesComponent } from './components/objectives/objectives.componen
         AbandonGameComponent,
         PopUpComponent,
         AdminPageComponent,
+        FileUploadComponent,
         ObjectivesComponent,
     ],
     imports: [

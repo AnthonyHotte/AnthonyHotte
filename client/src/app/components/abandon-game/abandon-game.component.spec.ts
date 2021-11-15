@@ -4,7 +4,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { AbandonGameComponent } from './abandon-game.component';
 import { SocketService } from '@app/services/socket.service';
-import { BehaviorSubject } from 'rxjs';
 
 describe('AbandonGameComponent', () => {
     let component: AbandonGameComponent;
@@ -14,7 +13,6 @@ describe('AbandonGameComponent', () => {
 
     beforeEach(async () => {
         socketSpy = jasmine.createSpyObj(SocketService, ['handleDisconnect', 'finishedGameMessageTransmission']);
-        socketSpy.currentEndGameValue = new BehaviorSubject<boolean>(false);
         spy = jasmine.createSpyObj(FinishGameService, ['goToHomeAndRefresh', 'getCongratulation']);
         await TestBed.configureTestingModule({
             declarations: [AbandonGameComponent],

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as Constants from '@app/constants';
 import { WordValidationService } from '@app/services/word-validation.service';
+import { DictionaryService } from './dictionary.service';
 import { GameStateService } from './game-state.service';
 import { LetterService } from './letter.service';
 import { PlaceLettersService } from './place-letters.service';
@@ -17,6 +18,7 @@ export class SoloOpponent2Service {
         public placeLetterService: PlaceLettersService,
         // public injectionService: Injector, //
         public wordValidatorService: WordValidationService,
+        public dictionatyService: DictionaryService,
     ) {}
 
     async play(): Promise<string> {
@@ -26,7 +28,7 @@ export class SoloOpponent2Service {
             arrayHand.push(letter.letter.toLowerCase());
         }
         if (this.gameStateService.isBoardEmpty) {
-            const wordToPlay = this.findValidWords(this.wordValidatorService.dictionnary, arrayHand);
+            const wordToPlay = this.findValidWords(this.dictionatyService.dictionaryList[this.dictionatyService.indexDictionary].words, arrayHand);
             if (wordToPlay.length > 0) {
                 tempword = 'h8v ' + wordToPlay[0];
             }
@@ -40,7 +42,10 @@ export class SoloOpponent2Service {
                     if (letteronbord[i][j] !== '') {
                         const temparrayHand = arrayHand;
                         temparrayHand.push(letteronbord[i][j]); // add the letter on board with the letter in hand
-                        const wordToPlay = this.findValidWords(this.wordValidatorService.dictionnary, temparrayHand);
+                        const wordToPlay = this.findValidWords(
+                            this.dictionatyService.dictionaryList[this.dictionatyService.indexDictionary].words,
+                            temparrayHand,
+                        );
                         if (wordToPlay.length > 0) {
                             for (const word2 of wordToPlay) {
                                 for (let k = 0; k < word2.length; k++) {

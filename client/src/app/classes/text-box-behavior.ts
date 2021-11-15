@@ -97,14 +97,14 @@ export class TextBox {
         return text;
     }
 
-    verfifyAide(): string {
+    verifyAide(): string {
         return (
             'Voici les commandes disponibles : \n' +
-            '!passer: Permet de passer son tour. \n' +
-            '!échanger: permet d echanger des lettres \n ' +
-            '!réserve : Permet d afficher sa reserve \n ' +
-            '!placer: permet de placer des lettres sur le plateau. \n ' +
-            '!abandonner : permet d abandonner la partie.'
+            '!passer : permet de passer son tour. \n' +
+            "!échanger : permet d'échanger des lettres. \n " +
+            "!réserve : Permet d'afficher sa réserve. \n " +
+            '!placer : permet de placer des lettres sur le plateau. \n ' +
+            "!abandonner : permet d'abandonner la partie."
         );
     }
 
@@ -141,6 +141,32 @@ export class TextBox {
     send(myWord: MessagePlayer) {
         this.inputVerification(myWord.message);
         if (this.character === false) {
+            // largest character on board: M -> by experience past 24 M it isn't visible so we take 23.
+            const LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING = 23;
+            let keepGoing = true;
+            let currentIndex = 0;
+            // complicated way to patch the too long word problem on screen so visuals of messages are okay
+            // at this point it can be called a log(n) algorithm
+            while (keepGoing) {
+                if (currentIndex + LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING < myWord.message.length) {
+                    let valueOfSpace = -1;
+                    if (
+                        (valueOfSpace = myWord.message.substr(currentIndex, currentIndex + LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING).search(' ')) < 0
+                    ) {
+                        currentIndex += LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING;
+                        const temporaryString =
+                            myWord.message.substring(0, currentIndex) + ' ' + myWord.message.substring(currentIndex, myWord.message.length);
+                        myWord.message = temporaryString;
+                    } else {
+                        if (valueOfSpace === 0) {
+                            currentIndex++;
+                        }
+                        currentIndex += valueOfSpace;
+                    }
+                } else {
+                    keepGoing = false;
+                }
+            }
             this.inputs.push(myWord);
         }
     }
@@ -173,7 +199,7 @@ export class TextBox {
             }
         } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!aide') {
             text = '';
-            this.handleEnter(this.verfifyAide());
+            this.handleEnter(this.verifyAide());
             this.socket.configureSendMessageToServer('!aide', this.timeManager.gameStatus);
         } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
             text = '';

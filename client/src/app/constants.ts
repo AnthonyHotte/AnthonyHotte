@@ -16,7 +16,7 @@ export const TWENTY = 20;
 export const THIRTY = 30;
 // export const SIDESPACE = 30;
 export const NUMBEROFCASE = 15;
-export const DEFAULT_WIDTH = 750;
+export const DEFAULT_WIDTH = 676; // determined by experimentation
 export const CASESIZE = DEFAULT_WIDTH / (NUMBEROFCASE + 1);
 export const SIDESPACE = CASESIZE;
 export const TILESIZE = (CASESIZE * 3) / FOUR;
@@ -65,3 +65,6 @@ export const NUMBER_DOUBLE_LETTER = 24;
 export const NUMBER_TRIPLE_LETTER = 12;
 
 export const ERRORCODE = -1;
+
+export const MAXPERCENTAGE = 100;
+export const TIMETOWAITFORVALIDATION = 2000;
