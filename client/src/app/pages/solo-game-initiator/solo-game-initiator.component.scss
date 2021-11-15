@@ -1,9 +1,9 @@
 .preventer {
     overflow-x: hidden;
-    max-height: 100vw;
-    max-height: 100vh;
     width: 100vw;
     height: 100vh;
+    max-width: 100vw;
+    max-height: 200vh;
     background-color: green;
 }
 #waiting {
@@ -26,9 +26,9 @@
     background-color:darkgreen;
     font-family: serif;
     width: 100vw;
-    font-size: 32px;
-    height: 5vh;
-    max-height: 5vh;
+    font-size: 2.5vmax;
+    height: 3vmax;
+    max-height: 3vmax;
 }
 .label {
     font-size: 16px;
@@ -63,11 +63,13 @@
     font-size: 3vmin;
     position: relative;
     display:block;
+    margin-bottom: 30px;
 }
 .header3 {
     color: white;
     font-family: serif;
-    font-size: 3vmin;
+    font-size: 1.5vmax;
+    border-radius: 0%;
 }
 .image-rules {
     background-color: green;
@@ -113,8 +115,8 @@ input, select, textarea{
     border: none;
     background-color: white;
     width: 100vw;
-    height: 9vh;
-    max-height: 9vh;
+    height: 68px;
+    max-height: 68px;
     max-width: 100vw;
 }
 .fieldset {
@@ -216,25 +218,25 @@ input, select, textarea{
     background: #04AA6D;
     cursor: pointer;
   }
-  // custom scrollbar : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2
+// custom scrollbar : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2
 /* width */
 ::-webkit-scrollbar {
-    width: 20px;
-  }
+  width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
   
-  /* Track */
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey; 
-    border-radius: 10px;
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: rgb(0, 54, 0); 
-    border-radius: 10px;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: lightgreen; 
-  }
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(0, 54, 0); 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: lightgreen; 
+}

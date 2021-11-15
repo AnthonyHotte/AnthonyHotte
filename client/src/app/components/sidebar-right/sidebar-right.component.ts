@@ -45,7 +45,7 @@ export class SidebarRightComponent implements AfterViewInit {
         }
     }
     showPassButton() {
-        return this.turnTimeController.turn === 0;
+        return this.turnTimeController.turn === 0 && !this.verifyLettersPlaced();
     }
 
     setAttribute() {
@@ -153,5 +153,11 @@ export class SidebarRightComponent implements AfterViewInit {
     }
     getLettersSelected() {
         return this.letterService.areLetterSelectedExchange;
+    }
+    verifyLettersPlaced(): boolean {
+        if (this.placeLetterClick.isTileSelected && this.placeLetterClick.lettersFromHand.length > 0 && this.turnTimeController.turn === 0) {
+            return true;
+        }
+        return false;
     }
 }
