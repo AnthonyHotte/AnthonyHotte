@@ -94,9 +94,47 @@
                 </p>
             </div>
         </fieldset>
+        <div>
+            <p><br><br>Mode Classique</p>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Numéro</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                    <div *ngFor="let best of this.bestScoreService.bestScore[0]; let numberBest = index">
+                        <tr>
+                            <td>{{ numberBest + 1 }}</td>
+                            <td>{{ best.name }}</td>
+                            <td>{{ best.score }}</td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <p><br><br>Mode LOG2990</p>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Numéro</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                    <div *ngFor="let best of this.bestScoreService.bestScore[1]; let numberBest = index">
+                        <tr>
+                            <td>{{ numberBest + 1 }}</td>
+                            <td>{{ best.name }}</td>
+                            <td>{{ best.score }}</td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+        </div>
         <br /><br /><button (click)="reinitialize()">Réinitialiser</button>
     </div>
     <div *ngIf="dictionaryService.dictionaryList.length === 0">
-        <p>La connection avec le server est impossible... s'il vous plait veillez resayer plus tard<br>Merci de votre compréhenssion</p>
+        <p>La connection avec le server est impossible... s'il vous plait veillez resayer plus tard<br />Merci de votre compréhenssion</p>
     </div>
 </body>

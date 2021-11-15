@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Dictionary } from '@app/classes/dictionary';
 import { ERRORCODE } from '@app/constants';
+import { BestScoreService } from '@app/services/best-score.service';
 import { CommunicationService } from '@app/services/communication.service';
 import { DictionaryService } from '@app/services/dictionary.service';
 
@@ -42,10 +43,12 @@ export class AdminPageComponent {
     showAddJVnameButton: boolean;
     showModifyJVNameButton: boolean;
     showDeleteJVNameButton: boolean;
+
     constructor(
         private readonly communicationService: CommunicationService,
         private readonly sanitizer: DomSanitizer,
         public dictionaryService: DictionaryService,
+        public bestScoreService: BestScoreService,
     ) {
         this.dictionaryService.dictionaryList = [];
         this.nameJV = [
