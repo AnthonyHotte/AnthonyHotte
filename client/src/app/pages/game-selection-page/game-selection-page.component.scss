@@ -41,25 +41,6 @@
 
 html, body {   margin:0;   height:100%;   overflow:hidden; }
 
-.buttonInfo {
-    display: inline-block;
-    border-radius: 4px;
-    background-color: white;
-    border: dotted;
-    border-radius: 50%;
-    color: green;
-    text-align: center;
-    font-size: 28px;
-    padding: 10px;
-    transition: all 0.5s;
-    cursor: pointer;
-    margin: 4px 2px;
-}
-
-.buttonInfo:hover {
-    background-color: black;
-    color:white;
-}
 
 // source : https://www.cloudhadoop.com/angular-dynamically-shorten-long-text/
 .limitTextHeight {
