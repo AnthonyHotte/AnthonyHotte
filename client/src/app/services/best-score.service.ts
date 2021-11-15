@@ -12,8 +12,8 @@ export class BestScoreService {
         this.bestScore.push([]);
         this.bestScore.push([]);
         for (let i = 0; i < MAXNUMBERBESTSCORE; i++) {
-            this.bestScore[0].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE + 2 * i });
-            this.bestScore[1].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE + 3 * i });
+            this.bestScore[0].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE - 3 * i });
+            this.bestScore[1].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE - 2 * i });
         }
     }
     verifyIfBestScore(score: number, mode: number) {
@@ -50,8 +50,8 @@ export class BestScoreService {
         this.bestScore[0] = [];
         this.bestScore[1] = [];
         for (let i = 0; i < MAXNUMBERBESTSCORE; i++) {
-            this.bestScore[0].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE + 2 * i });
-            this.bestScore[1].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE + 3 * i });
+            this.bestScore[0].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE - 3 * i });
+            this.bestScore[1].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE - 2 * i });
         }
         this.sendScoreChangesToMongo(0);
         this.sendScoreChangesToMongo(1);
