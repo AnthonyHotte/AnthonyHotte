@@ -1,5 +1,7 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { Dictionary } from '@app/classes/dictionary';
 import { BehaviorSubject } from 'rxjs';
+import { DictionaryService } from './dictionary.service';
 import { ScoreCalculatorService } from './score-calculator.service';
 import { SocketService } from './socket.service';
 import { WordValidationService } from './word-validation.service';
@@ -8,9 +10,74 @@ describe('WordValidationService', () => {
     let service: WordValidationService;
     let scoreCalculatorService: jasmine.SpyObj<ScoreCalculatorService>;
     let socketSpy: jasmine.SpyObj<SocketService>;
+    let dictionaryServiceSpy: jasmine.SpyObj<DictionaryService>;
 
     beforeEach(
         waitForAsync(() => {
+            dictionaryServiceSpy = jasmine.createSpyObj('DictionaryService', ['getDictionary']);
+            dictionaryServiceSpy.indexDictionary = 0;
+            dictionaryServiceSpy.dictionaryList = [];
+            dictionaryServiceSpy.dictionaryList.push(new Dictionary('base', 'baseDict'));
+            dictionaryServiceSpy.dictionaryList[0].words = [
+                'aa',
+                'aalenien',
+                'aalenienne',
+                'aaleniennes',
+                'aaleniens',
+                'aas',
+                'abaca',
+                'abacas',
+                'abacost',
+                'abacosts',
+                'abacule',
+                'abacules',
+                'abaissa',
+                'abaissable',
+                'abaissables',
+                'abaissai',
+                'abaissaient',
+                'abaissais',
+                'abaissait',
+                'abaissames',
+                'abaissant',
+                'abaissante',
+                'abaissantes',
+                'abaissants',
+                'abaissas',
+                'abaissasse',
+                'abaissassent',
+                'abaissasses',
+                'abaissassiez',
+                'abaissassions',
+                'abaissat',
+                'abaissates',
+                'abaisse',
+                'abaissee',
+                'abaissees',
+                'abaissement',
+                'abaissements',
+                'abaissent',
+                'abaisser',
+                'abaissera',
+                'abaisserai',
+                'abaisseraient',
+                'abaisserais',
+                'abaisserait',
+                'abaisseras',
+                'abaisserent',
+                'abaisserez',
+                'abaisseriez',
+                'abaisserions',
+                'abaisserons',
+                'abaisseront',
+                'abaisses',
+                'abaisseur',
+                'abaisseurs',
+                'abaisseuse',
+                'abaisseuses',
+                'abaissez',
+                'abaissiez',
+            ];
             scoreCalculatorService = jasmine.createSpyObj('ScoreCalculatorService', ['calculateScoreForHorizontal', 'calculateScoreForVertical']);
             socketSpy = jasmine.createSpyObj('SocketService', ['validateWord']);
             socketSpy.isWordValid = new BehaviorSubject<boolean>(false);
@@ -18,6 +85,7 @@ describe('WordValidationService', () => {
                 providers: [
                     { provide: ScoreCalculatorService, useValue: scoreCalculatorService },
                     { provide: SocketService, useValue: socketSpy },
+                    { provide: DictionaryService, useValue: dictionaryServiceSpy },
                 ],
             }).compileComponents();
         }),
@@ -32,10 +100,10 @@ describe('WordValidationService', () => {
         expect(service).toBeTruthy();
     });
     it('should have a dictionary lenght of at least one', () => {
-        expect(service.dicLength).toBeGreaterThanOrEqual(1);
+        expect(dictionaryServiceSpy.dictionaryList[0].words.length).toBeGreaterThanOrEqual(1);
     });
     it('should have a word in the dictionary', () => {
-        expect(service.dictionnary.length).toBeGreaterThanOrEqual(1);
+        expect(dictionaryServiceSpy.dictionaryList[0].words.length).toBeGreaterThanOrEqual(1);
     });
     it('isWordValid should return true with aa', () => {
         const isValid = service.isWordValid('aa');

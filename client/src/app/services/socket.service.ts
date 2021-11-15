@@ -9,8 +9,8 @@ import { io } from 'socket.io-client';
     providedIn: 'root',
 })
 export class SocketService {
-    // socket = io('http://localhost:3000');
     socket = io('http://localhost:3000');
+    // socket = io(environment.serverUrl);
     gameLists: string[][];
     roomNumber: number;
     startGame: BehaviorSubject<boolean>;

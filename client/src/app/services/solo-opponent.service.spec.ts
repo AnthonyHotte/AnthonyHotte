@@ -7,6 +7,7 @@ import { GameStatus } from '@app/game-status';
 import { FinishGameService } from './finish-game.service';
 import { LetterBankService } from './letter-bank.service';
 import { LetterService } from './letter.service';
+import { PlaceLettersService } from './place-letters.service';
 import { SoloOpponentService } from './solo-opponent.service';
 import { SoloOpponent2Service } from './solo-opponent2.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
@@ -18,10 +19,12 @@ describe('SoloOpponentService', () => {
     let soloOpponent2ServiceSpy: jasmine.SpyObj<SoloOpponent2Service>;
     let finishGameServiceSpy: jasmine.SpyObj<FinishGameService>;
     let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
+    let placeLettersServiceSpy: jasmine.SpyObj<PlaceLettersService>;
     let routerSpy: Router;
 
     beforeEach(
         waitForAsync(() => {
+            placeLettersServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['verifyTileNotOutOfBound']);
             letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
             letterBankServiceSpy.letterBank = [];
             for (let i = 0; i < 3; i++) {
@@ -55,6 +58,7 @@ describe('SoloOpponentService', () => {
                     { provide: SoloOpponent2Service, useValue: soloOpponent2ServiceSpy },
                     { provide: FinishGameService, useValue: finishGameServiceSpy },
                     { provide: LetterBankService, useValue: letterBankServiceSpy },
+                    { provide: PlaceLettersService, useValue: placeLettersServiceSpy },
                 ],
                 imports: [RouterTestingModule],
             }).compileComponents();
