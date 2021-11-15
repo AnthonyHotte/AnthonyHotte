@@ -20,6 +20,10 @@ export class MainPageComponent {
     beforeUnloadHandler() {
         this.socketService.handleDisconnect();
     }
+    @HostListener('contextmenu', ['$event'])
+    onRightClick(event: { preventDefault: () => void }) {
+        event.preventDefault();
+    }
 
     sendTimeToServer(): void {
         const newTimeMessage: Message = {

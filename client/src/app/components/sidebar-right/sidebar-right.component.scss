@@ -1,15 +1,120 @@
 .container {
     height: auto;
     min-height: 98vh;
-    border: 1px solid black;
+    border: double;
     padding: 0 5px 0 5px;
-    margin-right: 5px;
+    width: 20vw;
+    background-color: lightgreen;
+    text-align: center;
+    height: 100vh;
+    position: relative;
+    top: 5px;
+    max-height: 100vh;
 }
 
 .Counter {
-    font-size: x-large;
+    font-size: 42px;
+    font-family: sans-serif;
+    color: green;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    border:double;
+    background-color: black;
+    max-width: 20vw;
 }
 .buttonfontsize {
-    font-size: x-large;
+    font-size: 30px;
+    background-color: green;
+    color: white;
+    border-radius: 24px;
+    box-shadow: 0 5px darkgreen;
+    margin-right: 2vw;
+    margin-left: 2vw;
+    margin-bottom: 2vw;
+}
+.buttonfontsize:hover{
+    background-color: darkgreen;
+    color:white;
+}
+.header {
+    color: white;
+    background-color: black;
+    font-size: 30px;
+    width: 19vw;
+    max-width: 19vw;
+}
+.header1{
+   background-color: black;
+   color:white;
+   font-size: 30px; 
+   width: 19vw;
+   max-width: 19vw;
+}
+.header2{
+    background-color: black;
+    color:white;
+    font-size: 24px;
+    max-width: 20vw;
 }
 
+.label {
+    background-color: black;
+    color:white;
+    font-size: 24px;
+    max-width: 20vw;
+}
+.label2 {
+    background-color: transparent;
+    color: white;
+    font-size: 20px;
+    max-width: 20vw;
+}
+.header3 {
+    background-color: black;
+    color: white;
+    font-size: 20px;
+    max-width: 20vw;
+}
+.score-filler{
+    background-color: black;
+    width: 20vw;
+    max-width: 20vw;
+    margin-right: 0vw;
+    margin-left: 0vw;
+}
+.table{
+    color:white;
+    border: double;
+    width: 19vw;
+    max-width: 19vw;
+}
+.th, td {
+    color: white;
+    border: double;
+    width: 19vw;
+    max-width: 19vw;
+}
+.fieldset{
+    border:transparent;
+    max-width: 20vw;
+}
+.filler1{
+    background-color: black;
+    max-width: 20vw;
+}
+.filler2{
+    background-color: black;
+    max-width: 20vw;
+}
+.filler3{
+    background-color: black;
+    max-width: 20vw;
+}
+.filler4{
+    background-color: black;
+    height: 48px;
+    text-align: center;
+    max-width: 20vw;
+}

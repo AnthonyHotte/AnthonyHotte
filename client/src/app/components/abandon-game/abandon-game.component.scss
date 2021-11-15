@@ -1,20 +1,39 @@
 .buttonsurrender:hover {
-    background-color: #fa4040;
+    background-color: black;
+    color: red;
 }
 
 .buttonsurrender {
-    font-size: large;
+    font-size: 36px;
     color: #fff;
     background-color: #ff0000;
-    border: none;
-    border-radius: 5px;
+    border: double;
+    border-radius: 16px;
+    box-shadow: 0px 10px blue;
+    margin-bottom: 10px;
 }
 
 .buttonsurrenderconfirmed {
-    font-size: large;
+    font-size: 22px;
     color: #fff;
     background-color: #ff0000;
     margin-right: 30px;
-    border: none;
-    border-radius: 5px;
+    border: double;
+    border-radius: 14px;
+    box-shadow: 0 6px black;
+}
+
+.buttonsurrenderconfirmed:hover{
+    color: red;
+    background-color: white;
+}
+
+.label {
+    font-size: 16px;
+    color: blanchedalmond;
+    background-color: red;
+}
+
+.fieldset{
+    border:transparent;
 }

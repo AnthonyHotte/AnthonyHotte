@@ -72,6 +72,11 @@ export class SoloGameInitiatorComponent {
         this.socketService.handleDisconnect();
     }
 
+    @HostListener('contextmenu', ['$event'])
+    onRightClick(event: { preventDefault: () => void }) {
+        event.preventDefault();
+    }
+
     initiateIsNameValid() {
         if (this.getGameStatus() === 1) {
             this.nameIsValid = false;

@@ -15,6 +15,11 @@ export class WaitingRoomComponent {
         this.socketService.handleDisconnect();
     }
 
+    @HostListener('contextmenu', ['$event'])
+    onRightClick(event: { preventDefault: () => void }) {
+        event.preventDefault();
+    }
+
     setSoloType() {
         this.timeTurnManager.gameStatus = 2;
         this.cancelGame();

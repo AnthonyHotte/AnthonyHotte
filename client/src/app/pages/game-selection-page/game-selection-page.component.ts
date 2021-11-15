@@ -16,6 +16,10 @@ export class GameSelectionPageComponent {
     beforeUnloadHandler() {
         this.socket.handleDisconnect();
     }
+    @HostListener('contextmenu', ['$event'])
+    onRightClick(event: { preventDefault: () => void }) {
+        event.preventDefault();
+    }
 
     setSoloType() {
         this.timeTurnManager.gameStatus = 2;

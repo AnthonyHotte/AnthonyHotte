@@ -1,11 +1,14 @@
 .container {
     height: 100%;
     display: flex;
+    overflow: hidden;
+    background-image: url('https://th.bing.com/th/id/OIP.O3ERQEx-ofwpqBXLu19EgwHaE8?pid=ImgDet&rs=1');
 }
 
 .play-area-container {
-    overflow: auto;
+    overflow: hidden;
     flex: 1 1 auto;
+    background-image: url('https://th.bing.com/th/id/OIP.O3ERQEx-ofwpqBXLu19EgwHaE8?pid=ImgDet&rs=1');
 }
 
 .play-area {
