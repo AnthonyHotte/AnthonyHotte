@@ -17,7 +17,6 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 <h3 *ngIf="getGameStatus() === 1" class="header3"><strong>6 -</strong> Ne pas choisir le même nom que celui du créateur : {{returnNameOfCreator()}}</h3>
                 </div>
             </article>
-            <label class="label">Nom du joueur pour la partie : {{ this.name }}</label>
             </div>
                 <div class="image-names">
                     <fieldset class="fieldset">
@@ -51,23 +50,6 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                                 <label class="label"><output name="temps" for="tempsDeJeu" style="color:black">{{ playTime }}</output> secondes par tour de jeu </label>
                             </form>
                         </div>
-                    </fieldset>
-                </div>
-                <div class="image-button">
-                    <fieldset class="fieldset">
-                        <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
-                        <label class="space" *ngIf="nameIsValid">space</label>
-                        <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()" class="button"><i class="fa fa-play"></i>
-                            Démarrer la partie!
-                        </button>
-                        <button *ngIf="nameIsValid && getGameStatus() === 0" (click)="startNewGame()" routerLink="/waiting" class="button"><i class="fa fa-play"></i>
-                            Démarrer la partie!
-                        </button>
-                        <button *ngIf="nameIsValid && getGameStatus() === 1 && this.returnIsGameToBeJoined() && this.verifyNameIsNotSameAsRoomCreator()" (click)="joinGame()" class="button">
-                            <i class="fa fa-play"></i>Joindre la partie!
-                        </button>
-                        <button *ngIf="!this.returnIsGameToBeJoined()" (click) = "this.createPopUp()" class="button"><i class="fa fa-refresh"></i>Mettre à jour la situation</button>
-                    <div *ngIf="this.getGameStatus()===1" class="bonus-fill"> </div>
                     </fieldset>
                 </div>
                 <div *ngIf="getGameStatus() !== 1">
