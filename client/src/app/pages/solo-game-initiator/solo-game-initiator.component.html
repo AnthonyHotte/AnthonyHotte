@@ -20,7 +20,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             <label class="label">Nom du joueur pour la partie : {{ this.name }}</label>
             </div>
                 <div class="image-names">
-                    <fieldset class="fielset">
+                    <fieldset class="fieldset">
                         <label class="label"> {{ 'Validité du nom: ' + nameValidityInChar() }}</label>
                         <p><label class="label"> Entrez votre nom : </label> 
                             <input [(ngModel)]="temporaryName" type="string" class="input"/> 
@@ -56,6 +56,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 <div class="image-button">
                     <fieldset class="fieldset">
                         <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
+                        <label class="space" *ngIf="nameIsValid">space</label>
                         <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()" class="button"><i class="fa fa-play"></i>
                             Démarrer la partie!
                         </button>

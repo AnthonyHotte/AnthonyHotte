@@ -15,45 +15,52 @@
 .button {
     display: inline-block;
     padding: 15px 25px;
-    font-size: 30px;
+    font-size: 1.5vw;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
     outline: none;
     color: #fff;
-    background-color: orange;
+    background-color: green;
     border: none;
     border-radius: 15px;
-    box-shadow: 0 9px orangered;
+    box-shadow: 0 9px darkgreen;
     font-family: serif;
 }
 
 .team-name {
     margin-top: 0.25em;
     margin-bottom: 0.25em;
-    color: black;
+    color: white;
+    font-family: serif;
+    font-size: 18px;
 }
 
 .header-item {
     justify-content: center;
-    background: linear-gradient(to right, rgb(111, 0, 255), #71eeff);
+    background-color: darkgreen;
+    color: white;
     text-align: center;
-    font-family: fantasy;
+    font-family: serif;
+    font-size: 32px;
+    height: 5vh;
+    max-height: 5vh;
 }
 
 .footer-item {
     text-align: center;
-    background: linear-gradient(to left, rgb(255, 0, 0), rgb(165, 113, 17));
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: darkgreen;
+    color:white;
+    font-family: serif;
 }
 
 .footer-item p :nth-child(even) {
-    color: orange;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+    font-family: serif;
 }
 .footer-item p :nth-child(odd) {
-    color: blue;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+    font-family: serif;
 }
 
 .server-message {

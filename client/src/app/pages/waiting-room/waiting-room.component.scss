@@ -1,10 +1,12 @@
 .header {
-    font-size: 32px;
-    font-style: oblique;
-    font-family: Papyrus;
+    font-family: serif;
     color: white;
-    background-color: yellowgreen;
+    background-color: darkgreen;
     text-align: center;
+    width: 100vw;
+    font-size: 32px;
+    height: 5vh;
+    max-height: 5vh;
 }
 
 .body {
@@ -14,46 +16,35 @@
 }
 
 .filler {
-    background-color: green;
+    background-color: lightgreen;
     width: 100%;
     height: 100%;
 }
-
-.solo {
+// source : https://www.w3schools.com/csS/tryit.asp?filename=trycss_buttons_animate3 
+.button {
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 1vw;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
     background-color: green;
-    color: white;
-    font-size: 24px;
-    border-radius: 50%;
-    border: double;
-    border-color: black;
-    padding: 20px 40px;
-    box-shadow: 0 10px yellowgreen;
-    margin-bottom: 100px;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px darkgreen;
+    font-family: serif;
 }
 
-.solo:hover{
-    background-color: white;
-    color: green;
-}
-
-.home {
-    background-color: red;
-    color: black;
-    font-size: 24px;
-    border-radius: 50%;
-    border: double;
-    border-color: black;
-    padding: 20px 40px;
-    box-shadow: 0 10px red;
-}
-
-.home:hover {
+.button:hover{
     background-color: black;
-    color: red;
+    color: white;
+    font-family: serif;
 }
 
 .body {
-    background-color: green;
+    background-color: lightgreen;
     width: 100%;
     height: 100%;
 }
@@ -71,7 +62,7 @@ bodY {
     display: flex;
     justify-content: center;
     align-items: center;
-    background:green;
+    background:black;
   }
   .wave {
     width: 5px;

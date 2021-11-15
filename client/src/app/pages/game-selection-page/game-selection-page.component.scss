@@ -10,32 +10,34 @@
 .header-item {
     justify-content: center;
     color: white;
-    background: linear-gradient(to right, rgb(115, 128, 0),rgb(0, 128, 122));
+    background-color: darkgreen;
     text-align: center;
-    font-size: 35px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    width: 100%;
-    height: 60px;
+    font-family: serif;
+    width: 100vw;
+    font-size: 32px;
+    height: 5vh;
+    max-height: 5vh;
 }
 
-// source : https://www.coderepublics.com/CSS/css-buttons.php#:~:text=Button%20Hover%20effect%20means%20changing%20CSS%20of%20an,%3Ahover%20selector%20is%20used%20to%20create%20hover%20effect.
+// source : https://www.w3schools.com/csS/tryit.asp?filename=trycss_buttons_animate3 
 .button {
     display: inline-block;
-    border-radius: 4px;
-    background-color: transparent;
-    border: dotted;
-    border-radius: 50%;
-    color: black;
-    text-align: center;
-    font-size: 28px;
-    padding: 10px;
-    transition: all 0.5s;
+    padding: 15px 25px;
+    font-size: 1.5vw;
     cursor: pointer;
-    margin: 4px 2px;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: green;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px darkgreen;
+    font-family: serif;
 }
 
 .button:hover {
-    background-color: red;
+    background-color: black;
     color: white;
 }
 
@@ -49,5 +51,5 @@ html, body {   margin:0;   height:100%;   overflow:hidden; }
 }
 
 .info {
-    color: blueviolet;
+    color: white;
 }
