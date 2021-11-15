@@ -1,4 +1,4 @@
 export interface BestScore {
     score: number;
-    name: string;
+    name: string[];
 }
