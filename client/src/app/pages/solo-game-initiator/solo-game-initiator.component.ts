@@ -76,7 +76,7 @@ export class SoloGameInitiatorComponent {
     onRightClick(event: { preventDefault: () => void }) {
         event.preventDefault();
     }
-    
+
     initiateIsNameValid() {
         if (this.getGameStatus() === 1) {
             this.nameIsValid = false;
