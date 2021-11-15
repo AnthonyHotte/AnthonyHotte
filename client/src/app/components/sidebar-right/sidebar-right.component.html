@@ -69,7 +69,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 </div>
             </div>
         </fieldset>
-        <p><button *ngIf="showPassButton()" class="buttonfontsize" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button></p>
+        <p><button *ngIf="showPassButton() && !this.getLettersSelected()" class="buttonfontsize" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button></p>
             <app-exchange-letters-gui></app-exchange-letters-gui>
             <app-place-word-with-click-gui></app-place-word-with-click-gui>
             <app-abandon-game></app-abandon-game>

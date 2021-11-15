@@ -42,7 +42,8 @@
     color: gold;
     background-color: black;
     font-size: 36px;
-    max-width: 20vw;
+    width: 19vw;
+    max-width: 19vw;
 }
 .header1{
    background-image: linear-gradient(90deg, rgb(128, 105, 0), rgb(0, 102, 128));
@@ -77,17 +78,22 @@
 }
 .score-filler{
     background-color: black;
+    width: 20vw;
     max-width: 20vw;
+    margin-right: 0vw;
+    margin-left: 0vw;
 }
 .table{
     color:gold;
     border: double;
-    max-width: 20vw;
+    width: 19vw;
+    max-width: 19vw;
 }
 .th, td {
     color: gold;
     border: double;
-    max-width: 20vw;
+    width: 19vw;
+    max-width: 19vw;
 }
 .fieldset{
     border:transparent;
