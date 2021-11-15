@@ -198,8 +198,9 @@ export class AdminPageComponent {
         this.nameJV[0].splice(3);
         this.nameJV[1].splice(3);
         this.communicationService.reinitialiseDictionary().subscribe();
-        // TODO
-        // mogo gerer nameJV
+        this.bestScoreService.clearBestScore();
+        this.sendJVNameChanges(0);
+        this.sendJVNameChanges(1);
     }
     saveDictionaryModification() {
         this.showNewDescriptionInput = false;

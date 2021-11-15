@@ -47,4 +47,10 @@ export class BestScoreService {
         }
         return false;
     }
+    clearBestScore() {
+        this.bestScore[0] = [];
+        this.bestScore[1] = [];
+        // TODO
+        // send changes to Mongo
+    }
 }
