@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BestScore } from '@app/classes/best-score';
-import { MAXNUMBERBESTSCORE } from '@app/constants';
+import { BASEDEFAULTBESTSCORE, MAXNUMBERBESTSCORE } from '@app/constants';
 
 @Injectable({
     providedIn: 'root',
@@ -11,15 +11,12 @@ export class BestScoreService {
         this.bestScore = [];
         this.bestScore.push([]);
         this.bestScore.push([]);
-        this.bestScore[0].push({ name: ['tony'], score: 99 });
-        this.bestScore[0].push({ name: ['Hotte'], score: 78 });
-        this.bestScore[1].push({ name: ['tony'], score: 108 });
-        this.bestScore[1].push({ name: ['Hotte'], score: 54 });
+        for (let i = 0; i < MAXNUMBERBESTSCORE; i++) {
+            this.bestScore[0].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE + 2 * i });
+            this.bestScore[1].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE + 3 * i });
+        }
     }
     verifyIfBestScore(score: number, mode: number) {
-        if (this.bestScore[mode].length < MAXNUMBERBESTSCORE) {
-            return true;
-        }
         for (let i = 0; i < MAXNUMBERBESTSCORE; i++) {
             if (score >= this.bestScore[mode][i].score) {
                 return true;
@@ -32,6 +29,7 @@ export class BestScoreService {
         for (const best of this.bestScore[mode]) {
             if (score === best.score) {
                 this.bestScore[mode][index].name.push(name);
+                this.sendScoreChangesToMongo(mode);
                 return true;
             } else if (score >= this.bestScore[mode][index].score) {
                 const tempBestScore = this.bestScore[mode][index].score;
@@ -41,6 +39,7 @@ export class BestScoreService {
                 for (const oneName of tempBestName) {
                     this.addBestScore(oneName, tempBestScore, mode);
                 }
+                this.sendScoreChangesToMongo(mode);
                 return true;
             }
             index++;
@@ -50,7 +49,16 @@ export class BestScoreService {
     clearBestScore() {
         this.bestScore[0] = [];
         this.bestScore[1] = [];
+        for (let i = 0; i < MAXNUMBERBESTSCORE; i++) {
+            this.bestScore[0].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE + 2 * i });
+            this.bestScore[1].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE + 3 * i });
+        }
+        this.sendScoreChangesToMongo(0);
+        this.sendScoreChangesToMongo(1);
+    }
+    // eslint-disable-next-line no-unused-vars
+    sendScoreChangesToMongo(mode: number) {
         // TODO
-        // send changes to Mongo
+        // send to mongo
     }
 }
