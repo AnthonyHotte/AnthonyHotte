@@ -1,27 +1,22 @@
 import { Injectable } from '@angular/core';
 import { ScoreCalculatorService } from '@app/services/score-calculator.service';
 import { Subscription } from 'rxjs';
-import jsonDictionnary from 'src/assets/dictionnary.json';
+import { DictionaryService } from './dictionary.service';
 import { SocketService } from './socket.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class WordValidationService {
-    dictionnary: string[];
-    dicLength: number;
     pointsForLastWord: number;
     indexLastLetters: number[] = [];
     validatedWord: boolean;
     validatedSubscription: Subscription;
     wordsCreatedLastTurn: string[];
 
-    constructor(readonly scoreCalculator: ScoreCalculatorService, private socket: SocketService) {
-        // when importing the json, typescript doesnt let me read it as a json object. To go around this, we stringify it then parse it
-        const temp = JSON.stringify(jsonDictionnary);
-        const temp2 = JSON.parse(temp);
-        this.dictionnary = temp2.words;
-        this.dicLength = this.dictionnary.length;
+    constructor(readonly scoreCalculator: ScoreCalculatorService, private socket: SocketService, private dictionaryService: DictionaryService) {
+        // this.dictionaryService.getDictionary();
+
         this.validatedSubscription = this.socket.isWordValid.subscribe((value: boolean) => {
             this.validatedWord = value;
         });
@@ -160,10 +155,12 @@ export class WordValidationService {
         let normalizedDicWord: string;
         let m: number;
         let l = 0;
-        let r = this.dicLength - 1;
+        let r = this.dictionaryService.dictionaryList[this.dictionaryService.indexDictionary].words.length - 1;
         while (l <= r) {
             m = l + Math.floor((r - l) / 2);
-            normalizedDicWord = this.dictionnary[m].normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            normalizedDicWord = this.dictionaryService.dictionaryList[this.dictionaryService.indexDictionary].words[m]
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
 
             if (normalizedDicWord === normalizedWord) {
                 return true;
