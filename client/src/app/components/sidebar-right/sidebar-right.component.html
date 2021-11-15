@@ -46,15 +46,15 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             </div>
         </fieldset>
         <fieldset class="fieldset">
-            <h3 class="label"> Nombre de lettres dans la réserve: {{ getNumberRemainingLetters() }} </h3>
+            <h3 class="label" *ngIf="getNumberOfLettersForPlayer(0) === 7 && getNumberOfLettersForPlayer(1) === 7"> Nombre de lettres dans la réserve: {{ getNumberRemainingLetters() }} </h3>
             <div *ngIf="getNumberOfLettersForPlayer(0) < 7 || getNumberOfLettersForPlayer(1) < 7" class="fieldset">
                 <div class="filler3">
                     <label *ngIf="getNumberOfLettersForPlayer(0) < 7" class="label2">
-                        Nombre de lettres sur le chevalet de {{getPlayerName(0)}}: {{ getNumberOfLettersForPlayer(0) }}
+                        Nombre de lettres sur le chevalet de {{getPlayerName(0)}} : {{ getNumberOfLettersForPlayer(0) }}
                     </label>
                     <p>
                         <label *ngIf="getNumberOfLettersForPlayer(1) < 7" class="label2">
-                            Nombre de lettres sur le chevalet de {{getPlayerName(1)}}: {{ getNumberOfLettersForPlayer(1) }}
+                            Nombre de lettres sur le chevalet de {{getPlayerName(1)}} : {{ getNumberOfLettersForPlayer(1) }}
                         </label>
                     </p>
                 </div>
@@ -70,9 +70,9 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             </div>
         </fieldset>
         <p><button *ngIf="showPassButton() && !this.getLettersSelected()" class="buttonfontsize" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button></p>
-            <app-exchange-letters-gui></app-exchange-letters-gui>
-            <app-place-word-with-click-gui></app-place-word-with-click-gui>
-            <app-abandon-game></app-abandon-game>
-            <app-finished-game></app-finished-game>
+        <app-exchange-letters-gui></app-exchange-letters-gui>
+        <app-place-word-with-click-gui></app-place-word-with-click-gui>
+        <app-abandon-game></app-abandon-game>
+        <app-finished-game></app-finished-game>
     </body>
 </div>
