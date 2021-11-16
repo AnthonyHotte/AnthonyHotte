@@ -4,7 +4,13 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
 <div class="textBox">
     <h1 class="title"><i class="fa fa-mail-forward"></i><i class="fa fa-mail-reply"></i>Boite de communication</h1>
 </div>
-<div id="DisplayZone">
+<div *ngIf="this.getLOG2990()" id="DisplayZone">
+    <div *ngFor="let word of this.input.inputs">
+        <p [class]="word.role" *ngIf="word.message !== '' && word.role !== 'Systeme'"> {{word.sender}}: {{word.message}} </p>
+        <p [class]="word.role" *ngIf="word.message !== '' && word.role === 'Systeme'"> {{word.sender}} {{word.message}} </p>
+    </div>
+</div>
+<div *ngIf="!this.getLOG2990()" id="DisplayZone2">
     <div *ngFor="let word of this.input.inputs">
         <p [class]="word.role" *ngIf="word.message !== '' && word.role !== 'Systeme'"> {{word.sender}}: {{word.message}} </p>
         <p [class]="word.role" *ngIf="word.message !== '' && word.role === 'Systeme'"> {{word.sender}} {{word.message}} </p>
@@ -22,6 +28,6 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
         [(ngModel)]="this.word"
         (keyup.enter)="this.buttonDetect()"
         class="input"
-        placeholder="Commande ou message ici"
+        placeholder="Écrivez ici"
     />
 </form>

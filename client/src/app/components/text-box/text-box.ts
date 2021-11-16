@@ -47,4 +47,7 @@ export class TextBoxComponent {
     getSoloOpponentInputs() {
         return this.input.inputsSoloOpponent;
     }
+    getLOG2990() {
+        return this.socket.is2990;
+    }
 }

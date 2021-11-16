@@ -81,7 +81,7 @@ export class SoloGameInitiatorComponent {
         if (this.getGameStatus() === 1) {
             this.nameIsValid = false;
         } else {
-            this.nameIsValid = true;
+            this.nameIsValid = false;
         }
     }
 
