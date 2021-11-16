@@ -1,4 +1,5 @@
-import { TestBed } from '@angular/core/testing';
+import { HttpClient } from '@angular/common/http';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
@@ -6,24 +7,39 @@ import { LetterService } from '@app/services/letter.service';
 import { PlaceLetterClickService } from './place-letter-click.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
-describe('PlaceLetterClickService', () => {
+fdescribe('PlaceLetterClickService', () => {
     let placeLetterClickService: PlaceLetterClickService;
-    let gameStateServiceSpy: GameStateService;
-    let gridServiceSpy: GridService;
-    let letterServiceSpy: LetterService;
-    let timeManagerSpy: TimerTurnManagerService;
+    let gameStateServiceSpy: jasmine.SpyObj<GameStateService>;
+    let gridServiceSpy: jasmine.SpyObj<GridService>;
+    let letterServiceSpy: jasmine.SpyObj<LetterService>;
+    let timeManagerSpy: jasmine.SpyObj<TimerTurnManagerService>;
+    let httpClientSpy: jasmine.SpyObj<HttpClient>;
+    beforeEach(
+        waitForAsync(() => {
+            httpClientSpy = jasmine.createSpyObj('HttpClient', ['Get']);
+            gameStateServiceSpy = jasmine.createSpyObj('GameStateService', ['placeLetter']);
+            gridServiceSpy = jasmine.createSpyObj('GridService', ['drawGrid']);
+            letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
+            timeManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
+            letterServiceSpy.players[0].allLettersInHand = [
+                { letter: 'a', quantity: 9, point: 1 },
+                { letter: '*', quantity: 2, point: 0 },
+            ];
+            TestBed.configureTestingModule({
+                declarations: [PlaceLetterClickService],
+                providers: [
+                    { provide: GameStateService, useValue: gameStateServiceSpy },
+                    { provide: LetterService, useValue: letterServiceSpy },
+                    { provide: TimerTurnManagerService, useValue: timeManagerSpy },
+                    { provide: GridService, useValue: gridServiceSpy },
+                    { provide: HttpClient, useValue: httpClientSpy },
+                ],
+            }).compileComponents();
+        }),
+    );
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
         placeLetterClickService = TestBed.inject(PlaceLetterClickService);
-        gameStateServiceSpy = TestBed.inject(GameStateService) as jasmine.SpyObj<GameStateService>;
-        gridServiceSpy = TestBed.inject(GridService) as jasmine.SpyObj<GridService>;
-        letterServiceSpy = TestBed.inject(LetterService) as jasmine.SpyObj<LetterService>;
-        timeManagerSpy = TestBed.inject(TimerTurnManagerService) as jasmine.SpyObj<TimerTurnManagerService>;
-        letterServiceSpy.players[0].allLettersInHand = [
-            { letter: 'a', quantity: 9, point: 1 },
-            { letter: '*', quantity: 2, point: 0 },
-        ];
         placeLetterClickService.row = 2;
         placeLetterClickService.colomnNumber = 2;
     });
