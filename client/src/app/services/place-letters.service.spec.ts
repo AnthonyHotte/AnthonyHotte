@@ -10,7 +10,7 @@ import { PlaceLettersService } from './place-letters.service';
 import { SocketService } from './socket.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 import { WordValidationService } from './word-validation.service';
-fdescribe('PlaceLettersService', () => {
+describe('PlaceLettersService', () => {
     let service: PlaceLettersService;
     let gameStateServiceSpy: GameStateService;
     let gridServiceSpy: GridService;
@@ -125,7 +125,7 @@ fdescribe('PlaceLettersService', () => {
         expect(gridServiceSpy.drawtilebackground).toHaveBeenCalled();
         gameStateServiceSpy.indexLastLetters = [];
     }));
-    fit('validateWordPlaced should return true when playerUsedAllLetters is true and validateWordCreatedByNewLetters is true ', fakeAsync(() => {
+    it('validateWordPlaced should return true when playerUsedAllLetters is true and validateWordCreatedByNewLetters is true ', fakeAsync(() => {
         // eslint-disable-next-line @typescript-eslint/no-shadow
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
