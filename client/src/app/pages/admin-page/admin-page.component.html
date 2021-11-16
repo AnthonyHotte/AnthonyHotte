@@ -1,11 +1,34 @@
 <body ng-app="app" style="text-align: Center">
-    <div *ngIf="dictionaryService.dictionaryList.length !== 0">
-        <p><br />List des dictionnaires disponibles:</p>
-        <div *ngFor="let dictionary of this.dictionaryService.dictionaryList; let dictIndex = index">
-            <p>
-                Numéro du dictionnaire:{{ dictIndex }}<br />
-                Nom: {{ dictionary.title }}<br />Description: {{ dictionary.description }}<br /><br />
-            </p>
+    <p><br />List des dictionnaires disponibles:</p>
+    <div *ngFor="let dictionary of this.dictionaryService.dictionaryList; let dictIndex = index">
+        <p>
+            Numéro du dictionnaire:{{ dictIndex }}<br />
+            Nom : {{ dictionary.title }}<br />Description : {{ dictionary.description }}<br /><br />
+        </p>
+    </div>
+    <button *ngIf="showDeleteDictionaryButton" (click)="showNumberInput = true; showOrHideDictionaryButton(false); this.isDeleteMode = true">
+        Supprimer un dictionnaire
+    </button>
+    <button *ngIf="showModifyButton" (click)="showNumberInput = true; showOrHideDictionaryButton(false); this.isDeleteMode = false">
+        Modifier un dictionnaire</button
+    ><br /><br />
+
+    <fieldset *ngIf="showNumberInput">
+        <label>Numéro du dictionnaire: </label>
+        <input [(ngModel)]="dictionaryNumberInput" type="number" />
+        <button (click)="validateNumber()">Valider le numéro</button>
+        <button (click)="showNumberInput = false; showOrHideDictionaryButton(true)">Annuler</button>
+        <div *ngIf="showNumberMessageError">
+            <p>Le numéro du dictionnaire est invalide, il doit figurer dans la liste afficher mais ne peut pas etre 0.<br />Essayer de nouveau...</p>
+        </div>
+    </fieldset>
+    <fieldset *ngIf="showNewNameInput">
+        <label>Nom du dictionnaire: </label>
+        <input [(ngModel)]="newNameInput" type="string" />
+        <button (click)="validateNewName()">Valider le nom</button>
+        <button (click)="showNewNameInput = false; showOrHideDictionaryButton(true)">Annuler</button>
+        <div *ngIf="showNewNameMessageError">
+            <p>Le nom du dictionnaire est invalide, il est soit deja associer a un disctionnaire ou le nom est vide.<br />Essayer de nouveau...</p>
         </div>
         <button *ngIf="showDeleteDictionaryButton" (click)="showNumberInput = true; showOrHideDictionaryButton(false); this.isDeleteMode = true">
             Supprimer un dictionnaire
@@ -133,8 +156,8 @@
             </table>
         </div>
         <br /><br /><button (click)="reinitialize()">Réinitialiser</button>
-    </div>
     <div *ngIf="dictionaryService.dictionaryList.length === 0">
         <p>La connection avec le server est impossible... s'il vous plait veillez resayer plus tard<br />Merci de votre compréhenssion</p>
     </div>
+    </fieldset>
 </body>

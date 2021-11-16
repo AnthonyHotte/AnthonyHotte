@@ -43,6 +43,8 @@ export class SidebarRightComponent implements AfterViewInit {
             this.opponentSet = true;
             this.soloOpponentPlays();
         }
+        this.textBox.isCommand('!aide');
+        this.textBox.handleEnter('Entrez !aide pour montrer ce message de nouveau.');
     }
     showPassButton() {
         return this.turnTimeController.turn === 0 && !this.verifyLettersPlaced();
