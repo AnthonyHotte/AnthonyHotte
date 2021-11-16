@@ -68,3 +68,6 @@ export const ERRORCODE = -1;
 
 export const MAXPERCENTAGE = 100;
 export const TIMETOWAITFORVALIDATION = 2000;
+
+export const MAXNUMBERBESTSCORE = 5;
+export const BASEDEFAULTBESTSCORE = 80;
