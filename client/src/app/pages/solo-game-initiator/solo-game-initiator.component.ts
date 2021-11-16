@@ -36,6 +36,7 @@ export class SoloGameInitiatorComponent {
     isDictionaryValid: boolean;
 
     isBonusRandom = false;
+    showAdvancedParameters = false;
 
     constructor(
         private socketService: SocketService,

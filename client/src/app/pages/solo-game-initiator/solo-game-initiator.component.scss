@@ -139,6 +139,13 @@ input, select, textarea{
     margin-top: 0%;
     margin-bottom: 0%;
 }
+.advanced-parameters-button-filler{
+    background-color: white;
+    width: 100vw;
+    max-width: 100vw;
+    height: 65px;
+    max-height: 65px;
+}
 // radio code customization
 // source : https://thestizmedia.com/radio-buttons-as-toggle-buttons-with-css/
 .switch-field {

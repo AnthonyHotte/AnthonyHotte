@@ -27,49 +27,54 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 <label class="label" *ngIf="getGameStatus() === 2">{{ "Nom de l'adversaire: " + opponentName }}</label>
             </fieldset>
         </div>
-        <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2" class="image-bonus">
-            <fieldset class="fieldset">
-                <legend class="legend">Bonus aléatoire</legend>
-                <div class="switch-field">
-                    <p>
-                        <input type="radio" id="desactivated" name="randomBonus" (click)="setRandomBonus(false)" checked />
-                        <label for="desactivated">Désactivé</label>
-                        <input type="radio" id="activated" name="randomBonus" (click)="setRandomBonus(true)" />
-                        <label for="activated">Activé</label>
-                    </p>
-                </div>
-            </fieldset>
+        <div class="advanced-parameters-button-filler" *ngIf="!this.showAdvancedParameters">
+            <button class="button" *ngIf="!this.showAdvancedParameters" (click)="this.showAdvancedParameters = !this.showAdvancedParameters">Afficher les paramètres avancés</button>
         </div>
-        <div class="image-time">
-            <fieldset class="fieldset">
-                <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2">
-                    <legend class="legend">Choisissez le temps par tour de jeu</legend>
-                    <form oninput="tempsDeJeu = Math.max(parseInt(barre.value),parseInt(increment.value))">
-                        <input [(ngModel)]="playTime" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" class="slider"/>
-                        <p><label class="label"><output name="temps" for="tempsDeJeu" style="color:black">{{ playTime }}</output> secondes par tour de jeu </label></p>
-                    </form>
-                </div>
-            </fieldset>
-        </div>
-        <div *ngIf="getGameStatus() !== 1" class="dictionnary-filler">
-            <fieldset class="fieldset">
-                <legend class="legend">Choisissez le dictionnaire utilisé : </legend>
-                <legend class="legend"><br />Liste des dictionnaires disponibles :</legend>
-                <div id="listDict" *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
-                    <label class="label">
-                        Numéro du dictionnaire : {{ dictIndex }}
-                        Nom : {{ dictionary.title }} Description : {{ dictionary.description }}
-                    </label><br /><br />
-                </div>
-                <label class="label">Numéro du dictionnaire : </label>
-                <label style="background-color: lightgreen; color: lightgreen">spacing</label>
-                <input [(ngModel)]="indexDictionaryNumber" type="number" class="input"/>
-                <label style="background-color: lightgreen; color: lightgreen">spacing</label>
-                <button (click)="validateDictionaryNumber()" class="button"><i class="fa fa-check"></i>Valider le numéro</button>
-                <div>
-                    <label class="label">{{ validationDictionaryMessage }}</label>
-                </div>
-            </fieldset>
+        <div *ngIf="this.showAdvancedParameters">
+            <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2" class="image-bonus">
+                <fieldset class="fieldset">
+                    <legend class="legend">Bonus aléatoire</legend>
+                    <div class="switch-field">
+                        <p>
+                            <input type="radio" id="desactivated" name="randomBonus" (click)="setRandomBonus(false)" checked />
+                            <label for="desactivated">Désactivé</label>
+                            <input type="radio" id="activated" name="randomBonus" (click)="setRandomBonus(true)" />
+                            <label for="activated">Activé</label>
+                        </p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="image-time">
+                <fieldset class="fieldset">
+                    <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2">
+                        <legend class="legend">Choisissez le temps par tour de jeu</legend>
+                        <form oninput="tempsDeJeu = Math.max(parseInt(barre.value),parseInt(increment.value))">
+                            <input [(ngModel)]="playTime" type="range" id="barre" name="bar" step="30" min="30" max="300" value="60" class="slider"/>
+                            <p><label class="label"><output name="temps" for="tempsDeJeu" style="color:black">{{ playTime }}</output> secondes par tour de jeu </label></p>
+                        </form>
+                    </div>
+                </fieldset>
+            </div>
+            <div *ngIf="getGameStatus() !== 1" class="dictionnary-filler">
+                <fieldset class="fieldset">
+                    <legend class="legend">Choisissez le dictionnaire utilisé : </legend>
+                    <legend class="legend"><br />Liste des dictionnaires disponibles :</legend>
+                    <div id="listDict" *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
+                        <label class="label">
+                            Numéro du dictionnaire : {{ dictIndex }}
+                            Nom : {{ dictionary.title }} Description : {{ dictionary.description }}
+                        </label><br /><br />
+                    </div>
+                    <label class="label">Numéro du dictionnaire : </label>
+                    <label style="background-color: lightgreen; color: lightgreen">spacing</label>
+                    <input [(ngModel)]="indexDictionaryNumber" type="number" class="input"/>
+                    <label style="background-color: lightgreen; color: lightgreen">spacing</label>
+                    <button (click)="validateDictionaryNumber()" class="button"><i class="fa fa-check"></i>Valider le numéro</button>
+                    <div>
+                        <label class="label">{{ validationDictionaryMessage }}</label>
+                    </div>
+                </fieldset>
+            </div>
         </div>
         <div class="image-button">
             <fieldset class="fieldset">
