@@ -27,8 +27,9 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 <label class="label" *ngIf="getGameStatus() === 2">{{ "Nom de l'adversaire: " + opponentName }}</label>
             </fieldset>
         </div>
-        <div class="advanced-parameters-button-filler" *ngIf="!this.showAdvancedParameters">
+        <div class="advanced-parameters-button-filler">
             <button class="button" *ngIf="!this.showAdvancedParameters" (click)="this.showAdvancedParameters = !this.showAdvancedParameters">Afficher les paramètres avancés</button>
+            <button class="button" *ngIf="this.showAdvancedParameters" (click)="this.showAdvancedParameters = !this.showAdvancedParameters">Masquer les paramètres avancés</button>
         </div>
         <div *ngIf="this.showAdvancedParameters">
             <div *ngIf="getGameStatus() === 0 || getGameStatus() === 2" class="image-bonus">
