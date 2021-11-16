@@ -26,4 +26,12 @@ export class DictionaryService {
             this.dictionaryList.push(dict);
         });
     }
+    isTitlePresent(title: string) {
+        for (const dictionary of this.dictionaryList) {
+            if (title === dictionary.title) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
