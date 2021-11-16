@@ -8,12 +8,20 @@ describe('ClickManagementService', () => {
     let service: ClickManagementService;
     let letterServiceSpy: LetterService;
     let placeLetterServiceClickSPy: PlaceLetterClickService;
+    beforeEach(async () => {
+        placeLetterServiceClickSPy = jasmine.createSpyObj('PlaceLetterClickService', ['placeLetter', 'reset']);
+        letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset', 'removeAttributesExchange', 'removeAttributesSwapping']);
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: PlaceLetterClickService, useValue: placeLetterServiceClickSPy },
+                { provide: LetterService, useValue: letterServiceSpy },
+            ],
+        }).compileComponents();
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(ClickManagementService);
-        letterServiceSpy = TestBed.inject(LetterService) as jasmine.SpyObj<LetterService>;
-        placeLetterServiceClickSPy = TestBed.inject(PlaceLetterClickService) as jasmine.SpyObj<PlaceLetterClickService>;
     });
 
     it('should be created', () => {
@@ -28,37 +36,29 @@ describe('ClickManagementService', () => {
 
     it('manageView should call removeAttributesExchange, removeAttributesSwapping and reset when active location is textBox', () => {
         service.activeLocation = 'textBox';
-        const mySpy = spyOn(letterServiceSpy, 'removeAttributesExchange');
-        const mySpy2 = spyOn(letterServiceSpy, 'removeAttributesSwapping');
-        const mySpy3 = spyOn(placeLetterServiceClickSPy, 'reset');
         service.manageView();
-        expect(mySpy).toHaveBeenCalled();
-        expect(mySpy2).toHaveBeenCalled();
-        expect(mySpy3).toHaveBeenCalled();
+        expect(letterServiceSpy.removeAttributesSwapping).toHaveBeenCalled();
+        expect(letterServiceSpy.removeAttributesExchange).toHaveBeenCalled();
+        expect(placeLetterServiceClickSPy.reset).toHaveBeenCalled();
     });
 
     it('manageView should call reset when active location is hand', () => {
         service.activeLocation = 'hand';
-        const mySpy = spyOn(placeLetterServiceClickSPy, 'reset');
         service.manageView();
-        expect(mySpy).toHaveBeenCalled();
+        expect(placeLetterServiceClickSPy.reset).toHaveBeenCalled();
     });
 
     it('manageView should call removeAttributesExchange and removeAttributesSwapping when active location is gameBoard', () => {
         service.activeLocation = 'gameBoard';
-        const mySpy = spyOn(letterServiceSpy, 'removeAttributesExchange');
-        const mySpy2 = spyOn(letterServiceSpy, 'removeAttributesSwapping');
         service.manageView();
-        expect(mySpy).toHaveBeenCalled();
-        expect(mySpy2).toHaveBeenCalled();
+        expect(letterServiceSpy.removeAttributesExchange).toHaveBeenCalled();
+        expect(letterServiceSpy.removeAttributesSwapping).toHaveBeenCalled();
     });
 
     it('manageView should call removeAttributesExchange and removeAttributesSwapping when active location is sidebarRight', () => {
         service.activeLocation = 'sidebarRight';
-        const mySpy = spyOn(letterServiceSpy, 'removeAttributesExchange');
-        const mySpy2 = spyOn(letterServiceSpy, 'removeAttributesSwapping');
         service.manageView();
-        expect(mySpy).toHaveBeenCalled();
-        expect(mySpy2).toHaveBeenCalled();
+        expect(letterServiceSpy.removeAttributesExchange).toHaveBeenCalled();
+        expect(letterServiceSpy.removeAttributesSwapping).toHaveBeenCalled();
     });
 });
