@@ -1,15 +1,15 @@
-import { Container } from 'inversify';
-import { Application } from '@app/app';
+// import { Container } from 'inversify';
+// import { Application } from '@app/app';
 
-import { Server } from '@app/server';
-import { DatabaseService } from './services/database.service';
-import Types from '@app/types';
+// import { Server } from '@app/server';
+// import { DatabaseService } from './services/database.service';
+// import Types from '@app/types';
 
-const container: Container = new Container();
+// const container: Container = new Container();
 
-container.bind(Types.server).to(Server);
-container.bind(Types.application).to(Application);
+// container.bind(Types.Server).to(Server);
+// container.bind(Types.Application).to(Application);
 
-container.bind(Types.databaseService).to(DatabaseService).inSingletonScope();
+// container.bind(Types.DatabaseService).to(DatabaseService).inSingletonScope();
 
-export { container };
+// export { container };

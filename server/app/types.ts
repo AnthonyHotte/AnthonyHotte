@@ -1,5 +1,6 @@
-export default {
-    server: Symbol('Server'),
-    application: Symbol('Application'),
-    databaseService: Symbol('DatabaseService'),
-};
+// /* eslint-disable @typescript-eslint/naming-convention */
+// export default {
+//     Server: Symbol('Server'),
+//     Application: Symbol('Application'),
+//     DatabaseService: Symbol('DatabaseService'),
+// };

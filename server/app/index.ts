@@ -2,7 +2,7 @@
 import 'reflect-metadata';
 import 'module-alias/register';
 import { Server } from '@app/server';
-import { container } from '@app/inversify.config';
+import { Container } from 'typedi';
 
-const server: Server = container.get(Server);
+const server: Server = Container.get(Server);
 server.init();

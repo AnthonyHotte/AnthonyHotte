@@ -1,13 +1,13 @@
-import { injectable } from 'inversify';
 import { MongoClient, Db } from 'mongodb';
 import 'reflect-metadata';
+import { Service } from 'typedi';
 
 // CHANGE the URL for your database information
-const DATABASE_URL = 'mongodb+srv://Admin:admin12345@cluster0.hcrok.mongodb.net/<dbname>?retryWrites=true&w=majority';
+const DATABASE_URL = 'mongodb+srv://equipe104:Teamprojet2@cluster0.2bthm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 const DATABASE_NAME = 'database';
 const DATABASE_COLLECTION = 'JVName';
 
-@injectable()
+@Service()
 export class DatabaseService {
     private db: Db;
     private client: MongoClient;

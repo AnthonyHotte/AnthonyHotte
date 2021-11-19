@@ -5,9 +5,7 @@ import { Service } from 'typedi';
 import { RoomsService } from './services/rooms.service';
 import { SocketManager } from './services/socket-manager-initiate-game.service';
 import { WordValidationService } from './services/word-validation.service';
-import { inject } from 'inversify';
 import { DatabaseService } from '@app/services/database.service';
-import Types from '@app/types';
 
 @Service()
 export class Server {
@@ -23,7 +21,7 @@ export class Server {
         private readonly application: Application,
         private roomsService: RoomsService,
         private wordValidationService: WordValidationService,
-        @inject(Types.databaseService) private databaseService: DatabaseService,
+        private databaseService: DatabaseService,
     ) {}
 
     private static normalizePort(val: number | string): number | string | boolean {
