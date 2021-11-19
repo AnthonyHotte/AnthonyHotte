@@ -5,7 +5,7 @@ import 'reflect-metadata';
 // CHANGE the URL for your database information
 const DATABASE_URL = 'mongodb+srv://Admin:admin12345@cluster0.hcrok.mongodb.net/<dbname>?retryWrites=true&w=majority';
 const DATABASE_NAME = 'database';
-const DATABASE_COLLECTION = 'courses';
+const DATABASE_COLLECTION = 'JVName';
 
 @injectable()
 export class DatabaseService {
@@ -38,46 +38,16 @@ export class DatabaseService {
     }
 
     async populateDB(): Promise<void> {
-        /*
-        let courses: Course[] = [
-            {
-                name: 'Object Oriented Programming',
-                credits: 3,
-                subjectCode: 'INF1010',
-                teacher: 'Samuel Kadoury',
-            },
-            {
-                name: 'Intro to Software Engineering',
-                credits: 3,
-                subjectCode: 'LOG1000',
-                teacher: 'Bram Adams',
-            },
-            {
-                name: 'Project I',
-                credits: 4,
-                subjectCode: 'INF1900',
-                teacher: 'Jerome Collin',
-            },
-            {
-                name: 'Project II',
-                credits: 3,
-                subjectCode: 'LOG2990',
-                teacher: 'Levis Theriault',
-            },
-            {
-                name: 'Web Semantics and Ontology',
-                credits: 2,
-                subjectCode: 'INF8410',
-                teacher: 'Michel Gagnon',
-            },
-        ];
-
+        const jVNamesEasy = [{ name: 'JV1' }, { name: 'JV2' }, { name: 'JV3' }];
+        const jVNamesHard = [{ name: 'JVHard1' }, { name: 'JVHard2' }, { name: 'JVHard3' }];
         // eslint-disable-next-line no-console
         console.log('THIS ADDS DATA TO THE DATABASE, DO NOT USE OTHERWISE');
-        for (const course of courses) {
-            await this.db.collection(DATABASE_COLLECTION).insertOne(course);
+        for (const name of jVNamesEasy) {
+            await this.db.collection(DATABASE_COLLECTION).insertOne(name);
         }
-        */
+        for (const name of jVNamesHard) {
+            await this.db.collection(DATABASE_COLLECTION).insertOne(name);
+        }
     }
 
     get database(): Db {
