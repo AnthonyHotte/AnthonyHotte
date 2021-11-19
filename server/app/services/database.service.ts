@@ -11,11 +11,6 @@ const DATABASE_COLLECTION = 'JVName';
 export class DatabaseService {
     private db: Db;
     private client: MongoClient;
-    /*
-    private options: MongoClientOptions = {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    };*/
 
     async start(url: string = DATABASE_URL): Promise<MongoClient | null> {
         try {
