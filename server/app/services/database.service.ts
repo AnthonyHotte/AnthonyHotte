@@ -1,5 +1,5 @@
-import { injectable } from "inversify";
-import { MongoClient, MongoClientOptions, Db } from 'mongodb';
+import { injectable } from 'inversify';
+import { MongoClient, Db } from 'mongodb';
 import 'reflect-metadata';
 
 // CHANGE the URL for your database information
@@ -11,15 +11,16 @@ const DATABASE_COLLECTION = 'courses';
 export class DatabaseService {
     private db: Db;
     private client: MongoClient;
-
+    /*
     private options: MongoClientOptions = {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-    };
+    };*/
 
     async start(url: string = DATABASE_URL): Promise<MongoClient | null> {
         try {
-            const client = await MongoClient.connect(url, this.options);
+            // const client = await MongoClient.connect(url, this.options);
+            const client = await MongoClient.connect(url);
             this.client = client;
             this.db = client.db(DATABASE_NAME);
         } catch {
