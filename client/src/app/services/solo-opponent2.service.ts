@@ -82,12 +82,12 @@ export class SoloOpponent2Service {
             } else if (this.expertmode) {
                 // find horizontal word to play
                 this.score = 0;
-                const temptempword = await this.findhorizontalword(true);
+                const temptempword = await this.findword(true);
                 if (temptempword !== '') {
                     tempword = temptempword;
                 }
                 // const temptempword2 = await this.findverticalword();
-                const temptempword2 = await this.findhorizontalword(false);
+                const temptempword2 = await this.findword(false);
                 if (temptempword2 !== '') {
                     tempword = temptempword2;
                 }
@@ -190,6 +190,8 @@ export class SoloOpponent2Service {
         return arrayHand;
     }
 
+    // to be removed eventually, keeping in case the variable swap didn't work
+    /*
     async findverticalword(): Promise<string> {
         const minusone = -1;
         const letteronbord = this.gameStateService.lettersOnBoard;
@@ -213,7 +215,8 @@ export class SoloOpponent2Service {
         }
         return tempword;
     }
-    async findhorizontalword(horizontal: boolean): Promise<string> {
+    */
+    async findword(horizontal: boolean): Promise<string> {
         const minusone = -1;
         const letteronbord = this.gameStateService.lettersOnBoard;
         let tempword = '';
