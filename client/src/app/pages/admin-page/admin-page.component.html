@@ -51,7 +51,6 @@
         <p>Description: {{ this.dictionaryService.dictionaryList[this.dictionaryService.dictionaryList.length - 1].description }}</p>
         <div *ngFor="let word of this.dictionaryService.dictionaryList[this.dictionaryService.dictionaryList.length - 1].words">
             <div>{{ word }}</div>
->>>>>>> main
         </div>
         <button (click)="dictionaryService.showUploadedInfo = false; showOrHideDictionaryButton(true)">Faire d'autres modifications</button>
     </div>
