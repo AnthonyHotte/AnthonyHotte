@@ -96,7 +96,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
         const index = Math.floor(Math.random() * gameIndex.length);
         this.setIndex(gameIndex[index]);
     }
-    
+
     refresh() {
         this.socketInformation.sendGameListNeededNotification();
         this.fillGamesList();
