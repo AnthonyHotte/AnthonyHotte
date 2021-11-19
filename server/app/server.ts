@@ -5,6 +5,9 @@ import { Service } from 'typedi';
 import { RoomsService } from './services/rooms.service';
 import { SocketManager } from './services/socket-manager-initiate-game.service';
 import { WordValidationService } from './services/word-validation.service';
+import { inject } from 'inversify';
+import { DatabaseService } from '@app/services/database.service';
+import Types from '@app/types';
 
 @Service()
 export class Server {
@@ -20,6 +23,7 @@ export class Server {
         private readonly application: Application,
         private roomsService: RoomsService,
         private wordValidationService: WordValidationService,
+        @inject(Types.databaseService) private databaseService: DatabaseService,
     ) {}
 
     private static normalizePort(val: number | string): number | string | boolean {
@@ -32,7 +36,7 @@ export class Server {
             return false;
         }
     }
-    init(): void {
+    async init(): Promise<void> {
         this.application.app.set('port', Server.appPort);
 
         this.server = http.createServer(this.application.app);
@@ -43,6 +47,15 @@ export class Server {
         this.server.listen(Server.appPort);
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
+        try {
+            await this.databaseService.start();
+            // eslint-disable-next-line no-console
+            console.log('Database connection successful !');
+        } catch {
+            // eslint-disable-next-line no-console
+            console.error('Database connection failed !');
+            process.exit(1);
+        }
     }
 
     private onError(error: NodeJS.ErrnoException): void {
