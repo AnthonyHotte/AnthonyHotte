@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Dictionary } from '@app/classes/dictionary';
 import { CommunicationService } from '@app/services/communication.service';
 import { DictionaryService } from '@app/services/dictionary.service';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { AdminPageComponent } from './admin-page.component';
 
@@ -22,6 +22,7 @@ describe('AdminPageComponent', () => {
         ]);
         communicationServiceSpy.getDictionaryList.and.returnValue(new Observable());
         dictionaryServiceSpy = jasmine.createSpyObj('DictionaryService', ['getDictionary']);
+        dictionaryServiceSpy.showButton = new BehaviorSubject<boolean[]>([true, false]);
         dictionaryServiceSpy.dictionaryList = [];
         dictionaryServiceSpy.dictionaryList.push(new Dictionary('t1', 'd1'));
         dictionaryServiceSpy.dictionaryList[0].title = 't1';

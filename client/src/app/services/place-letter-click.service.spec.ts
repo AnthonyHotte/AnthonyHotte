@@ -7,7 +7,7 @@ import { LetterService } from '@app/services/letter.service';
 import { PlaceLetterClickService } from './place-letter-click.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
-fdescribe('PlaceLetterClickService', () => {
+describe('PlaceLetterClickService', () => {
     let placeLetterClickService: PlaceLetterClickService;
     let gameStateServiceSpy: jasmine.SpyObj<GameStateService>;
     let gridServiceSpy: jasmine.SpyObj<GridService>;
