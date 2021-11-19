@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
@@ -7,14 +8,14 @@ import { LetterService } from '@app/services/letter.service';
 import { PlaceLetterClickService } from './place-letter-click.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
-describe('PlaceLetterClickService', () => {
+fdescribe('PlaceLetterClickService', () => {
     let placeLetterClickService: PlaceLetterClickService;
     let gameStateServiceSpy: jasmine.SpyObj<GameStateService>;
     let gridServiceSpy: jasmine.SpyObj<GridService>;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let timeManagerSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let httpClientSpy: jasmine.SpyObj<HttpClient>;
-    beforeEach(
+    /* beforeEach(
         waitForAsync(() => {
             httpClientSpy = jasmine.createSpyObj('HttpClient', ['Get']);
             gameStateServiceSpy = jasmine.createSpyObj('GameStateService', ['placeLetter']);
@@ -34,12 +35,34 @@ describe('PlaceLetterClickService', () => {
                     { provide: GridService, useValue: gridServiceSpy },
                     { provide: HttpClient, useValue: httpClientSpy },
                 ],
+                imports: [HttpClientTestingModule],
             }).compileComponents();
         }),
-    );
+    );*/
 
     beforeEach(() => {
+        httpClientSpy = jasmine.createSpyObj('HttpClient', ['Get']);
+        gameStateServiceSpy = jasmine.createSpyObj('GameStateService', ['placeLetter']);
+        gridServiceSpy = jasmine.createSpyObj('GridService', ['drawGrid']);
+        letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
+        timeManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
+        letterServiceSpy.players[0].allLettersInHand = [
+            { letter: 'a', quantity: 9, point: 1 },
+            { letter: '*', quantity: 2, point: 0 },
+        ];
+        TestBed.configureTestingModule({
+            declarations: [PlaceLetterClickService],
+            providers: [
+                { provide: GameStateService, useValue: gameStateServiceSpy },
+                { provide: LetterService, useValue: letterServiceSpy },
+                { provide: TimerTurnManagerService, useValue: timeManagerSpy },
+                { provide: GridService, useValue: gridServiceSpy },
+                { provide: HttpClient, useValue: httpClientSpy },
+            ],
+            imports: [HttpClientTestingModule],
+        }).compileComponents();
         placeLetterClickService = TestBed.inject(PlaceLetterClickService);
+        // TestBed.configureTestingModule({})
         placeLetterClickService.row = 2;
         placeLetterClickService.colomnNumber = 2;
     });
