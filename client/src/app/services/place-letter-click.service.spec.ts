@@ -1,10 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { PlayerLetterHand } from '@app/classes/player-letter-hand';
+import { NUMBEROFCASE } from '@app/constants';
 
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
+import { LetterBankService } from './letter-bank.service';
 import { PlaceLetterClickService } from './place-letter-click.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
@@ -15,44 +18,30 @@ fdescribe('PlaceLetterClickService', () => {
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let timeManagerSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let httpClientSpy: jasmine.SpyObj<HttpClient>;
-    /* beforeEach(
-        waitForAsync(() => {
-            httpClientSpy = jasmine.createSpyObj('HttpClient', ['Get']);
-            gameStateServiceSpy = jasmine.createSpyObj('GameStateService', ['placeLetter']);
-            gridServiceSpy = jasmine.createSpyObj('GridService', ['drawGrid']);
-            letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
-            timeManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
-            letterServiceSpy.players[0].allLettersInHand = [
-                { letter: 'a', quantity: 9, point: 1 },
-                { letter: '*', quantity: 2, point: 0 },
-            ];
-            TestBed.configureTestingModule({
-                declarations: [PlaceLetterClickService],
-                providers: [
-                    { provide: GameStateService, useValue: gameStateServiceSpy },
-                    { provide: LetterService, useValue: letterServiceSpy },
-                    { provide: TimerTurnManagerService, useValue: timeManagerSpy },
-                    { provide: GridService, useValue: gridServiceSpy },
-                    { provide: HttpClient, useValue: httpClientSpy },
-                ],
-                imports: [HttpClientTestingModule],
-            }).compileComponents();
-        }),
-    );*/
+    let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
 
     beforeEach(() => {
+        letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
         httpClientSpy = jasmine.createSpyObj('HttpClient', ['Get']);
         gameStateServiceSpy = jasmine.createSpyObj('GameStateService', ['placeLetter']);
-        gridServiceSpy = jasmine.createSpyObj('GridService', ['drawGrid']);
+        gameStateServiceSpy.lettersOnBoard = [];
+        for (let i = 0; i < NUMBEROFCASE; i++) {
+            gameStateServiceSpy.lettersOnBoard[i] = [];
+            for (let j = 0; j < NUMBEROFCASE; j++) {
+                gameStateServiceSpy.lettersOnBoard[i][j] = '';
+            }
+        }
+        gridServiceSpy = jasmine.createSpyObj('GridService', ['drawGrid', 'drawtilebackground']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
         timeManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
+        letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
         letterServiceSpy.players[0].allLettersInHand = [
             { letter: 'a', quantity: 9, point: 1 },
             { letter: '*', quantity: 2, point: 0 },
         ];
         TestBed.configureTestingModule({
-            declarations: [PlaceLetterClickService],
             providers: [
+                { provide: LetterBankService, useValue: letterBankServiceSpy },
                 { provide: GameStateService, useValue: gameStateServiceSpy },
                 { provide: LetterService, useValue: letterServiceSpy },
                 { provide: TimerTurnManagerService, useValue: timeManagerSpy },
@@ -252,12 +241,12 @@ fdescribe('PlaceLetterClickService', () => {
     });
 
     it('rawXYPositionToCasePosition should return 14 when 746 is entered', () => {
-        const randomNumber = 746;
+        const randomNumber = 634;
         const lastCase = 14;
         expect(placeLetterClickService.rawXYPositionToCasePosition(randomNumber)).toEqual(lastCase);
     });
 
-    it('removeLetterWithBackspace should call handleColumnAndRowAfterRemove when orientation is h letteronedge', () => {
+    fit('removeLetterWithBackspace should call handleColumnAndRowAfterRemove when orientation is h letteronedge', () => {
         placeLetterClickService.isLetterAtEdge = true;
         placeLetterClickService.orientation = 'h';
         placeLetterClickService.lettersFromHand = 'hello';
@@ -344,9 +333,8 @@ fdescribe('PlaceLetterClickService', () => {
     it('removearrow if needed should call drawtilebackground if last letter entered is Backspace', () => {
         placeLetterClickService.wordPlacedWithClick = 'hello';
         placeLetterClickService.lastKeyPressed = 'Backspace';
-        const mySpy = spyOn(gridServiceSpy, 'drawtilebackground');
         placeLetterClickService.removeArrowIfNeeded(2, 2);
-        expect(mySpy).toHaveBeenCalled();
+        expect(gridServiceSpy.drawtilebackground).toHaveBeenCalled();
     });
 
     it('remove whole word should call remove arrow if needed', () => {
