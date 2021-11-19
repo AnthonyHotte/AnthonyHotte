@@ -1,9 +1,11 @@
 import { MongoClient, Db } from 'mongodb';
 import 'reflect-metadata';
 import { Service } from 'typedi';
+import { environment } from '@app/environnements/environnement';
 
 // CHANGE the URL for your database information
-const DATABASE_URL = 'mongodb+srv://equipe104:Teamprojet2@cluster0.2bthm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+// const DATABASE_URL = 'mongodb+srv://equipe104:Teamprojet2@cluster0.2bthm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const DATABASE_URL = environment.mongoUrl;
 const DATABASE_NAME = 'database';
 const DATABASE_COLLECTION = 'JVName';
 
