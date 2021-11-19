@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { GameStatus } from '@app/game-status';
 import { ERRORCODE, VALEUR_TEMPS_DEFAULT } from '@app/constants';
+import { GameStatus } from '@app/game-status';
 import { Subscription } from 'rxjs';
 import { SocketService } from './socket.service';
 

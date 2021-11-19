@@ -12,6 +12,7 @@ import { IndexWaitingRoomService } from '@app/services/index-waiting-room.servic
 import { LetterService } from '@app/services/letter.service';
 import { MessageService } from '@app/services/message.service';
 import { SocketService } from '@app/services/socket.service';
+import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { TileScramblerService } from '@app/services/tile-scrambler.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 
@@ -34,7 +35,7 @@ export class SoloGameInitiatorComponent {
     validationDictionaryMessage: string;
     startingNewGame = false;
     isDictionaryValid: boolean;
-
+    expertmode = false;
     isBonusRandom = false;
 
     constructor(
@@ -47,6 +48,7 @@ export class SoloGameInitiatorComponent {
         private dialog: MatDialog,
         private communicationService: CommunicationService,
         private dictionaryService: DictionaryService,
+        private soloopponent2: SoloOpponent2Service,
     ) {
         this.dictionaryList = [];
         this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
@@ -209,6 +211,9 @@ export class SoloGameInitiatorComponent {
     }
     setRandomBonus(activated: boolean) {
         this.isBonusRandom = activated;
+    }
+    setExpertMode() {
+        this.soloopponent2.setExpertMode();
     }
     scrambleBonus() {
         if (this.isBonusRandom) {
