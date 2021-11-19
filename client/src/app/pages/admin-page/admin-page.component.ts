@@ -5,6 +5,7 @@ import { ERRORCODE } from '@app/constants';
 import { BestScoreService } from '@app/services/best-score.service';
 import { CommunicationService } from '@app/services/communication.service';
 import { DictionaryService } from '@app/services/dictionary.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-admin-page',
@@ -30,6 +31,7 @@ export class AdminPageComponent {
     showDownloadButton: boolean;
     showUpLoadButton: boolean;
     showUpload: boolean;
+    showDictionarySubscription: Subscription;
 
     nameJV: string[][]; // JV easy name index 0, JVHard name index 1
     newNameJV: string;
@@ -59,6 +61,10 @@ export class AdminPageComponent {
             result.forEach((res) => {
                 this.dictionaryService.dictionaryList.push(res);
             });
+        });
+        this.showDictionarySubscription = this.dictionaryService.showButton.subscribe((res) => {
+            this.showOrHideDictionaryButton(res[0]);
+            this.showUpload = res[1];
         });
         this.newNameJV = '';
         this.newNameInput = '';

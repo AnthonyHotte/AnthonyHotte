@@ -15,16 +15,14 @@ export class FileUploadComponent {
     @Input()
     requiredFileType: string;
     showDownloadMessage: boolean;
-    showDownload: boolean;
     dictionary: Dictionary;
 
     fileName = '';
     uploadProgress: number | null;
     uploadSub: Subscription | null;
 
-    constructor(private communicationService: CommunicationService, private dictionaryService: DictionaryService) {
+    constructor(private communicationService: CommunicationService, public dictionaryService: DictionaryService) {
         this.showDownloadMessage = false;
-        this.showDownload = false;
         this.dictionary = new Dictionary('', '');
     }
     isValidDictionary(title: string, description: string) {
@@ -55,10 +53,11 @@ export class FileUploadComponent {
                         // succeded
                         this.communicationService.sendNewDictionary(this.dictionary).subscribe();
                         this.dictionaryService.dictionaryList.push(this.dictionary);
-                        this.showDownload = true;
                         this.dictionaryService.isUploadComplete = true;
+                        this.dictionaryService.showUploadedInfo = true;
                     } else {
                         this.showDownloadMessage = true;
+                        this.dictionaryService.showUploadedInfo = false;
                     }
                 };
             }

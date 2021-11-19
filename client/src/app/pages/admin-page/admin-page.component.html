@@ -73,7 +73,15 @@
         ><br />
         <a *ngIf="showDownloadUrl" [href]="downloadUrl" download="dictionary.json">Download</a>
         <br /><app-file-upload *ngIf="showUpload && !dictionaryService.isUploadComplete" requiredFileType=".json"></app-file-upload>
-
+        <div *ngIf="dictionaryService.showUploadedInfo">
+            <p>Voici les informations du dictionnaire téléversé:</p>
+            <p>Titre: {{ this.dictionaryService.dictionaryList[this.dictionaryService.dictionaryList.length-1].title }}</p>
+            <p>Description: {{ this.dictionaryService.dictionaryList[this.dictionaryService.dictionaryList.length-1].description }}</p>
+            <div *ngFor="let word of this.dictionaryService.dictionaryList[this.dictionaryService.dictionaryList.length-1].words">
+                <div>{{ word }}</div>
+            </div>
+            <button (click)="dictionaryService.showUploadedInfo = false; showOrHideDictionaryButton(true);">Faire d'autres modifications</button>
+        </div>
         <p><br /><br />List de nom des joueur virtuel débutant:</p>
         <div *ngFor="let name of this.nameJV[0]; let dictIndex = index">
             <p>
