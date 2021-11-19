@@ -1,0 +1,22 @@
+.fieldset {
+    border: double;
+    background-color: lightgreen;
+    color: black;
+    width: 27vw;
+    max-width: 27vw;
+    height: 29vh;
+    max-height: 29vh;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 0 5px 0 5px;
+}
+.title {
+    color: darkgreen;
+    font-size: 18px;
+    font-family: serif;
+}
+.text {
+    color: darkgreen;
+    font-size: 14px;
+    font-family: serif;
+}

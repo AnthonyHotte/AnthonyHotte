@@ -1,15 +1,32 @@
 .container {
     height: auto;
-    min-height: 98vh;
+    min-height: 95vh;
     padding: 0 5px 0 5px;
     margin-right: 5px;
     background-color: lightgreen;
     width: 27vw;
     color:black;
     border: double;
-    height: 100vh;
-    max-height: 100vh;
+    height: 97vh;
+    max-height: 97vh;
     position: relative;
-    left: 5px;
+    margin-left: 5px;
     top: 5px;
+}
+.container2 {
+    height: auto;
+    min-height: 66vh;
+    padding: 0 5px 0 5px;
+    margin-right: 5px;
+    background-color: lightgreen;
+    width: 27vw;
+    color:black;
+    border: double;
+    height: 67vh;
+    max-height: 67vh;
+    position: relative;
+    margin-left: 5px;
+    margin-right: 5px;
+    top: 5px;
+    margin-bottom: 5px;
 }
