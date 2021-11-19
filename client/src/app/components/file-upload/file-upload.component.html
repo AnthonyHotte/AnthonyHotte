@@ -8,18 +8,12 @@
             <mat-icon>attach_file</mat-icon>
         </button>
     </div>
-    <div *ngIf="this.showDownload">
-        <p>Voici les informations du dictionnaire téléversé:</p>
-        <p>Titre: {{ this.dictionary.title }}</p>
-        <p>Description: {{ this.dictionary.description }}</p>
-        <div *ngFor="let word of this.dictionary.words">
-            <pre>{{ word }}, </pre>
-        </div>
-    </div>
+    
     <div *ngIf="showDownloadMessage">
         <p>
             Le dictionnaire téléverser n'est pas dans le bon format ou le titre est deja present dans la liste, essayer de nouveau.<br />Le format
             désiré contient les champs title, description et words (un array de tous les mots)
         </p>
+        <button (click)="dictionaryService.showUploadedInfo = false; showDownloadMessage=false; dictionaryService.showButton.next([true, false]);">Faire d'autres modifications</button>
     </div>
 </div>
