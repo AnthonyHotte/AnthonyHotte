@@ -14,6 +14,7 @@ export class CommunicationService {
     private readonly baseUrl: string = environment.serverUrl;
 
     constructor(private readonly http: HttpClient) {}
+    // getJVNames() : Observable<
     getDictionaryList(): Observable<Dictionary[]> {
         return this.http.get<Dictionary[]>(`${this.baseUrl}/dictionary/list`).pipe(catchError(this.handleError<Dictionary[]>('getDictionary')));
     }
