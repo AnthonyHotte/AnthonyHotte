@@ -1,4 +1,8 @@
-<div class="container">
+<div *ngIf="!getLOG2990()" class='container'>
+    <p></p>
+    <div><app-text-box></app-text-box></div>
+</div>
+<div *ngIf="getLOG2990()" class='container2'>
     <p></p>
     <div><app-text-box></app-text-box></div>
 </div>

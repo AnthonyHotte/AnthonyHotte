@@ -1,6 +1,7 @@
-import { Component, HostListener } from '@angular/core';
+import { AfterViewInit, Component, HostListener } from '@angular/core';
 import { Message } from '@app/classes/message';
 import { CommunicationService } from '@app/services/communication.service';
+import { RefreshServiceService } from '@app/services/refresh-service.service';
 import { SocketService } from '@app/services/socket.service';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -10,11 +11,15 @@ import { map } from 'rxjs/operators';
     templateUrl: './main-page.component.html',
     styleUrls: ['./main-page.component.scss'],
 })
-export class MainPageComponent {
+export class MainPageComponent implements AfterViewInit {
     readonly title: string = 'LOG2990';
     message: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-    constructor(private readonly communicationService: CommunicationService, private socketService: SocketService) {}
+    constructor(
+        private readonly communicationService: CommunicationService,
+        private socketService: SocketService,
+        private refreshService: RefreshServiceService,
+    ) {}
 
     @HostListener('window:beforeunload', ['$event'])
     beforeUnloadHandler() {
@@ -23,6 +28,12 @@ export class MainPageComponent {
     @HostListener('contextmenu', ['$event'])
     onRightClick(event: { preventDefault: () => void }) {
         event.preventDefault();
+    }
+
+    ngAfterViewInit(): void {
+        if (this.refreshService.needRefresh) {
+            this.refreshService.refresh();
+        }
     }
 
     sendTimeToServer(): void {

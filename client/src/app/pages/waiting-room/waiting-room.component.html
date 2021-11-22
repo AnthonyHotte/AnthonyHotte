@@ -1,6 +1,6 @@
 <!-- Source pour les icones sur les buttons : https://www.w3schools.com/howto/howto_css_icon_buttons.asp -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<html>
+<div class="overflow-hidden">
     <div class="filler">
         <div>
             <h1 class="header">Vous êtes présentement en attente d'un autre joueur, veuillez-vous détendre un moment et patienter!</h1>
@@ -19,8 +19,9 @@
                 <div class="wave"></div>
                 <div class="wave"></div>
             </div>
+            <div class="filler2"></div>
             <p><button class = "button" (click)="setSoloType()" routerLink="/soloInitiator"><i class="fa fa-play"></i>Convertir en mode solo</button></p>
             <button class = "button" (click)="cancelGame()" routerLink="/home" ><i class="fa fa-close"></i>Annuler la partie et retourner au menu principal<i class="fa fa-home"></i></button>
         </body>
     </div>
-</html>
+</div>

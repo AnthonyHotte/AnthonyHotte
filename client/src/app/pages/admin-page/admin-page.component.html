@@ -3,7 +3,7 @@
     <div *ngFor="let dictionary of this.dictionaryService.dictionaryList; let dictIndex = index">
         <p>
             Numéro du dictionnaire:{{ dictIndex }}<br />
-            Nom: {{ dictionary.title }}<br />Description: {{ dictionary.description }}<br /><br />
+            Nom : {{ dictionary.title }}<br />Description : {{ dictionary.description }}<br /><br />
         </p>
     </div>
     <button *ngIf="showDeleteDictionaryButton" (click)="showNumberInput = true; showOrHideDictionaryButton(false); this.isDeleteMode = true">
@@ -37,13 +37,23 @@
         <button (click)="saveDictionaryModification()">Enregistrer les changements</button>
         <button (click)="showNewDescriptionInput = false; showOrHideDictionaryButton(true)">Annuler</button>
     </fieldset>
-    <button *ngIf="showUpLoadButton" (click)="showOrHideDictionaryButton(false); showUpload = true; dictionaryService.isUploadComplete = false;">Téléverser un nouveau dictionnaire</button>
-    <button *ngIf="showDownloadButton" (click)="isDownloadMode = true; showNumberInput = true; showOrHideDictionaryButton(false);">
+    <button *ngIf="showUpLoadButton" (click)="showOrHideDictionaryButton(false); showUpload = true; dictionaryService.isUploadComplete = false">
+        Téléverser un nouveau dictionnaire
+    </button>
+    <button *ngIf="showDownloadButton" (click)="isDownloadMode = true; showNumberInput = true; showOrHideDictionaryButton(false)">
         Télécharger un dictionaire</button
     ><br />
     <a *ngIf="showDownloadUrl" [href]="downloadUrl" download="dictionary.json">Download</a>
-    <br /><app-file-upload *ngIf="showUpload && !dictionaryService.isUploadComplete" requiredFileType=".json" ></app-file-upload>
-
+    <br /><app-file-upload *ngIf="showUpload && !dictionaryService.isUploadComplete" requiredFileType=".json"></app-file-upload>
+    <div *ngIf="dictionaryService.showUploadedInfo">
+        <p>Voici les informations du dictionnaire téléversé:</p>
+        <p>Titre: {{ this.dictionaryService.dictionaryList[this.dictionaryService.dictionaryList.length - 1].title }}</p>
+        <p>Description: {{ this.dictionaryService.dictionaryList[this.dictionaryService.dictionaryList.length - 1].description }}</p>
+        <div *ngFor="let word of this.dictionaryService.dictionaryList[this.dictionaryService.dictionaryList.length - 1].words">
+            <div>{{ word }}</div>
+        </div>
+        <button (click)="dictionaryService.showUploadedInfo = false; showOrHideDictionaryButton(true)">Faire d'autres modifications</button>
+    </div>
     <p><br /><br />List de nom des joueur virtuel débutant:</p>
     <div *ngFor="let name of this.nameJV[0]; let dictIndex = index">
         <p>
@@ -87,5 +97,46 @@
             </p>
         </div>
     </fieldset>
+    <div>
+        <p><br /><br />Mode Classique</p>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Numéro</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                </tr>
+                <div *ngFor="let best of this.bestScoreService.bestScore[0]; let numberBest = index">
+                    <tr>
+                        <td>{{ numberBest + 1 }}</td>
+                        <td>{{ best.name }}</td>
+                        <td>{{ best.score }}</td>
+                    </tr>
+                </div>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <p><br /><br />Mode LOG2990</p>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Numéro</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                </tr>
+                <div *ngFor="let best of this.bestScoreService.bestScore[1]; let numberBest = index">
+                    <tr>
+                        <td>{{ numberBest + 1 }}</td>
+                        <td>{{ best.name }}</td>
+                        <td>{{ best.score }}</td>
+                    </tr>
+                </div>
+            </tbody>
+        </table>
+    </div>
     <br /><br /><button (click)="reinitialize()">Réinitialiser</button>
+    <div *ngIf="dictionaryService.dictionaryList.length === 0">
+        <p>La connection avec le server est impossible... s'il vous plait veillez resayer plus tard<br />Merci de votre compréhenssion</p>
+    </div>
 </body>

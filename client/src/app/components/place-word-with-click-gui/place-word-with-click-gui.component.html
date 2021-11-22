@@ -1,4 +1,4 @@
-<fieldset *ngIf = "verifyWordCreated()">
+<fieldset *ngIf = "verifyWordCreated()" style="border: transparent">
     <label class="label">Jouer ce mot?</label>
-    <p><button (click)="this.playWord()" class="button"> Jouer </button></p>
+    <button (click)="this.playWord()" class="button"> Jouer </button>
 </fieldset>

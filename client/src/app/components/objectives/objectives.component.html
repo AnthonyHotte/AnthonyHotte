@@ -1,16 +1,17 @@
-<fieldset *ngIf="getGameMode()">
+<div style="text-align: center;">
+    <fieldset *ngIf="getGameMode()" class="fieldset">
     <div *ngIf="publicLeft()">
-        <b>Objectifs public</b>
-        <p>{{ getObjective(0) }}</p>
-        <p>{{ getObjective(1) }}</p>
+        <label class="title">Objectifs public</label>
+        <p class="text">{{ getObjective(0) }}</p>
+        <p class="text">{{ getObjective(1) }}</p>
     </div>
     <div *ngIf="privateLeft()">
-        <b>Objectifs privés</b>
-        <p>{{ getObjective(2) }}</p>
+        <label class="title">Objectifs privés</label>
+        <p class="text">{{ getObjective(2) }}</p>
     </div>
     <div *ngIf="areSomeCompleted()">
-        <b>Objectifs complétés</b>
-        <p
+        <label class="title">Objectifs complétés</label>
+        <p class="text"
             *ngFor="let objective of objCompleted; let indexOfElem = index"
             [ngStyle]="{
          'color': objCompletor[indexOfElem] === 0 ? 'green' : 'red'
@@ -19,4 +20,5 @@
             {{ getSingleObjCompleted(objective) }} complété par {{ getPlayerName(objCompletor[indexOfElem]) }}
         </p>
     </div>
-</fieldset>
+    </fieldset>
+</div>

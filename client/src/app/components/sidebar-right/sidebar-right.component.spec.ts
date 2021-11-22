@@ -8,6 +8,7 @@ import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
+import { PlaceLetterClickService } from '@app/services/place-letter-click.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
@@ -27,8 +28,10 @@ describe('SidebarRightComponent', () => {
     let placeLettersServiceSpy: jasmine.SpyObj<PlaceLettersService>;
     let routerSpy: jasmine.SpyObj<Router>;
     let counterSpy: jasmine.SpyObj<CountdownComponent>;
+    let placeLetterClickServiceSpy: jasmine.SpyObj<PlaceLetterClickService>;
     beforeEach(
         waitForAsync(() => {
+            placeLetterClickServiceSpy = jasmine.createSpyObj('PlaceLetterClickService', ['placeLetter', 'reset']);
             timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn', 'initiateGame']);
             timerTurnManagerServiceSpy.turn = 0;
             soloOpponentServiceSpy = jasmine.createSpyObj('SoloOpponentService', ['reset', 'play']);
@@ -50,6 +53,7 @@ describe('SidebarRightComponent', () => {
             TestBed.configureTestingModule({
                 declarations: [SidebarRightComponent],
                 providers: [
+                    { provide: PlaceLetterClickService, useValue: placeLetterClickServiceSpy },
                     { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
                     { provide: SoloOpponentService, useValue: soloOpponentServiceSpy },
                     { provide: LetterService, useValue: letterServiceSpy },

@@ -1,9 +1,19 @@
-<input type="file" class="file-input" [accept]="requiredFileType" (change)="onFileSelected($event)" #fileUpload />
+<div>
+    <input type="file" class="file-input" [accept]="requiredFileType" (change)="onFileSelected($event)" #fileUpload />
 
-<div class="file-upload">
-    {{ fileName || 'No file uploaded yet.' }}
+    <div class="file-upload">
+        {{ fileName || 'No file uploaded yet.' }}
 
-    <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
-        <mat-icon>attach_file</mat-icon>
-    </button>
+        <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
+            <mat-icon>attach_file</mat-icon>
+        </button>
+    </div>
+    
+    <div *ngIf="showDownloadMessage">
+        <p>
+            Le dictionnaire téléverser n'est pas dans le bon format ou le titre est deja present dans la liste, essayer de nouveau.<br />Le format
+            désiré contient les champs title, description et words (un array de tous les mots)
+        </p>
+        <button (click)="dictionaryService.showUploadedInfo = false; showDownloadMessage=false; dictionaryService.showButton.next([true, false]);">Faire d'autres modifications</button>
+    </div>
 </div>
