@@ -12,25 +12,31 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
 import { WordValidationService } from './word-validation.service';
 describe('PlaceLettersService', () => {
     let service: PlaceLettersService;
-    let gameStateServiceSpy: GameStateService;
-    let gridServiceSpy: GridService;
-    let letterServiceSpy: LetterService;
-    let letterBankServiceSpy: LetterBankService;
-    let timeManagerSpy: TimerTurnManagerService;
-    let placeLetterClickServiceSpy: PlaceLetterClickService;
-    let socketSpy: SocketService;
-    let wordValidationServiceSpy: WordValidationService;
+    let gameStateServiceSpy: jasmine.SpyObj<GameStateService>;
+    let gridServiceSpy: jasmine.SpyObj<GridService>;
+    let letterServiceSpy: jasmine.SpyObj<LetterService>;
+    let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
+    let timeManagerSpy: jasmine.SpyObj<TimerTurnManagerService>;
+    let placeLetterClickServiceSpy: jasmine.SpyObj<PlaceLetterClickService>;
+    let socketSpy: jasmine.SpyObj<SocketService>;
+    let wordValidationServiceSpy: jasmine.SpyObj<WordValidationService>;
 
     beforeEach(
         waitForAsync(() => {
             wordValidationServiceSpy = jasmine.createSpyObj('WordValidationService', ['isWordValid']);
-            gameStateServiceSpy = jasmine.createSpyObj('GameStateService', ['placeLetter', 'validateWordCreatedByNewLetters', 'removeLetter']);
+            gameStateServiceSpy = jasmine.createSpyObj('GameStateService', [
+                'placeLetter',
+                'validateWordCreatedByNewLetters',
+                'removeLetter',
+                'isWordCreationPossibleWithRessources',
+            ]);
             gridServiceSpy = jasmine.createSpyObj('GridService', ['drawGrid', 'drawLetterwithpositionstring', 'drawtilebackground']);
             letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
             letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
             timeManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
-            placeLetterClickServiceSpy = jasmine.createSpyObj('PlaceLetterClickService', ['placeLetter']);
+            placeLetterClickServiceSpy = jasmine.createSpyObj('PlaceLetterClickService', ['placeLetter', 'transformIntoCommand']);
             socketSpy = jasmine.createSpyObj('SocketService', ['getMessageObservable']);
+            jasmine.getEnv().allowRespy(true);
             timeManagerSpy.turn = 0;
             const player1 = new PlayerLetterHand(letterBankServiceSpy);
             for (let i = 0; i < MAXLETTERINHAND; i++) {

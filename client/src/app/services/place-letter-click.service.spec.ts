@@ -29,10 +29,11 @@ describe('PlaceLetterClickService', () => {
                 gameStateServiceSpy.lettersOnBoard[i][j] = '';
             }
         }
-        gridServiceSpy = jasmine.createSpyObj('GridService', ['drawGrid', 'drawtilebackground']);
+        gridServiceSpy = jasmine.createSpyObj('GridService', ['drawGrid', 'drawtilebackground', 'drawLetterwithpositionstring']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
         timeManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
         letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
+        jasmine.getEnv().allowRespy(true);
         letterServiceSpy.players[0].allLettersInHand = [
             { letter: 'a', quantity: 9, point: 1 },
             { letter: '*', quantity: 2, point: 0 },
