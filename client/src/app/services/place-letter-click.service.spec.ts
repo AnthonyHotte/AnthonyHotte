@@ -3,15 +3,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { NUMBEROFCASE } from '@app/constants';
-
 import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterService } from '@app/services/letter.service';
 import { LetterBankService } from './letter-bank.service';
 import { PlaceLetterClickService } from './place-letter-click.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
-
-fdescribe('PlaceLetterClickService', () => {
+describe('PlaceLetterClickService', () => {
     let placeLetterClickService: PlaceLetterClickService;
     let gameStateServiceSpy: jasmine.SpyObj<GameStateService>;
     let gridServiceSpy: jasmine.SpyObj<GridService>;
@@ -246,7 +244,7 @@ fdescribe('PlaceLetterClickService', () => {
         expect(placeLetterClickService.rawXYPositionToCasePosition(randomNumber)).toEqual(lastCase);
     });
 
-    fit('removeLetterWithBackspace should call handleColumnAndRowAfterRemove when orientation is h letteronedge', () => {
+    it('removeLetterWithBackspace should call handleColumnAndRowAfterRemove when orientation is h letteronedge', () => {
         placeLetterClickService.isLetterAtEdge = true;
         placeLetterClickService.orientation = 'h';
         placeLetterClickService.lettersFromHand = 'hello';
@@ -313,7 +311,6 @@ fdescribe('PlaceLetterClickService', () => {
         placeLetterClickService.removeLetterWithBackspace();
         expect(mySpy).toHaveBeenCalled();
     });
-
     it('handlerowcolumn after remove should reduce by 1 column number when orientation is h', () => {
         placeLetterClickService.wordPlacedWithClick = 'hello';
         gameStateServiceSpy.lettersOnBoard[2][2] = 'a';
@@ -321,7 +318,6 @@ fdescribe('PlaceLetterClickService', () => {
         placeLetterClickService.handleColumnAndRowAfterRemove();
         expect(placeLetterClickService.colomnNumber).toEqual(1);
     });
-
     it('handlerowcolumn after remove should reduce by 1 row when orientation is v', () => {
         placeLetterClickService.wordPlacedWithClick = 'hello';
         placeLetterClickService.orientation = 'v';
@@ -329,14 +325,12 @@ fdescribe('PlaceLetterClickService', () => {
         placeLetterClickService.handleColumnAndRowAfterRemove();
         expect(placeLetterClickService.row).toEqual(1);
     });
-
     it('removearrow if needed should call drawtilebackground if last letter entered is Backspace', () => {
         placeLetterClickService.wordPlacedWithClick = 'hello';
         placeLetterClickService.lastKeyPressed = 'Backspace';
         placeLetterClickService.removeArrowIfNeeded(2, 2);
         expect(gridServiceSpy.drawtilebackground).toHaveBeenCalled();
     });
-
     it('remove whole word should call remove arrow if needed', () => {
         placeLetterClickService.lettersFromHand = 'hello';
         spyOn(placeLetterClickService, 'removeLetterWithBackspace');
@@ -344,7 +338,6 @@ fdescribe('PlaceLetterClickService', () => {
         placeLetterClickService.removeWholeWord();
         expect(mySpy).toHaveBeenCalled();
     });
-
     it('reset should call remove whole word', () => {
         placeLetterClickService.isTileSelected = true;
         const mySpy = spyOn(placeLetterClickService, 'removeWholeWord');

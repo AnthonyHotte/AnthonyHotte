@@ -1,20 +1,27 @@
 import { Injectable } from '@angular/core';
 import { BestScore } from '@app/classes/best-score';
-import { BASEDEFAULTBESTSCORE, MAXNUMBERBESTSCORE } from '@app/constants';
+import { BASEDEFAULTBESTSCORECLASSIQUE, BASEDEFAULTBESTSCORELOG2990, MAXNUMBERBESTSCORE } from '@app/constants';
+import { CommunicationService } from './communication.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class BestScoreService {
     bestScore: BestScore[][];
-    constructor() {
+    constructor(private communicationService: CommunicationService) {
         this.bestScore = [];
         this.bestScore.push([]);
         this.bestScore.push([]);
-        for (let i = 0; i < MAXNUMBERBESTSCORE; i++) {
-            this.bestScore[0].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE - 3 * i });
-            this.bestScore[1].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE - 2 * i });
-        }
+        this.communicationService.getBestScoreClassique().subscribe((result) => {
+            result.forEach((res) => {
+                this.bestScore[0].push(res);
+            });
+        });
+        this.communicationService.getBestScoreLog2990().subscribe((result) => {
+            result.forEach((res) => {
+                this.bestScore[1].push(res);
+            });
+        });
     }
     verifyIfBestScore(score: number, mode: number) {
         for (let i = 0; i < MAXNUMBERBESTSCORE; i++) {
@@ -50,15 +57,13 @@ export class BestScoreService {
         this.bestScore[0] = [];
         this.bestScore[1] = [];
         for (let i = 0; i < MAXNUMBERBESTSCORE; i++) {
-            this.bestScore[0].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE - 3 * i });
-            this.bestScore[1].push({ name: ['Player' + i], score: BASEDEFAULTBESTSCORE - 2 * i });
+            this.bestScore[0].push({ name: ['Player ' + i], score: BASEDEFAULTBESTSCORECLASSIQUE[i] });
+            this.bestScore[1].push({ name: ['Player ' + i], score: BASEDEFAULTBESTSCORELOG2990[i] });
         }
         this.sendScoreChangesToMongo(0);
         this.sendScoreChangesToMongo(1);
     }
-    // eslint-disable-next-line no-unused-vars
     sendScoreChangesToMongo(mode: number) {
-        // TODO
-        // send to mongo
+        this.communicationService.sendScoreChanges(mode, this.bestScore[mode]).subscribe();
     }
 }

@@ -8,6 +8,7 @@ import logger from 'morgan';
 import swaggerJSDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import { Service } from 'typedi';
+import { DatabaseController } from './controllers/database.controller';
 import { DictionaryController } from './controllers/dictionary.controller';
 import { ExampleController } from './controllers/example.controller';
 
@@ -21,6 +22,7 @@ export class Application {
         private readonly dateController: DateController,
         private readonly exampleController: ExampleController,
         private readonly dictionaryController: DictionaryController,
+        private readonly databaseController: DatabaseController,
     ) {
         this.app = express();
 
@@ -44,6 +46,7 @@ export class Application {
         this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)));
         this.app.use('/api/example', this.exampleController.router);
         this.app.use('/api/dictionary', this.dictionaryController.router);
+        this.app.use('/api/database', this.databaseController.router);
         this.app.use('/api/date', this.dateController.router);
         this.app.use('/', (req, res) => {
             res.redirect('/api/docs');
