@@ -30,6 +30,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { ObjectivesComponent } from './components/objectives/objectives.component';
+import { BestScorePageComponent } from './pages/best-score-page/best-score-page.component';
 
 /**
  * Main module that is used in main.ts.
@@ -60,6 +61,7 @@ import { ObjectivesComponent } from './components/objectives/objectives.componen
         AdminPageComponent,
         FileUploadComponent,
         ObjectivesComponent,
+        BestScorePageComponent,
     ],
     imports: [
         AppMaterialModule,
