@@ -9,6 +9,7 @@ const DATABASE_URL = environment.mongoUrl;
 const DATABASE_NAME = 'database';
 const DATABASE_JV_EASY_NAME = 'JVEasyName';
 const DATABASE_JV_HARD_NAME = 'JVHardName';
+const BESTSCORECLASSIQUE = 'bestScoreClassique';
 
 @Service()
 export class DatabaseService {
@@ -31,6 +32,9 @@ export class DatabaseService {
         }
         if ((await this.db.collection(DATABASE_JV_HARD_NAME).countDocuments()) === 0) {
             await this.populateJVHardNameDB();
+        }
+        if ((await this.db.collection(BESTSCORECLASSIQUE).countDocuments()) === 0) {
+            await this.populateBestScoreClassiqueDB();
         }
         return this.client;
     }
@@ -62,6 +66,18 @@ export class DatabaseService {
         console.log('THIS ADDS DATA TO THE DATABASE, DO NOT USE OTHERWISE');
         for (const name of jVNames) {
             await this.db.collection(DATABASE_JV_EASY_NAME).insertOne(name);
+        }
+    }
+    async populateBestScoreClassiqueDB(): Promise<void> {
+        const bestScoreClassique = [
+            { name: ['Player 1'], score: 100 },
+            { name: ['Player 2'], level: 80 },
+            { name: ['Player 3'], level: 60 },
+        ];
+        // eslint-disable-next-line no-console
+        console.log('THIS ADDS DATA TO THE DATABASE, DO NOT USE OTHERWISE');
+        for (const best of bestScoreClassique) {
+            await this.db.collection(DATABASE_JV_EASY_NAME).insertOne(best);
         }
     }
 

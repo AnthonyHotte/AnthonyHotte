@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BestScore } from '@app/classes/best-score';
 import { Dictionary } from '@app/classes/dictionary';
 import { Message } from '@app/classes/message';
 import { SendModifyDictionary } from '@app/classes/send-dictionary-interface';
@@ -14,6 +15,11 @@ export class CommunicationService {
     private readonly baseUrl: string = environment.serverUrl;
 
     constructor(private readonly http: HttpClient) {}
+    getBestScoreClassique(): Observable<BestScore[]> {
+        return this.http
+            .get<BestScore[]>(`${this.baseUrl}/database/bestscoreclassique`)
+            .pipe(catchError(this.handleError<BestScore[]>('getBestScoreClassique')));
+    }
     getJVEasyNames(): Observable<string[]> {
         return this.http.get<string[]>(`${this.baseUrl}/database/jveasynames`).pipe(catchError(this.handleError<string[]>('getJVEasyNames')));
     }

@@ -239,9 +239,7 @@ export class AdminPageComponent {
     sendDeleteDictionaryServer() {
         this.communicationService.sendDeleteDictionary(this.dictionaryNumberInput).subscribe();
     }
-    // eslint-disable-next-line no-unused-vars
     sendJVNameChanges(mode: number) {
-        // TODO
         this.communicationService.sendModifyJVNames(mode, this.nameJV[mode]).subscribe();
     }
 }

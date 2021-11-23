@@ -1,3 +1,4 @@
+import { BestScore } from '@app/classes/best-score-interface';
 import { DatabaseService } from '@app/services/database.service';
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
@@ -15,6 +16,31 @@ export class DatabaseController {
     private configureRouter(): void {
         this.router = Router();
         const HTTP_OK_STATUS = 200;
+
+        /**
+         * @swagger
+         *
+         * /api/database/bestscoreclassique:
+         *   get:
+         *     description: Return best score
+         *     produces:
+         *       - BestScore[]
+         *     responses:
+         *       200:
+         *
+         */
+        this.router.get('/bestscoreclassique', async (req: Request, res: Response) => {
+            // Send the request to the service and send the response
+            const bestScore: BestScore[] = [];
+            await this.databaseService.database
+                .collection('bestScoreClassique')
+                .find()
+                .forEach((document) => {
+                    bestScore.push({ score: document.score, name: document.name });
+                });
+
+            res.json(bestScore);
+        });
 
         /**
          * @swagger
