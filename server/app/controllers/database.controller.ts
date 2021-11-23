@@ -14,26 +14,74 @@ export class DatabaseController {
 
     private configureRouter(): void {
         this.router = Router();
+        const HTTP_OK_STATUS = 200;
 
         /**
          * @swagger
          *
-         * /api/dictionary:
+         * /api/database/jveasynames:
          *   get:
-         *     description: Return dictionary info
-         *     tags:
-         *       - Dictionary
+         *     description: Return names jvEasy
          *     produces:
-         *       - application/json
+         *       - string[]
          *     responses:
          *       200:
          *
          */
-        this.router.get('/jvnames', (req: Request, res: Response) => {
+        this.router.get('/jveasynames', async (req: Request, res: Response) => {
             // Send the request to the service and send the response
-            // const nameJv = [];
-            // this.databaseService.database.collection('JVName');
-            res.json(this.databaseService.database.collection('JVName'));
+            const nameJv: string[] = [];
+            await this.databaseService.database
+                .collection('JVEasyName')
+                .find()
+                .forEach((document) => {
+                    nameJv.push(document.name);
+                });
+
+            res.json(nameJv);
+        });
+        /**
+         * @swagger
+         *
+         * /api/database/jvhardnames:
+         *   get:
+         *     description: Return names jvHard
+         *     produces:
+         *       - string[]
+         *     responses:
+         *       200:
+         *
+         */
+        this.router.get('/jvhardnames', async (req: Request, res: Response) => {
+            // Send the request to the service and send the response
+            const nameJv: string[] = [];
+            await this.databaseService.database
+                .collection('JVHardName')
+                .find()
+                .forEach((document) => {
+                    nameJv.push(document.name);
+                });
+
+            res.json(nameJv);
+        });
+        /**
+         * @swagger
+         *
+         * /api/database/sendnameschanges:
+         *   get:
+         *     description: change Jv names
+         *     responses:
+         *       200:
+         *
+         */
+        this.router.post('/sendnameschanges', async (req: Request, res: Response) => {
+            const modeJV = req.body.jvLevel;
+            const nameCollection = ['JVEasyName', 'JVHardName'];
+            this.databaseService.database.collection(nameCollection[modeJV]).deleteMany({});
+            for (const nameJV of req.body.jvNames) {
+                await this.databaseService.database.collection(nameCollection[modeJV]).insertOne({ name: nameJV, level: modeJV });
+            }
+            res.sendStatus(HTTP_OK_STATUS);
         });
     }
 }

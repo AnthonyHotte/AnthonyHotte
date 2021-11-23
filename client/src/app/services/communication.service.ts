@@ -12,11 +12,13 @@ import { environment } from 'src/environments/environment';
 })
 export class CommunicationService {
     private readonly baseUrl: string = environment.serverUrl;
-    private readonly databaseUrl = environment.mongoUrl;
 
     constructor(private readonly http: HttpClient) {}
-    getJVNames(): Observable<string[]> {
-        return this.http.get<string[]>(`${this.databaseUrl}/database/jvnames`).pipe(catchError(this.handleError<string[]>('getJVNames')));
+    getJVEasyNames(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.baseUrl}/database/jveasynames`).pipe(catchError(this.handleError<string[]>('getJVEasyNames')));
+    }
+    getJVHardNames(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.baseUrl}/database/jvhardnames`).pipe(catchError(this.handleError<string[]>('getJVHardNames')));
     }
     getDictionaryList(): Observable<Dictionary[]> {
         return this.http.get<Dictionary[]>(`${this.baseUrl}/dictionary/list`).pipe(catchError(this.handleError<Dictionary[]>('getDictionary')));
@@ -26,6 +28,11 @@ export class CommunicationService {
         return this.http
             .get<Dictionary>(`${this.baseUrl}/dictionary/fulldictionary`, { params })
             .pipe(catchError(this.handleError<Dictionary>('getFullDictionary')));
+    }
+    // modeJV = 0 for easy and 1 for hard
+    sendModifyJVNames(modeJV: number, names: string[]): Observable<void> {
+        const info = { jvLevel: modeJV, jvNames: names };
+        return this.http.post<void>(`${this.baseUrl}/database/sendnameschanges`, info).pipe(catchError(this.handleError<void>('sendModifyJVNames')));
     }
 
     sendDictionaryNameChanged(dictionaryInfo: SendModifyDictionary): Observable<void> {
