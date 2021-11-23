@@ -65,6 +65,25 @@ export class DatabaseController {
 
             res.json(bestScore);
         });
+        /**
+         * @swagger
+         *
+         * /api/database/sendscorechanges:
+         *   get:
+         *     description: change best score
+         *     responses:
+         *       200:
+         *
+         */
+        this.router.post('/sendscorechanges', async (req: Request, res: Response) => {
+            const mode = req.body.scoreMode;
+            const nameCollection = ['bestScoreClassique', 'bestScoreLog2990'];
+            this.databaseService.database.collection(nameCollection[mode]).deleteMany({});
+            for (const bestScore of req.body.best) {
+                await this.databaseService.database.collection(nameCollection[mode]).insertOne({ score: bestScore.score, name: bestScore.name });
+            }
+            res.sendStatus(HTTP_OK_STATUS);
+        });
 
         /**
          * @swagger

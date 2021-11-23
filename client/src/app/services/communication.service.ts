@@ -25,6 +25,11 @@ export class CommunicationService {
             .get<BestScore[]>(`${this.baseUrl}/database/bestscoreclassique`)
             .pipe(catchError(this.handleError<BestScore[]>('getBestScoreClassique')));
     }
+    // modeJV = 0 for classique and 1 for log2990
+    sendScoreChanges(mode: number, bestScore: BestScore[]): Observable<void> {
+        const info = { scoreMode: mode, best: bestScore };
+        return this.http.post<void>(`${this.baseUrl}/database/sendscorechanges`, info).pipe(catchError(this.handleError<void>('sendScoreChanges')));
+    }
     getJVEasyNames(): Observable<string[]> {
         return this.http.get<string[]>(`${this.baseUrl}/database/jveasynames`).pipe(catchError(this.handleError<string[]>('getJVEasyNames')));
     }

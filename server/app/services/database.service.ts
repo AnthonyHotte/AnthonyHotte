@@ -76,9 +76,11 @@ export class DatabaseService {
     }
     async populateBestScoreLog2990DB(): Promise<void> {
         const bestScoreLog2990 = [
-            { name: ['Player 1'], score: 120 },
-            { name: ['Player 2'], score: 100 },
-            { name: ['Player 3'], score: 80 },
+            { name: ['Player 1'], score: 150 },
+            { name: ['Player 2'], score: 130 },
+            { name: ['Player 3'], score: 120 },
+            { name: ['Player 4'], score: 100 },
+            { name: ['Player 5'], score: 90 },
         ];
         // eslint-disable-next-line no-console
         console.log('THIS ADDS DATA TO THE DATABASE, DO NOT USE OTHERWISE');
@@ -88,9 +90,11 @@ export class DatabaseService {
     }
     async populateBestScoreClassiqueDB(): Promise<void> {
         const bestScoreClassique = [
-            { name: ['Player 1'], score: 100 },
-            { name: ['Player 2'], score: 80 },
-            { name: ['Player 3'], score: 60 },
+            { name: ['Player 1'], score: 120 },
+            { name: ['Player 2'], score: 110 },
+            { name: ['Player 3'], score: 100 },
+            { name: ['Player 4'], score: 90 },
+            { name: ['Player 5'], score: 80 },
         ];
         // eslint-disable-next-line no-console
         console.log('THIS ADDS DATA TO THE DATABASE, DO NOT USE OTHERWISE');

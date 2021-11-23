@@ -70,4 +70,7 @@ export const MAXPERCENTAGE = 100;
 export const TIMETOWAITFORVALIDATION = 2000;
 
 export const MAXNUMBERBESTSCORE = 5;
-export const BASEDEFAULTBESTSCORE = 80;
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+export const BASEDEFAULTBESTSCORECLASSIQUE = [120, 110, 100, 90, 80];
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+export const BASEDEFAULTBESTSCORELOG2990 = [150, 130, 120, 100, 90];
