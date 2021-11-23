@@ -12,9 +12,12 @@ import { environment } from 'src/environments/environment';
 })
 export class CommunicationService {
     private readonly baseUrl: string = environment.serverUrl;
+    private readonly databaseUrl = environment.mongoUrl;
 
     constructor(private readonly http: HttpClient) {}
-    // getJVNames() : Observable<
+    getJVNames(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.databaseUrl}/database/jvnames`).pipe(catchError(this.handleError<string[]>('getJVNames')));
+    }
     getDictionaryList(): Observable<Dictionary[]> {
         return this.http.get<Dictionary[]>(`${this.baseUrl}/dictionary/list`).pipe(catchError(this.handleError<Dictionary[]>('getDictionary')));
     }
