@@ -12,24 +12,24 @@ export class BestScoreService {
         this.bestScore = [];
         this.bestScore.push([]);
         this.bestScore.push([]);
+        this.updateBestScore();
+    }
+    updateBestScore() {
         this.communicationService.getBestScoreClassique().subscribe((result) => {
+            this.bestScore[0] = [];
             result.forEach((res) => {
                 this.bestScore[0].push(res);
             });
         });
         this.communicationService.getBestScoreLog2990().subscribe((result) => {
+            this.bestScore[1] = [];
             result.forEach((res) => {
                 this.bestScore[1].push(res);
             });
         });
     }
     verifyIfBestScore(score: number, mode: number) {
-        for (let i = 0; i < MAXNUMBERBESTSCORE; i++) {
-            if (score >= this.bestScore[mode][i].score) {
-                return true;
-            }
-        }
-        return false;
+        return score >= this.bestScore[mode][MAXNUMBERBESTSCORE - 1].score;
     }
     addBestScore(name: string, score: number, mode: number) {
         let index = 0;
