@@ -15,6 +15,11 @@ export class CommunicationService {
     private readonly baseUrl: string = environment.serverUrl;
 
     constructor(private readonly http: HttpClient) {}
+    getBestScoreLog2990(): Observable<BestScore[]> {
+        return this.http
+            .get<BestScore[]>(`${this.baseUrl}/database/bestscorelog2990`)
+            .pipe(catchError(this.handleError<BestScore[]>('getBestScoreLog2990')));
+    }
     getBestScoreClassique(): Observable<BestScore[]> {
         return this.http
             .get<BestScore[]>(`${this.baseUrl}/database/bestscoreclassique`)

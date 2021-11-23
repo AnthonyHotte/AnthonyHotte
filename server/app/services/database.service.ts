@@ -10,6 +10,7 @@ const DATABASE_NAME = 'database';
 const DATABASE_JV_EASY_NAME = 'JVEasyName';
 const DATABASE_JV_HARD_NAME = 'JVHardName';
 const BESTSCORECLASSIQUE = 'bestScoreClassique';
+const BESTSCORELOG2990 = 'bestScoreLog2990';
 
 @Service()
 export class DatabaseService {
@@ -33,8 +34,13 @@ export class DatabaseService {
         if ((await this.db.collection(DATABASE_JV_HARD_NAME).countDocuments()) === 0) {
             await this.populateJVHardNameDB();
         }
+        this.db.collection(BESTSCORECLASSIQUE).deleteMany({});
         if ((await this.db.collection(BESTSCORECLASSIQUE).countDocuments()) === 0) {
             await this.populateBestScoreClassiqueDB();
+        }
+        this.db.collection(BESTSCORELOG2990).deleteMany({});
+        if ((await this.db.collection(BESTSCORELOG2990).countDocuments()) === 0) {
+            await this.populateBestScoreLog2990DB();
         }
         return this.client;
     }
@@ -68,16 +74,28 @@ export class DatabaseService {
             await this.db.collection(DATABASE_JV_EASY_NAME).insertOne(name);
         }
     }
+    async populateBestScoreLog2990DB(): Promise<void> {
+        const bestScoreLog2990 = [
+            { name: ['Player 1'], score: 120 },
+            { name: ['Player 2'], score: 100 },
+            { name: ['Player 3'], score: 80 },
+        ];
+        // eslint-disable-next-line no-console
+        console.log('THIS ADDS DATA TO THE DATABASE, DO NOT USE OTHERWISE');
+        for (const best of bestScoreLog2990) {
+            await this.db.collection(BESTSCORELOG2990).insertOne(best);
+        }
+    }
     async populateBestScoreClassiqueDB(): Promise<void> {
         const bestScoreClassique = [
             { name: ['Player 1'], score: 100 },
-            { name: ['Player 2'], level: 80 },
-            { name: ['Player 3'], level: 60 },
+            { name: ['Player 2'], score: 80 },
+            { name: ['Player 3'], score: 60 },
         ];
         // eslint-disable-next-line no-console
         console.log('THIS ADDS DATA TO THE DATABASE, DO NOT USE OTHERWISE');
         for (const best of bestScoreClassique) {
-            await this.db.collection(DATABASE_JV_EASY_NAME).insertOne(best);
+            await this.db.collection(BESTSCORECLASSIQUE).insertOne(best);
         }
     }
 

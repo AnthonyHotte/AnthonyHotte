@@ -41,6 +41,30 @@ export class DatabaseController {
 
             res.json(bestScore);
         });
+        /**
+         * @swagger
+         *
+         * /api/database/bestscorelog2990:
+         *   get:
+         *     description: Return best score
+         *     produces:
+         *       - BestScore[]
+         *     responses:
+         *       200:
+         *
+         */
+        this.router.get('/bestscorelog2990', async (req: Request, res: Response) => {
+            // Send the request to the service and send the response
+            const bestScore: BestScore[] = [];
+            await this.databaseService.database
+                .collection('bestScoreLog2990')
+                .find()
+                .forEach((document) => {
+                    bestScore.push({ score: document.score, name: document.name });
+                });
+
+            res.json(bestScore);
+        });
 
         /**
          * @swagger
