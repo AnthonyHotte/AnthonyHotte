@@ -31,7 +31,7 @@ describe('Example service', () => {
         expect(dictionaryService.dictionaryList.length).to.equals(1);
     });
     it('should delete a dictionary', () => {
-        dictionaryService.deleteDictionary(1);
+        dictionaryService.deleteDictionary(0);
         expect(dictionaryService.dictionaryList.length).to.equals(0);
     });
     it('should reinitialize the dictionary list', () => {

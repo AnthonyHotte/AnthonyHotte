@@ -14,8 +14,10 @@ const BESTSCORELOG2990 = 'bestScoreLog2990';
 
 @Service()
 export class DatabaseService {
-    private db: Db;
-    private client: MongoClient;
+    // public for testing both
+    client: MongoClient;
+    db: Db;
+    // private client: MongoClient;
 
     async start(url: string = DATABASE_URL): Promise<MongoClient | null> {
         try {
