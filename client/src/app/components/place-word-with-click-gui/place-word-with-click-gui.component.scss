@@ -1,21 +1,27 @@
 .label{
-    color: black;
-    background-color: white;
+    color: white;
+    background-color: darkgreen;
     font-size: 20px;
     font-family: serif;
 }
 
 .button {
+    display: inline-block;
+    padding: 15px 25px;
     font-size: 16px;
-    background-color: green;
+    cursor: pointer;
+    text-align: center;
     color: white;
-    border-radius: 24px;
-    box-shadow: 0 5px darkgreen;
+    background-color: green;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px darkgreen;
+    font-family: serif;
     margin-right: 2vw;
     margin-left: 2vw;
     margin-bottom: 2vw;
 }
 .button:hover{
-    background-color: darkgreen;
+    background-color: black;
     color:white;
 }

@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Dictionary } from '@app/classes/dictionary';
 import { ERRORCODE } from '@app/constants';
+import { BestScoreService } from '@app/services/best-score.service';
 import { CommunicationService } from '@app/services/communication.service';
 import { DictionaryService } from '@app/services/dictionary.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-admin-page',
@@ -29,6 +31,7 @@ export class AdminPageComponent {
     showDownloadButton: boolean;
     showUpLoadButton: boolean;
     showUpload: boolean;
+    showDictionarySubscription: Subscription;
 
     nameJV: string[][]; // JV easy name index 0, JVHard name index 1
     newNameJV: string;
@@ -42,10 +45,12 @@ export class AdminPageComponent {
     showAddJVnameButton: boolean;
     showModifyJVNameButton: boolean;
     showDeleteJVNameButton: boolean;
+
     constructor(
         private readonly communicationService: CommunicationService,
         private readonly sanitizer: DomSanitizer,
         public dictionaryService: DictionaryService,
+        public bestScoreService: BestScoreService,
     ) {
         this.dictionaryService.dictionaryList = [];
         this.nameJV = [
@@ -56,6 +61,10 @@ export class AdminPageComponent {
             result.forEach((res) => {
                 this.dictionaryService.dictionaryList.push(res);
             });
+        });
+        this.showDictionarySubscription = this.dictionaryService.showButton.subscribe((res) => {
+            this.showOrHideDictionaryButton(res[0]);
+            this.showUpload = res[1];
         });
         this.newNameJV = '';
         this.newNameInput = '';
@@ -195,8 +204,9 @@ export class AdminPageComponent {
         this.nameJV[0].splice(3);
         this.nameJV[1].splice(3);
         this.communicationService.reinitialiseDictionary().subscribe();
-        // TODO
-        // mogo gerer nameJV
+        this.bestScoreService.clearBestScore();
+        this.sendJVNameChanges(0);
+        this.sendJVNameChanges(1);
     }
     saveDictionaryModification() {
         this.showNewDescriptionInput = false;

@@ -3,6 +3,7 @@ import { LetterService } from '@app/services/letter.service';
 import { Router } from '@angular/router';
 import { SocketService } from './socket.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { RefreshServiceService } from './refresh-service.service';
 // import { TimerTurnManagerService } from './timer-turn-manager.service';
 
 @Injectable({
@@ -18,6 +19,7 @@ export class FinishGameService {
         private letterService: LetterService,
         private link: Router,
         private socketService: SocketService, // private timerTurnManager: TimerTurnManagerService,
+        private refreshService: RefreshServiceService,
     ) {
         this.currentEndGameValue = this.updateOfEndGameValue.asObservable();
     }
@@ -96,5 +98,6 @@ export class FinishGameService {
     goToHomeAndRefresh() {
         this.socketService.handleDisconnect();
         this.link.navigate(['']);
+        this.refreshService.needRefresh = true;
     }
 }
