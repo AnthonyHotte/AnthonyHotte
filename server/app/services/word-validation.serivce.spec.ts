@@ -1,3 +1,4 @@
+import { Dictionary } from '@app/classes/dictionary';
 import { WordValidationService } from '@app/services/word-validation.service';
 import { expect } from 'chai';
 import { createStubInstance } from 'sinon';
@@ -8,6 +9,10 @@ describe('Word validation service', () => {
     let dico: DictionaryService;
     before(() => {
         dico = createStubInstance(DictionaryService);
+        dico.indexDictionaryInUse = 0;
+        dico.dictionaryList = [];
+        dico.dictionaryList.push(new Dictionary('t1', 'd1'));
+        dico.dictionaryList[0].words = ['aa'];
         wordValidationService = new WordValidationService(dico);
     });
 
