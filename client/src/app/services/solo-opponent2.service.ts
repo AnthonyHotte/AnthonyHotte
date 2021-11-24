@@ -28,7 +28,7 @@ export class SoloOpponent2Service {
     async play(): Promise<string> {
         let tempword = '';
         const arrayHand: string[] = [];
-        // inital value of positionFirstLetterWordOnLineè
+        // inital value of positionFirstLetterWordOnLine
         for (const letter of this.letterService.players[this.timeManagerService.turn].allLettersInHand) {
             arrayHand.push(letter.letter.toLowerCase());
         }
