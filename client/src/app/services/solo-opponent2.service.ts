@@ -284,38 +284,4 @@ export class SoloOpponent2Service {
         }
         return tempword;
     }
-    /*
-    async firstwordplayed() {
-        this.score = 0;
-        const centerRow = 7;
-        const centerColomn = 7;
-        const firtdoubleletter = 5;
-        const temparrayHand = this.pushLetterToHand();
-        const wordToPlay = this.findValidWords(this.dictionatyService.dictionaryList[this.dictionatyService.indexDictionary].words, temparrayHand);
-        let tempword = '';
-        if (wordToPlay.length > 0) {
-            for (const word2 of wordToPlay) {
-                if (word2.length >= firtdoubleletter) {
-                    const numberOfLetterExcedingFive = word2.length - firtdoubleletter;
-                    for (let k = 0; k <= numberOfLetterExcedingFive; k++) {
-                        if (await this.isWordPlayable(word2, centerRow, numberOfLetterExcedingFive + k, 'v')) {
-                            if (this.wordValidatorService.pointsForLastWord > this.score) {
-                                const rowstring = String.fromCharCode(centerRow + Constants.SIDELETTERS_TO_ASCII);
-                                // tempword = rowstring + (j - k + 1).toString() + orientation + ' ' + word2;
-                                tempword = rowstring + (numberOfLetterExcedingFive + k + 1).toString() + 'v' + ' ' + word2;
-                                this.score = this.wordValidatorService.pointsForLastWord;
-                            }
-                        }
-                    }
-                } else {
-                    if (await this.isWordPlayable(word2, 7, 7, 'v')) {
-                        const rowstring = String.fromCharCode(7 + Constants.SIDELETTERS_TO_ASCII);
-                        tempword = rowstring + (7 + 1).toString() + 'h' + ' ' + word2;
-                        this.score = this.wordValidatorService.pointsForLastWord;
-                    }
-                }
-            }
-        }
-    }
-    */
 }
