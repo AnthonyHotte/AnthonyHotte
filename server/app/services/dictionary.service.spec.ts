@@ -2,7 +2,7 @@ import { Dictionary } from '@app/classes/dictionary';
 import { expect } from 'chai';
 import { DictionaryService } from './dictionary.service';
 
-describe('Example service', () => {
+describe('Dictionary service', () => {
     let dictionaryService: DictionaryService;
 
     beforeEach(async () => {
