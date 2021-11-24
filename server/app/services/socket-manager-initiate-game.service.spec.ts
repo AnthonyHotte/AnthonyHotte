@@ -7,7 +7,7 @@ import { NUMBEROFROOMS } from '@app/constants';
 import { Letter } from '@app/letter';
 import { assert } from 'console';
 import * as http from 'http';
-import { spy } from 'sinon';
+import { createStubInstance, spy } from 'sinon';
 import * as io from 'socket.io';
 import { RoomsService } from './rooms.service';
 import { SocketManager } from './socket-manager-initiate-game.service';
@@ -83,7 +83,7 @@ describe('Socket Manager', () => {
     const TEN = 10;
 
     beforeEach(async () => {
-        roomSpy = new RoomsService();
+        roomSpy = createStubInstance(RoomsService);
         roomSpy.indexNextRoom = 0;
         roomSpy.rooms = [];
         roomSpy.listRoomWaiting = [];
@@ -91,7 +91,7 @@ describe('Socket Manager', () => {
             roomSpy.rooms.push(new Room('room number' + i, i));
         }
         const ioSPy = new http.Server();
-        const wordValidation = new WordValidationService();
+        const wordValidation = createStubInstance(WordValidationService);
         socketManager = new SocketManager(
             ioSPy as unknown as http.Server,
             roomSpy as unknown as RoomsService,

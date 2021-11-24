@@ -53,10 +53,17 @@ export class AdminPageComponent {
         public bestScoreService: BestScoreService,
     ) {
         this.dictionaryService.dictionaryList = [];
-        this.nameJV = [
-            ['JV1', 'JV2', 'JV3'],
-            ['JVHard1', 'JVHard2', 'JVHard3'],
-        ];
+        this.nameJV = [[], []];
+        this.communicationService.getJVEasyNames().subscribe((value) => {
+            value.forEach((res) => {
+                this.nameJV[0].push(res);
+            });
+        });
+        this.communicationService.getJVHardNames().subscribe((value) => {
+            value.forEach((res) => {
+                this.nameJV[1].push(res);
+            });
+        });
         this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
             result.forEach((res) => {
                 this.dictionaryService.dictionaryList.push(res);
@@ -232,9 +239,7 @@ export class AdminPageComponent {
     sendDeleteDictionaryServer() {
         this.communicationService.sendDeleteDictionary(this.dictionaryNumberInput).subscribe();
     }
-    // eslint-disable-next-line no-unused-vars
     sendJVNameChanges(mode: number) {
-        // TODO
-        // send to mongo name
+        this.communicationService.sendModifyJVNames(mode, this.nameJV[mode]).subscribe();
     }
 }

@@ -86,6 +86,17 @@ export class OpponentWaitingRoomComponent implements OnInit {
         this.socketInformation.nameOfRoomCreator = name;
     }
 
+    joinRandom() {
+        const gameIndex = [];
+        for (let i = 0; i < this.socketInformation.gameLists.length; ++i) {
+            if (this.socketInformation.gameLists[i][7] === this.socketInformation.is2990.toString()) {
+                gameIndex.push(i);
+            }
+        }
+        const index = Math.floor(Math.random() * gameIndex.length);
+        this.setIndex(gameIndex[index]);
+    }
+
     refresh() {
         this.socketInformation.sendGameListNeededNotification();
         this.fillGamesList();

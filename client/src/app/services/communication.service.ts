@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BestScore } from '@app/classes/best-score';
 import { Dictionary } from '@app/classes/dictionary';
 import { Message } from '@app/classes/message';
 import { SendModifyDictionary } from '@app/classes/send-dictionary-interface';
@@ -14,6 +15,27 @@ export class CommunicationService {
     private readonly baseUrl: string = environment.serverUrl;
 
     constructor(private readonly http: HttpClient) {}
+    getBestScoreLog2990(): Observable<BestScore[]> {
+        return this.http
+            .get<BestScore[]>(`${this.baseUrl}/database/bestscorelog2990`)
+            .pipe(catchError(this.handleError<BestScore[]>('getBestScoreLog2990')));
+    }
+    getBestScoreClassique(): Observable<BestScore[]> {
+        return this.http
+            .get<BestScore[]>(`${this.baseUrl}/database/bestscoreclassique`)
+            .pipe(catchError(this.handleError<BestScore[]>('getBestScoreClassique')));
+    }
+    // modeJV = 0 for classique and 1 for log2990
+    sendScoreChanges(mode: number, bestScore: BestScore[]): Observable<void> {
+        const info = { scoreMode: mode, best: bestScore };
+        return this.http.post<void>(`${this.baseUrl}/database/sendscorechanges`, info).pipe(catchError(this.handleError<void>('sendScoreChanges')));
+    }
+    getJVEasyNames(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.baseUrl}/database/jveasynames`).pipe(catchError(this.handleError<string[]>('getJVEasyNames')));
+    }
+    getJVHardNames(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.baseUrl}/database/jvhardnames`).pipe(catchError(this.handleError<string[]>('getJVHardNames')));
+    }
     getDictionaryList(): Observable<Dictionary[]> {
         return this.http.get<Dictionary[]>(`${this.baseUrl}/dictionary/list`).pipe(catchError(this.handleError<Dictionary[]>('getDictionary')));
     }
@@ -22,6 +44,11 @@ export class CommunicationService {
         return this.http
             .get<Dictionary>(`${this.baseUrl}/dictionary/fulldictionary`, { params })
             .pipe(catchError(this.handleError<Dictionary>('getFullDictionary')));
+    }
+    // modeJV = 0 for easy and 1 for hard
+    sendModifyJVNames(modeJV: number, names: string[]): Observable<void> {
+        const info = { jvLevel: modeJV, jvNames: names };
+        return this.http.post<void>(`${this.baseUrl}/database/sendnameschanges`, info).pipe(catchError(this.handleError<void>('sendModifyJVNames')));
     }
 
     sendDictionaryNameChanged(dictionaryInfo: SendModifyDictionary): Observable<void> {
