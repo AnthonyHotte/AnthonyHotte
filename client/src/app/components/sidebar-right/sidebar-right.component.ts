@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
-import { GameStatus } from '@app/game-status';
 import { MessagePlayer } from '@app/message';
 import { BestScoreService } from '@app/services/best-score.service';
 import { FinishGameService } from '@app/services/finish-game.service';
@@ -77,9 +76,6 @@ export class SidebarRightComponent implements AfterViewInit {
         this.textBox.inputs.push(messageSkip);
         this.textBox.isCommand('!passer');
         this.placeLetterClick.reset();
-        if (this.turnTimeController.turn === 1 && this.turnTimeController.gameStatus === GameStatus.SoloPlayer) {
-            // this.soloOpponentPlays();
-        }
     }
 
     getNumberRemainingLetters() {

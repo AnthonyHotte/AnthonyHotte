@@ -12,6 +12,7 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLetterClickService } from '@app/services/place-letter-click.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
+import { SocketService } from '@app/services/socket.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
@@ -32,8 +33,10 @@ fdescribe('SidebarRightComponent', () => {
     let counterSpy: jasmine.SpyObj<CountdownComponent>;
     let placeLetterClickServiceSpy: jasmine.SpyObj<PlaceLetterClickService>;
     let bestScoreSpy: jasmine.SpyObj<BestScoreService>;
+    let socketService: jasmine.SpyObj<SocketService>;
     beforeEach(
         waitForAsync(() => {
+            socketService = jasmine.createSpyObj('SocketService', ['sendJoinGameInfo']);
             bestScoreSpy = jasmine.createSpyObj('BestScoreService', ['verifyIfBestScore', 'addBestScore', 'updateBestScore']);
             placeLetterClickServiceSpy = jasmine.createSpyObj('PlaceLetterClickService', ['placeLetter', 'reset']);
             timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn', 'initiateGame']);
@@ -58,6 +61,7 @@ fdescribe('SidebarRightComponent', () => {
             TestBed.configureTestingModule({
                 declarations: [SidebarRightComponent],
                 providers: [
+                    { provide: SocketService, useValue: socketService },
                     { provide: BestScoreService, useValue: bestScoreSpy },
                     { provide: PlaceLetterClickService, useValue: placeLetterClickServiceSpy },
                     { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
@@ -164,6 +168,14 @@ fdescribe('SidebarRightComponent', () => {
         component.verifyChangedTurns(counterSpy);
         expect(bestScoreSpy.addBestScore).toHaveBeenCalled();
     });
+
+    it('verifyChangedTurns should return false when set to false ', () => {
+        finishGameServiceSpy.isGameFinished = true;
+        socketService.is2990 = true;
+        bestScoreSpy.verifyIfBestScore.and.returnValue(true);
+        component.verifyChangedTurns(counterSpy);
+        expect(bestScoreSpy.addBestScore).toHaveBeenCalled();
+    });
     it('verifyChangedTurns should return false when set to false ', () => {
         component.changedTurns = false;
         component.verifyChangedTurns(counterSpy);
@@ -256,5 +268,12 @@ fdescribe('SidebarRightComponent', () => {
         letterServiceSpy.players[0].name = 'annthththhjjxxd';
         const name = component.getPlayerName(0);
         expect(name).toEqual('annththt hhjjxxd ');
+    });
+    it('verifyLettersPlaced should verify if letter place', () => {
+        placeLetterClickServiceSpy.isTileSelected = true;
+        placeLetterClickServiceSpy.lettersFromHand = 'a';
+        timerTurnManagerServiceSpy.turn = 0;
+        const res = component.verifyLettersPlaced();
+        expect(res).toEqual(true);
     });
 });
