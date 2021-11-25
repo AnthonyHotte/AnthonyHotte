@@ -17,7 +17,7 @@ import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
 
-fdescribe('SidebarRightComponent', () => {
+describe('SidebarRightComponent', () => {
     let component: SidebarRightComponent;
     let fixture: ComponentFixture<SidebarRightComponent>;
 
