@@ -11,22 +11,25 @@ describe('Room', () => {
         expect(room.roomName).equal('room1');
     });
 
-    // it('setStartingInfo should set the room', () => {
-    //     const timeGame = 30;
-    //     room.setStartingInfo(
-    //         timeGame,
-    //         'Antho',
-    //         'hdf6547',
-    //         false,
-    //         [{ letter: 'a', quantity: 1, point: 1 }],
-    //         [{ letter: 'a', quantity: 1, point: 1 }],
-    //         [],
-    //     );
+    it('setStartingInfo should set the room', () => {
+        const timeGame = 30;
+        room.setStartingInfo(
+            timeGame,
+            'Antho',
+            'hdf6547',
+            false,
+            [{ letter: 'a', quantity: 1, point: 1 }],
+            [{ letter: 'a', quantity: 1, point: 1 }],
+            [],
+            [],
+            [],
+            false,
+        );
 
-    //     expect(room.roomName).equal('room1');
-    //     expect(room.playerNames[0]).equal('Antho');
-    //     expect(room.socketsId[0]).equal('hdf6547');
-    // });
+        expect(room.roomName).equal('room1');
+        expect(room.playerNames[0]).equal('Antho');
+        expect(room.socketsId[0]).equal('hdf6547');
+    });
     it('cleanRoom should clean the room', () => {
         room.timePerTurn = 30;
         room.playerNames = ['antho', 'hotte'];
