@@ -5,7 +5,7 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
 import { TileMap } from '@app/classes/grid-special-tile';
 import * as Constants from '@app/constants';
 
-fdescribe('ObjectivesService', () => {
+describe('ObjectivesService', () => {
     let service: ObjectivesService;
     let timeManagerSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let tileMapSpy: jasmine.SpyObj<TileMap>;
