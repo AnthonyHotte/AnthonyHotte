@@ -37,15 +37,27 @@ describe('DictionaryController', () => {
     });
     /*
     it('should return [] from dictionary service on valid get request to root', async () => {
-        const params = new HttpParams().append('indexNumber', 0);
-        return supertest(expressApp)
-            .get('/api/dictionary/fulldictionary', { params })
-            .expect(HTTP_STATUS_OK)
-            .then((response) => {
-                expect(response.body).to.deep.equal([]);
-            });
+        return (
+            supertest(expressApp)
+                .get('/api/dictionary/fulldictionary?indexNumber=0')
+                // .query({ indexNumber: 0 })
+                .expect(HTTP_STATUS_OK)
+                .then((response) => {
+                    expect(response.body).to.deep.equal([]);
+                })
+        );
+        
+        // const params: HttpParams = new HttpParams().append('indexNumber', 0);
+        // return supertest(expressApp)
+        //     .get('/api/dictionary/fulldictionary', params)
+        //     .expect(HTTP_STATUS_OK)
+        //     .then((response) => {
+        //         expect(response.body).to.deep.equal([]);
+        //     });
+            
     });
     */
+
     it('should change dictionary in dictionary service on valid post request to /sendnamechange', async () => {
         const message = { index: 0, dictionary: new Dictionary('t1', 'd1') };
         return supertest(expressApp).post('/api/dictionary/sendnamechange').send(message).set('Accept', 'application/json').expect(HTTP_STATUS_OK);
