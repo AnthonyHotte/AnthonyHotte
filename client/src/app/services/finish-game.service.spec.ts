@@ -67,6 +67,11 @@ describe('FinishGameService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
+    it('getMessageCongratulationsAbandon should have length of 2 when when there are two players', () => {
+        const expectedMessage = 'Félicitation, allo vous avez gagné. bonjour a abandonné';
+        const message = service.getMessageCongratulationsAbandon();
+        expect(message).toEqual(expectedMessage);
+    });
 
     it('scoreCalculator should have length of 2 when when there are two players', () => {
         const scoreOfPlayer = 6;
@@ -77,7 +82,7 @@ describe('FinishGameService', () => {
         expect(service.finalScore.length).toEqual(2);
     });
     it('getWinner should return 1 when trigged quit', () => {
-        socketSpy.triggeredQuit = true;
+        service.finalScore = [1, 2];
         const winner = service.getWinner();
         expect(winner.length).toEqual(1);
         expect(winner[0]).toEqual(1);
