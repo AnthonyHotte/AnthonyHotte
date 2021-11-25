@@ -1,25 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FinishGameService } from '@app/services/finish-game.service';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { AbandonGameComponent } from './abandon-game.component';
-import { SocketService } from '@app/services/socket.service';
+import { TextBox } from '@app/classes/text-box-behavior';
 
 describe('AbandonGameComponent', () => {
     let component: AbandonGameComponent;
     let fixture: ComponentFixture<AbandonGameComponent>;
-    let spy: jasmine.SpyObj<FinishGameService>;
-    let socketSpy: jasmine.SpyObj<SocketService>;
+    let spy: jasmine.SpyObj<TextBox>;
 
     beforeEach(async () => {
-        socketSpy = jasmine.createSpyObj(SocketService, ['handleDisconnect', 'finishedGameMessageTransmission']);
-        spy = jasmine.createSpyObj(FinishGameService, ['goToHomeAndRefresh', 'getCongratulation']);
+        spy = jasmine.createSpyObj(TextBox, ['goToHomeAndRefresh', 'isCommand']);
         await TestBed.configureTestingModule({
             declarations: [AbandonGameComponent],
-            providers: [
-                { provide: FinishGameService, useValue: spy },
-                { provide: SocketService, useValue: socketSpy },
-            ],
+            providers: [{ provide: TextBox, useValue: spy }],
             imports: [RouterTestingModule],
         }).compileComponents();
     });
@@ -33,12 +27,12 @@ describe('AbandonGameComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-    it('beforeUnloadHandler should call handleDisconnect', () => {
+    it('beforeUnloadHandler should call iscommand', () => {
         component.beforeUnloadHandler();
-        expect(socketSpy.handleDisconnect).toHaveBeenCalled();
+        expect(spy.isCommand).toHaveBeenCalled();
     });
     it('finishCurrentGame should call finishedGameMessageTransmission', () => {
         component.finishCurrentGame();
-        expect(socketSpy.finishedGameMessageTransmission).toHaveBeenCalled();
+        expect(spy.isCommand).toHaveBeenCalled();
     });
 });
