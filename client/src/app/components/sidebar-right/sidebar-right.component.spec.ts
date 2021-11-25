@@ -1,9 +1,11 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { TextBox } from '@app/classes/text-box-behavior';
 import { SidebarRightComponent } from '@app/components/sidebar-right/sidebar-right.component';
+import { BestScoreService } from '@app/services/best-score.service';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
@@ -14,7 +16,7 @@ import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
 
-describe('SidebarRightComponent', () => {
+fdescribe('SidebarRightComponent', () => {
     let component: SidebarRightComponent;
     let fixture: ComponentFixture<SidebarRightComponent>;
 
@@ -29,8 +31,10 @@ describe('SidebarRightComponent', () => {
     let routerSpy: jasmine.SpyObj<Router>;
     let counterSpy: jasmine.SpyObj<CountdownComponent>;
     let placeLetterClickServiceSpy: jasmine.SpyObj<PlaceLetterClickService>;
+    let bestScoreSpy: jasmine.SpyObj<BestScoreService>;
     beforeEach(
         waitForAsync(() => {
+            bestScoreSpy = jasmine.createSpyObj('BestScoreService', ['verifyIfBestScore', 'addBestScore', 'updateBestScore']);
             placeLetterClickServiceSpy = jasmine.createSpyObj('PlaceLetterClickService', ['placeLetter', 'reset']);
             timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn', 'initiateGame']);
             timerTurnManagerServiceSpy.turn = 0;
@@ -42,6 +46,7 @@ describe('SidebarRightComponent', () => {
                 letterBankServiceSpy.letterBank.push({ letter: 'A', quantity: 9, point: 1 });
             }
             letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
+            letterServiceSpy.players[0].score = 10;
 
             textBoxSpy = jasmine.createSpyObj('TextBox', ['send', 'isCommand', 'scrollDown']);
             textBoxSpy.inputs = [];
@@ -53,6 +58,7 @@ describe('SidebarRightComponent', () => {
             TestBed.configureTestingModule({
                 declarations: [SidebarRightComponent],
                 providers: [
+                    { provide: BestScoreService, useValue: bestScoreSpy },
                     { provide: PlaceLetterClickService, useValue: placeLetterClickServiceSpy },
                     { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
                     { provide: SoloOpponentService, useValue: soloOpponentServiceSpy },
@@ -66,7 +72,7 @@ describe('SidebarRightComponent', () => {
                     { provide: LetterBankService, useValue: letterBankServiceSpy },
                 ],
 
-                imports: [RouterTestingModule],
+                imports: [RouterTestingModule, HttpClientTestingModule],
             }).compileComponents();
         }),
     );
@@ -153,6 +159,12 @@ describe('SidebarRightComponent', () => {
     });
 
     it('verifyChangedTurns should return false when set to false ', () => {
+        finishGameServiceSpy.isGameFinished = true;
+        bestScoreSpy.verifyIfBestScore.and.returnValue(true);
+        component.verifyChangedTurns(counterSpy);
+        expect(bestScoreSpy.addBestScore).toHaveBeenCalled();
+    });
+    it('verifyChangedTurns should return false when set to false ', () => {
         component.changedTurns = false;
         component.verifyChangedTurns(counterSpy);
         expect(component.changedTurns).toBe(false);
@@ -235,5 +247,14 @@ describe('SidebarRightComponent', () => {
         spyOn(window, 'setTimeout');
         component.delay(2);
         expect(setTimeout).toHaveBeenCalled();
+    });
+    it('getNumberRemainingLetters should get remaining letters', () => {
+        const number = component.getNumberRemainingLetters();
+        expect(number).toEqual(3);
+    });
+    it('getPlayerName should return name when to long', () => {
+        letterServiceSpy.players[0].name = 'annthththhjjxxd';
+        const name = component.getPlayerName(0);
+        expect(name).toEqual('annththt hhjjxxd ');
     });
 });
