@@ -1,6 +1,7 @@
-/* import * as chai from 'chai';
+import * as chai from 'chai';
 import { expect } from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
+import chaiAsPromised from 'chai-as-promised';
+// import { assert } from 'console';
 import { describe } from 'mocha';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { DatabaseService } from './database.service';
@@ -14,13 +15,14 @@ describe('Database service', () => {
         databaseService = new DatabaseService();
 
         // Start a local test server
-        mongoServer = new MongoMemoryServer();
+        mongoServer = await MongoMemoryServer.create();
     });
 
     afterEach(async () => {
-        if (databaseService.client && databaseService.client.isConnected()) {
-            await databaseService.client.close();
-        }
+        // if (databaseService.client && databaseService.client.isConnected()) {
+        // await databaseService.client.close();
+        await databaseService.closeConnection();
+        // }
     });
 
     // NB : We dont test the case when DATABASE_URL is used in order to not connect to the real database
@@ -28,8 +30,18 @@ describe('Database service', () => {
         // Reconnect to local server
         const mongoUri = await mongoServer.getUri();
         await databaseService.start(mongoUri);
-        // expect(databaseService.client).to.not.be.undefined;
+        expect(databaseService.database.listCollections.length).to.be.equal(0);
+        expect(databaseService.db.databaseName).to.equal('database');
+    });
+    // NB : We dont test the case when DATABASE_URL is used in order to not connect to the real database
+    it('should not populate when already populated', async () => {
+        // Reconnect to local server
+        let mongoUri = await mongoServer.getUri();
+        await databaseService.start(mongoUri);
+        await databaseService.closeConnection();
+        mongoUri = await mongoServer.getUri();
+        await databaseService.start(mongoUri);
+        expect(databaseService.database.listCollections.length).to.be.equal(0);
         expect(databaseService.db.databaseName).to.equal('database');
     });
 });
-*/
