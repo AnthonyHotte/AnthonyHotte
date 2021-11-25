@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { MAXLETTERINHAND } from '@app/constants';
 import { GameStatus } from '@app/game-status';
+import { LetterBankService } from '@app/services/letter-bank.service';
+import { LetterService } from '@app/services/letter.service';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { FinishGameService } from './finish-game.service';
-import { LetterService } from '@app/services/letter.service';
+import { ObjectivesService } from './objectives.service';
 import { PlaceLettersService } from './place-letters.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
-import { ObjectivesService } from './objectives.service';
 
 @Injectable({
     providedIn: 'root',
@@ -20,29 +21,39 @@ export class SoloOpponentService {
         public finishGameService: FinishGameService,
         public placeLettersService: PlaceLettersService,
         public objectiveService: ObjectivesService,
+        private letterBankService: LetterBankService,
     ) {
         this.letters.players[1].addLetters(MAXLETTERINHAND);
     }
     async play(): Promise<void> {
         if (this.timeManager.gameStatus === GameStatus.SoloPlayer) {
             if (this.timeManager.turn === 1) {
-                const HUNDRED = 100;
-                const TWENTY = 20;
-                const TEN = 10;
-                const SIX = 6;
-                const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
-                if (PROBABILITY_OF_ACTION > TWENTY) {
+                if (this.soloOpponent2.expertmode) {
                     this.lastCommandEntered = await this.soloOpponent2.play();
                     this.endTurn('place');
-                } else if (PROBABILITY_OF_ACTION <= TEN) {
-                    this.skipTurn();
+                    if (this.lastCommandEntered === '!placer undefined') {
+                        this.exchangeLettersExpert();
+                        this.endTurn('exchange'); // TODO DEBUG HERE, not working for some reasons
+                    }
                 } else {
-                    const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length) - 1;
-                    if (NUMBER_OF_LETTERS_TO_TRADE <= SIX) {
-                        this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE + 1);
-                        this.endTurn('exchange');
-                    } else {
+                    const HUNDRED = 100;
+                    const TWENTY = 20;
+                    const TEN = 10;
+                    const SIX = 6;
+                    const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
+                    if (PROBABILITY_OF_ACTION > TWENTY) {
+                        this.lastCommandEntered = await this.soloOpponent2.play();
+                        this.endTurn('place');
+                    } else if (PROBABILITY_OF_ACTION <= TEN) {
                         this.skipTurn();
+                    } else {
+                        const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length) - 1;
+                        if (NUMBER_OF_LETTERS_TO_TRADE <= SIX) {
+                            this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE + 1);
+                            this.endTurn('exchange');
+                        } else {
+                            this.skipTurn();
+                        }
                     }
                 }
             }
@@ -80,7 +91,16 @@ export class SoloOpponentService {
         this.letters.players[this.timeManager.turn].exchangeLetters(lettersToExchange);
         this.lastCommandEntered = '!échanger ' + numberOfLettersToTrade.toString();
     }
-
+    exchangeLettersExpert() {
+        if (this.getNumberRemainingLetters() >= MAXLETTERINHAND) {
+            this.exchangeLetters(MAXLETTERINHAND);
+        } else {
+            this.exchangeLetters(this.getNumberRemainingLetters());
+        }
+    }
+    getNumberRemainingLetters() {
+        return this.letterBankService.letterBank.length;
+    }
     endTurn(reason: string) {
         if (reason === 'place') {
             this.objectiveService.consectivePlacementPlayers[this.timeManager.turn]++;
