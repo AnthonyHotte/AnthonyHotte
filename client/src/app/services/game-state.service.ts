@@ -150,69 +150,53 @@ export class GameStateService {
     isWordTouchingLetterOnBoard(wordToPlace: string, orientation: string): boolean {
         if (this.lastLettersAdded.length !== wordToPlace.length || this.isBoardEmpty) {
             return true;
-        } else if (orientation === 'h') {
-            return this.isWordTouchingHorizontal();
         } else {
-            return this.isWordTouchingVertical();
+            return this.isWordTouching(orientation === 'h');
         }
     }
-    isWordTouchingHorizontal(): boolean {
+    isWordTouching(horizontal: boolean): boolean {
         for (let i = 0; i < this.indexLastLetters.length; i += 2) {
-            if (i === 0 && this.indexLastLetters[i + 1] !== 0) {
-                if (this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] - 1] !== '') {
-                    return true;
-                }
-            } else if (i === this.indexLastLetters.length - 2 && this.indexLastLetters[i + 1] !== constants.FOURTEEN) {
-                if (this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] + 1] !== '') {
-                    return true;
-                }
+            if (this.isFrontOrBackTouching(i, horizontal)) return true;
+            if (this.areSideTouching(i, horizontal)) return true;
+        }
+        return false;
+    }
+
+    isFrontOrBackTouching(i: number, horizontal: boolean) {
+        const index = horizontal ? i + 1 : i;
+        if (i === 0 && this.indexLastLetters[index] !== 0) {
+            const y1 = horizontal ? this.indexLastLetters[i] : this.indexLastLetters[i] - 1;
+            const x1 = horizontal ? this.indexLastLetters[i + 1] - 1 : this.indexLastLetters[i + 1];
+            if (this.lettersOnBoard[y1][x1] !== '') {
+                return true;
             }
-            if (this.indexLastLetters[i] === 0) {
-                if (this.lettersOnBoard[this.indexLastLetters[i] + 1][this.indexLastLetters[i + 1]] !== '') {
-                    return true;
-                }
-            } else if (this.indexLastLetters[i] === constants.FOURTEEN) {
-                if (this.lettersOnBoard[this.indexLastLetters[i] - 1][this.indexLastLetters[i + 1]] !== '') {
-                    return true;
-                }
-            } else {
-                if (
-                    this.lettersOnBoard[this.indexLastLetters[i] - 1][this.indexLastLetters[i + 1]] !== '' ||
-                    this.lettersOnBoard[this.indexLastLetters[i] + 1][this.indexLastLetters[i + 1]] !== ''
-                ) {
-                    return true;
-                }
+        } else if (i === this.indexLastLetters.length - 2 && this.indexLastLetters[index] !== constants.FOURTEEN) {
+            const y2 = horizontal ? this.indexLastLetters[i] : this.indexLastLetters[i] + 1;
+            const x2 = horizontal ? this.indexLastLetters[i + 1] + 1 : this.indexLastLetters[i + 1];
+            if (this.lettersOnBoard[y2][x2] !== '') {
+                return true;
             }
         }
         return false;
     }
 
-    isWordTouchingVertical(): boolean {
-        for (let i = 0; i < this.indexLastLetters.length; i += 2) {
-            if (i === 0 && this.indexLastLetters[i] !== 0) {
-                if (this.lettersOnBoard[this.indexLastLetters[i] - 1][this.indexLastLetters[i + 1]] !== '') {
-                    return true;
-                }
-            } else if (i === this.indexLastLetters.length - 2 && this.indexLastLetters[i] !== constants.FOURTEEN) {
-                if (this.lettersOnBoard[this.indexLastLetters[i] + 1][this.indexLastLetters[i + 1]] !== '') {
-                    return true;
-                }
+    areSideTouching(i: number, horizontal: boolean) {
+        const index = horizontal ? i : i + 1;
+        const y1 = horizontal ? this.indexLastLetters[i] + 1 : this.indexLastLetters[i];
+        const x1 = horizontal ? this.indexLastLetters[i + 1] : this.indexLastLetters[i + 1] + 1;
+        const y2 = horizontal ? this.indexLastLetters[i] - 1 : this.indexLastLetters[i];
+        const x2 = horizontal ? this.indexLastLetters[i + 1] : this.indexLastLetters[i + 1] - 1;
+        if (this.indexLastLetters[index] === 0) {
+            if (this.lettersOnBoard[y1][x1] !== '') {
+                return true;
             }
-            if (this.indexLastLetters[i + 1] === 0) {
-                if (this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] + 1] !== '') {
-                    return true;
-                }
-            } else if (this.indexLastLetters[i + 1] === constants.FOURTEEN) {
-                if (this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] - 1] !== '') {
-                    return true;
-                }
-            } else {
-                if (
-                    this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] - 1] !== '' ||
-                    this.lettersOnBoard[this.indexLastLetters[i]][this.indexLastLetters[i + 1] + 1] !== ''
-                ) {
-                    return true;
-                }
+        } else if (this.indexLastLetters[index] === constants.FOURTEEN) {
+            if (this.lettersOnBoard[y2][x2] !== '') {
+                return true;
+            }
+        } else {
+            if (this.lettersOnBoard[y2][x2] !== '' || this.lettersOnBoard[y1][x1] !== '') {
+                return true;
             }
         }
         return false;
