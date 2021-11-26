@@ -21,6 +21,7 @@ describe('DictionaryController', () => {
         dictionaryService.deleteDictionary.returns();
         dictionaryService.addFullDictionary.returns();
         dictionaryService.reinitialize.returns();
+        dictionaryService.getFullDictionary.returns(new Dictionary('t1', 'd1'));
         const app = Container.get(Application);
         // eslint-disable-next-line dot-notation
         Object.defineProperty(app['dictionaryController'], 'dictionaryService', { value: dictionaryService });
@@ -35,18 +36,16 @@ describe('DictionaryController', () => {
                 expect(response.body).to.deep.equal([]);
             });
     });
-    /*
-    it('should return [] from dictionary service on valid get request to root', async () => {
-        return (
-            supertest(expressApp)
-                .get('/api/dictionary/fulldictionary?indexNumber=0')
-                // .query({ indexNumber: 0 })
-                .expect(HTTP_STATUS_OK)
-                .then((response) => {
-                    expect(response.body).to.deep.equal([]);
-                })
-        );
-        
+
+    it('should return from dictionary service on valid get request to root', async () => {
+        return supertest(expressApp)
+            .get('/api/dictionary/fulldictionary')
+            .send({ indexNumber: 0 })
+            .expect(HTTP_STATUS_OK)
+            .then((response) => {
+                expect(response.body).to.deep.equal(new Dictionary('t1', 'd1'));
+            });
+
         // const params: HttpParams = new HttpParams().append('indexNumber', 0);
         // return supertest(expressApp)
         //     .get('/api/dictionary/fulldictionary', params)
@@ -54,9 +53,7 @@ describe('DictionaryController', () => {
         //     .then((response) => {
         //         expect(response.body).to.deep.equal([]);
         //     });
-            
     });
-    */
 
     it('should change dictionary in dictionary service on valid post request to /sendnamechange', async () => {
         const message = { index: 0, dictionary: new Dictionary('t1', 'd1') };
