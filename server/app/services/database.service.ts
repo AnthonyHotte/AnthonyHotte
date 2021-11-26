@@ -104,9 +104,6 @@ export class DatabaseService {
         }
     }
 
-    get database(): Db {
-        return this.db;
-    }
     getBestScoreClassique() {
         const bestScore: BestScore[] = [];
         this.db
@@ -134,8 +131,8 @@ export class DatabaseService {
             await this.addOneScore(nameCollection, mode, bestScore);
         }
     }
-    addOneScore(nameCollection: string[], mode: number, bestScore: BestScore) {
-        this.db.collection(nameCollection[mode]).insertOne({ score: bestScore.score, name: bestScore.name });
+    async addOneScore(nameCollection: string[], mode: number, bestScore: BestScore) {
+        return this.db.collection(nameCollection[mode]).insertOne({ score: bestScore.score, name: bestScore.name });
     }
     async jvEasyNames() {
         const nameJv: string[] = [];
