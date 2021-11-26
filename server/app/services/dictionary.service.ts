@@ -38,4 +38,8 @@ export class DictionaryService {
     addFullDictionary(dictionary: Dictionary) {
         this.dictionaryList.push(dictionary);
     }
+    getFullDictionary(index: number) {
+        this.indexDictionaryInUse = index;
+        return this.dictionaryList[index];
+    }
 }

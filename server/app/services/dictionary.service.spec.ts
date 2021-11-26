@@ -50,4 +50,10 @@ describe('Dictionary service', () => {
         expect(dictionaryService.dictionaryList[1].words.length).to.equals(2);
         expect(dictionaryService.dictionaryList.length).to.equals(2);
     });
+    it('getFullDictionary should getFullDictionary correctly', () => {
+        dictionaryService.dictionaryList = [];
+        dictionaryService.dictionaryList.push(new Dictionary('t1', 'd1'));
+        const dict = dictionaryService.getFullDictionary(0);
+        expect(dict.title).to.equals('t1');
+    });
 });
