@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { TextBox } from '@app/classes/text-box-behavior';
-import { GameStatus } from '@app/game-status';
 import { MessagePlayer } from '@app/message';
+import { BestScoreService } from '@app/services/best-score.service';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLetterClickService } from '@app/services/place-letter-click.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
+import { SocketService } from '@app/services/socket.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { CountdownComponent } from '@ciri/ngx-countdown';
@@ -34,6 +35,8 @@ export class SidebarRightComponent implements AfterViewInit {
         private letterBankService: LetterBankService,
         private placeLetterClick: PlaceLetterClickService,
         private gameFinishService: FinishGameService,
+        private bestScoreService: BestScoreService,
+        private socketService: SocketService,
     ) {
         this.setAttribute();
     }
@@ -44,7 +47,8 @@ export class SidebarRightComponent implements AfterViewInit {
             this.soloOpponentPlays();
         }
         this.textBox.isCommand('!aide');
-        this.textBox.handleEnter('Entrez !aide pour montrer ce message de nouveau.');
+        const myMessage: MessagePlayer = { message: 'Entrez !aide pour montrer ce message de nouveau.', sender: 'Systeme', role: 'Systeme' };
+        this.textBox.inputs.push(myMessage);
     }
     showPassButton() {
         return this.turnTimeController.turn === 0 && !this.verifyLettersPlaced();
@@ -72,9 +76,6 @@ export class SidebarRightComponent implements AfterViewInit {
         this.textBox.inputs.push(messageSkip);
         this.textBox.isCommand('!passer');
         this.placeLetterClick.reset();
-        if (this.turnTimeController.turn === 1 && this.turnTimeController.gameStatus === GameStatus.SoloPlayer) {
-            // this.soloOpponentPlays();
-        }
     }
 
     getNumberRemainingLetters() {
@@ -127,6 +128,11 @@ export class SidebarRightComponent implements AfterViewInit {
     verifyChangedTurns(counter: CountdownComponent) {
         if (this.gameFinishService.isGameFinished) {
             counter.pause();
+            const mode = this.socketService.is2990 ? 1 : 0;
+            this.bestScoreService.updateBestScore();
+            if (this.bestScoreService.verifyIfBestScore(this.letterService.players[0].score, mode)) {
+                this.bestScoreService.addBestScore(this.letterService.players[0].name, this.letterService.players[0].score, mode);
+            }
         } else {
             if (this.changedTurns === true) {
                 counter.reset();

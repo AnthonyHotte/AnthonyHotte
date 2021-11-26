@@ -12,8 +12,9 @@ import { MessageService } from '@app/services/message.service';
 import { MatDialog } from '@angular/material/dialog';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { CommunicationService } from '@app/services/communication.service';
-import { Observable } from 'rxjs';
 import { DictionaryService } from '@app/services/dictionary.service';
+import { Observable } from 'rxjs';
+import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 
 describe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
@@ -28,7 +29,9 @@ describe('SoloGameInitiatorComponent', () => {
     let indexWaintingRoomService: jasmine.SpyObj<IndexWaitingRoomService>;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
     let dictionaryServiceSpy: jasmine.SpyObj<DictionaryService>;
+    let soloopponent2Spy: jasmine.SpyObj<SoloOpponent2Service>;
     beforeEach(async () => {
+        soloopponent2Spy = jasmine.createSpyObj('SoloOpponent2Service', ['play']);
         dictionaryServiceSpy = jasmine.createSpyObj('DictionaryService', ['getDictionary']);
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', ['getDictionaryList']);
         communicationServiceSpy.getDictionaryList.and.returnValue(new Observable());
@@ -59,6 +62,7 @@ describe('SoloGameInitiatorComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [SoloGameInitiatorComponent],
             providers: [
+                { provide: SoloOpponent2Service, useValue: soloopponent2Spy },
                 { provide: MessageService, useValue: messageServiceSpy },
                 { provide: SocketService, useValue: socketServiceSpy },
                 { provide: LetterService, useValue: letterServiceSpy },

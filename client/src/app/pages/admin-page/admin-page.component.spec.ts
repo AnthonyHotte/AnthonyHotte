@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Dictionary } from '@app/classes/dictionary';
+import { BestScoreService } from '@app/services/best-score.service';
 import { CommunicationService } from '@app/services/communication.service';
 import { DictionaryService } from '@app/services/dictionary.service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -11,15 +12,27 @@ describe('AdminPageComponent', () => {
     let fixture: ComponentFixture<AdminPageComponent>;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
     let dictionaryServiceSpy: jasmine.SpyObj<DictionaryService>;
+    let bestScoreServiceSpy: jasmine.SpyObj<BestScoreService>;
 
     beforeEach(async () => {
+        bestScoreServiceSpy = jasmine.createSpyObj('BestScoreService', ['updateBestScore', 'clearBestScore']);
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', [
             'getDictionaryList',
             'reinitialiseDictionary',
             'sendDictionaryNameChanged',
             'sendDeleteDictionary',
             'getFullDictionary',
+            'getBestScoreClassique',
+            'getBestScoreLog2990',
+            'getJVEasyNames',
+            'getJVHardNames',
+            'sendModifyJVNames',
         ]);
+        communicationServiceSpy.sendModifyJVNames.and.returnValue(new Observable());
+        communicationServiceSpy.getBestScoreClassique.and.returnValue(new Observable());
+        communicationServiceSpy.getBestScoreLog2990.and.returnValue(new Observable());
+        communicationServiceSpy.getJVEasyNames.and.returnValue(new Observable());
+        communicationServiceSpy.getJVHardNames.and.returnValue(new Observable());
         communicationServiceSpy.getDictionaryList.and.returnValue(new Observable());
         dictionaryServiceSpy = jasmine.createSpyObj('DictionaryService', ['getDictionary']);
         dictionaryServiceSpy.showButton = new BehaviorSubject<boolean[]>([true, false]);
@@ -34,6 +47,7 @@ describe('AdminPageComponent', () => {
         await TestBed.configureTestingModule({
             declarations: [AdminPageComponent],
             providers: [
+                { provide: BestScoreService, useValue: bestScoreServiceSpy },
                 { provide: CommunicationService, useValue: communicationServiceSpy },
                 { provide: DictionaryService, useValue: dictionaryServiceSpy },
             ],
@@ -44,6 +58,9 @@ describe('AdminPageComponent', () => {
         fixture = TestBed.createComponent(AdminPageComponent);
         component = fixture.componentInstance;
         component.dictionaryNumberInput = 0;
+        component.nameJV = [[], []];
+        component.modeJV = 0;
+        component.indexJVName = 0;
         fixture.detectChanges();
     });
 

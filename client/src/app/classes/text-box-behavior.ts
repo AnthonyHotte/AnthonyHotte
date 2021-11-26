@@ -43,29 +43,22 @@ export class TextBox {
     }
 
     async handleOpponentCommand(messageString: string) {
-        let printCommand = false;
         const myMessage = { message: messageString, sender: this.letterService.players[1].name, role: 'Adversaire' };
         let text = '';
         if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
             this.verifyCommandPasser();
             text = this.letterService.players[1].name + ' a passé son tour';
-            printCommand = true;
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 2) === '!échanger') {
             myMessage.message = '!échanger ' + myMessage.message.substring('!échanger '.length, myMessage.message.length).length.toString();
             text = this.exchangeLetterOpponent(messageString);
-            printCommand = true;
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
             this.inputs.push(myMessage);
             text = this.letterService.players[1].name + ' a affiché la reserve';
-            printCommand = true;
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
             text = await this.placeWordOpponent(myMessage.message, this.socket.lettersToReplace);
-            printCommand = true;
         } else if (myMessage.message === '!abandonner') {
             this.inputs.push(myMessage);
             text = this.letterService.players[1].name + ' a abandonné la partie';
-            const messageSystem: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
-            this.inputs.push(messageSystem);
             if (this.timeManager.turn === 1) {
                 this.endTurn('skip');
             }
@@ -78,13 +71,10 @@ export class TextBox {
             this.commandSuccessful = true;
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!aide') {
             text = this.letterService.players[1].name + ' a affiché la liste de ses commandes';
-            printCommand = true;
         }
-        if (printCommand) {
-            this.inputs.push(myMessage);
-            const messageSystem: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
-            this.inputs.push(messageSystem);
-        }
+        this.inputs.push(myMessage);
+        const messageSystem: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
+        this.inputs.push(messageSystem);
     }
 
     async placeWordOpponent(command: string, lettersToReplace: string) {

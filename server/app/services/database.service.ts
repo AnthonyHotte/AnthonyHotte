@@ -14,31 +14,31 @@ const BESTSCORELOG2990 = 'bestScoreLog2990';
 
 @Service()
 export class DatabaseService {
-    private db: Db;
-    private client: MongoClient;
+    // public for testing both
+    client: MongoClient;
+    db: Db;
+    // private client: MongoClient;
 
     async start(url: string = DATABASE_URL): Promise<MongoClient | null> {
         try {
-            // const client = await MongoClient.connect(url, this.options);
             const client = await MongoClient.connect(url);
             this.client = client;
             this.db = client.db(DATABASE_NAME);
         } catch {
             throw new Error('Database connection error');
         }
-        // the line commented below is to fix bd when it's broking
-        // this.db.collection(DATABASE_JV_EASY_NAME).deleteMany({});
+
         if ((await this.db.collection(DATABASE_JV_EASY_NAME).countDocuments()) === 0) {
             await this.populateJVEasyNameDB();
         }
         if ((await this.db.collection(DATABASE_JV_HARD_NAME).countDocuments()) === 0) {
             await this.populateJVHardNameDB();
         }
-        this.db.collection(BESTSCORECLASSIQUE).deleteMany({});
+
         if ((await this.db.collection(BESTSCORECLASSIQUE).countDocuments()) === 0) {
             await this.populateBestScoreClassiqueDB();
         }
-        this.db.collection(BESTSCORELOG2990).deleteMany({});
+
         if ((await this.db.collection(BESTSCORELOG2990).countDocuments()) === 0) {
             await this.populateBestScoreLog2990DB();
         }

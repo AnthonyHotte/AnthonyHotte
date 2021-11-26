@@ -21,6 +21,9 @@ describe('Room', () => {
             [{ letter: 'a', quantity: 1, point: 1 }],
             [{ letter: 'a', quantity: 1, point: 1 }],
             [],
+            [],
+            [],
+            false,
         );
 
         expect(room.roomName).equal('room1');
