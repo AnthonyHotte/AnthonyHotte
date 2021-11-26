@@ -144,15 +144,14 @@ export class LetterService {
                 break;
             }
         }
-        if (checkLowerHalf) {
-            for (let j = 0; j < i; j++) {
-                if (typeof this.players[0].allLettersInHand[j].letter !== 'undefined') {
-                    if (buttonPressed.toLowerCase() === this.players[0].allLettersInHand[j].letter.toLowerCase()) {
-                        this.indexSelectedSwapping = j;
-                        letterIsThere = true;
-                        this.isLetterSelectedSwapping = true;
-                        break;
-                    }
+        if (!checkLowerHalf) return letterIsThere;
+        for (let j = 0; j < i; j++) {
+            if (typeof this.players[0].allLettersInHand[j].letter !== 'undefined') {
+                if (buttonPressed.toLowerCase() === this.players[0].allLettersInHand[j].letter.toLowerCase()) {
+                    this.indexSelectedSwapping = j;
+                    letterIsThere = true;
+                    this.isLetterSelectedSwapping = true;
+                    break;
                 }
             }
         }

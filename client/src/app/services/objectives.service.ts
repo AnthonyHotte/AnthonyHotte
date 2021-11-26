@@ -123,9 +123,7 @@ export class ObjectivesService {
     }
 
     sideToSide6(): boolean {
-        if (this.indexLastLetters.length <= 2) {
-            return false;
-        }
+        if (this.indexLastLetters.length <= 2) return false;
         if (this.indexLastLetters[0] === this.indexLastLetters[2]) {
             for (let i = 0; i < this.indexLastLetters.length - 2; i += 2) {
                 if (this.indexLastLetters[i + 1] + 1 !== this.indexLastLetters[i + 3]) {
