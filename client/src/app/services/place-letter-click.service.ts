@@ -29,22 +29,21 @@ export class PlaceLetterClickService {
         private timeManager: TimerTurnManagerService,
     ) {}
     placeLetter(letter: string) {
-        if (this.isTileSelected) {
-            this.lastKeyPressed = letter;
-            if (letter === 'Backspace' && this.wordPlacedWithClick.length !== 0) {
-                this.removeLetterWithBackspace();
-            } else {
-                const normalizedLetter = letter.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                const regexInput = /[a-zA-Z]/;
-                if (regexInput.exec(normalizedLetter) !== null && normalizedLetter.length === 1) {
-                    if (normalizedLetter.toLowerCase() !== normalizedLetter) {
-                        if (this.letterService.players[0].handContainLetters('*')) {
-                            this.addLetterOnBoard(normalizedLetter, true);
-                        }
-                    } else {
-                        if (this.letterService.players[0].handContainLetters(normalizedLetter)) {
-                            this.addLetterOnBoard(normalizedLetter, false);
-                        }
+        if (!this.isTileSelected) return;
+        this.lastKeyPressed = letter;
+        if (letter === 'Backspace' && this.wordPlacedWithClick.length !== 0) {
+            this.removeLetterWithBackspace();
+        } else {
+            const normalizedLetter = letter.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            const regexInput = /[a-zA-Z]/;
+            if (regexInput.exec(normalizedLetter) !== null && normalizedLetter.length === 1) {
+                if (normalizedLetter.toLowerCase() !== normalizedLetter) {
+                    if (this.letterService.players[0].handContainLetters('*')) {
+                        this.addLetterOnBoard(normalizedLetter, true);
+                    }
+                } else {
+                    if (this.letterService.players[0].handContainLetters(normalizedLetter)) {
+                        this.addLetterOnBoard(normalizedLetter, false);
                     }
                 }
             }
@@ -68,26 +67,25 @@ export class PlaceLetterClickService {
         }
     }
     caseSelected(xPos: number, yPos: number) {
-        if (this.timeManager.turn === 0 && this.wordPlacedWithClick.length === 0) {
-            const tempColumn = this.rawXYPositionToCasePosition(xPos);
-            const tempRow = this.rawXYPositionToCasePosition(yPos);
-            if (this.isTileSelected && this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
-                this.removeArrowIfNeeded(this.initialClickRow, this.initialClickColumn);
+        if (!(this.timeManager.turn === 0 && this.wordPlacedWithClick.length === 0)) return;
+        const tempColumn = this.rawXYPositionToCasePosition(xPos);
+        const tempRow = this.rawXYPositionToCasePosition(yPos);
+        if (this.isTileSelected && this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
+            this.removeArrowIfNeeded(this.initialClickRow, this.initialClickColumn);
+        }
+        if (this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
+            if (tempRow === this.row && tempColumn === this.colomnNumber) {
+                this.changeOrientation();
+                this.gridService.drawtilebackground(this.colomnNumber, this.row);
+            } else {
+                this.orientation = 'h';
+                this.colomnNumber = tempColumn;
+                this.row = tempRow;
             }
-            if (this.gameState.lettersOnBoard[tempRow][tempColumn] === '') {
-                if (tempRow === this.row && tempColumn === this.colomnNumber) {
-                    this.changeOrientation();
-                    this.gridService.drawtilebackground(this.colomnNumber, this.row);
-                } else {
-                    this.orientation = 'h';
-                    this.colomnNumber = tempColumn;
-                    this.row = tempRow;
-                }
-                this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
-                this.isTileSelected = true;
-                this.initialClickRow = this.row;
-                this.initialClickColumn = this.colomnNumber;
-            }
+            this.gridService.drawarrow(this.orientation, this.row, this.colomnNumber);
+            this.isTileSelected = true;
+            this.initialClickRow = this.row;
+            this.initialClickColumn = this.colomnNumber;
         }
     }
     handleRowAndColumnAfterLetter() {
