@@ -3,7 +3,7 @@ import { DictionaryService } from './dictionary.service';
 
 @Service()
 export class WordValidationService {
-    constructor(private dictionaryService: DictionaryService) {}
+    constructor(public dictionaryService: DictionaryService) {}
 
     // The binary search was inspired by the binarysearch method provided here https://www.geeksforgeeks.org/binary-search/
     isWordValid(word: string): boolean {
