@@ -221,8 +221,9 @@ export class GridService {
     }
     drawLetterwithpositionstring(word: string, x1: number, y1: number, color: string) {
         // color must be either black or red
-        const offset = 8;
+        // const offset = 8;
         // TODO isma discussion ici;
+        // all commented style are for smaller size tile (different style)
         this.drawtilebackground(x1, y1);
         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE;
         const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE;
@@ -230,17 +231,22 @@ export class GridService {
         this.gridContext.strokeStyle = color;
         if (color === 'red') {
             this.gridContext.lineWidth = linewidth;
-            this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+            // this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+            this.gridContext.strokeRect(x, y, Constants.CASESIZE, Constants.CASESIZE);
             this.gridContext.lineWidth = 1; // 1 is the default value;
         } else {
-            this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+            const borderpixelsize = 3;
+            this.gridContext.lineWidth = borderpixelsize;
+            // this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+            this.gridContext.strokeRect(x, y, Constants.CASESIZE, Constants.CASESIZE);
         }
-        this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+        //   this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
         this.gridContext.fillStyle = 'white';
-        this.gridContext.fillRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+        // this.gridContext.fillRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+        this.gridContext.fillRect(x, y, Constants.CASESIZE, Constants.CASESIZE);
         this.gridContext.fillStyle = 'black';
         this.gridContext.font = String(this.policesizeletter) + 'px system-ui';
-        this.gridContext.fillText(word, x + Constants.CASESIZE / 2, y + Constants.CASESIZE / 2);
+        this.gridContext.fillText(word.toUpperCase(), x + Constants.CASESIZE / 2, y + Constants.CASESIZE / 2);
         const lettervalue = LetterMap.letterMap.letterMap.get(word) as Letter;
         this.drawLetterValuewithposition(lettervalue, x1, y1);
     }

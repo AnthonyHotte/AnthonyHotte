@@ -213,8 +213,8 @@ export class SoloGameInitiatorComponent {
     setRandomBonus(activated: boolean) {
         this.isBonusRandom = activated;
     }
-    setExpertMode() {
-        this.soloopponent2.setExpertMode();
+    setExpertMode(expert: boolean) {
+        this.soloopponent2.setExpertMode(expert);
     }
     scrambleBonus() {
         if (this.isBonusRandom) {
