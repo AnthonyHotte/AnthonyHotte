@@ -18,6 +18,10 @@
     color: white;
     box-shadow: 0 9px grey;
 }
+.button-surrender:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); 
+}
 
 .button-surrender-confirmed {
     display: inline-block;
@@ -42,6 +46,11 @@
     box-shadow: 0 9px grey;
 }
 
+.button-surrender-confirmed:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); 
+}
+
 .button-surrender-refuse {
     display: inline-block;
     padding: 15px 25px;
@@ -63,6 +72,11 @@
     color: white;
     background-color: black;
     box-shadow: 0 9px grey;
+}
+
+.button-surrender-refuse:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); 
 }
 
 .label {

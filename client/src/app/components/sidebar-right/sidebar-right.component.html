@@ -27,7 +27,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
         <fieldset class="fieldset">
             <div class="filler2">
                 <h1 class="header2" *ngIf="this.turnTimeController.turn === 0">C'est votre tour, {{ getPlayerNameAndVerifyTurn() }}</h1>
-                <h2 class="header2" *ngIf="this.turnTimeController.turn === 1">Temps restant à l'adversaire</h2>
+                <h2 class="header2" *ngIf="this.turnTimeController.turn === 1">Temps restant à {{ getPlayerNameAndVerifyTurn() }}</h2>
                 <div class="Counter">
                     <ngx-countdown
                         #counter
