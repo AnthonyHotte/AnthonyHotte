@@ -8,7 +8,7 @@ import { SocketService } from '@app/services/socket.service';
 import { of } from 'rxjs';
 import SpyObj = jasmine.SpyObj;
 
-describe('MainPageComponent', () => {
+fdescribe('MainPageComponent', () => {
     let component: MainPageComponent;
     let fixture: ComponentFixture<MainPageComponent>;
     let communicationServiceSpy: SpyObj<CommunicationService>;
@@ -27,6 +27,7 @@ describe('MainPageComponent', () => {
             imports: [RouterTestingModule, HttpClientModule],
             declarations: [MainPageComponent],
             providers: [
+                { provide: SocketService, useValue: socketServiceSpy },
                 { provide: CommunicationService, useValue: communicationServiceSpy },
                 { provide: BestScoreService, useValue: bestScoreServiceSpy },
             ],
@@ -61,6 +62,7 @@ describe('MainPageComponent', () => {
         expect(bestScoreServiceSpy.updateBestScore).toHaveBeenCalled();
     });
     it('setMode2990 should call updateBestScore', () => {
+        socketServiceSpy.is2990 = false;
         component.setMode2990(true);
         expect(socketServiceSpy.is2990).toBe(true);
     });

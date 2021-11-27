@@ -8,7 +8,7 @@ import { SocketService } from '@app/services/socket.service';
 
 import { OpponentWaitingRoomComponent } from './opponent-waiting-room.component';
 
-fdescribe('OpponentWaitingRoomComponent', () => {
+describe('OpponentWaitingRoomComponent', () => {
     let component: OpponentWaitingRoomComponent;
     let fixture: ComponentFixture<OpponentWaitingRoomComponent>;
     let socketServiceSpy: jasmine.SpyObj<SocketService>;
