@@ -1,5 +1,12 @@
 <html class="html">
     <div class="bg-container">
+        <div *ngIf="showBestScore" class="pop-up-best-score">
+            <div class="background-best-score">
+                <app-best-score-page></app-best-score-page>
+                <button (click)="showBestScore = false" class="button">Cacher les meilleurs scores</button>
+            </div>
+        </div>
+
         <div class="container justified">
             <h1 class="header-item">Bienvenue au cours {{ title }}</h1>
             <img src="https://bit.ly/3m206ss" width="400" height="80" alt="Logo Scrabble" />
