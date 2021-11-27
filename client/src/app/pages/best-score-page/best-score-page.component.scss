@@ -1,0 +1,35 @@
+.centered {
+    text-align: center;
+    align-items: center;
+}
+
+.table-filler{
+    background-color: darkgreen;
+    margin-left: 25%;
+    width: 50%;
+    max-width: 50%;
+    color: white;
+    border: double;
+    text-align: center;
+}
+.table{
+    color:black;
+    border: double;
+    width: 100%;
+    max-width: 100%;
+}
+.th {
+    color: black;
+    font-family: serif;
+    border: double;
+    width:33%;
+}
+.td {
+    color: black;
+    font-family: serif;
+    border: double;
+    width:33%;
+}
+.for-length{
+    width:100%;
+}
