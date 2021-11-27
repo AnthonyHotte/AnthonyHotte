@@ -52,9 +52,4 @@ describe('GameSelectionPageComponent', () => {
         component.setJoinMultiPayerGame();
         expect(socketServiceSpy.sendGameListNeededNotification).toHaveBeenCalled();
     });
-    it('infoAboutNigelRichardsDisplay should switch read info', () => {
-        component.readInfo = false;
-        component.infoAboutNigelRichardsDisplay();
-        expect(component.readInfo).toBe(true);
-    });
 });

@@ -219,7 +219,7 @@ describe('GameStateService', () => {
     it('expect verify if is word touching horizontal is called if the orientation is horizontal', () => {
         service.lastLettersAdded = 'allo';
         service.isBoardEmpty = false;
-        const spy = spyOn(service, 'isWordTouchingHorizontal');
+        const spy = spyOn(service, 'isWordTouching');
         service.isWordTouchingLetterOnBoard('allo', 'h');
         expect(spy).toHaveBeenCalled();
     });
@@ -230,15 +230,15 @@ describe('GameStateService', () => {
         const twelve = 12;
         service.indexLastLetters = [0, eleven, 0, twelve];
         service.lettersOnBoard[0][ten] = 'a';
-        expect(service.isWordTouchingHorizontal()).toBe(true);
+        expect(service.isWordTouching(true)).toBe(true);
     });
     it('isWordTouchingHorizontal should return false', () => {
         service.indexLastLetters = [1, 0, FOURTEEN, 2];
-        expect(service.isWordTouchingHorizontal()).toBe(false);
+        expect(service.isWordTouching(true)).toBe(false);
     });
     it('isWordTouchingVertical should return false', () => {
         service.indexLastLetters = [0, FOURTEEN, FOURTEEN];
-        expect(service.isWordTouchingVertical()).toBe(true);
+        expect(service.isWordTouching(true)).toBe(true);
     });
     it('horizontal word should tell if word added is touching a letter on the right', () => {
         const ten = 10;
@@ -246,7 +246,7 @@ describe('GameStateService', () => {
         const twelve = 12;
         service.indexLastLetters = [0, ten, 0, eleven];
         service.lettersOnBoard[0][twelve] = 'a';
-        expect(service.isWordTouchingHorizontal()).toBe(true);
+        expect(service.isWordTouching(true)).toBe(true);
     });
 
     it('horizontal word should tell if word added is touching a letter under on row 1', () => {
@@ -254,7 +254,7 @@ describe('GameStateService', () => {
         const eleven = 11;
         service.indexLastLetters = [0, ten, 0, eleven];
         service.lettersOnBoard[1][ten] = 'a';
-        expect(service.isWordTouchingHorizontal()).toBe(true);
+        expect(service.isWordTouching(true)).toBe(true);
     });
 
     it('horizontal word should tell if word added is touching a letter over on row 15', () => {
@@ -264,7 +264,7 @@ describe('GameStateService', () => {
         const fourteen = 14;
         service.indexLastLetters = [fourteen, ten, fourteen, eleven];
         service.lettersOnBoard[thirteen][ten] = 'a';
-        expect(service.isWordTouchingHorizontal()).toBe(true);
+        expect(service.isWordTouching(true)).toBe(true);
     });
 
     it('horizontal word should tell if word added is touching a letter over or under when word is added in the middle of the board', () => {
@@ -272,14 +272,14 @@ describe('GameStateService', () => {
         const eleven = 11;
         service.indexLastLetters = [3, ten, 3, eleven];
         service.lettersOnBoard[2][ten] = 'a';
-        expect(service.isWordTouchingHorizontal()).toBe(true);
+        expect(service.isWordTouching(true)).toBe(true);
     });
 
     it('horizontal word should tell if word is not touching to any letter on board', () => {
         const ten = 10;
         const eleven = 11;
         service.indexLastLetters = [3, ten, 3, eleven];
-        expect(service.isWordTouchingHorizontal()).toBe(false);
+        expect(service.isWordTouching(true)).toBe(false);
     });
 
     it('vertical word should tell if word added is touching a letter over it', () => {
@@ -288,7 +288,7 @@ describe('GameStateService', () => {
         const twelve = 12;
         service.indexLastLetters = [eleven, 0, twelve, 0];
         service.lettersOnBoard[ten][0] = 'a';
-        expect(service.isWordTouchingVertical()).toBe(true);
+        expect(service.isWordTouching(false)).toBe(true);
     });
     it('vertical word should tell if word added is touching a letter under it', () => {
         const ten = 10;
@@ -296,7 +296,7 @@ describe('GameStateService', () => {
         const twelve = 12;
         service.indexLastLetters = [ten, 0, eleven, 0];
         service.lettersOnBoard[twelve][0] = 'a';
-        expect(service.isWordTouchingVertical()).toBe(true);
+        expect(service.isWordTouching(false)).toBe(true);
     });
 
     it('vertical word on column 1 should tell if word added is touching a letter on the right', () => {
@@ -304,7 +304,7 @@ describe('GameStateService', () => {
         const eleven = 11;
         service.indexLastLetters = [ten, 0, eleven, 0];
         service.lettersOnBoard[ten][1] = 'a';
-        expect(service.isWordTouchingVertical()).toBe(true);
+        expect(service.isWordTouching(false)).toBe(true);
     });
 
     it('vertical word on column 1 should tell if word added is touching a letter on the left', () => {
@@ -314,7 +314,7 @@ describe('GameStateService', () => {
         const fourteen = 14;
         service.indexLastLetters = [ten, fourteen, eleven, fourteen];
         service.lettersOnBoard[ten][thirteen] = 'a';
-        expect(service.isWordTouchingVertical()).toBe(true);
+        expect(service.isWordTouching(false)).toBe(true);
     });
 
     it('vertical word should tell if word added is touching a letter on right or left when word is added in the middle of the board', () => {
@@ -322,14 +322,14 @@ describe('GameStateService', () => {
         const eleven = 11;
         service.indexLastLetters = [ten, 3, eleven, 3];
         service.lettersOnBoard[ten][2] = 'a';
-        expect(service.isWordTouchingVertical()).toBe(true);
+        expect(service.isWordTouching(false)).toBe(true);
     });
 
     it('vertical word should tell if word is not touching to any letter on board', () => {
         const ten = 10;
         const eleven = 11;
         service.indexLastLetters = [ten, 3, eleven, 3];
-        expect(service.isWordTouchingVertical()).toBe(false);
+        expect(service.isWordTouching(true)).toBe(false);
     });
 
     it('isWordTouchingLetterOnBoard should return true if word is not the same length as last letter added', () => {
@@ -341,7 +341,7 @@ describe('GameStateService', () => {
     it('isWordTouchingLetterOnBoard should call isWordTouchingVertical if word is not same length as last letter added and oreintation is v', () => {
         service.lastLettersAdded = 'hello';
         service.isBoardEmpty = false;
-        const spy = spyOn(service, 'isWordTouchingVertical');
+        const spy = spyOn(service, 'isWordTouching');
         service.isWordTouchingLetterOnBoard('hello', 'v');
         expect(spy).toHaveBeenCalled();
     });
