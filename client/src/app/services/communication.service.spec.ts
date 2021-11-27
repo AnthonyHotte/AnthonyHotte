@@ -4,7 +4,7 @@ import { Dictionary } from '@app/classes/dictionary';
 import { Message } from '@app/classes/message';
 import { CommunicationService } from '@app/services/communication.service';
 
-fdescribe('CommunicationService', () => {
+describe('CommunicationService', () => {
     let httpMock: HttpTestingController;
     let service: CommunicationService;
     let baseUrl: string;
