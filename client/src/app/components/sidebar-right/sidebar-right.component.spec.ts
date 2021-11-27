@@ -267,7 +267,7 @@ describe('SidebarRightComponent', () => {
     it('getPlayerName should return name when to long', () => {
         letterServiceSpy.players[0].name = 'annthththhjjxxd';
         const name = component.getPlayerName(0);
-        expect(name).toEqual('annththt hhjjxxd ');
+        expect(name).toEqual('annthththhjj xxd ');
     });
     it('verifyLettersPlaced should verify if letter place', () => {
         placeLetterClickServiceSpy.isTileSelected = true;
