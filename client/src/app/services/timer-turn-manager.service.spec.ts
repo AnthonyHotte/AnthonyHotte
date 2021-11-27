@@ -20,7 +20,7 @@ describe('TimerTurnManager', () => {
     });
     it('end turn should change turn to 1', () => {
         service.turn = 0;
-        service.endTurn('place');
+        service.endTurn('skip');
         expect(service.turn).toEqual(1);
     });
 });

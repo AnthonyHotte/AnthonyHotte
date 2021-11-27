@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { TileMap } from '@app/classes/grid-special-tile';
 import { ScoreCalculatorService } from './score-calculator.service';
 
-describe('ScoreCalculatorService', () => {
+fdescribe('ScoreCalculatorService', () => {
     let service: ScoreCalculatorService;
 
     beforeEach(() => {
@@ -88,6 +88,15 @@ describe('ScoreCalculatorService', () => {
         const firstIndex = 1;
         const secondIndex = 4;
         const result = service.calculateScoreForHorizontal(firstIndex, secondIndex, rowPosition, 'aber');
+        expect(result).toEqual(expectedScore);
+    });
+    it('calculateScoreForHorizontal should be return 0 when pass {1,4,5, } and on ', () => {
+        const expectedScore = 0;
+        const rowPosition = 5;
+        const firstIndex = 1;
+        const secondIndex = 4;
+        spyOn(service, 'isLetterAJoker').and.returnValue(true);
+        const result = service.calculateScoreForHorizontal(firstIndex, secondIndex, rowPosition, '');
         expect(result).toEqual(expectedScore);
     });
     it('calculateScoreForHorizontal should be return 12 when pass {1,4,1,aber}', () => {

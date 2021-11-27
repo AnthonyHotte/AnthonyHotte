@@ -139,9 +139,7 @@ export class WordValidationService {
             return this.isWordValid(wordCreated);
         }
     }
-    async delay(ms: number) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    }
+
     isWordLongerThanTwo(word: string): boolean {
         if (word.length >= 2) {
             return true;
