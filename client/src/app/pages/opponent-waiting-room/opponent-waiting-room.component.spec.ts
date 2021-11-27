@@ -8,7 +8,7 @@ import { SocketService } from '@app/services/socket.service';
 
 import { OpponentWaitingRoomComponent } from './opponent-waiting-room.component';
 
-describe('OpponentWaitingRoomComponent', () => {
+fdescribe('OpponentWaitingRoomComponent', () => {
     let component: OpponentWaitingRoomComponent;
     let fixture: ComponentFixture<OpponentWaitingRoomComponent>;
     let socketServiceSpy: jasmine.SpyObj<SocketService>;
@@ -20,7 +20,7 @@ describe('OpponentWaitingRoomComponent', () => {
         indexWaitingRoomServiceSpy = jasmine.createSpyObj('IndexWaitingRoomService', ['setIndex']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['synchInformation']);
         gridMapServiceSpy = jasmine.createSpyObj('TileMap', ['isDoubleWordTile']);
-        socketServiceSpy.gameLists = [['name', 'bonus', 'time', 'letters']];
+        socketServiceSpy.gameLists = [['1', '2', '3', '4', '5', '6', '7', 'true']];
         await TestBed.configureTestingModule({
             declarations: [OpponentWaitingRoomComponent],
             providers: [
@@ -59,7 +59,7 @@ describe('OpponentWaitingRoomComponent', () => {
     });
 
     it('fillList should call push ', () => {
-        socketServiceSpy.gameLists.push(['1', '2', '3', '4']);
+        socketServiceSpy.gameLists.push(['1', '2', '3', '4', '5', '6', '7', 'letters']);
         component.fillList();
         expect(component.gamesList[1]).toEqual(['1', '2', '3', 'letters']);
     });
@@ -88,5 +88,22 @@ describe('OpponentWaitingRoomComponent', () => {
 
     it('getBonus should return non if not true', () => {
         expect(component.getBonusInLetters('false')).toEqual('Non');
+    });
+    it('getTimePerTurn should parse time to int', () => {
+        expect(component.getTimePerTurn('2')).toEqual(2);
+    });
+    it('changeStringToBool2990 should parse int to bool', () => {
+        expect(component.changeStringToBool2990('true')).toEqual(true);
+    });
+    it('changeStringToBool2990 should parse int to bool', () => {
+        socketServiceSpy.is2990 = true;
+        expect(component.getIs2990()).toEqual(true);
+    });
+    it('joinRandom should parse int to bool', () => {
+        socketServiceSpy.is2990 = true;
+        socketServiceSpy.gameLists.push(['1', '2', '3', '4', '5', '6', '7', 'false']);
+        const spy = spyOn(component, 'setIndex');
+        component.joinRandom();
+        expect(spy).toHaveBeenCalledWith(0);
     });
 });
