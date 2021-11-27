@@ -3,19 +3,25 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { FinishedGameComponent } from './finished-game.component';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { BehaviorSubject } from 'rxjs';
+import { SocketService } from '@app/services/socket.service';
 
 describe('FinishedGameComponent', () => {
     let component: FinishedGameComponent;
     let fixture: ComponentFixture<FinishedGameComponent>;
     let spy: jasmine.SpyObj<FinishGameService>;
+    let socketServiceSpy: jasmine.SpyObj<SocketService>;
 
     beforeEach(async () => {
-        spy = jasmine.createSpyObj(FinishGameService, ['goToHomeAndRefresh', 'getCongratulation']);
+        socketServiceSpy = jasmine.createSpyObj('SocketService', ['getMessageObservable']);
+        spy = jasmine.createSpyObj(FinishGameService, ['goToHomeAndRefresh', 'getCongratulation', 'getMessageCongratulationsAbandon']);
         spy.updateOfEndGameValue = new BehaviorSubject<boolean>(false);
         spy.currentEndGameValue = spy.updateOfEndGameValue.asObservable();
         await TestBed.configureTestingModule({
             declarations: [FinishedGameComponent],
-            providers: [{ provide: FinishGameService, useValue: spy }],
+            providers: [
+                { provide: FinishGameService, useValue: spy },
+                { provide: SocketService, useValue: socketServiceSpy },
+            ],
             imports: [RouterTestingModule],
         }).compileComponents();
     });
@@ -44,5 +50,21 @@ describe('FinishedGameComponent', () => {
     it('getter should be called congratulation', () => {
         component.quitGame();
         expect(spy.goToHomeAndRefresh).toHaveBeenCalled();
+    });
+    it('getMessageCongratulationsAbandon should call getMessageCongratulationsAbandon from finishGameService', () => {
+        component.getMessageCongratulationsAbandon();
+        expect(spy.getMessageCongratulationsAbandon).toHaveBeenCalled();
+    });
+    it('getGameStatus should return true', () => {
+        spy.isGameFinished = true;
+        socketServiceSpy.triggeredQuit = false;
+        const res = component.getGameStatus();
+        expect(res).toBe(true);
+    });
+    it('getAbandonStatus should return true', () => {
+        spy.isGameFinished = true;
+        socketServiceSpy.triggeredQuit = true;
+        const res = component.getAbandonStatus();
+        expect(res).toBe(true);
     });
 });

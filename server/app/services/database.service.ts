@@ -25,7 +25,9 @@ export class DatabaseService {
             const client = await MongoClient.connect(url);
             this.client = client;
             this.db = client.db(DATABASE_NAME);
-        } catch {
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.log(err.message);
             throw new Error('Database connection error');
         }
 
