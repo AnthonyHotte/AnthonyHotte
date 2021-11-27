@@ -1,13 +1,23 @@
-.button{
-    font-size: 22px;
+.button {
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
     color: white;
-    background-color: red;
-    box-shadow: 0 5px black;
+    background-color: green;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px darkgreen;
+    font-family: serif;
+    margin-top: 5%;
 }
 .button:hover{
-    color: red;
-    background-color:white;
+    background-color: black;
+    color:white;
 }
 .fieldset{
     border:transparent;
+    width: 85%;
+    max-width: 85%;
 }

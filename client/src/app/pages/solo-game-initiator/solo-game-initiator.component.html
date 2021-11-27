@@ -39,9 +39,10 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             <fieldset class="fieldset">
                 <p>
                     <input [(ngModel)]="temporaryName" type="string" class="input" />
+                    <button class="button" (click)="setName()"><i class="fa fa-check"></i>Valider l'identifiant</button>
                 </p>
                 <p>
-                    <button class="button" (click)="setName()"><i class="fa fa-check"></i>Validation de l'identifiant</button>
+                    <label class="label-red" *ngIf="nameValidityInChar()==='invalide' && this.name !== 'Appuyez sur la validation pour valider votre nom'"> {{ 'L\'identifiant choisi est invalide!' }}</label>
                 </p>
             </fieldset>
         </div>
@@ -115,8 +116,9 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
         </div>
         <div class="image-button">
             <fieldset class="fieldset">
-                <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
-                <label class="space" *ngIf="nameIsValid">space</label>
+                <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>
+                    Revenir en arrière
+                </button>
                 <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()" class="button">
                     <i class="fa fa-play"></i>
                     Démarrer la partie!
