@@ -1,5 +1,5 @@
 .container {
-    min-height: 100vh;
+    min-height: 100%;
     height: auto;
 }
 
@@ -31,15 +31,15 @@
 .team-name {
     margin-top: 0.25em;
     margin-bottom: 0.25em;
-    color: white;
+    color: green;
     font-family: serif;
     font-size: 18px;
 }
 
 .header-item {
     justify-content: center;
-    background-color: darkgreen;
-    color: white;
+    background-color: rgb(213, 231, 213);
+    color: green;
     text-align: center;
     font-family: serif;
     font-size: 2.5vmax;
@@ -49,17 +49,17 @@
 
 .footer-item {
     text-align: center;
-    background-color: darkgreen;
-    color:white;
+    background-color: rgb(213, 231, 213);
+    color:green;
     font-family: serif;
 }
 
 .footer-item p :nth-child(even) {
-    color: white;
+    color: green;
     font-family: serif;
 }
 .footer-item p :nth-child(odd) {
-    color: white;
+    color: green;
     font-family: serif;
 }
 
@@ -70,7 +70,7 @@
 }
 
 .bg-container { 
-    background-image:url("../../../assets/poly_uni_building.png");
+    background-color:rgb(213, 231, 213);
     background-repeat:no-repeat;
     background-position: center center; 
     background-size: cover; 
@@ -80,7 +80,7 @@
     position:relative;
 }
 
-html, body {   margin:0;   height:100%;   overflow:hidden; }
+html, body {   margin:0;   height:100%; overflow:hidden; }
 
 .button:hover { background-color: black; }
 
@@ -92,4 +92,21 @@ html, body {   margin:0;   height:100%;   overflow:hidden; }
 .img {
     width: 100%;
     height: auto;
+}
+
+.pop-up-best-score{
+    position: fixed; 
+    //display: none; 
+    width: 100%; 
+    height: 100%; 
+    z-index:2;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.background-best-score{
+    background-color: rgb(213, 231, 213);
+    width: 50%;
+    height: 80%;
+    margin-left: 25%;
+    margin-top: 5%;
 }

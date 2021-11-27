@@ -1,12 +1,12 @@
 .header {
     font-family: serif;
-    color: white;
-    background-color: darkgreen;
+    color: green;
+    background-color: rgb(213, 231, 213);
     text-align: center;
-    width: 100vw;
+    width: 100%;
     font-size: 32px;
-    height: 5vh;
-    max-height: 5vh;
+    height: 5%;
+    max-height: 5%;
 }
 
 .body {
@@ -18,12 +18,14 @@
 .overflow-hidden{
     overflow-x: hidden;
     overflow-y: hidden;
+    background-color: rgb(213, 231, 213);
+    height: 100%;
 }
 
 .filler {
-    background-color: lightgreen;
-    width: 100vw;
-    height: 100vh;
+    background-color: rgb(213, 231, 213);
+    width: 100%;
+    height: 100%;
 }
 // source : https://www.w3schools.com/csS/tryit.asp?filename=trycss_buttons_animate3 
 .button {
@@ -40,6 +42,7 @@
     border-radius: 15px;
     box-shadow: 0 9px darkgreen;
     font-family: serif;
+    margin-top: 5%;
 }
 
 .button:hover{
@@ -49,14 +52,14 @@
 }
 
 .body {
-    background-color: lightgreen;
-    width: 100vw;
-    height: 100vh;
+    background-color: rgb(213, 231, 213);
+    width: 100%;
+    height: 100%;
 }
 .filler2{
-    width:100vw;
+    width:100%;
     height: 10vh;
-    background-color: lightgreen;
+    background-color: rgb(213, 231, 213);
 }
 // animated loading screen by Bilal Rizwaan
 // source : https://codepen.io/Bilal1909/pen/pobgJae
@@ -71,12 +74,12 @@ bodY {
     display: flex;
     justify-content: center;
     align-items: center;
-    background:black;
+    background:rgb(213, 231, 213);
   }
   .wave {
     width: 5px;
     height: 100px;
-    background: linear-gradient(45deg, cyan, #fff);
+    background: linear-gradient(45deg, green, green);
     margin: 10px;
     animation: wave 1s linear infinite;
     border-radius: 20px;
