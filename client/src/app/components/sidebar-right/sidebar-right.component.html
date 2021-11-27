@@ -3,8 +3,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="container">
     <body>
-        <fieldset class="fieldset">
-            <div class="score-filler">
+        <div class="score-filler">
             <h1 class="header">Score</h1>
             <table class="table">
                 <tr>
@@ -24,8 +23,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     </td>
                 </tr>
             </table>
-            </div>
-        </fieldset>
+        </div>
         <fieldset class="fieldset">
             <div class="filler2">
                 <h1 class="header1" *ngIf="this.turnTimeController.turn === 0">C'est votre tour, {{ getPlayerNameAndVerifyTurn() }}</h1>
@@ -60,12 +58,10 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 </div>
             </div>
         </fieldset>
-        <fieldset class="fieldset">
             <div class="filler1">
                 <label class="header3"> Agrandir la taille des lettres sur la grille</label>
                 <div class="filler4">
                     <button class="button-font-size" (click)="increaseFontSize()"><i class="fa fa-plus"></i> </button>
-                    <label style="color: transparent;">spacing</label> 
                     <button class="button-font-size" (click)="decreaseFontSize()"> <i class="fa fa-minus"></i> </button>
                 </div>
             </div>
