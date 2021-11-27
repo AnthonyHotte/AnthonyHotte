@@ -67,7 +67,7 @@ export class GameStateService {
                 return false;
             }
             for (let i = 0; i < this.indexLastLetters.length; i += 2) {
-                if (this.wordValidator.isPartOfWordVertical(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
+                if (this.wordValidator.isPartOfWord(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard, false)) {
                     if (
                         !(await this.wordValidator.validateVerticalWord(
                             this.indexLastLetters[i],
@@ -85,7 +85,7 @@ export class GameStateService {
                 return false;
             }
             for (let i = 0; i < this.indexLastLetters.length; i += 2) {
-                if (this.wordValidator.isPartOfWordHorizontal(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
+                if (this.wordValidator.isPartOfWord(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard, true)) {
                     if (
                         !(await this.wordValidator.validateHorizontalWord(
                             this.indexLastLetters[i],
