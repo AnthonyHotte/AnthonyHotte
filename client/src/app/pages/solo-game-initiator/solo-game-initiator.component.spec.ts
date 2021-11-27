@@ -167,7 +167,7 @@ describe('SoloGameInitiatorComponent', () => {
     it('setName should put joueur in this.name', () => {
         component.temporaryName = 'sdfsd3';
         component.setName();
-        const j = 'Joueur';
+        const j = 'Essayez de nouveau...';
         expect(component.name).toBe(j);
     });
     it('setName should put joueur in this.name when status equal 1', () => {
