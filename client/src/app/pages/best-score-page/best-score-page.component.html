@@ -2,7 +2,6 @@
     <div>
         <p><br /><br />Mode Classique</p>
         <table class="table">
-            <tbody>
                 <tr>
                     <th>Numéro</th>
                     <th>Name</th>
@@ -27,12 +26,10 @@
                     <th>Name</th>
                     <th>Score</th>
                 </tr>
-                <div *ngFor="let best of this.bestScore[1]; let numberBest = index">
-                    <tr>
+                    <div *ngFor="let best of this.bestScore[1]; let numberBest = index">
                         <td>{{ numberBest + 1 }}</td>
                         <td>{{ best.name }}</td>
                         <td>{{ best.score }}</td>
-                    </tr>
                 </div>
             </tbody>
         </table>
@@ -41,4 +38,3 @@
 <div *ngIf="bestScore[0].length === 0">
     <p>La connection avec la base de données est impossible pour le moment... Veuillez réessayer plus tard<br />Merci de votre compréhenssion</p>
 </div>
-<button routerLink="/home">Retour au menu principale</button>

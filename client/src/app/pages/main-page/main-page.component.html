@@ -15,11 +15,6 @@
                 <p><button class="button" routerLink="/selection" (click)="setMode2990(false)">Scrabble classique</button></p>
                 <p><button class="button" routerLink="/selection" (click)="setMode2990(true)">Scrabble 2990</button></p>
                 <p><button class="button" (click)="this.showBestScore = true; this.updateBestScore();">Meilleurs scores</button></p>
-                <div *ngIf="showBestScore">
-                    <app-best-score-page></app-best-score-page>
-                    <button (click)="showBestScore = false">Cacher meilleur score</button>
-                </div>
-
                 <div class="footer-item">
                     <h4 class="team-name">104 - Les Québecois et quelques survenants</h4>
                     <p>
