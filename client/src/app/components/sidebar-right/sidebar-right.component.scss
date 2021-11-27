@@ -1,15 +1,17 @@
 .container {
     height: auto;
-    min-height: 97vh;
+    min-height: 97%;
     border: double;
     padding: 0 5px 0 5px;
-    width: 20vw;
-    background-color: lightgreen;
+    min-width: 90%;
+    width: 90%;
+    background-color: rgb(213, 231, 213);
     text-align: center;
-    height: 97vh;
+    height: 97%;
     position: relative;
-    top: 5px;
-    max-height: 97vh;
+    top: 1%;
+    max-height: 97%;
+    margin-left: 25%;
 }
 
 .Counter {
@@ -21,10 +23,30 @@
     padding-bottom: 10px;
     padding-left: 10px;
     border:double;
-    background-color: black;
-    max-width: 20vw;
+    background-color: rgb(213, 231, 213);
+    max-width: 90%;
 }
-.buttonfontsize {
+.button-font-size {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 10px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: green;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px darkgreen;
+    font-family: serif;
+    margin-top: 1.5px;
+}
+.button-font-size:hover {
+    background-color: black;
+    color: white;
+}
+.button-pass {
     display: inline-block;
     padding: 15px 25px;
     font-size: 20px;
@@ -40,93 +62,96 @@
     font-family: serif;
     margin-top: 1.5px;
 }
-.buttonfontsize:hover {
+.button-pass:hover {
     background-color: black;
     color: white;
 }
 .header {
-    color: white;
-    background-color: darkgreen;
-    font-size: 30px;
-    width: 19vw;
-    max-width: 19vw;
+    color: green;
+    background-color: rgb(213, 231, 213);
+    font-size: 24px;
+    width: 90%;
+    max-width: 90%;
 }
 .header1{
-   background-color: darkgreen;
-   color:white;
-   font-size: 26px; 
-   width: 19vw;
-   max-width: 19vw;
+   background-color: rgb(213, 231, 213);
+   color:green;
+   font-size: 20px; 
+   width: 90%;
+   max-width: 90%;
 }
 .header2{
-    background-color: darkgreen;
-    color:white;
-    font-size: 20px;
-    max-width: 20vw;
+    background-color: rgb(213, 231, 213);
+    color:green;
+    font-size: 16px;
 }
 
 .label {
-    background-color: darkgreen;
-    color:white;
-    font-size: 20px;
-    max-width: 20vw;
+    background-color: rgb(213, 231, 213);
+    color:green;
+    font-size: 16px;
+    max-width: 90%;
 }
 .label2 {
     background-color: transparent;
-    color: white;
-    font-size: 20px;
-    max-width: 20vw;
+    color: green;
+    font-size: 16px;
+    max-width: 90%;
 }
 .header3 {
     background-color: transparent;
-    color: white;
-    font-size: 18px;
-    max-width: 20vw;
+    color: green;
+    font-size: 14px;
+    max-width: 95%;
 }
 .score-filler{
-    background-color: darkgreen;
-    max-width: 20vw;
-    color: white;
+    background-color: rgb(213, 231, 213);
+    width: 95%;
+    max-width: 95%;
+    color: green;
     border: double;
 }
 .table{
-    color:white;
+    color:green;
     border: double;
-    width: 19vw;
-    max-width: 19vw;
+    width: 100%;
+    max-width: 100%;
 }
 .th, td {
-    color: white;
+    color: green;
     border: double;
-    width: 19vw;
-    max-width: 19vw;
+    width: 100%;
+    max-width: 100%;
 }
 .fieldset{
     border:transparent;
-    max-width: 20vw;
+    max-width: 90%;
 }
 .filler1{
-    background-color: darkgreen;
-    max-width: 20vw;
-    height: 14.5vh;
-    max-height: 14.5vh;
-    color:white;
+    background-color: rgb(213, 231, 213);
+    max-width: 90%;
+    height: 12%;
+    max-height: 12%;
+    color:green;
     border: double;
+    margin-left: 5%;
 }
 .filler2{
-    background-color: darkgreen;
-    max-width: 20vw;
-    color:white;
+    background-color: rgb(213, 231, 213);
+    max-width: 90%;
+    color:green;
     border: double;
+    margin-left: 5%;
 }
 .filler3{
-    background-color: darkgreen;
-    max-width: 20vw;
-    color:white;
+    background-color: rgb(213, 231, 213);
+    max-width: 90%;
+    color:green;
     border: double;
+    margin-left: 5%;
 }
 .filler4{
-    background-color: white;
+    background-color: rgb(213, 231, 213);
     height: 64px;
     text-align: center;
     max-width: 20vw;

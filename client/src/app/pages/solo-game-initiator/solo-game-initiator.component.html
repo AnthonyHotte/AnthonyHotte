@@ -2,9 +2,10 @@
 https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%20let%20a%20user%20select%20only%20one,group%20can%20be%20selected%20at%20the%20same%20time.-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 <div class="preventer">
-    <h1 class="header">Bienvenue dans le mode {{ getGameStatusInString() }}!</h1>
-    <div class="fill-top"></div>
     <body class="body">
+        <div class="fill-top">
+            <h1 class="header">Bienvenue dans le mode {{ getGameStatusInString() }}!</h1>
+        </div>
         <div class="image-rules">
             <label class="header2">Entrez votre identifiant. Les règles à suivre :</label>
             <article>
@@ -28,15 +29,22 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         ><strong>6 -</strong> Ne pas choisir le même nom que celui du créateur : {{ returnNameOfCreator() }}</label
                     >
                 </p>
+                <p>
+                    <label *ngIf="getGameStatus() === 2" class="header3"
+                        ><strong>6 -</strong> Le nom de l{{'\''}}adversaire est unique : {{ opponentName }}</label>
+                </p>
             </article>
         </div>
         <div class="image-names">
             <fieldset class="fieldset">
                 <p>
-                    <label class="label">Nom du joueur pour la partie : {{ this.name }}</label>
+                    <label class="label" *ngIf="this.name !== 'Essayez de nouveau...' && this.name !== 'Entrez votre nom de nouveau, vous aviez fait une erreur...' && this.name !== 'Appuyez sur la validation pour valider votre nom'">Nom du joueur pour la partie : {{ this.name }}</label>
+                    <label class="label" *ngIf="this.name === 'Appuyez sur la validation pour valider votre nom'">{{ this.name }}</label>
+                    <label class="label-red" *ngIf="this.name==='Essayez de nouveau...' || this.name=== 'Entrez votre nom de nouveau, vous aviez fait une erreur...'">{{ this.name }}</label>
                 </p>
                 <p>
-                    <label class="label"> {{ 'Validité du nom: ' + nameValidityInChar() }}</label>
+                    <label class="label" *ngIf="nameValidityInChar()==='valide'"> {{ 'Validité du nom: ' + nameValidityInChar() }}</label>
+                    <label class="label-red" *ngIf="nameValidityInChar()==='invalide'"> {{ 'Validité du nom: ' + nameValidityInChar() }}</label>
                     <input [(ngModel)]="temporaryName" type="string" class="input" />
                 </p>
                 <p>
@@ -45,10 +53,10 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             </fieldset>
         </div>
         <div class="advanced-parameters-button-filler">
-            <button class="button" *ngIf="!this.showAdvancedParameters" (click)="this.showAdvancedParameters = !this.showAdvancedParameters">
+            <button class="button" *ngIf="!this.showAdvancedParameters && this.getGameStatus() !== 1" (click)="this.showAdvancedParameters = !this.showAdvancedParameters">
                 Afficher les paramètres avancés
             </button>
-            <button class="button" *ngIf="this.showAdvancedParameters" (click)="this.showAdvancedParameters = !this.showAdvancedParameters">
+            <button class="button" *ngIf="this.showAdvancedParameters && this.getGameStatus() !== 1" (click)="this.showAdvancedParameters = !this.showAdvancedParameters">
                 Masquer les paramètres avancés
             </button>
         </div>
@@ -96,7 +104,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             </div>
             <div *ngIf="getGameStatus() !== 1" class="dictionnary-filler">
                 <fieldset class="fieldset">
-                    <legend class="legend">Choisissez le dictionnaire utilisé :</legend>
+                    <legend class="legend">Choisissez le dictionnaire utilisé</legend>
                     <legend class="legend"><br />Liste des dictionnaires disponibles :</legend>
                     <div id="listDict" *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
                         <label class="label">

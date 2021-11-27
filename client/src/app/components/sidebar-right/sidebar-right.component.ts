@@ -99,7 +99,7 @@ export class SidebarRightComponent implements AfterViewInit {
         this.placeLetterService.policeSizeChanged();
     }
     getPlayerName(player: number) {
-        const VISUAL_LIMITS_OF_LENGTH = 8;
+        const VISUAL_LIMITS_OF_LENGTH = 12;
         if (this.letterService.players[player].name.length >= VISUAL_LIMITS_OF_LENGTH) {
             return (
                 this.letterService.players[player].name.substring(0, VISUAL_LIMITS_OF_LENGTH) +

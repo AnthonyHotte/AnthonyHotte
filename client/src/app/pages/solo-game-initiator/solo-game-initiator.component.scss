@@ -1,36 +1,52 @@
 .preventer {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    background-color:rgb(213, 231, 213);
+    overscroll-behavior: block;
     overflow-x: hidden;
+    display: relative;
 }
 #waiting {
     display: none;
 }
 .body {
     text-align: center;
-    background-color: green;
-    width: 100vw;
-    height: 140vh;
+    background-color: rgb(213, 231, 213);
+    width: 100%;
+    height: 170%;
     display: block;
-    overflow: hidden;
+    overflow-x: hidden;
     overscroll-behavior: contain;
-    max-height: 200vh;
+    max-height: 250%;
 }
 .header {
     text-align: center;
     font-family: serif;
-    color: white;
-    background-color: darkgreen;
+    color: green;
+    background-color: rgb(213, 231, 213);
     font-family: serif;
-    width: 100vw;
+    width: 100%;
     font-size: 2.5vmax;
     height: 3vmax;
     max-height: 3vmax;
 }
 .label {
     font-size: 16px;
-    background-color: white;
-    color: black;
+    background-color: rgb(213, 231, 213);
+    color: green;
     border-radius: 15px;
     margin-bottom: 5px;
+    margin-left: 2%;
+    margin-right:2%;
+}
+.label-red {
+  font-size: 16px;
+  background-color: rgb(213, 231, 213);
+  color: red;
+  border-radius: 15px;
+  margin-bottom: 5px;
 }
 // source : https://www.w3schools.com/csS/tryit.asp?filename=trycss_buttons_animate3
 .button {
@@ -47,50 +63,58 @@
     border-radius: 15px;
     box-shadow: 0 9px darkgreen;
     font-family: serif;
+    margin-top: 0.5%;
 }
 .button:hover {
     background-color: black;
     color: white;
 }
 .header2 {
-    background-color: black;
-    color: white;
+    background-color: rgb(213, 231, 213);;
+    color: green;
     font-size: 3vmin;
     position: relative;
     display:block;
     margin-bottom: 30px;
 }
 .header3 {
-    color: white;
+    color: green;
     font-family: serif;
     font-size: 1.5vmax;
     border-radius: 0%;
 }
 .image-rules {
-    background-color: green;
-    height: 40vmin;
-    max-height: 44vmin;
-    width: 100vw;
-    max-width: 100vw;
+    background-color: rgb(213, 231, 213);
+    height: 20%;
+    max-height: 20%;
+    width: 100%;
+    max-width: 100%;
     text-align: center;
     display: block;
 }
 .image-names {
-    background-color: white;
-    max-height: 100vh;
-    max-width: 100vw;
+    background-color: rgb(213, 231, 213);
+    max-height: 20%;
+    max-width: 100%;
 }
 .legend {
-    color: white;
-    font-size: serif;
+    color: green;
+    font-family: serif;
+    font-size: 20px;
+    margin-bottom: 0.5%;
+    margin-top: 0.5%
 }
 
 .image-bonus {
-    background-color: green;
+    background-color: rgb(213, 231, 213);
+    width: 100%;
+    max-width: 100%;
+    height: 7.5%;
+    max-height: 5.5%;
 }
 
 .image-time {
-    background-color: darkgreen;
+    background-color: rgb(213, 231, 213);
 }
 
 .input {
@@ -98,6 +122,8 @@
     font-size: 20px;
     border-radius: 16px;
     padding: 10px;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 
 input,
@@ -110,38 +136,38 @@ textarea {
 
 .image-button{
     border: none;
-    background-color: white;
-    width: 100vw;
-    height: 68px;
-    max-height: 68px;
-    max-width: 100vw;
+    background-color: rgb(213, 231, 213);
+    width: 100%;
+    height: 7.5%;
+    max-height: 7.5%;
+    max-width: 100%;
 }
 .fieldset {
     border: transparent;
 }
 .fill-top {
-    background-color: green;
-    width: 100vw;
-    height: 2vh;
-    max-height: 2vh;
+    background-color: rgb(213, 231, 213);
+    width: 100%;
+    height: 10%;
+    max-height: 10%;
 }
 .space {
-    color: white;
+    color: rgb(213, 231, 213);
     border: transparent;
 }
 .dictionnary-filler{
-    background-color: lightgreen;
+    background-color: rgb(213, 231, 213);
 }
 .spacing-control{
     margin-top: 0%;
     margin-bottom: 0%;
 }
 .advanced-parameters-button-filler{
-    background-color: white;
-    width: 100vw;
-    max-width: 100vw;
-    height: 65px;
-    max-height: 65px;
+    background-color: rgb(213, 231, 213);
+    width: 100%;
+    max-width: 100%;
+    height: 5.5%;
+    max-height: 5.5%;
 }
 // radio code customization
 // source : https://thestizmedia.com/radio-buttons-as-toggle-buttons-with-css/
@@ -159,7 +185,7 @@ textarea {
 
 .switch-field label {
     background-color: #e4e4e4;
-    color: rgba(0, 0, 0, 0.6);
+    color: green;
     font-size: 20px;
     line-height: 1;
     text-align: center;
@@ -176,7 +202,8 @@ textarea {
 }
 
 .switch-field input:checked + label {
-    background-color: greenyellow;
+    background-color: green;
+    color: white;
     box-shadow: none;
 }
 
@@ -202,7 +229,7 @@ textarea {
 
 .switch-field2 label {
     background-color: #e4e4e4;
-    color: rgba(0, 0, 0, 0.6);
+    color: green;
     font-size: 20px;
     line-height: 1;
     text-align: center;
@@ -219,7 +246,8 @@ textarea {
 }
 
 .switch-field2 input:checked + label {
-    background-color: greenyellow;
+    background-color: green;
+    color: white;
     box-shadow: none;
 }
 
@@ -234,8 +262,8 @@ textarea {
 // source : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_rangeslider
 .slider {
     -webkit-appearance: none;
-    width: 96vw;
-    height: 25px;
+    width: 96%;
+    height: 3%;
     background: lightgrey;
     outline: none;
     -webkit-transition: 0.2s;
@@ -253,7 +281,7 @@ textarea {
     appearance: none;
     width: 25px;
     height: 25px;
-    background: black;
+    background: green;
     cursor: pointer;
 }
 
@@ -277,7 +305,7 @@ textarea {
   
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: rgb(0, 54, 0); 
+  background: green; 
   border-radius: 10px;
 }
 

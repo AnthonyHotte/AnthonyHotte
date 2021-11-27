@@ -193,7 +193,7 @@ export class SoloGameInitiatorComponent {
         if (this.nameIsValid) {
             this.name = this.temporaryName;
         } else {
-            this.name = 'Joueur';
+            this.name = 'Essayez de nouveau...';
             if (this.getGameStatus() === 1) {
                 this.name = 'Entrez votre nom de nouveau, vous aviez fait une erreur...';
             }
