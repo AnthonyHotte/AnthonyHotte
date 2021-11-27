@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { TileMap } from '@app/classes/grid-special-tile';
 import { ScoreCalculatorService } from './score-calculator.service';
 
-fdescribe('ScoreCalculatorService', () => {
+describe('ScoreCalculatorService', () => {
     let service: ScoreCalculatorService;
 
     beforeEach(() => {
