@@ -27,34 +27,22 @@ export class WordValidationService {
         return this.isWordInDictionnary(word) && this.isWordLongerThanTwo(word);
     }
 
-    isPartOfWordVertical(row: number, column: number, lettersOnBoard: string[][]): boolean {
-        if (row === 0) {
-            if (lettersOnBoard[row + 1][column] === '') {
+    isPartOfWord(row: number, column: number, lettersOnBoard: string[][], isHorizontal: boolean): boolean {
+        const criticalFactor = isHorizontal ? column : row;
+        const y1 = isHorizontal ? row : row + 1;
+        const x1 = isHorizontal ? column + 1 : column;
+        const y2 = isHorizontal ? row : row - 1;
+        const x2 = isHorizontal ? column - 1 : column;
+        if (criticalFactor === 0) {
+            if (lettersOnBoard[y1][x1] === '') {
                 return false;
             }
-        } else if (row === lettersOnBoard.length - 1) {
-            if (lettersOnBoard[row - 1][column] === '') {
-                return false;
-            }
-        } else {
-            if (lettersOnBoard[row - 1][column] === '' && lettersOnBoard[row + 1][column] === '') {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    isPartOfWordHorizontal(row: number, column: number, lettersOnBoard: string[][]): boolean {
-        if (column === 0) {
-            if (lettersOnBoard[row][column + 1] === '') {
-                return false;
-            }
-        } else if (column === lettersOnBoard.length - 1) {
-            if (lettersOnBoard[row][column - 1] === '') {
+        } else if (criticalFactor === lettersOnBoard.length - 1) {
+            if (lettersOnBoard[y2][x2] === '') {
                 return false;
             }
         } else {
-            if (lettersOnBoard[row][column - 1] === '' && lettersOnBoard[row][column + 1] === '') {
+            if (lettersOnBoard[y2][x2] === '' && lettersOnBoard[y1][x1] === '') {
                 return false;
             }
         }
@@ -82,22 +70,10 @@ export class WordValidationService {
             wordCreated += lettersOnBoard[row][firstColumnOfWord];
             lastIndexWord = firstColumnOfWord;
         }
-        this.pointsForLastWord += this.scoreCalculator.calculateScoreForHorizontal(beginIndexWord, lastIndexWord, row, wordCreated);
-        // this.socket.isWordValidationFinished = false;
-        // emit to server word validation with word
-        // while (!this.socket.isWordValidationFinished) {}
-        // this.socket.validateWord(wordCreated);
-
-        // set timer
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        //  const timeToWait = 3000;
-        // this.delay(timeToWait);
-        // return this.validatedWord;
-        // temporaire
+        this.pointsForLastWord += this.scoreCalculator.calculateScore(beginIndexWord, lastIndexWord, row, wordCreated, true);
         if (onServer) {
             this.wordsCreatedLastTurn.push(wordCreated);
             return await this.socket.validateWord(wordCreated);
-            // return this.isWordValid(wordCreated);
         } else {
             return this.isWordValid(wordCreated);
         }
@@ -123,15 +99,7 @@ export class WordValidationService {
             wordCreated += lettersOnBoard[firstRowOfWord][column];
             lastIndexWord = firstRowOfWord;
         }
-        this.pointsForLastWord += this.scoreCalculator.calculateScoreForVertical(beginIndexWord, lastIndexWord, column, wordCreated);
-        // this.socket.validateWord(wordCreated);
-
-        // set timer
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        // const timeToWait = 3000;
-        // this.delay(timeToWait);
-        // return this.validatedWord;
-        // temporaire
+        this.pointsForLastWord += this.scoreCalculator.calculateScore(beginIndexWord, lastIndexWord, column, wordCreated, false);
         if (onServer) {
             this.wordsCreatedLastTurn.push(wordCreated);
             return await this.socket.validateWord(wordCreated);

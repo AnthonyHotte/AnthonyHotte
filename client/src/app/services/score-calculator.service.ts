@@ -10,48 +10,26 @@ export class ScoreCalculatorService {
     indexLastLetters: number[] = [];
     indexJoker: number[] = [];
 
-    calculateScoreForHorizontal(beginIndex: number, endIndex: number, row: number, word: string): number {
+    calculateScore(beginIndex: number, endIndex: number, constantRowOrCol: number, word: string, isHorizontal: boolean): number {
         let wordPoints = 0;
         let coefficient = 1;
         let charIndex = 0;
         for (let index = beginIndex; index <= endIndex; index++) {
-            if (!this.isLetterAJoker(row, index)) {
+            const y = isHorizontal ? index : constantRowOrCol;
+            const x = isHorizontal ? constantRowOrCol : index;
+            if (!this.isLetterAJoker(x, y)) {
                 const tempLetter = LetterMap.letterMap.letterMap.get(word.charAt(charIndex++)) as Letter;
-                if (TileMap.gridMap.isDoubleLetterTile(index + 1, row + 1) && !this.isLetterAlreadyOnBoard(row, index)) {
+                if (TileMap.gridMap.isDoubleLetterTile(y + 1, x + 1) && !this.isLetterAlreadyOnBoard(x, y)) {
                     wordPoints += tempLetter.point * 2;
-                } else if (TileMap.gridMap.isTripleLetterTile(index + 1, row + 1) && !this.isLetterAlreadyOnBoard(row, index)) {
+                } else if (TileMap.gridMap.isTripleLetterTile(y + 1, x + 1) && !this.isLetterAlreadyOnBoard(x, y)) {
                     wordPoints += tempLetter.point * 3;
                 } else {
                     wordPoints += tempLetter.point;
                 }
             }
-            if (TileMap.gridMap.isDoubleWordTile(index + 1, row + 1) && !this.isLetterAlreadyOnBoard(row, index)) {
+            if (TileMap.gridMap.isDoubleWordTile(y + 1, x + 1) && !this.isLetterAlreadyOnBoard(x, y)) {
                 coefficient *= 2;
-            } else if (TileMap.gridMap.isTripleWordTile(index + 1, row + 1) && !this.isLetterAlreadyOnBoard(row, index)) {
-                coefficient *= 3;
-            }
-        }
-        return wordPoints * coefficient;
-    }
-
-    calculateScoreForVertical(beginIndex: number, endIndex: number, column: number, word: string): number {
-        let wordPoints = 0;
-        let coefficient = 1;
-        let charIndex = 0;
-        for (let index = beginIndex; index <= endIndex; index++) {
-            if (!this.isLetterAJoker(index, column)) {
-                const tempLetter = LetterMap.letterMap.letterMap.get(word.charAt(charIndex++)) as Letter;
-                if (TileMap.gridMap.isDoubleLetterTile(column + 1, index + 1) && !this.isLetterAlreadyOnBoard(index, column)) {
-                    wordPoints += tempLetter.point * 2;
-                } else if (TileMap.gridMap.isTripleLetterTile(column + 1, index + 1) && !this.isLetterAlreadyOnBoard(index, column)) {
-                    wordPoints += tempLetter.point * 3;
-                } else {
-                    wordPoints += tempLetter.point;
-                }
-            }
-            if (TileMap.gridMap.isDoubleWordTile(column + 1, index + 1) && !this.isLetterAlreadyOnBoard(index, column)) {
-                coefficient *= 2;
-            } else if (TileMap.gridMap.isTripleWordTile(column + 1, index + 1) && !this.isLetterAlreadyOnBoard(index, column)) {
+            } else if (TileMap.gridMap.isTripleWordTile(y + 1, x + 1) && !this.isLetterAlreadyOnBoard(x, y)) {
                 coefficient *= 3;
             }
         }
