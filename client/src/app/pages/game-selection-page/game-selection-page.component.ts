@@ -32,7 +32,4 @@ export class GameSelectionPageComponent {
         this.timeTurnManager.gameStatus = 1;
         this.socket.sendGameListNeededNotification();
     }
-    infoAboutNigelRichardsDisplay() {
-        this.readInfo = !this.readInfo;
-    }
 }

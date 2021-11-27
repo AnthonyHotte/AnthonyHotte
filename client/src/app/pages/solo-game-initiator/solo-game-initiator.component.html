@@ -37,13 +37,11 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 </p>
                 <p>
                     <label class="label"> {{ 'Validité du nom: ' + nameValidityInChar() }}</label>
-                    <label style="background-color: white; color: white">spacing</label>
                     <input [(ngModel)]="temporaryName" type="string" class="input" />
                 </p>
                 <p>
                     <button class="button" (click)="setName()"><i class="fa fa-check"></i>Validation de l'identifiant</button>
                 </p>
-                <label class="label" *ngIf="getGameStatus() === 2">{{ "Nom de l'adversaire: " + opponentName }}</label>
             </fieldset>
         </div>
         <div class="advanced-parameters-button-filler">
@@ -106,9 +104,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         ><br /><br />
                     </div>
                     <label class="label">Numéro du dictionnaire : </label>
-                    <label style="background-color: lightgreen; color: lightgreen">spacing</label>
                     <input [(ngModel)]="indexDictionaryNumber" type="number" class="input" />
-                    <label style="background-color: lightgreen; color: lightgreen">spacing</label>
                     <button (click)="validateDictionaryNumber()" class="button"><i class="fa fa-check"></i>Valider le numéro</button>
                     <div>
                         <label class="label">{{ validationDictionaryMessage }}</label>
