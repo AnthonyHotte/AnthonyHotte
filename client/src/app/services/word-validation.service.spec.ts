@@ -278,4 +278,30 @@ describe('WordValidationService', () => {
         expect(scoreCalculatorService.calculateScoreForVertical).toHaveBeenCalledWith(0, 2, 1, await Promise.resolve('fym'));
         expect(socketSpy.validateWord).toHaveBeenCalledWith(await Promise.resolve('fym'));
     });
+    it('validateHorizontalWord should not give point for no word when solo mode ', () => {
+        const myBoard = [
+            ['a', 'f', 'y'],
+            ['', '', ''],
+            ['e', 'm', 'f'],
+        ];
+        const spy = spyOn(service, 'isWordValid');
+        scoreCalculatorService.calculateScoreForHorizontal.and.returnValue(0);
+        service.pointsForLastWord = 0;
+        service.validateHorizontalWord(1, 2, myBoard, false);
+        expect(spy).toHaveBeenCalled();
+        expect(service.pointsForLastWord).toEqual(0);
+    });
+    it('validateVerticalWord should not give point for no word when solo mode ', () => {
+        const myBoard = [
+            ['a', 'f', ''],
+            ['', '', 'a'],
+            ['e', 'm', 'a'],
+        ];
+        const spy = spyOn(service, 'isWordValid');
+        scoreCalculatorService.calculateScoreForVertical.and.returnValue(0);
+        service.pointsForLastWord = 0;
+        service.validateVerticalWord(1, 2, myBoard, false);
+        expect(spy).toHaveBeenCalled();
+        expect(service.pointsForLastWord).toEqual(0);
+    });
 });

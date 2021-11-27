@@ -1,5 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { CENTERCASE, NUMBEROFCASE } from '@app/constants';
+import { CENTERCASE, FOURTEEN, NUMBEROFCASE } from '@app/constants';
 import { GameStateService } from '@app/services/game-state.service';
 import { WordValidationService } from '@app/services/word-validation.service';
 
@@ -34,7 +34,7 @@ describe('GameStateService', () => {
                 service.lettersOnBoard[i][j] = '';
             }
         }
-        service.indexLastLetters = [0, 0, 2, 2];
+        service.indexLastLetters = [1, 0, 2, 2];
     });
 
     it('should be created', () => {
@@ -138,12 +138,6 @@ describe('GameStateService', () => {
 
     it('validateWordCreatedByNewLetters should return true when vertical is not part of vertical word', async () => {
         service.orientationOfLastWord = 'h';
-        /* const promise1 = new Promise<boolean>((resolve) => {
-            resolve(true);
-        });
-         const promise2 = new Promise<boolean>((resolve) => {
-            resolve(false);
-        }); */
         wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
         wordValidationServiceSpy.validateHorizontalWord.and.returnValue(Promise.resolve(true));
         wordValidationServiceSpy.validateVerticalWord.and.returnValue(Promise.resolve(false));
@@ -164,7 +158,6 @@ describe('GameStateService', () => {
             expect(res).toBe(false);
         });
     });
-
     it('validateWordCreatedByNewLetters should return false when horizontal invalid word', () => {
         service.orientationOfLastWord = 'v';
         const promise1 = new Promise<boolean>((resolve) => {
@@ -180,10 +173,17 @@ describe('GameStateService', () => {
             expect(res).toBe(false);
         });
     });
-
     it('validateWordCreatedByNewLetters should return true when horizontal valid word', async () => {
         service.orientationOfLastWord = 'v';
         wordValidationServiceSpy.isPartOfWordHorizontal.and.returnValue(true);
+        wordValidationServiceSpy.validateVerticalWord.and.returnValue(Promise.resolve(true));
+        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(Promise.resolve(true));
+        const result = await service.validateWordCreatedByNewLetters(false);
+        expect(result).toBe(true);
+    });
+    it('validateWordCreatedByNewLetters should return true when horizontal valid word', async () => {
+        service.orientationOfLastWord = 'h';
+        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(false);
         wordValidationServiceSpy.validateVerticalWord.and.returnValue(Promise.resolve(true));
         wordValidationServiceSpy.validateHorizontalWord.and.returnValue(Promise.resolve(true));
         const result = await service.validateWordCreatedByNewLetters(false);
@@ -231,6 +231,14 @@ describe('GameStateService', () => {
         service.indexLastLetters = [0, eleven, 0, twelve];
         service.lettersOnBoard[0][ten] = 'a';
         expect(service.isWordTouchingHorizontal()).toBe(true);
+    });
+    it('isWordTouchingHorizontal should return false', () => {
+        service.indexLastLetters = [1, 0, FOURTEEN, 2];
+        expect(service.isWordTouchingHorizontal()).toBe(false);
+    });
+    it('isWordTouchingVertical should return false', () => {
+        service.indexLastLetters = [0, FOURTEEN, FOURTEEN];
+        expect(service.isWordTouchingVertical()).toBe(true);
     });
     it('horizontal word should tell if word added is touching a letter on the right', () => {
         const ten = 10;
