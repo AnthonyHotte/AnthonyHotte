@@ -52,18 +52,15 @@ export class PlaceLettersService {
     checkInput(commandrowInput: string): string {
         const regexInput = /(?<letter>[a-o])(?<number>[0-9]|1[0-5])(?<dir>[hv])(?<space>[ ])(?<word>[a-zA-Z]{1,15})/;
         const match = regexInput.exec(commandrowInput);
-        if (match != null && match.groups != null) {
-            this.row = this.rowLetterToNumbers(match.groups.letter);
-            this.colomnNumber = Number(match.groups.number) - 1;
-            this.orientation = match.groups.dir;
-            this.wordToPlaceBrut = match.groups.word;
-            this.wordToPlace = match.groups.word.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            this.lettersToPlace = this.wordToPlace;
-            this.wordContainsJoker();
-            return 'ok';
-        } else {
-            return 'Mauvais input!';
-        }
+        if (!(match != null && match.groups != null)) return 'Mauvais input!';
+        this.row = this.rowLetterToNumbers(match.groups.letter);
+        this.colomnNumber = Number(match.groups.number) - 1;
+        this.orientation = match.groups.dir;
+        this.wordToPlaceBrut = match.groups.word;
+        this.wordToPlace = match.groups.word.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        this.lettersToPlace = this.wordToPlace;
+        this.wordContainsJoker();
+        return 'ok';
     }
 
     verifyAvailable(): boolean {
@@ -148,28 +145,26 @@ export class PlaceLettersService {
     }
 
     handleObjective() {
-        if (this.socket.is2990) {
-            this.objectivesService.wordsCreated = this.wordValidator.wordsCreatedLastTurn;
-            this.objectivesService.indexLastLetters = this.wordValidator.indexLastLetters;
-            this.objectivesService.pointsLastWord = this.wordValidator.pointsForLastWord;
-            this.objectivesService.lastLettersAdded = this.gameState.lastLettersAdded;
-            for (const obj of this.letterService.players[this.timeManager.turn].objectives) {
-                if ((this.objectivesService.objectiveVerif.get(obj) as () => boolean).apply(this.objectivesService)) {
-                    if (!this.letterService.objCompleted.includes(obj)) {
-                        this.letterService.players[this.timeManager.turn].score += this.objectivesService.objectivePoint.get(obj) as number;
-                        this.letterService.objCompleted.push(obj);
-                        this.letterService.objCompletor.push(this.timeManager.turn);
-                    }
+        if (!this.socket.is2990) return;
+        this.objectivesService.wordsCreated = this.wordValidator.wordsCreatedLastTurn;
+        this.objectivesService.indexLastLetters = this.wordValidator.indexLastLetters;
+        this.objectivesService.pointsLastWord = this.wordValidator.pointsForLastWord;
+        this.objectivesService.lastLettersAdded = this.gameState.lastLettersAdded;
+        for (const obj of this.letterService.players[this.timeManager.turn].objectives) {
+            if ((this.objectivesService.objectiveVerif.get(obj) as () => boolean).apply(this.objectivesService)) {
+                if (!this.letterService.objCompleted.includes(obj)) {
+                    this.letterService.players[this.timeManager.turn].score += this.objectivesService.objectivePoint.get(obj) as number;
+                    this.letterService.objCompleted.push(obj);
+                    this.letterService.objCompletor.push(this.timeManager.turn);
                 }
             }
         }
     }
     sendWordToServer(lettersToReplace?: string) {
-        if (lettersToReplace === undefined) {
-            const row = String.fromCharCode(this.row + Constants.SIDELETTERS_TO_ASCII);
-            const command = '!placer ' + row + (this.colomnNumber + 1).toString() + this.orientation + ' ' + this.wordToPlaceBrut;
-            this.socket.configureSendMessageToServer(command, this.timeManager.gameStatus);
-        }
+        if (lettersToReplace !== undefined) return;
+        const row = String.fromCharCode(this.row + Constants.SIDELETTERS_TO_ASCII);
+        const command = '!placer ' + row + (this.colomnNumber + 1).toString() + this.orientation + ' ' + this.wordToPlaceBrut;
+        this.socket.configureSendMessageToServer(command, this.timeManager.gameStatus);
     }
     placeWordGameState() {
         let xtile: number = this.colomnNumber;

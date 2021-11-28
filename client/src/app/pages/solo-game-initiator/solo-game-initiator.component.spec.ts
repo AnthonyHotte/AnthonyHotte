@@ -31,7 +31,7 @@ describe('SoloGameInitiatorComponent', () => {
     let dictionaryServiceSpy: jasmine.SpyObj<DictionaryService>;
     let soloopponent2Spy: jasmine.SpyObj<SoloOpponent2Service>;
     beforeEach(async () => {
-        soloopponent2Spy = jasmine.createSpyObj('SoloOpponent2Service', ['play']);
+        soloopponent2Spy = jasmine.createSpyObj('SoloOpponent2Service', ['play', 'setExpertMode']);
         dictionaryServiceSpy = jasmine.createSpyObj('DictionaryService', ['getDictionary']);
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', ['getDictionaryList']);
         communicationServiceSpy.getDictionaryList.and.returnValue(new Observable());
@@ -167,7 +167,14 @@ describe('SoloGameInitiatorComponent', () => {
     it('setName should put joueur in this.name', () => {
         component.temporaryName = 'sdfsd3';
         component.setName();
-        const j = 'Joueur';
+        const j = 'Essayez de nouveau...';
+        expect(component.name).toBe(j);
+    });
+    it('setName should put joueur in this.name when status equal 1', () => {
+        component.temporaryName = 'sdfsd3';
+        spyOn(component, 'getGameStatus').and.returnValue(1);
+        component.setName();
+        const j = 'Entrez votre nom de nouveau, vous aviez fait une erreur...';
         expect(component.name).toBe(j);
     });
     it('nameValidity should return valide ', () => {
@@ -205,5 +212,9 @@ describe('SoloGameInitiatorComponent', () => {
         const retour = 'Haruki Murakami';
         component.switchOpponentName(temp);
         expect(component.opponentName).toBe(retour);
+    });
+    it('setExpertMode should enter in default', () => {
+        component.setExpertMode(true);
+        expect(soloopponent2Spy.setExpertMode).toHaveBeenCalledWith(true);
     });
 });

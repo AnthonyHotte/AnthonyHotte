@@ -1,4 +1,3 @@
-import { BestScore } from '@app/classes/best-score-interface';
 import { DatabaseService } from '@app/services/database.service';
 import { Request, Response, Router } from 'express';
 import { Service } from 'typedi';
@@ -31,13 +30,7 @@ export class DatabaseController {
          */
         this.router.get('/bestscoreclassique', async (req: Request, res: Response) => {
             // Send the request to the service and send the response
-            const bestScore: BestScore[] = [];
-            await this.databaseService.database
-                .collection('bestScoreClassique')
-                .find()
-                .forEach((document) => {
-                    bestScore.push({ score: document.score, name: document.name });
-                });
+            const bestScore = await this.databaseService.getBestScoreClassique();
 
             res.json(bestScore);
         });
@@ -55,13 +48,7 @@ export class DatabaseController {
          */
         this.router.get('/bestscorelog2990', async (req: Request, res: Response) => {
             // Send the request to the service and send the response
-            const bestScore: BestScore[] = [];
-            await this.databaseService.database
-                .collection('bestScoreLog2990')
-                .find()
-                .forEach((document) => {
-                    bestScore.push({ score: document.score, name: document.name });
-                });
+            const bestScore = await this.databaseService.bestScoreLog2990();
 
             res.json(bestScore);
         });
@@ -76,12 +63,7 @@ export class DatabaseController {
          *
          */
         this.router.post('/sendscorechanges', async (req: Request, res: Response) => {
-            const mode = req.body.scoreMode;
-            const nameCollection = ['bestScoreClassique', 'bestScoreLog2990'];
-            this.databaseService.database.collection(nameCollection[mode]).deleteMany({});
-            for (const bestScore of req.body.best) {
-                await this.databaseService.database.collection(nameCollection[mode]).insertOne({ score: bestScore.score, name: bestScore.name });
-            }
+            await this.databaseService.sendScoreChanges(req.body.scoreMode, req.body.best);
             res.sendStatus(HTTP_OK_STATUS);
         });
 
@@ -99,13 +81,7 @@ export class DatabaseController {
          */
         this.router.get('/jveasynames', async (req: Request, res: Response) => {
             // Send the request to the service and send the response
-            const nameJv: string[] = [];
-            await this.databaseService.database
-                .collection('JVEasyName')
-                .find()
-                .forEach((document) => {
-                    nameJv.push(document.name);
-                });
+            const nameJv = await this.databaseService.jvEasyNames();
 
             res.json(nameJv);
         });
@@ -123,15 +99,8 @@ export class DatabaseController {
          */
         this.router.get('/jvhardnames', async (req: Request, res: Response) => {
             // Send the request to the service and send the response
-            const nameJv: string[] = [];
-            await this.databaseService.database
-                .collection('JVHardName')
-                .find()
-                .forEach((document) => {
-                    nameJv.push(document.name);
-                });
-
-            res.json(nameJv);
+            const nameJV = await this.databaseService.jvHardNames();
+            res.json(nameJV);
         });
         /**
          * @swagger
@@ -145,11 +114,7 @@ export class DatabaseController {
          */
         this.router.post('/sendnameschanges', async (req: Request, res: Response) => {
             const modeJV = req.body.jvLevel;
-            const nameCollection = ['JVEasyName', 'JVHardName'];
-            this.databaseService.database.collection(nameCollection[modeJV]).deleteMany({});
-            for (const nameJV of req.body.jvNames) {
-                await this.databaseService.database.collection(nameCollection[modeJV]).insertOne({ name: nameJV, level: modeJV });
-            }
+            await this.databaseService.sendNamesChanges(modeJV, req.body.jvNames);
             res.sendStatus(HTTP_OK_STATUS);
         });
     }

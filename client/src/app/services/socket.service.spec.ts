@@ -133,7 +133,6 @@ describe('SocketService', () => {
         const emitSpy = spyOn(service.socket, 'emit');
         service.finishedGameMessageTransmission();
         expect(emitSpy).toHaveBeenCalled();
-        expect(service.triggeredQuit).toBeTrue();
     });
 
     it('handleDisconnect should call disconnect', () => {
@@ -160,6 +159,15 @@ describe('SocketService', () => {
         expect(spys).toHaveBeenCalled();
         done();
     });
+    // it('sendGamesInformation in configureBaseRequest set gameIndex', (done) => {
+    //     service.gameLists = [];
+    //     // const game = [['1', '2', '3', '4', '5', '6', '7', '8']];
+    //     // const board = [[[]]];
+    //     const info = { games: [['1', '2', '3', '4', '5', '6', '7', '8']], boards: [[[]]] };
+    //     socketMock.peerSideEmit('sendGamesInformation', info);
+    //     // expect(service.gameLists.length).toEqual(1);
+    //     done();
+    // });
 
     it('cancellation indexes should change cancellation indexes', (done) => {
         service.cancellationIndexes = [2, 2];

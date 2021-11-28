@@ -60,9 +60,10 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <legend class="legend">Difficulté</legend>
                     <div class="switch-field2">
                         <p>
-                            <input type="radio" id="desactivated2" name="difficulty" (click)="setExpertMode()" [checked]="this.easyDifficulty" />
+                            <input type="radio" id="desactivated2" name="difficulty" (click)="setExpertMode(false)" [checked]="this.easyDifficulty" />
                             <label for="desactivated2">Débutant</label>
-                            <input type="radio" id="activated2" name="difficulty" (click)="setExpertMode()" [checked]="!this.easyDifficulty"/>
+                            <input type="radio" id="activated2" name="difficulty" (click)="setExpertMode(true)" [checked]="!this.easyDifficulty"/>
+
                             <label for="activated2">Expert</label>
                         </p>
                     </div>
