@@ -75,7 +75,7 @@ export class WordValidationService {
             lastIndexWord = firstRowOrColumn;
         }
         const rowOrColOfWord = isHorizontal ? row : column;
-        this.pointsForLastWord += this.scoreCalculator.calculateScore(beginIndexWord, lastIndexWord, rowOrColOfWord, wordCreated, true);
+        this.pointsForLastWord += this.scoreCalculator.calculateScore(beginIndexWord, lastIndexWord, rowOrColOfWord, wordCreated, isHorizontal);
         if (onServer) {
             this.wordsCreatedLastTurn.push(wordCreated);
             return await this.socket.validateWord(wordCreated);
