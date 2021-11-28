@@ -78,7 +78,7 @@ describe('WordValidationService', () => {
                 'abaissez',
                 'abaissiez',
             ];
-            scoreCalculatorService = jasmine.createSpyObj('ScoreCalculatorService', ['calculateScoreForHorizontal', 'calculateScoreForVertical']);
+            scoreCalculatorService = jasmine.createSpyObj('ScoreCalculatorService', ['calculateScore']);
             socketSpy = jasmine.createSpyObj('SocketService', ['validateWord']);
             socketSpy.isWordValid = new BehaviorSubject<boolean>(false);
             TestBed.configureTestingModule({
@@ -126,7 +126,7 @@ describe('WordValidationService', () => {
             ['a', 'b'],
             ['c', ''],
         ];
-        const isValid = service.isPartOfWordVertical(0, 1, myBoard);
+        const isValid = service.isPartOfWord(0, 1, myBoard, false);
         expect(isValid).toBe(false);
     });
     it('isPartOfWordVertical should return false with row equal the size of the array-1 and letter above is empty ', () => {
@@ -134,7 +134,7 @@ describe('WordValidationService', () => {
             ['', 'b'],
             ['c', 'a'],
         ];
-        const isValid = service.isPartOfWordVertical(1, 0, myBoard);
+        const isValid = service.isPartOfWord(1, 0, myBoard, false);
         expect(isValid).toBe(false);
     });
     it('isPartOfWordVertical should return true with row equal 0 and letter under is not empty ', () => {
@@ -142,7 +142,7 @@ describe('WordValidationService', () => {
             ['d', 'b'],
             ['u', 'a'],
         ];
-        const isValid = service.isPartOfWordVertical(0, 0, myBoard);
+        const isValid = service.isPartOfWord(0, 0, myBoard, false);
         expect(isValid).toBe(true);
     });
     it('isPartOfWordVertical should return false when place above and bellow are empty ', () => {
@@ -151,7 +151,7 @@ describe('WordValidationService', () => {
             ['c', 'a', 'g'],
             ['e', '', 'f'],
         ];
-        const isValid = service.isPartOfWordVertical(1, 1, myBoard);
+        const isValid = service.isPartOfWord(1, 1, myBoard, false);
         expect(isValid).toBe(false);
     });
     it('isPartOfWordVertical should return true when place above are not empty ', () => {
@@ -160,7 +160,7 @@ describe('WordValidationService', () => {
             ['d', 'a', 'g'],
             ['e', 'r', 'f'],
         ];
-        const isValid = service.isPartOfWordVertical(2, 1, myBoard);
+        const isValid = service.isPartOfWord(2, 1, myBoard, false);
         expect(isValid).toBe(true);
     });
     it('isPartOfWordHorizontale should return true when place at left are not empty and colum equal lenght-1 ', () => {
@@ -169,7 +169,7 @@ describe('WordValidationService', () => {
             ['d', 'a', 'g'],
             ['e', 'r', 'f'],
         ];
-        const isValid = service.isPartOfWordHorizontal(1, 2, myBoard);
+        const isValid = service.isPartOfWord(1, 2, myBoard, true);
         expect(isValid).toBe(true);
     });
     it('isPartOfWordHorizontale should return true when place at right are not empty and colum equal 0 ', () => {
@@ -178,7 +178,7 @@ describe('WordValidationService', () => {
             ['d', 'a', 'g'],
             ['e', 'r', 'f'],
         ];
-        const isValid = service.isPartOfWordHorizontal(1, 0, myBoard);
+        const isValid = service.isPartOfWord(1, 0, myBoard, true);
         expect(isValid).toBe(true);
     });
     it('isPartOfWordVertical should return true when the letter touch an other vertically ', () => {
@@ -187,7 +187,7 @@ describe('WordValidationService', () => {
             ['c', 'a', 'g'],
             ['e', '', 'f'],
         ];
-        const isValid = service.isPartOfWordVertical(1, 1, myBoard);
+        const isValid = service.isPartOfWord(1, 1, myBoard, true);
         expect(isValid).toBe(true);
     });
 
@@ -196,7 +196,7 @@ describe('WordValidationService', () => {
             ['a', ''],
             ['c', 'b'],
         ];
-        const isValid = service.isPartOfWordHorizontal(0, 0, myBoard);
+        const isValid = service.isPartOfWord(0, 0, myBoard, true);
         expect(isValid).toBe(false);
     });
     it('isPartOfWordHorizontal should return false with col equal the size of the array-1 and letter at left is empty ', () => {
@@ -204,7 +204,7 @@ describe('WordValidationService', () => {
             ['b', 'g'],
             ['', 'a'],
         ];
-        const isValid = service.isPartOfWordHorizontal(1, 1, myBoard);
+        const isValid = service.isPartOfWord(1, 1, myBoard, true);
         expect(isValid).toBe(false);
     });
     it('isPartOfWordHorizontal should return false when place at right and left are empty ', () => {
@@ -213,7 +213,7 @@ describe('WordValidationService', () => {
             ['', 'a', ''],
             ['e', 'v', 'f'],
         ];
-        const isValid = service.isPartOfWordHorizontal(1, 1, myBoard);
+        const isValid = service.isPartOfWord(1, 1, myBoard, true);
         expect(isValid).toBe(false);
     });
     it('isPartOfWordHorizontal should return true when the letter touch an other horizontally ', () => {
@@ -222,7 +222,7 @@ describe('WordValidationService', () => {
             ['c', 'a', ''],
             ['e', 'm', 'f'],
         ];
-        const isValid = service.isPartOfWordHorizontal(1, 1, myBoard);
+        const isValid = service.isPartOfWord(1, 1, myBoard, true);
         expect(isValid).toBe(true);
     });
 
@@ -232,11 +232,11 @@ describe('WordValidationService', () => {
             ['', '', ''],
             ['e', 'm', 'f'],
         ];
-        scoreCalculatorService.calculateScoreForHorizontal.and.returnValue(0);
+        scoreCalculatorService.calculateScore.and.returnValue(0);
         // const spyIsWordValid = spyOn(service, 'isWordValid');
         service.pointsForLastWord = 0;
         await service.validateHorizontalWord(1, 2, myBoard, true);
-        expect(scoreCalculatorService.calculateScoreForHorizontal).toHaveBeenCalledWith(0, 0, 1, await Promise.resolve(''));
+        expect(scoreCalculatorService.calculateScore).toHaveBeenCalledWith(0, 0, 1, await Promise.resolve(''), true);
         expect(socketSpy.validateWord).toHaveBeenCalledWith(await Promise.resolve(''));
         expect(service.pointsForLastWord).toEqual(0);
     });
@@ -248,7 +248,7 @@ describe('WordValidationService', () => {
         ];
         // const spyIsWordValid = spyOn(service, 'isWordValid');
         await service.validateHorizontalWord(0, 2, myBoard, true);
-        expect(scoreCalculatorService.calculateScoreForHorizontal).toHaveBeenCalledWith(0, 2, 0, await Promise.resolve('afy'));
+        expect(scoreCalculatorService.calculateScore).toHaveBeenCalledWith(0, 2, 0, await Promise.resolve('afy'), true);
         // expect(socketSpy.validateWord).toHaveBeenCalledWith('afy');
         expect(socketSpy.validateWord).toHaveBeenCalledWith(await Promise.resolve('afy'));
     });
@@ -259,11 +259,11 @@ describe('WordValidationService', () => {
             ['a', '', 'b'],
             ['e', '', 'f'],
         ];
-        scoreCalculatorService.calculateScoreForVertical.and.returnValue(0);
+        scoreCalculatorService.calculateScore.and.returnValue(0);
         // const spyIsWordValid = spyOn(service, 'isWordValid');
         service.pointsForLastWord = 0;
         await service.validateVerticalWord(1, 1, myBoard, true);
-        expect(scoreCalculatorService.calculateScoreForVertical).toHaveBeenCalledWith(0, 0, 1, await Promise.resolve(''));
+        expect(scoreCalculatorService.calculateScore).toHaveBeenCalledWith(0, 0, 1, await Promise.resolve(''), false);
         expect(socketSpy.validateWord).toHaveBeenCalledWith(await Promise.resolve(''));
         expect(service.pointsForLastWord).toEqual(0);
     });
@@ -275,7 +275,7 @@ describe('WordValidationService', () => {
         ];
         // const spyIsWordValid = spyOn(service, 'isWordValid');
         await service.validateVerticalWord(0, 1, myBoard, true);
-        expect(scoreCalculatorService.calculateScoreForVertical).toHaveBeenCalledWith(0, 2, 1, await Promise.resolve('fym'));
+        expect(scoreCalculatorService.calculateScore).toHaveBeenCalledWith(0, 2, 1, await Promise.resolve('fym'), false);
         expect(socketSpy.validateWord).toHaveBeenCalledWith(await Promise.resolve('fym'));
     });
     it('validateHorizontalWord should not give point for no word when solo mode ', () => {
@@ -285,7 +285,7 @@ describe('WordValidationService', () => {
             ['e', 'm', 'f'],
         ];
         const spy = spyOn(service, 'isWordValid');
-        scoreCalculatorService.calculateScoreForHorizontal.and.returnValue(0);
+        scoreCalculatorService.calculateScore.and.returnValue(0);
         service.pointsForLastWord = 0;
         service.validateHorizontalWord(1, 2, myBoard, false);
         expect(spy).toHaveBeenCalled();
@@ -298,7 +298,7 @@ describe('WordValidationService', () => {
             ['e', 'm', 'a'],
         ];
         const spy = spyOn(service, 'isWordValid');
-        scoreCalculatorService.calculateScoreForVertical.and.returnValue(0);
+        scoreCalculatorService.calculateScore.and.returnValue(0);
         service.pointsForLastWord = 0;
         service.validateVerticalWord(1, 2, myBoard, false);
         expect(spy).toHaveBeenCalled();

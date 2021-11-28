@@ -9,8 +9,7 @@ describe('GameStateService', () => {
     beforeEach(
         waitForAsync(() => {
             wordValidationServiceSpy = jasmine.createSpyObj('WordValidationService', [
-                'isPartOfWordVertical',
-                'isPartOfWordHorizontal',
+                'isPartOfWord',
                 'validateHorizontalWord',
                 'validateVerticalWord',
             ]);
@@ -97,7 +96,7 @@ describe('GameStateService', () => {
 
     it('validateWordCreatedByNewLetters should return false when vertical invalid word', () => {
         service.orientationOfLastWord = 'h';
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
         });
@@ -116,7 +115,7 @@ describe('GameStateService', () => {
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
         });
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
         wordValidationServiceSpy.validateHorizontalWord.and.returnValue(promise1);
         wordValidationServiceSpy.validateVerticalWord.and.returnValue(promise1);
         service.validateWordCreatedByNewLetters(false).then((res: boolean) => {
@@ -128,7 +127,7 @@ describe('GameStateService', () => {
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
         });
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
         wordValidationServiceSpy.validateHorizontalWord.and.returnValue(promise1);
         wordValidationServiceSpy.validateVerticalWord.and.returnValue(promise1);
         service.validateWordCreatedByNewLetters(false).then((res: boolean) => {
@@ -138,7 +137,7 @@ describe('GameStateService', () => {
 
     it('validateWordCreatedByNewLetters should return true when vertical is not part of vertical word', async () => {
         service.orientationOfLastWord = 'h';
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
         wordValidationServiceSpy.validateHorizontalWord.and.returnValue(Promise.resolve(true));
         wordValidationServiceSpy.validateVerticalWord.and.returnValue(Promise.resolve(false));
         await service.validateWordCreatedByNewLetters(false).then((res: boolean) => {
@@ -151,7 +150,7 @@ describe('GameStateService', () => {
         const promise2 = new Promise<boolean>((resolve) => {
             resolve(false);
         });
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(false);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(false);
         wordValidationServiceSpy.validateHorizontalWord.and.callThrough();
         wordValidationServiceSpy.validateVerticalWord.and.returnValue(promise2);
         service.validateWordCreatedByNewLetters(false).then((res: boolean) => {
@@ -166,7 +165,7 @@ describe('GameStateService', () => {
         const promise2 = new Promise<boolean>((resolve) => {
             resolve(false);
         });
-        wordValidationServiceSpy.isPartOfWordHorizontal.and.returnValue(true);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
         wordValidationServiceSpy.validateVerticalWord.and.returnValue(promise1);
         wordValidationServiceSpy.validateHorizontalWord.and.returnValue(promise2);
         service.validateWordCreatedByNewLetters(false).then((res: boolean) => {
@@ -175,7 +174,7 @@ describe('GameStateService', () => {
     });
     it('validateWordCreatedByNewLetters should return true when horizontal valid word', async () => {
         service.orientationOfLastWord = 'v';
-        wordValidationServiceSpy.isPartOfWordHorizontal.and.returnValue(true);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
         wordValidationServiceSpy.validateVerticalWord.and.returnValue(Promise.resolve(true));
         wordValidationServiceSpy.validateHorizontalWord.and.returnValue(Promise.resolve(true));
         const result = await service.validateWordCreatedByNewLetters(false);
@@ -183,7 +182,7 @@ describe('GameStateService', () => {
     });
     it('validateWordCreatedByNewLetters should return true when horizontal valid word', async () => {
         service.orientationOfLastWord = 'h';
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(false);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(false);
         wordValidationServiceSpy.validateVerticalWord.and.returnValue(Promise.resolve(true));
         wordValidationServiceSpy.validateHorizontalWord.and.returnValue(Promise.resolve(true));
         const result = await service.validateWordCreatedByNewLetters(false);

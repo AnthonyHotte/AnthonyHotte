@@ -70,86 +70,86 @@ describe('ScoreCalculatorService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
-    it('calculateScoreForHorizontal should be return 0 when pass {1,1,0,a}', () => {
-        const result = service.calculateScoreForHorizontal(1, 1, 0, 'a');
+    it('calculateScore should be return 0 when pass {1,1,0,a}', () => {
+        const result = service.calculateScore(1, 1, 0, 'a', true);
         expect(result).toEqual(1);
     });
-    it('calculateScoreForHorizontal should be return 0 when pass {0,1,4,aa}', () => {
+    it('calculateScore should be return 0 when pass {0,1,4,aa}', () => {
         const expectedScore = 3;
         const rowPosition = 3;
         const firstIndex = 0;
         const secondIndex = 1;
-        const result = service.calculateScoreForHorizontal(firstIndex, secondIndex, rowPosition, 'aa');
+        const result = service.calculateScore(firstIndex, secondIndex, rowPosition, 'aa', true);
         expect(result).toEqual(expectedScore);
     });
-    it('calculateScoreForHorizontal should be return 8 when pass {1,4,5,aber}', () => {
+    it('calculateScore should be return 8 when pass {1,4,5,aber}', () => {
         const expectedScore = 8;
         const rowPosition = 5;
         const firstIndex = 1;
         const secondIndex = 4;
-        const result = service.calculateScoreForHorizontal(firstIndex, secondIndex, rowPosition, 'aber');
+        const result = service.calculateScore(firstIndex, secondIndex, rowPosition, 'aber', true);
         expect(result).toEqual(expectedScore);
     });
-    it('calculateScoreForHorizontal should be return 0 when pass {1,4,5, } and on ', () => {
+    it('calculateScore should be return 0 when pass {1,4,5, } and on ', () => {
         const expectedScore = 0;
         const rowPosition = 5;
         const firstIndex = 1;
         const secondIndex = 4;
         spyOn(service, 'isLetterAJoker').and.returnValue(true);
-        const result = service.calculateScoreForHorizontal(firstIndex, secondIndex, rowPosition, '');
+        const result = service.calculateScore(firstIndex, secondIndex, rowPosition, '', true);
         expect(result).toEqual(expectedScore);
     });
-    it('calculateScoreForHorizontal should be return 12 when pass {1,4,1,aber}', () => {
+    it('calculateScore should be return 12 when pass {1,4,1,aber}', () => {
         const expectedScore = 12;
         const rowPosition = 1;
         const firstIndex = 1;
         const secondIndex = 4;
-        const result = service.calculateScoreForHorizontal(firstIndex, secondIndex, rowPosition, 'aber');
+        const result = service.calculateScore(firstIndex, secondIndex, rowPosition, 'aber', true);
         expect(result).toEqual(expectedScore);
     });
-    it('calculateScoreForHorizontal should be return 6 when pass {0,1,0,aa}', () => {
+    it('calculateScore should be return 6 when pass {0,1,0,aa}', () => {
         const expectedScore = 6;
         const rowPosition = 0;
         const firstIndex = 0;
         const secondIndex = 1;
-        const result = service.calculateScoreForHorizontal(firstIndex, secondIndex, rowPosition, 'aa');
+        const result = service.calculateScore(firstIndex, secondIndex, rowPosition, 'aa', true);
         expect(result).toEqual(expectedScore);
     });
 
-    it('calculateScoreForVertical should be return 0 when pass {1,1,0,a}', () => {
-        const result = service.calculateScoreForVertical(1, 1, 0, 'a');
+    it('calculateScore should be return 0 when pass {1,1,0,a}', () => {
+        const result = service.calculateScore(1, 1, 0, 'a', false);
         expect(result).toEqual(1);
     });
-    it('calculateScoreForVertical should be return 0 when pass {3,4,0,aa}', () => {
+    it('calculateScore should be return 0 when pass {3,4,0,aa}', () => {
         const expectedScore = 3;
         const colPosition = 0;
         const firstIndex = 3;
         const secondIndex = 4;
-        const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'aa');
+        const result = service.calculateScore(firstIndex, secondIndex, colPosition, 'aa', false);
         expect(result).toEqual(expectedScore);
     });
-    it('calculateScoreForVertical should be return 8 when pass {5,8,1,aber}', () => {
+    it('calculateScore should be return 8 when pass {5,8,1,aber}', () => {
         const expectedScore = 8;
         const colPosition = 1;
         const firstIndex = 5;
         const secondIndex = 8;
-        const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'aber');
+        const result = service.calculateScore(firstIndex, secondIndex, colPosition, 'aber', false);
         expect(result).toEqual(expectedScore);
     });
-    it('calculateScoreForVertical should be return 12 when pass {1,4,1,aber}', () => {
+    it('calculateScore should be return 12 when pass {1,4,1,aber}', () => {
         const expectedScore = 12;
         const colPosition = 1;
         const firstIndex = 1;
         const secondIndex = 4;
-        const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'aber');
+        const result = service.calculateScore(firstIndex, secondIndex, colPosition, 'aber', false);
         expect(result).toEqual(expectedScore);
     });
-    it('calculateScoreForVertical should be return 6 when pass {0,1,0,aa}', () => {
+    it('calculateScore should be return 6 when pass {0,1,0,aa}', () => {
         const expectedScore = 6;
         const colPosition = 0;
         const firstIndex = 0;
         const secondIndex = 1;
-        const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'aa');
+        const result = service.calculateScore(firstIndex, secondIndex, colPosition, 'aa', false);
         expect(result).toEqual(expectedScore);
     });
     it("LetterAlreadyOnBoard shouldn't give bonus if on bonus tile", () => {
@@ -157,7 +157,7 @@ describe('ScoreCalculatorService', () => {
         const colPosition = 7;
         const firstIndex = 12;
         const secondIndex = 14;
-        const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'nos');
+        const result = service.calculateScore(firstIndex, secondIndex, colPosition, 'nos', false);
         expect(result).toEqual(expectedScore);
     });
     it("Joker shouldn't give points", () => {
@@ -168,7 +168,7 @@ describe('ScoreCalculatorService', () => {
         const indexXJoker = 14;
         const indexYJoker = 11;
         service.indexJoker = [indexYJoker, indexXJoker];
-        const result = service.calculateScoreForVertical(firstIndex, secondIndex, colPosition, 'note');
+        const result = service.calculateScore(firstIndex, secondIndex, colPosition, 'note', false);
         expect(result).toEqual(expectedScore);
     });
 });
