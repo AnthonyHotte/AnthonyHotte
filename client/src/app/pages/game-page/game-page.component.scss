@@ -7,6 +7,7 @@
     max-height: 120%;
     max-width: 100%;
     background-color: rgb(213, 231, 213);
+    align-items: center;
 }
 
 .play-area {
@@ -21,6 +22,7 @@
     width: 25%;
     max-width: 25%;
     min-width: 25%;
+    align-items: center;
 }
 
 .section-20{
@@ -30,6 +32,7 @@
     width: 20%;
     max-width: 20%;
     min-width: 20%;
+    align-items: center;
 }
 
 .section-55{
@@ -39,6 +42,8 @@
     width: 55%;
     max-width: 55%;
     min-width: 55%;
+    display: block;
+    align-items: center;
 }
 
 // custom scrollbar : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2
