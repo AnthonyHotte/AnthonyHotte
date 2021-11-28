@@ -49,57 +49,33 @@ export class WordValidationService {
         return true;
     }
 
-    async validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][], onServer: boolean): Promise<boolean> {
-        // validateHorizontalWord(row: number, column: number, lettersOnBoard: string[][], onServer: boolean): boolean {
+    async validateWord(row: number, column: number, lettersOnBoard: string[][], onServer: boolean, isHorizontal: boolean): Promise<boolean> {
         let beginIndexWord = 0;
         let lastIndexWord = 0;
-        let firstColumnOfWord = 0;
+        let firstRowOrColumn = 0;
         let wordCreated = '';
         this.scoreCalculator.indexLastLetters = this.indexLastLetters;
-        for (column; column >= 0; column--) {
-            if (lettersOnBoard[row][column] === '') {
-                break;
-            }
-            firstColumnOfWord = column;
-            beginIndexWord = firstColumnOfWord;
-        }
-        for (firstColumnOfWord; firstColumnOfWord < lettersOnBoard.length; firstColumnOfWord++) {
-            if (lettersOnBoard[row][firstColumnOfWord] === '') {
-                break;
-            }
-            wordCreated += lettersOnBoard[row][firstColumnOfWord];
-            lastIndexWord = firstColumnOfWord;
-        }
-        this.pointsForLastWord += this.scoreCalculator.calculateScore(beginIndexWord, lastIndexWord, row, wordCreated, true);
-        if (onServer) {
-            this.wordsCreatedLastTurn.push(wordCreated);
-            return await this.socket.validateWord(wordCreated);
-        } else {
-            return this.isWordValid(wordCreated);
-        }
-    }
 
-    async validateVerticalWord(row: number, column: number, lettersOnBoard: string[][], onServer: boolean): Promise<boolean> {
-        let beginIndexWord = 0;
-        let lastIndexWord = 0;
-        let firstRowOfWord = 0;
-        let wordCreated = '';
-        this.scoreCalculator.indexLastLetters = this.indexLastLetters;
-        for (row; row >= 0; row--) {
-            if (lettersOnBoard[row][column] === '') {
+        for (let rowOrCol = isHorizontal ? column : row; rowOrCol >= 0; rowOrCol--) {
+            const y = isHorizontal ? row : rowOrCol;
+            const x = isHorizontal ? rowOrCol : column;
+            if (lettersOnBoard[y][x] === '') {
                 break;
             }
-            firstRowOfWord = row;
-            beginIndexWord = firstRowOfWord;
+            firstRowOrColumn = rowOrCol;
+            beginIndexWord = firstRowOrColumn;
         }
-        for (firstRowOfWord; firstRowOfWord < lettersOnBoard.length; firstRowOfWord++) {
-            if (lettersOnBoard[firstRowOfWord][column] === '') {
+        for (firstRowOrColumn; firstRowOrColumn < lettersOnBoard.length; firstRowOrColumn++) {
+            const y = isHorizontal ? row : firstRowOrColumn;
+            const x = isHorizontal ? firstRowOrColumn : column;
+            if (lettersOnBoard[y][x] === '') {
                 break;
             }
-            wordCreated += lettersOnBoard[firstRowOfWord][column];
-            lastIndexWord = firstRowOfWord;
+            wordCreated += lettersOnBoard[y][x];
+            lastIndexWord = firstRowOrColumn;
         }
-        this.pointsForLastWord += this.scoreCalculator.calculateScore(beginIndexWord, lastIndexWord, column, wordCreated, false);
+        const rowOrColOfWord = isHorizontal ? row : column;
+        this.pointsForLastWord += this.scoreCalculator.calculateScore(beginIndexWord, lastIndexWord, rowOrColOfWord, wordCreated, true);
         if (onServer) {
             this.wordsCreatedLastTurn.push(wordCreated);
             return await this.socket.validateWord(wordCreated);
