@@ -4,14 +4,40 @@
     box-shadow: 0 5px rgb(240, 225, 205);
     font-size: 24px;
 }
-
-table {
-    margin: auto;
-    text-align: center;
+.table {
+    text-align: left;
+    vertical-align: middle;
+}
+.flex-container {
+    margin-top: 1.5%;
+    display: flex;
+    align-content: flex-start;
+    flex-flow: column wrap;
+    background-color: rgb(213, 231, 213);
+    width: 100%;
+    max-width: 100%;
+    height: 8%;
+    max-height: 8%;
+    color: black;
+    border: transparent;
+    vertical-align: middle;
 }
 
-.wood{
+.letter-filler{
     background-color: rgb(213, 231, 213);
-    display: block;
-    margin-left: auto;
+    width: 45%;
+    max-width: 45%;
+    color: black;
+    border: transparent;
+    text-align: center;
+    margin-left: 25.5%;
+}
+.font-size-filler{
+    background-color: rgb(213, 231, 213);
+    width: 20%;
+    max-width: 20%;
+    color: black;
+    border: none;
+    text-align: center;
+    margin-left: 8%;
 }
