@@ -16,10 +16,11 @@ export class SoloOpponent2Service {
     tempword: string;
     score = 0;
     expertmode = false;
-    bestWordsToPlayExpert: BestWordToPlay[] = [];
-    wordToPlayLessThan6Points: string[] = [];
-    wordToPlay7to12points: string[] = [];
-    wordToPlaymore13to18points: string[] = [];
+    private bestWordsToPlayExpert: BestWordToPlay[] = [];
+    private wordToPlayLessThan6Points: string[] = [];
+    private wordToPlay7to12points: string[] = [];
+    private wordToPlaymore13to18points: string[] = [];
+    private alternativeplays: string;
     constructor(
         public letterService: LetterService,
         public timeManagerService: TimerTurnManagerService,
@@ -56,10 +57,13 @@ export class SoloOpponent2Service {
             const PROBABILITY_OF_ACTION = this.calculateProbability(hundredpercant);
             if (PROBABILITY_OF_ACTION < chancelessthan6) {
                 tempword = this.wordToPlayLessThan6Points[Math.floor(Math.random() * this.wordToPlayLessThan6Points.length)];
+                this.fillAlternativePlay(this.wordToPlayLessThan6Points);
             } else if (PROBABILITY_OF_ACTION < chancemorethan6 + chancelessthan6) {
                 tempword = this.wordToPlay7to12points[Math.floor(Math.random() * this.wordToPlay7to12points.length)];
+                this.fillAlternativePlay(this.wordToPlay7to12points);
             } else {
                 tempword = this.wordToPlaymore13to18points[Math.floor(Math.random() * this.wordToPlaymore13to18points.length)];
+                this.fillAlternativePlay(this.wordToPlaymore13to18points);
             }
         } else {
             if (this.bestWordsToPlayExpert[0] !== undefined) {
@@ -255,5 +259,27 @@ export class SoloOpponent2Service {
                 }
             }
         }
+    }
+    alternativePlay() {
+        if (this.expertmode) {
+            let alternativeplay = '';
+            for (const word2 of this.bestWordsToPlayExpert) {
+                alternativeplay = alternativeplay + ' ' + word2;
+            }
+            return alternativeplay;
+        } else {
+            if (this.alternativeplays === '') {
+                return 'aucun alternative';
+            } else {
+                return this.alternativeplays;
+            }
+        }
+    }
+    private fillAlternativePlay(listfOfWordToPlay: string[]) {
+        this.alternativeplays = '';
+        for (let i = 0; i < listfOfWordToPlay.length && i < 3; i++) {
+            this.alternativeplays = this.alternativeplays + ' ' + listfOfWordToPlay[i];
+        }
+        return;
     }
 }
