@@ -205,7 +205,7 @@ export class SoloGameInitiatorComponent {
     }
 
     setExpertMode(expert: boolean) {
-        this.easyDifficulty = expert;
+        this.easyDifficulty = !expert;
         this.soloopponent2.setExpertMode(expert);
     }
     scrambleBonus() {

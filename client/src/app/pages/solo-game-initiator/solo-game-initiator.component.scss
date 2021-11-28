@@ -167,10 +167,6 @@ textarea {
 .dictionnary-filler{
     background-color: rgb(213, 231, 213);
 }
-.spacing-control{
-    margin-top: 0%;
-    margin-bottom: 0%;
-}
 .advanced-parameters-button-filler{
     background-color: rgb(213, 231, 213);
     width: 100%;
@@ -239,49 +235,49 @@ textarea {
     border-radius: 0 4px 4px 0;
 }
 //switch-field difficulty
-.switch-field2 {
-}
+// .switch-field2 {
+// }
 
-.switch-field2 input {
-    position: absolute !important;
-    clip: rect(0, 0, 0, 0);
-    height: 1px;
-    width: 1px;
-    border: 0;
-    overflow: hidden;
-}
+// .switch-field2 input {
+//     position: absolute !important;
+//     clip: rect(0, 0, 0, 0);
+//     height: 1px;
+//     width: 1px;
+//     border: 0;
+//     overflow: hidden;
+// }
 
-.switch-field2 label {
-    background-color: #e4e4e4;
-    color: green;
-    font-size: 20px;
-    line-height: 1;
-    text-align: center;
-    padding: 6px 32px;
-    margin-right: -1px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
-    transition: all 0.1s ease-in-out;
-    border-radius: 15px;
-}
+// .switch-field2 label {
+//     background-color: #e4e4e4;
+//     color: green;
+//     font-size: 20px;
+//     line-height: 1;
+//     text-align: center;
+//     padding: 6px 32px;
+//     margin-right: -1px;
+//     border: 1px solid rgba(0, 0, 0, 0.2);
+//     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+//     transition: all 0.1s ease-in-out;
+//     border-radius: 15px;
+// }
 
-.switch-field2 label:hover {
-    cursor: pointer;
-}
+// .switch-field2 label:hover {
+//     cursor: pointer;
+// }
 
-.switch-field2 input:checked + label {
-    background-color: green;
-    color: white;
-    box-shadow: none;
-}
+// .switch-field2 input:checked + label {
+//     background-color: green;
+//     color: white;
+//     box-shadow: none;
+// }
 
-.switch-field2 label:first-of-type {
-    border-radius: 4px 0 0 4px;
-}
+// .switch-field2 label:first-of-type {
+//     border-radius: 4px 0 0 4px;
+// }
 
-.switch-field2 label:last-of-type {
-    border-radius: 0 4px 4px 0;
-}
+// .switch-field2 label:last-of-type {
+//     border-radius: 0 4px 4px 0;
+// }
 // custom slider
 // source : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_rangeslider
 .slider {
