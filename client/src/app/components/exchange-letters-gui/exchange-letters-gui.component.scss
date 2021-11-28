@@ -1,12 +1,12 @@
 .label{
     color:green;
     background-color: rgb(213, 231, 213);
-    font-size: 14px;
+    font-size: 18px;
 }
 .button {
     display: inline-block;
     padding: 15px 25px;
-    font-size: 12px;
+    font-size: 20px;
     cursor: pointer;
     text-align: center;
     color: white;
@@ -21,6 +21,10 @@
 .button:hover{
     background-color: black;
     color:white;
+}
+.button:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); 
 }
 .button:active {
     box-shadow: 0 5px #666;
