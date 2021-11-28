@@ -255,8 +255,4 @@ export class SoloGameInitiatorComponent {
             }
         }, TIMETOWAITFORVALIDATION);
     }
-
-    isDictionaryButtonClicked(index: number) {
-        return this.indexDictionaryNumber === index;
-    }
 }
