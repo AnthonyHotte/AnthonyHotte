@@ -226,7 +226,7 @@ describe('WordValidationService', () => {
         expect(isValid).toBe(true);
     });
 
-    it('validateHorizontalWord should not give point for no word ', async () => {
+    it('validateWord should not give point for no word ', async () => {
         const myBoard = [
             ['a', 'f', 'y'],
             ['', '', ''],
@@ -235,25 +235,25 @@ describe('WordValidationService', () => {
         scoreCalculatorService.calculateScore.and.returnValue(0);
         // const spyIsWordValid = spyOn(service, 'isWordValid');
         service.pointsForLastWord = 0;
-        await service.validateHorizontalWord(1, 2, myBoard, true);
+        await service.validateWord(1, 2, myBoard, true, true);
         expect(scoreCalculatorService.calculateScore).toHaveBeenCalledWith(0, 0, 1, await Promise.resolve(''), true);
         expect(socketSpy.validateWord).toHaveBeenCalledWith(await Promise.resolve(''));
         expect(service.pointsForLastWord).toEqual(0);
     });
-    it('validateHorizontalWord should create the right word ', async () => {
+    it('validateWord should create the right word ', async () => {
         const myBoard = [
             ['a', 'f', 'y'],
             ['', '', ''],
             ['e', 'm', 'f'],
         ];
         // const spyIsWordValid = spyOn(service, 'isWordValid');
-        await service.validateHorizontalWord(0, 2, myBoard, true);
+        await service.validateWord(0, 2, myBoard, true, true);
         expect(scoreCalculatorService.calculateScore).toHaveBeenCalledWith(0, 2, 0, await Promise.resolve('afy'), true);
         // expect(socketSpy.validateWord).toHaveBeenCalledWith('afy');
         expect(socketSpy.validateWord).toHaveBeenCalledWith(await Promise.resolve('afy'));
     });
 
-    it('validateVerticalWord should not give point for no word ', async () => {
+    it('validateWord should not give point for no word ', async () => {
         const myBoard = [
             ['a', '', 'y'],
             ['a', '', 'b'],
@@ -262,23 +262,23 @@ describe('WordValidationService', () => {
         scoreCalculatorService.calculateScore.and.returnValue(0);
         // const spyIsWordValid = spyOn(service, 'isWordValid');
         service.pointsForLastWord = 0;
-        await service.validateVerticalWord(1, 1, myBoard, true);
+        await service.validateWord(1, 1, myBoard, true, false);
         expect(scoreCalculatorService.calculateScore).toHaveBeenCalledWith(0, 0, 1, await Promise.resolve(''), false);
         expect(socketSpy.validateWord).toHaveBeenCalledWith(await Promise.resolve(''));
         expect(service.pointsForLastWord).toEqual(0);
     });
-    it('validateVerticalWord should create the right word ', async () => {
+    it('validateWord should create the right word ', async () => {
         const myBoard = [
             ['a', 'f', 'y'],
             ['d', 'y', 'h'],
             ['e', 'm', 'f'],
         ];
         // const spyIsWordValid = spyOn(service, 'isWordValid');
-        await service.validateVerticalWord(0, 1, myBoard, true);
+        await service.validateWord(0, 1, myBoard, true, false);
         expect(scoreCalculatorService.calculateScore).toHaveBeenCalledWith(0, 2, 1, await Promise.resolve('fym'), false);
         expect(socketSpy.validateWord).toHaveBeenCalledWith(await Promise.resolve('fym'));
     });
-    it('validateHorizontalWord should not give point for no word when solo mode ', () => {
+    it('validateWord should not give point for no word when solo mode ', () => {
         const myBoard = [
             ['a', 'f', 'y'],
             ['', '', ''],
@@ -287,11 +287,11 @@ describe('WordValidationService', () => {
         const spy = spyOn(service, 'isWordValid');
         scoreCalculatorService.calculateScore.and.returnValue(0);
         service.pointsForLastWord = 0;
-        service.validateHorizontalWord(1, 2, myBoard, false);
+        service.validateWord(1, 2, myBoard, false, true);
         expect(spy).toHaveBeenCalled();
         expect(service.pointsForLastWord).toEqual(0);
     });
-    it('validateVerticalWord should not give point for no word when solo mode ', () => {
+    it('validateWord should not give point for no word when solo mode ', () => {
         const myBoard = [
             ['a', 'f', ''],
             ['', '', 'a'],
@@ -300,7 +300,7 @@ describe('WordValidationService', () => {
         const spy = spyOn(service, 'isWordValid');
         scoreCalculatorService.calculateScore.and.returnValue(0);
         service.pointsForLastWord = 0;
-        service.validateVerticalWord(1, 2, myBoard, false);
+        service.validateWord(1, 2, myBoard, false, false);
         expect(spy).toHaveBeenCalled();
         expect(service.pointsForLastWord).toEqual(0);
     });
