@@ -31,6 +31,7 @@ import { AdminPageComponent } from './pages/admin-page/admin-page.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { ObjectivesComponent } from './components/objectives/objectives.component';
 import { BestScorePageComponent } from './pages/best-score-page/best-score-page.component';
+import { ChangeFontSizeComponent } from './components/change-font-size/change-font-size.component';
 
 /**
  * Main module that is used in main.ts.
@@ -62,6 +63,7 @@ import { BestScorePageComponent } from './pages/best-score-page/best-score-page.
         FileUploadComponent,
         ObjectivesComponent,
         BestScorePageComponent,
+        ChangeFontSizeComponent,
     ],
     imports: [
         AppMaterialModule,
