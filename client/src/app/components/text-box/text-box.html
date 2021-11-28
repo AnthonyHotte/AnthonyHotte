@@ -11,7 +11,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
     </div>
     <div *ngIf="!this.getLOG2990()" id="DisplayZone2">
         <div *ngFor="let word of this.input.inputs">
-            <p [class]="word.role" *ngIf="word.message !== '' && word.role !== 'Systeme'"> {{word.sender}} : {{word.message}} </p>
+            <p [class]="word.role" *ngIf="word.message !== ''"> {{word.sender}} : {{word.message}} </p>
             <!-- <p [class]="word.role" *ngIf="word.message !== '' && word.role === 'Systeme'"> {{word.sender}} : {{word.message}} </p> -->
         </div>
     </div>

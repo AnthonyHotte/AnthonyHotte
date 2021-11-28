@@ -59,9 +59,8 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             </div>
         </fieldset>
         <div class="filler4">
-            <label class="header3">Taille lettres : </label>
-            <button class="button-font-size" (click)="increaseFontSize()"><i class="fa fa-plus"></i> </button>
-            <button class="button-font-size" (click)="decreaseFontSize()"><i class="fa fa-minus"></i> </button>
+            <button class="button-font-size-plus" (click)="increaseFontSize()"><i class="fa fa-font"></i><i class="fa fa-sort-asc"></i> </button>
+            <button class="button-font-size-minus" (click)="decreaseFontSize()"><i class="fa fa-font"></i><i class="fa fa-sort-desc"></i> </button>
         </div>
         <fieldset class="fieldset">
             <p><button *ngIf="showPassButton() && !this.getLettersSelected()" class="button-pass" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button></p>
