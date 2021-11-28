@@ -262,23 +262,23 @@ export class SoloOpponent2Service {
     }
     alternativePlay() {
         if (this.expertmode) {
-            let alternativeplay = '';
-            for (const word2 of this.bestWordsToPlayExpert) {
-                alternativeplay = alternativeplay + ' ' + word2;
+            let alternativeplay = '   placements alternatifs:';
+            for (let i = 0; i < this.bestWordsToPlayExpert.length && i < 3; i++) {
+                alternativeplay = alternativeplay + ' ' + this.bestWordsToPlayExpert[i].word;
             }
             return alternativeplay;
         } else {
-            if (this.alternativeplays === '') {
-                return 'aucun alternative';
+            if (this.alternativeplays === '   placements alternatifs:') {
+                return 'aucune alternative';
             } else {
                 return this.alternativeplays;
             }
         }
     }
     private fillAlternativePlay(listfOfWordToPlay: string[]) {
-        this.alternativeplays = '';
+        this.alternativeplays = '   placements alternatifs:';
         for (let i = 0; i < listfOfWordToPlay.length && i < 3; i++) {
-            this.alternativeplays = this.alternativeplays + ' ' + listfOfWordToPlay[i];
+            this.alternativeplays = this.alternativeplays + listfOfWordToPlay[i];
         }
         return;
     }

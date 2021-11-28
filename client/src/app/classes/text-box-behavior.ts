@@ -7,7 +7,6 @@ import { LetterService } from '@app/services/letter.service';
 import { ObjectivesService } from '@app/services/objectives.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SocketService } from '@app/services/socket.service';
-import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { Subscription } from 'rxjs';
 @Injectable({
@@ -31,7 +30,6 @@ export class TextBox {
         private letterBankService: LetterBankService,
         private socket: SocketService,
         private objectiveService: ObjectivesService,
-        private soloOpponent2Service: SoloOpponent2Service,
     ) {
         this.inputs = [];
         this.character = false;
@@ -57,9 +55,6 @@ export class TextBox {
             text = this.letterService.players[1].name + ' a affiché la reserve';
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
             text = await this.placeWordOpponent(myMessage.message, this.socket.lettersToReplace);
-            if (this.debugCommand) {
-                text = text + ' ' + this.soloOpponent2Service.alternativePlay();
-            }
         } else if (myMessage.message === '!abandonner') {
             this.inputs.push(myMessage);
             text = this.letterService.players[1].name + ' a abandonné la partie';
