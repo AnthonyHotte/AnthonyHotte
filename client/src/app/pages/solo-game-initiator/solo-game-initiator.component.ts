@@ -198,9 +198,7 @@ export class SoloGameInitiatorComponent {
     }
 
     nameValidityInChar() {
-        if (this.nameIsValid) {
-            return 'valide';
-        } else return 'invalide';
+        return this.nameIsValid ? 'valide' : 'invalide';
     }
     setRandomBonus(activated: boolean) {
         this.isBonusRandom = activated;
