@@ -60,9 +60,9 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <legend class="legend">Difficulté</legend>
                     <div class="switch-field2">
                         <p>
-                            <input type="radio" id="desactivated2" name="difficulty" (click)="setExpertMode()" checked />
+                            <input type="radio" id="desactivated2" name="difficulty" (click)="setExpertMode()" [checked]="this.easyDifficulty" />
                             <label for="desactivated2">Débutant</label>
-                            <input type="radio" id="activated2" name="difficulty" (click)="setExpertMode()" />
+                            <input type="radio" id="activated2" name="difficulty" (click)="setExpertMode()" [checked]="!this.easyDifficulty"/>
                             <label for="activated2">Expert</label>
                         </p>
                     </div>
@@ -73,9 +73,9 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <legend class="legend">Bonus aléatoire</legend>
                     <div class="switch-field">
                         <p>
-                            <input type="radio" id="desactivated" name="randomBonus" (click)="setRandomBonus(false)" checked />
+                            <input type="radio" id="desactivated" name="randomBonus" (click)="setRandomBonus(false)" [checked]="!this.isBonusRandom"/>
                             <label for="desactivated">Désactivé</label>
-                            <input type="radio" id="activated" name="randomBonus" (click)="setRandomBonus(true)" />
+                            <input type="radio" id="activated" name="randomBonus" (click)="setRandomBonus(true)" [checked]="this.isBonusRandom"/>
                             <label for="activated">Activé</label>
                         </p>
                     </div>
