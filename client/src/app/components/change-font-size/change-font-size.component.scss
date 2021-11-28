@@ -49,12 +49,14 @@
 .filler{
     background-color: rgb(213, 231, 213);
     color: black;
-    border: double;
-    height: 7%;
+    border: none;
+    height: 90%;
     text-align: center;
-    width: 85%;
+    width: 90%;
     margin-left: 5%;
     margin-right: 5%;
-    max-width: 85%;
-    max-height: 7%;
+    max-width: 90%;
+    max-height: 90%;
+    align-items: center;
+    vertical-align: middle;
 }
