@@ -1,24 +1,24 @@
-<div style="text-align: center;">
+<div class="container">
     <fieldset *ngIf="getGameMode()" class="fieldset">
-    <div *ngIf="publicLeft()">
-        <label class="title">Objectifs public</label>
-        <p class="text">{{ getObjective(0) }}</p>
-        <p class="text">{{ getObjective(1) }}</p>
-    </div>
-    <div *ngIf="privateLeft()">
-        <label class="title">Objectifs privés</label>
-        <p class="text">{{ getObjective(2) }}</p>
-    </div>
-    <div *ngIf="areSomeCompleted()">
-        <label class="title">Objectifs complétés</label>
-        <p class="text"
-            *ngFor="let objective of objCompleted; let indexOfElem = index"
-            [ngStyle]="{
-         'color': objCompletor[indexOfElem] === 0 ? 'green' : 'red'
-         }"
-        >
-            {{ getSingleObjCompleted(objective) }} complété par {{ getPlayerName(objCompletor[indexOfElem]) }}
-        </p>
-    </div>
+        <div *ngIf="publicLeft()">
+            <label class="title">Objectifs public</label>
+            <p class="text">{{ getObjective(0) }}</p>
+            <p class="text">{{ getObjective(1) }}</p>
+        </div>
+        <div *ngIf="privateLeft()">
+            <label class="title">Objectifs privés</label>
+            <p class="text">{{ getObjective(2) }}</p>
+        </div>
+        <div *ngIf="areSomeCompleted()">
+            <label class="title">Objectifs complétés</label>
+            <p class="text"
+                *ngFor="let objective of objCompleted; let indexOfElem = index"
+                [ngStyle]="{
+            'color': objCompletor[indexOfElem] === 0 ? 'green' : 'red'
+            }"
+            >
+                {{ getSingleObjCompleted(objective) }} complété par {{ getPlayerName(objCompletor[indexOfElem]) }}
+            </p>
+        </div>
     </fieldset>
 </div>

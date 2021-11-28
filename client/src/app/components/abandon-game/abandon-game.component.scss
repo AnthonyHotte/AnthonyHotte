@@ -1,25 +1,4 @@
-.buttonsurrender {
-    display: inline-block;
-    padding: 15px 25px;
-    font-size: 26px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    outline: none;
-    color: #fff;
-    background-color: red;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 9px black;
-    font-family: serif;
-}
-.buttonsurrender:hover {
-    background-color: black;
-    color: white;
-    box-shadow: 0 9px grey;
-}
-
-.buttonsurrenderconfirmed {
+.button-surrender {
     display: inline-block;
     padding: 15px 25px;
     font-size: 20px;
@@ -34,17 +13,76 @@
     box-shadow: 0 9px black;
     font-family: serif;
 }
+.button-surrender:hover {
+    background-color: black;
+    color: white;
+    box-shadow: 0 9px grey;
+}
+.button-surrender:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); 
+}
 
-.buttonsurrenderconfirmed:hover{
+.button-surrender-confirmed {
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: red;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px black;
+    font-family: serif;
+    margin-right: 3%;
+}
+
+.button-surrender-confirmed:hover{
     color: white;
     background-color: black;
     box-shadow: 0 9px grey;
 }
 
+.button-surrender-confirmed:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); 
+}
+
+.button-surrender-refuse {
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: green;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px darkgreen;
+    font-family: serif;
+    margin-left: 3%;
+}
+
+.button-surrender-refuse:hover{
+    color: white;
+    background-color: black;
+    box-shadow: 0 9px grey;
+}
+
+.button-surrender-refuse:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); 
+}
+
 .label {
     font-size: 16px;
-    color: blanchedalmond;
-    background-color: red;
+    color: black;
+    background-color: rgb(213, 231, 213);
 }
 
 .fieldset{

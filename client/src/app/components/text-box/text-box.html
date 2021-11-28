@@ -1,33 +1,33 @@
 <!-- Sources : https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ (en IEEE plus tard)
 https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%20let%20a%20user%20select%20only%20one,group%20can%20be%20selected%20at%20the%20same%20time.-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<div class="textBox">
-    <h1 class="title"><i class="fa fa-mail-forward"></i><i class="fa fa-mail-reply"></i>Boite de communication</h1>
-</div>
-<div *ngIf="this.getLOG2990()" id="DisplayZone">
-    <div *ngFor="let word of this.input.inputs">
-        <p [class]="word.role" *ngIf="word.message !== '' && word.role !== 'Systeme'"> {{word.sender}}: {{word.message}} </p>
-        <p [class]="word.role" *ngIf="word.message !== '' && word.role === 'Systeme'"> {{word.sender}} {{word.message}} </p>
+<div class="textbox">
+    <h1 class="title">Boite de communication</h1>
+    <div *ngIf="this.getLOG2990()" id="DisplayZone">
+        <div *ngFor="let word of this.input.inputs">
+            <p [class]="word.role" *ngIf="word.message !== ''"> {{word.sender}} : {{word.message}} </p>
+            <!-- <p [class]="word.role" *ngIf="word.message !== '' && word.role === 'Systeme'"> {{word.sender}} : {{word.message}} </p> -->
+        </div>
     </div>
-</div>
-<div *ngIf="!this.getLOG2990()" id="DisplayZone2">
-    <div *ngFor="let word of this.input.inputs">
-        <p [class]="word.role" *ngIf="word.message !== '' && word.role !== 'Systeme'"> {{word.sender}}: {{word.message}} </p>
-        <p [class]="word.role" *ngIf="word.message !== '' && word.role === 'Systeme'"> {{word.sender}} {{word.message}} </p>
+    <div *ngIf="!this.getLOG2990()" id="DisplayZone2">
+        <div *ngFor="let word of this.input.inputs">
+            <p [class]="word.role" *ngIf="word.message !== ''"> {{word.sender}} : {{word.message}} </p>
+            <!-- <p [class]="word.role" *ngIf="word.message !== '' && word.role === 'Systeme'"> {{word.sender}} : {{word.message}} </p> -->
+        </div>
     </div>
+    <div *ngIf="input.character">
+        <p class="AlertMessage">Votre commande ou message est trop long!</p>
+    </div>
+    <form #myInput="ngForm" class="form">
+        <input
+            type="text"
+            autocomplete="off"
+            ngModel
+            name="commandsAndMessages"
+            [(ngModel)]="this.word"
+            (keyup.enter)="this.buttonDetect()"
+            class="input"
+            placeholder="Écrivez ici"
+        />
+    </form>
 </div>
-<div *ngIf="input.character">
-    <p class="AlertMessage">Votre commande ou message est trop long</p>
-</div>
-<form #myInput="ngForm" class="form">
-    <input
-        type="text"
-        autocomplete="off"
-        ngModel
-        name="commandsAndMessages"
-        [(ngModel)]="this.word"
-        (keyup.enter)="this.buttonDetect()"
-        class="input"
-        placeholder="Écrivez ici"
-    />
-</form>

@@ -8,16 +8,11 @@ describe('GameStateService', () => {
     let wordValidationServiceSpy: jasmine.SpyObj<WordValidationService>;
     beforeEach(
         waitForAsync(() => {
-            wordValidationServiceSpy = jasmine.createSpyObj('WordValidationService', [
-                'isPartOfWordVertical',
-                'isPartOfWordHorizontal',
-                'validateHorizontalWord',
-                'validateVerticalWord',
-            ]);
+            wordValidationServiceSpy = jasmine.createSpyObj('WordValidationService', ['isPartOfWord', 'validateWord']);
             const promise1 = new Promise<boolean>((resolve) => {
                 resolve(true);
             });
-            wordValidationServiceSpy.validateHorizontalWord.and.returnValue(promise1);
+            wordValidationServiceSpy.validateWord.and.returnValue(promise1);
             TestBed.configureTestingModule({
                 providers: [{ provide: WordValidationService, useValue: wordValidationServiceSpy }],
             }).compileComponents();
@@ -79,7 +74,7 @@ describe('GameStateService', () => {
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(false);
         });
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(promise1);
+        wordValidationServiceSpy.validateWord.and.returnValue(promise1);
         service.validateWordCreatedByNewLetters(false).then((res) => {
             expect(res).toBe(false);
         });
@@ -89,7 +84,7 @@ describe('GameStateService', () => {
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(false);
         });
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(promise1);
+        wordValidationServiceSpy.validateWord.and.returnValue(promise1);
         service.validateWordCreatedByNewLetters(false).then((res) => {
             expect(res).toBe(false);
         });
@@ -97,15 +92,15 @@ describe('GameStateService', () => {
 
     it('validateWordCreatedByNewLetters should return false when vertical invalid word', () => {
         service.orientationOfLastWord = 'h';
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
         });
         const promise2 = new Promise<boolean>((resolve) => {
             resolve(false);
         });
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(promise1);
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(promise2);
+        wordValidationServiceSpy.validateWord.and.returnValue(promise1);
+        wordValidationServiceSpy.validateWord.and.returnValue(promise2);
         service.validateWordCreatedByNewLetters(false).then((res) => {
             expect(res).toBe(false);
         });
@@ -116,9 +111,9 @@ describe('GameStateService', () => {
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
         });
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(promise1);
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(promise1);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
+        wordValidationServiceSpy.validateWord.and.returnValue(promise1);
+        wordValidationServiceSpy.validateWord.and.returnValue(promise1);
         service.validateWordCreatedByNewLetters(false).then((res: boolean) => {
             expect(res).toBe(true);
         });
@@ -128,9 +123,9 @@ describe('GameStateService', () => {
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
         });
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(promise1);
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(promise1);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
+        wordValidationServiceSpy.validateWord.and.returnValue(promise1);
+        wordValidationServiceSpy.validateWord.and.returnValue(promise1);
         service.validateWordCreatedByNewLetters(false).then((res: boolean) => {
             expect(res).toBe(true);
         });
@@ -138,9 +133,9 @@ describe('GameStateService', () => {
 
     it('validateWordCreatedByNewLetters should return true when vertical is not part of vertical word', async () => {
         service.orientationOfLastWord = 'h';
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(true);
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(Promise.resolve(true));
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(Promise.resolve(false));
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
+        wordValidationServiceSpy.validateWord.and.returnValue(Promise.resolve(true));
+        wordValidationServiceSpy.validateWord.and.returnValue(Promise.resolve(false));
         await service.validateWordCreatedByNewLetters(false).then((res: boolean) => {
             expect(res).toBe(false);
         });
@@ -151,9 +146,9 @@ describe('GameStateService', () => {
         const promise2 = new Promise<boolean>((resolve) => {
             resolve(false);
         });
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(false);
-        wordValidationServiceSpy.validateHorizontalWord.and.callThrough();
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(promise2);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(false);
+        wordValidationServiceSpy.validateWord.and.callThrough();
+        wordValidationServiceSpy.validateWord.and.returnValue(promise2);
         service.validateWordCreatedByNewLetters(false).then((res: boolean) => {
             expect(res).toBe(false);
         });
@@ -166,26 +161,26 @@ describe('GameStateService', () => {
         const promise2 = new Promise<boolean>((resolve) => {
             resolve(false);
         });
-        wordValidationServiceSpy.isPartOfWordHorizontal.and.returnValue(true);
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(promise1);
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(promise2);
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
+        wordValidationServiceSpy.validateWord.and.returnValue(promise1);
+        wordValidationServiceSpy.validateWord.and.returnValue(promise2);
         service.validateWordCreatedByNewLetters(false).then((res: boolean) => {
             expect(res).toBe(false);
         });
     });
     it('validateWordCreatedByNewLetters should return true when horizontal valid word', async () => {
         service.orientationOfLastWord = 'v';
-        wordValidationServiceSpy.isPartOfWordHorizontal.and.returnValue(true);
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(Promise.resolve(true));
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(Promise.resolve(true));
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(true);
+        wordValidationServiceSpy.validateWord.and.returnValue(Promise.resolve(true));
+        wordValidationServiceSpy.validateWord.and.returnValue(Promise.resolve(true));
         const result = await service.validateWordCreatedByNewLetters(false);
         expect(result).toBe(true);
     });
     it('validateWordCreatedByNewLetters should return true when horizontal valid word', async () => {
         service.orientationOfLastWord = 'h';
-        wordValidationServiceSpy.isPartOfWordVertical.and.returnValue(false);
-        wordValidationServiceSpy.validateVerticalWord.and.returnValue(Promise.resolve(true));
-        wordValidationServiceSpy.validateHorizontalWord.and.returnValue(Promise.resolve(true));
+        wordValidationServiceSpy.isPartOfWord.and.returnValue(false);
+        wordValidationServiceSpy.validateWord.and.returnValue(Promise.resolve(true));
+        wordValidationServiceSpy.validateWord.and.returnValue(Promise.resolve(true));
         const result = await service.validateWordCreatedByNewLetters(false);
         expect(result).toBe(true);
     });

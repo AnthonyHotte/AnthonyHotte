@@ -60,45 +60,28 @@ export class GameStateService {
         this.wordValidator.indexLastLetters = this.indexLastLetters;
         this.wordValidator.pointsForLastWord = 0;
         this.wordValidator.wordsCreatedLastTurn = [];
-        if (this.orientationOfLastWord === 'h') {
-            if (
-                !(await this.wordValidator.validateHorizontalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard, onServer))
-            ) {
-                return false;
-            }
-            for (let i = 0; i < this.indexLastLetters.length; i += 2) {
-                if (this.wordValidator.isPartOfWordVertical(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
-                    if (
-                        !(await this.wordValidator.validateVerticalWord(
-                            this.indexLastLetters[i],
-                            this.indexLastLetters[i + 1],
-                            this.lettersOnBoard,
-                            onServer,
-                        ))
-                    ) {
-                        return false;
-                    }
-                }
-            }
-        } else {
-            if (!(await this.wordValidator.validateVerticalWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard, onServer))) {
-                return false;
-            }
-            for (let i = 0; i < this.indexLastLetters.length; i += 2) {
-                if (this.wordValidator.isPartOfWordHorizontal(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard)) {
-                    if (
-                        !(await this.wordValidator.validateHorizontalWord(
-                            this.indexLastLetters[i],
-                            this.indexLastLetters[i + 1],
-                            this.lettersOnBoard,
-                            onServer,
-                        ))
-                    ) {
-                        return false;
-                    }
+        const isHorizontal = this.orientationOfLastWord === 'h';
+        if (
+            !(await this.wordValidator.validateWord(this.indexLastLetters[0], this.indexLastLetters[1], this.lettersOnBoard, onServer, isHorizontal))
+        ) {
+            return false;
+        }
+        for (let i = 0; i < this.indexLastLetters.length; i += 2) {
+            if (this.wordValidator.isPartOfWord(this.indexLastLetters[i], this.indexLastLetters[i + 1], this.lettersOnBoard, !isHorizontal)) {
+                if (
+                    !(await this.wordValidator.validateWord(
+                        this.indexLastLetters[i],
+                        this.indexLastLetters[i + 1],
+                        this.lettersOnBoard,
+                        onServer,
+                        !isHorizontal,
+                    ))
+                ) {
+                    return false;
                 }
             }
         }
+
         this.wordsCreatedLastTurn = this.wordValidator.wordsCreatedLastTurn;
         return true;
     }

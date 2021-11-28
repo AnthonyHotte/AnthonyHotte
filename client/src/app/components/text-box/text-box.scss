@@ -1,31 +1,33 @@
 .textBox {
-    height: 20px;
-    border-color: white;
+    height: 100%;
+    border-color: black;
     border-width: 2px;
-    width: 27vw;
+    width: 100%;
     border-style: ridge;
     margin-bottom: 10px;
     margin-bottom: 0px;
-    background-color: black;
+    background-color: rgb(213, 231, 213);
     color: white;
     padding-bottom: 10px;
-    max-width: 27vw;
+    max-width: 100%;
 }
 
 .title {
     text-align: center;
-    background-color: darkgreen;
-    color: white;
+    background-color: rgb(213, 231, 213);
+    color: black;
     font-family: serif;
-    width: 27vw;
-    max-width: 27vw;
+    border: double;
+    width: 90%;
+    max-width: 90%;
+    margin-left: 3.5%;
 }
 #DisplayZone {
-    height: 50vh;
-    max-height: 52vh;
+    height: 55vh;
+    max-height: 55vh;
     border-color: black;
     border-width: 2px;
-    width: 27vw;
+    width: 90%;
     border-style: groove;
     margin-bottom: 10px;
     overflow-y: scroll;
@@ -33,13 +35,17 @@
     display: block;
     background-color:white;
     border-radius: 16px;
+    margin-left: 5%;
+    width: 90%;
+    max-width: 90%;
 }
 #DisplayZone2 {
-    height: 78vh;
+    height: 80vh;
     max-height: 80vh;
     border-color: black;
     border-width: 2px;
-    width: 27vw;
+    width: 90%;
+    max-width: 90%;
     border-style: groove;
     margin-bottom: 10px;
     overflow-y: scroll;
@@ -47,11 +53,14 @@
     display: block;
     background-color:white;
     border-radius: 16px;
+    margin-left: 5%;
+    color: black;
+    border: double;
 }
 
 .PlayerMessage {
     color: blue;
-    font-size: 18px;
+    font-size: 14px;
     max-width: 26vw;
     font-family: serif;
     margin-top: 5px;
@@ -61,7 +70,7 @@
 
 .AlertMessage {
     color: red;
-    font-size:18px;
+    font-size:14px;
     max-width: 26vw;
     font-family: serif;
     margin-top: 5px;
@@ -70,8 +79,8 @@
 }
 
 .Joueur {
-    color: rgb(34, 121, 34);
-    font-size: 18px;
+    color: rgb(139, 218, 139);
+    font-size: 14px;
     max-width: 26vw;
     font-family: serif;
     margin-top: 5px;
@@ -80,8 +89,8 @@
 }
 
 .Adversaire {
-    color: rgb(92, 20, 20);
-    font-size: 18px;
+    color: rgb(241, 147, 147);
+    font-size: 14px;
     max-width: 26vw;
     margin-top: 5px;
     margin-right: 5px;
@@ -89,8 +98,8 @@
     font-family: serif;
 }
 .Systeme {
-    color: rgb(25, 25, 126);
-    font-size: 18px;
+    color: rgb(123, 123, 226);
+    font-size: 14px;
     max-width: 26vw;
     font-family: serif;
     margin-top: 5px;
@@ -99,10 +108,13 @@
 }
 .input{
     text-align: center;
-    font-size: 26px;
+    font-size: 20px;
     border-radius: 16px;
     padding: 10px;
-    max-width: 25vw;
+    max-width: 90%;
+    width: 90%;
+    border: double;
+    color: black;
 }
 .form{
     text-align: center;

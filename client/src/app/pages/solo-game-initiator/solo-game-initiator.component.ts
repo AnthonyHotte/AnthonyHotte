@@ -198,14 +198,14 @@ export class SoloGameInitiatorComponent {
     }
 
     nameValidityInChar() {
-        if (this.nameIsValid) {
-            return 'valide';
-        } else return 'invalide';
+        return this.nameIsValid ? 'valide' : 'invalide';
     }
     setRandomBonus(activated: boolean) {
         this.isBonusRandom = activated;
     }
+
     setExpertMode(expert: boolean) {
+        this.easyDifficulty = !expert;
         this.soloopponent2.setExpertMode(expert);
     }
     scrambleBonus() {
