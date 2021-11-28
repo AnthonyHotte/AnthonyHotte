@@ -103,6 +103,14 @@ describe('LetterService', () => {
         expect(service.indexSelectedSwapping).toEqual(0);
     });
 
+    it('select index swapping should check lower half and set index to letter of lower half', () => {
+        service.players[0].allLettersInHand[0].letter = 'b';
+        service.buttonPressed = 'a';
+        service.indexSelectedSwapping = 1;
+        service.selectIndexSwapping('a');
+        expect(service.indexSelectedSwapping).toEqual(1);
+    });
+
     it('select index swapping should check upper half and set index to letter of upper half', () => {
         service.buttonPressed = 'a';
         service.indexSelectedSwapping = 1;
@@ -163,6 +171,12 @@ describe('LetterService', () => {
         service.indexSelectedExchange = [0, 1, 2];
         service.rightClickOnLetter('i', 1);
         expect(service.lettersSelectedExchange).toEqual('ae');
+    });
+    it('right click on letter should isletter remove letter from selection if already selected', () => {
+        spyOn(service.indexSelectedExchange, 'includes').and.returnValue(false);
+        service.areLetterSelectedExchange = false;
+        service.rightClickOnLetter('', 1);
+        expect(service.lettersSelectedExchange).toEqual('');
     });
 
     it('right click on letter should set is are letter selected for exchange to false if there are none left', () => {

@@ -64,7 +64,7 @@ export class SoloGameInitiatorComponent {
         this.name = 'Appuyez sur la validation pour valider votre nom';
         this.assignOpponentName();
         this.idNameOpponent = 0;
-        this.initiateIsNameValid();
+        this.nameIsValid = false;
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
         this.messageService.gameStartingInfoSubscribe();
@@ -78,14 +78,6 @@ export class SoloGameInitiatorComponent {
     @HostListener('contextmenu', ['$event'])
     onRightClick(event: { preventDefault: () => void }) {
         event.preventDefault();
-    }
-
-    initiateIsNameValid() {
-        if (this.getGameStatus() === 1) {
-            this.nameIsValid = false;
-        } else {
-            this.nameIsValid = false;
-        }
     }
 
     joinGame() {
@@ -206,16 +198,15 @@ export class SoloGameInitiatorComponent {
     }
 
     nameValidityInChar() {
-        if (this.nameIsValid) {
-            return 'valide';
-        } else return 'invalide';
+        return this.nameIsValid ? 'valide' : 'invalide';
     }
     setRandomBonus(activated: boolean) {
         this.isBonusRandom = activated;
     }
-    setExpertMode() {
-        this.easyDifficulty = !this.easyDifficulty;
-        this.soloopponent2.setExpertMode();
+
+    setExpertMode(expert: boolean) {
+        this.easyDifficulty = expert;
+        this.soloopponent2.setExpertMode(expert);
     }
     scrambleBonus() {
         if (this.isBonusRandom) {

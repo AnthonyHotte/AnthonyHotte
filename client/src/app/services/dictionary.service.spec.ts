@@ -1,4 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { Dictionary } from '@app/classes/dictionary';
 import { Observable } from 'rxjs';
 import { CommunicationService } from './communication.service';
 
@@ -19,13 +20,23 @@ describe('DictionaryService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(DictionaryService);
+        service.dictionaryList = [];
+        service.dictionaryList.push(new Dictionary('t1', 'd1'));
     });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
-    it('getDictionary be created', () => {
+    it('getDictionary should call get full dictionary', () => {
         service.getDictionary();
         expect(communicationServiceSpy.getFullDictionary).toHaveBeenCalled();
+    });
+    it('isTitlePresent should return true', () => {
+        const res = service.isTitlePresent('t1');
+        expect(res).toBe(true);
+    });
+    it('isTitlePresent should return false', () => {
+        const res = service.isTitlePresent('t2');
+        expect(res).toBe(false);
     });
 });

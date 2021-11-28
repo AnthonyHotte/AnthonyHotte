@@ -30,7 +30,7 @@ describe('Database service', () => {
         // Reconnect to local server
         const mongoUri = await mongoServer.getUri();
         await databaseService.start(mongoUri);
-        expect(databaseService.database.listCollections.length).to.be.equal(0);
+        expect(databaseService.db.listCollections.length).to.be.equal(0);
         expect(databaseService.db.databaseName).to.equal('database');
     });
     // NB : We dont test the case when DATABASE_URL is used in order to not connect to the real database
@@ -41,7 +41,51 @@ describe('Database service', () => {
         await databaseService.closeConnection();
         mongoUri = await mongoServer.getUri();
         await databaseService.start(mongoUri);
-        expect(databaseService.database.listCollections.length).to.be.equal(0);
+        expect(databaseService.db.listCollections.length).to.be.equal(0);
         expect(databaseService.db.databaseName).to.equal('database');
+    });
+    it('getBestScoreClassique get best score classique', async () => {
+        // Reconnect to local server
+        const mongoUri = await mongoServer.getUri();
+        await databaseService.start(mongoUri);
+        const best = databaseService.getBestScoreClassique();
+        expect(best.length).to.be.equal(0);
+    });
+    it('bestScoreLog2990 should get best score log2990', async () => {
+        // Reconnect to local server
+        const mongoUri = await mongoServer.getUri();
+        await databaseService.start(mongoUri);
+        const best = databaseService.bestScoreLog2990();
+        expect(best.length).to.be.equal(0);
+    });
+    it('sendScoreChanges should send score changes', async () => {
+        // Reconnect to local server
+        const mongoUri = await mongoServer.getUri();
+        await databaseService.start(mongoUri);
+        const bestArr = [{ score: 2, name: ['adr'] }];
+        await databaseService.sendScoreChanges(0, bestArr);
+        expect(await databaseService.db.collection('bestScoreClassique').find().count()).to.be.equal(1);
+    });
+    it('jvEasyNames should send jvEasyNames changes', async () => {
+        // Reconnect to local server
+        const mongoUri = await mongoServer.getUri();
+        await databaseService.start(mongoUri);
+        await databaseService.jvEasyNames();
+        expect(await databaseService.db.collection('JVEasyName').find().count()).to.be.equal(3);
+    });
+    it('jvHardNames should send jvHardNames changes', async () => {
+        // Reconnect to local server
+        const mongoUri = await mongoServer.getUri();
+        await databaseService.start(mongoUri);
+        await databaseService.jvHardNames();
+        expect(await databaseService.db.collection('JVHardName').find().count()).to.be.equal(3);
+    });
+    it('sendNamesChanges should send names changes', async () => {
+        // Reconnect to local server
+        const mongoUri = await mongoServer.getUri();
+        await databaseService.start(mongoUri);
+        const names = ['fggg', 'frtr', 'eretey'];
+        await databaseService.sendNamesChanges(0, names);
+        expect(await databaseService.db.collection('JVEasyName').find().count()).to.be.equal(3);
     });
 });

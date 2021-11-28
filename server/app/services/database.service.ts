@@ -2,6 +2,7 @@ import { MongoClient, Db } from 'mongodb';
 import 'reflect-metadata';
 import { Service } from 'typedi';
 import { environment } from '@app/environnements/environnement';
+import { BestScore } from '@app/classes/best-score-interface';
 
 // CHANGE the URL for your database information
 // const DATABASE_URL = 'mongodb+srv://equipe104:Teamprojet2@cluster0.2bthm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
@@ -24,7 +25,9 @@ export class DatabaseService {
             const client = await MongoClient.connect(url);
             this.client = client;
             this.db = client.db(DATABASE_NAME);
-        } catch {
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.log(err.message);
             throw new Error('Database connection error');
         }
 
@@ -103,7 +106,64 @@ export class DatabaseService {
         }
     }
 
-    get database(): Db {
-        return this.db;
+    getBestScoreClassique() {
+        const bestScore: BestScore[] = [];
+        this.db
+            .collection(BESTSCORECLASSIQUE)
+            .find()
+            .forEach((document) => {
+                bestScore.push({ score: document.score, name: document.name });
+            });
+        return bestScore;
+    }
+    bestScoreLog2990() {
+        const bestScore: BestScore[] = [];
+        this.db
+            .collection(BESTSCORELOG2990)
+            .find()
+            .forEach((document) => {
+                bestScore.push({ score: document.score, name: document.name });
+            });
+        return bestScore;
+    }
+    async sendScoreChanges(mode: number, bestScoreArr: BestScore[]) {
+        const nameCollection = [BESTSCORECLASSIQUE, BESTSCORELOG2990];
+        this.db.collection(nameCollection[mode]).deleteMany({});
+        for (const bestScore of bestScoreArr) {
+            await this.addOneScore(nameCollection, mode, bestScore);
+        }
+    }
+    async addOneScore(nameCollection: string[], mode: number, bestScore: BestScore) {
+        return this.db.collection(nameCollection[mode]).insertOne({ score: bestScore.score, name: bestScore.name });
+    }
+    async jvEasyNames() {
+        const nameJv: string[] = [];
+        await this.db
+            .collection(DATABASE_JV_EASY_NAME)
+            .find()
+            .forEach((document) => {
+                nameJv.push(document.name);
+            });
+        return nameJv;
+    }
+    async jvHardNames() {
+        const nameJv: string[] = [];
+        await this.db
+            .collection(DATABASE_JV_HARD_NAME)
+            .find()
+            .forEach((document) => {
+                nameJv.push(document.name);
+            });
+        return nameJv;
+    }
+    async sendNamesChanges(modeJV: number, jvNames: string[]) {
+        const nameCollection = [DATABASE_JV_EASY_NAME, DATABASE_JV_HARD_NAME];
+        this.db.collection(nameCollection[modeJV]).deleteMany({});
+        for (const nameJV of jvNames) {
+            await this.addOneName(nameCollection, modeJV, nameJV);
+        }
+    }
+    async addOneName(nameCollection: string[], modeJV: number, nameJV: string) {
+        return this.db.collection(nameCollection[modeJV]).insertOne({ name: nameJV, level: modeJV });
     }
 }

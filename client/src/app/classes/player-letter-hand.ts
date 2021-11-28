@@ -18,50 +18,50 @@ export class PlayerLetterHand {
     }
 
     addLetters(amount: number): void {
-        if (this.allLettersInHand.length + amount <= MAXLETTERINHAND) {
-            // to make sure there are enough letters available
-            const numberLetterToAdd = Math.min(amount, this.letterBankService.letterBank.length);
-            let i = 0;
-            while (i < numberLetterToAdd) {
-                const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
-                this.allLettersInHand.push(this.letterBankService.letterBank[index]);
-                this.letterBankService.letterBank.splice(index, 1);
-                i++;
-            }
+        if (!(this.allLettersInHand.length + amount <= MAXLETTERINHAND)) return;
+        // to make sure there are enough letters available
+        const numberLetterToAdd = Math.min(amount, this.letterBankService.letterBank.length);
+        let i = 0;
+        while (i < numberLetterToAdd) {
+            const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
+            this.allLettersInHand.push(this.letterBankService.letterBank[index]);
+            this.letterBankService.letterBank.splice(index, 1);
+            i++;
         }
     }
     exchangeLetters(letters: string, lettersToReplace?: string): string {
         // only possible when at least 7 letters are there
         let lettersReplacedExchange = '';
-        if (this.letterBankService.letterBank.length >= MAXLETTERINHAND && this.handContainLetters(letters)) {
-            const numberToExchange = letters.length;
-            const lettersExchanged = [];
-            // removes letters from hand
-            for (const letter of letters) {
-                for (let i = 0; i < this.allLettersInHand.length; i++) {
-                    if (this.allLettersInHand[i].letter.toLowerCase() === letter) {
-                        lettersExchanged.push(letter);
-                        this.allLettersInHand.splice(i, 1);
-                        break;
-                    }
-                }
-            }
-            if (lettersToReplace === undefined) {
-                for (let i = 0; i < numberToExchange; i++) {
-                    const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
-                    this.allLettersInHand.push(this.letterBankService.letterBank[index]);
-                    lettersReplacedExchange += this.letterBankService.letterBank[index].letter;
-                    this.letterBankService.letterBank.splice(index, 1);
-                }
-            } else {
-                this.addLetterToHand(lettersToReplace);
-            }
+        if (!(this.letterBankService.letterBank.length >= MAXLETTERINHAND && this.handContainLetters(letters))) return lettersReplacedExchange;
 
-            for (const letter of lettersExchanged) {
-                const tempLetter = LetterMap.letterMap.letterMap.get(letter) as Letter;
-                this.letterBankService.letterBank.push(tempLetter);
+        const numberToExchange = letters.length;
+        const lettersExchanged = [];
+        // removes letters from hand
+        for (const letter of letters) {
+            for (let i = 0; i < this.allLettersInHand.length; i++) {
+                if (this.allLettersInHand[i].letter.toLowerCase() === letter) {
+                    lettersExchanged.push(letter);
+                    this.allLettersInHand.splice(i, 1);
+                    break;
+                }
             }
         }
+        if (lettersToReplace === undefined) {
+            for (let i = 0; i < numberToExchange; i++) {
+                const index: number = Math.floor(Math.random() * this.letterBankService.letterBank.length);
+                this.allLettersInHand.push(this.letterBankService.letterBank[index]);
+                lettersReplacedExchange += this.letterBankService.letterBank[index].letter;
+                this.letterBankService.letterBank.splice(index, 1);
+            }
+        } else {
+            this.addLetterToHand(lettersToReplace);
+        }
+
+        for (const letter of lettersExchanged) {
+            const tempLetter = LetterMap.letterMap.letterMap.get(letter) as Letter;
+            this.letterBankService.letterBank.push(tempLetter);
+        }
+
         return lettersReplacedExchange;
     }
 

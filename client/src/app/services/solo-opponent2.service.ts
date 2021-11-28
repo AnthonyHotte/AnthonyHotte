@@ -1,4 +1,6 @@
+/* eslint-disable max-lines */
 import { Injectable } from '@angular/core';
+import { BestWordToPlay } from '@app/classes/best-word-to-play';
 import * as Constants from '@app/constants';
 import { WordValidationService } from '@app/services/word-validation.service';
 import { DictionaryService } from './dictionary.service';
@@ -14,6 +16,10 @@ export class SoloOpponent2Service {
     tempword: string;
     score = 0;
     expertmode = false;
+    bestWordsToPlayExpert: BestWordToPlay[] = [];
+    wordToPlayLessThan6Points: string[] = [];
+    wordToPlay7to12points: string[] = [];
+    wordToPlaymore13to18points: string[] = [];
     constructor(
         public letterService: LetterService,
         public timeManagerService: TimerTurnManagerService,
@@ -27,79 +33,42 @@ export class SoloOpponent2Service {
     // eslint-disable-next-line complexity
     async play(): Promise<string> {
         let tempword = '';
+        this.bestWordsToPlayExpert = [];
+        this.wordToPlayLessThan6Points = [];
+        this.wordToPlay7to12points = [];
+        this.wordToPlaymore13to18points = [];
         const arrayHand: string[] = [];
         // inital value of positionFirstLetterWordOnLine
         for (const letter of this.letterService.players[this.timeManagerService.turn].allLettersInHand) {
             arrayHand.push(letter.letter.toLowerCase());
         }
+        this.bestWordsToPlayExpert[0] = { word: '', score: 0 };
         if (this.gameStateService.isBoardEmpty) {
-            const wordToPlay = this.findValidWords(
-                this.dictionatyService.dictionaryList[this.dictionatyService.indexDictionary].words,
-                arrayHand,
-                true, // we are playing the first word;
-            );
-            if (wordToPlay.length > 0) {
-                tempword = 'h8v ' + wordToPlay[0];
+            await this.playfirstword();
+        } else {
+            await this.findword(true);
+            await this.findword(false);
+        }
+        if (!this.expertmode) {
+            const hundredpercant = 100;
+            const chancelessthan6 = 40;
+            const chancemorethan6 = 30;
+            const PROBABILITY_OF_ACTION = this.calculateProbability(hundredpercant);
+            if (PROBABILITY_OF_ACTION < chancelessthan6) {
+                tempword = this.wordToPlayLessThan6Points[Math.floor(Math.random() * this.wordToPlayLessThan6Points.length)];
+            } else if (PROBABILITY_OF_ACTION < chancemorethan6 + chancelessthan6) {
+                tempword = this.wordToPlay7to12points[Math.floor(Math.random() * this.wordToPlay7to12points.length)];
+            } else {
+                tempword = this.wordToPlaymore13to18points[Math.floor(Math.random() * this.wordToPlaymore13to18points.length)];
             }
         } else {
-            // const wordfound = false;
-            if (!this.expertmode) {
-                const letteronbord = this.gameStateService.lettersOnBoard;
-                // loop1 is an part of the code it is the name of the line we use it it to jump there
-                loop1: for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
-                    for (let j = 0; j < Constants.NUMBEROFCASE; j++) {
-                        // all colomn of letter on board
-                        if (letteronbord[i][j] !== '') {
-                            const temparrayHand = arrayHand;
-                            temparrayHand.push(letteronbord[i][j]); // add the letter on board with the letter in hand
-                            const wordToPlay = this.findValidWords(
-                                this.dictionatyService.dictionaryList[this.dictionatyService.indexDictionary].words,
-                                temparrayHand,
-                            );
-                            if (wordToPlay.length > 0) {
-                                for (const word2 of wordToPlay) {
-                                    for (let k = 0; k < word2.length; k++) {
-                                        if (letteronbord[i][j] === word2.charAt(k)) {
-                                            // find which position is the letter on board in the word
-                                            if (await this.isWordPlayable(word2, i, j - k, 'h')) {
-                                                const rowstring = String.fromCharCode(i + Constants.SIDELETTERS_TO_ASCII);
-                                                tempword = rowstring + (j - k + 1).toString() + 'h' + ' ' + word2;
-                                                //  wordfound = true;
-                                                break loop1;
-                                            } else if (await this.isWordPlayable(word2, i - k, j, 'v')) {
-                                                const rowstring = String.fromCharCode(i - k + Constants.SIDELETTERS_TO_ASCII);
-                                                tempword = rowstring + (j + 1).toString() + 'v' + ' ' + word2;
-                                                //  wordfound = true;
-                                                break loop1;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } else if (this.expertmode) {
-                // find horizontal word to play
-                this.score = 0;
-                const temptempword = await this.findword(true);
-                if (temptempword !== '') {
-                    tempword = temptempword;
-                }
-                // const temptempword2 = await this.findverticalword();
-                const temptempword2 = await this.findword(false);
-                if (temptempword2 !== '') {
-                    tempword = temptempword2;
-                }
+            if (this.bestWordsToPlayExpert[0] !== undefined) {
+                tempword = this.bestWordsToPlayExpert[0].word;
             }
         }
-
         if (tempword !== '') {
             this.tempword = tempword;
-            // const TIME_OUT_TIME = 3000; // TODO debug this
-            // setTimeout(() => {
             await this.placeLetterService.placeWord(this.tempword);
-            // }, TIME_OUT_TIME);
 
             return '!placer ' + tempword;
         } else {
@@ -107,8 +76,8 @@ export class SoloOpponent2Service {
         }
     }
 
-    setExpertMode() {
-        this.expertmode = !this.expertmode;
+    setExpertMode(expert: boolean) {
+        this.expertmode = expert;
     }
     // return all the word that exist with the letters given;
     findValidWords(dict: string[], letters: string[], firstword?: boolean): string[] {
@@ -166,7 +135,8 @@ export class SoloOpponent2Service {
                     if (!this.gameStateService.isLetterOnh8()) {
                         isPlayable = false;
                     }
-                } else if (this.gameStateService.lastLettersAdded.length === 0) {
+                }
+                if (this.gameStateService.lastLettersAdded.length === 0) {
                     isPlayable = false;
                 } else if (!this.gameStateService.isWordTouchingLetterOnBoard(word, this.placeLetterService.orientation)) {
                     isPlayable = false;
@@ -189,37 +159,10 @@ export class SoloOpponent2Service {
         }
         return arrayHand;
     }
-
-    // to be removed eventually, keeping in case the variable swap didn't work
-    /*
-    async findverticalword(): Promise<string> {
-        const minusone = -1;
-        const letteronbord = this.gameStateService.lettersOnBoard;
-        let tempword = '';
-        for (let j = 0; j < Constants.NUMBEROFCASE; j++) {
-            let wordonline = '';
-            let positionFirstLetterWordOnLine = -1;
-            for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
-                if (letteronbord[i][j] !== '') {
-                    if (wordonline === '') {
-                        positionFirstLetterWordOnLine = i;
-                    }
-                    wordonline += letteronbord[i][j];
-                } else if (wordonline !== '' || (i === Constants.NUMBEROFCASE - 1 && positionFirstLetterWordOnLine !== minusone)) {
-                    const temptempword = await this.findValidWordOrderedByPoint(wordonline, j, positionFirstLetterWordOnLine, false);
-                    if (temptempword !== '') {
-                        tempword = temptempword;
-                    }
-                }
-            }
-        }
-        return tempword;
-    }
-    */
     async findword(horizontal: boolean): Promise<string> {
         const minusone = -1;
         const letteronbord = this.gameStateService.lettersOnBoard;
-        let tempword = '';
+        // let tempword = '';
         for (let i = 0; i < Constants.NUMBEROFCASE; i++) {
             let wordonline = '';
             let positionFirstLetterWordOnLine = -1;
@@ -232,14 +175,12 @@ export class SoloOpponent2Service {
                     }
                     wordonline += letteronbord[x][y];
                 } else if (wordonline !== '' || (j === Constants.NUMBEROFCASE - 1 && positionFirstLetterWordOnLine !== minusone)) {
-                    const temptempword = await this.findValidWordOrderedByPoint(wordonline, i, positionFirstLetterWordOnLine, horizontal);
-                    if (temptempword !== '') {
-                        tempword = temptempword;
-                    }
+                    await this.findValidWordOrderedByPoint(wordonline, i, positionFirstLetterWordOnLine, horizontal);
                 }
             }
         }
-        return tempword;
+        // return tempword
+        return 'test';
     }
     async findValidWordOrderedByPoint(wordonline: string, i: number, j: number, horizontal: boolean) {
         let tempword = '';
@@ -260,28 +201,59 @@ export class SoloOpponent2Service {
                         y = horizontal ? y - k : y;
                         const orientation = horizontal ? 'h' : 'v';
                         if (await this.isWordPlayable(word2, x, y, orientation)) {
-                            if (this.wordValidatorService.pointsForLastWord > this.score) {
-                                const rowstring = String.fromCharCode(x + Constants.SIDELETTERS_TO_ASCII);
-                                // tempword = rowstring + (j - k + 1).toString() + orientation + ' ' + word2;
-                                tempword = rowstring + (y + 1).toString() + orientation + ' ' + word2;
-                                this.score = this.wordValidatorService.pointsForLastWord;
-                            }
+                            const rowstring = String.fromCharCode(x + Constants.SIDELETTERS_TO_ASCII);
+                            tempword = rowstring + (y + 1).toString() + orientation + ' ' + word2;
+                            this.handleWordPlacingOption(tempword, this.wordValidatorService.pointsForLastWord);
                         }
-                        // } else {
-                        /*
-                        if (await this.isWordPlayable(word2, c, d, orientation)) {
-                            if (this.wordValidatorService.pointsForLastWord > this.score) {
-                                const rowstring = String.fromCharCode(i - k + Constants.SIDELETTERS_TO_ASCII);
-                                tempword = rowstring + (j + 1).toString() + orientation + ' ' + word2;
-                                this.score = this.wordValidatorService.pointsForLastWord;
-                            }
-                        }
-                        */
-                        // }
                     }
                 }
             }
         }
-        return tempword;
+        return;
+    }
+    handleWordPlacingOption(wordtoplace: string, score2: number) {
+        const smallerthan = -1;
+        const numberOfBestWordToPlayMax = 3;
+        if (score2 > this.bestWordsToPlayExpert[this.bestWordsToPlayExpert.length - 1].score) {
+            if (this.bestWordsToPlayExpert.length < numberOfBestWordToPlayMax) {
+                this.bestWordsToPlayExpert.push({ word: wordtoplace, score: score2 });
+            } else if (!this.bestWordsToPlayExpert.find((i) => i.word === wordtoplace)) {
+                this.bestWordsToPlayExpert[this.bestWordsToPlayExpert.length - 1] = { word: wordtoplace, score: score2 };
+            }
+            this.bestWordsToPlayExpert.sort((a, b) => (a.score > b.score ? smallerthan : 1));
+        }
+        const lowerboundd = 6;
+        const middlebound = 12;
+        const upperbound = 18;
+        if (score2 <= lowerboundd) {
+            this.wordToPlayLessThan6Points.push(wordtoplace);
+        } else if (score2 <= middlebound) {
+            this.wordToPlay7to12points.push(wordtoplace);
+        } else if (score2 <= upperbound) {
+            this.wordToPlaymore13to18points.push(wordtoplace);
+        }
+        return;
+    }
+    calculateProbability(percentage: number) {
+        return Math.floor(Math.random() * percentage);
+    }
+    async playfirstword() {
+        const temparrayHand = this.pushLetterToHand();
+        const wordToPlay = this.findValidWords(
+            this.dictionatyService.dictionaryList[this.dictionatyService.indexDictionary].words,
+            temparrayHand,
+            true,
+        );
+        const center = 7;
+        let tempword = '';
+        for (const word2 of wordToPlay) {
+            for (let i = 0; i < word2.length; i++) {
+                if (await this.isWordPlayable(word2, center - i, center, 'v')) {
+                    const rowstring = String.fromCharCode(center - i + Constants.SIDELETTERS_TO_ASCII);
+                    tempword = rowstring + (center + 1).toString() + 'v' + ' ' + word2;
+                    this.handleWordPlacingOption(tempword, this.wordValidatorService.pointsForLastWord);
+                }
+            }
+        }
     }
 }
