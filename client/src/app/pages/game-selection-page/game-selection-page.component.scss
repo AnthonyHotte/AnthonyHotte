@@ -40,6 +40,10 @@
     background-color: black;
     color: white;
 }
+.button:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); 
+}
 
 html, body {   margin:0;   height:100%;   overflow:hidden; }
 

@@ -1,6 +1,6 @@
 .label{
-    color: white;
-    background-color: darkgreen;
+    color: green;
+    background-color: rgb(213, 231, 213);
     font-size: 20px;
     font-family: serif;
 }
@@ -8,7 +8,7 @@
 .button {
     display: inline-block;
     padding: 15px 25px;
-    font-size: 16px;
+    font-size: 20px;
     cursor: pointer;
     text-align: center;
     color: white;
@@ -17,11 +17,16 @@
     border-radius: 15px;
     box-shadow: 0 9px darkgreen;
     font-family: serif;
-    margin-right: 2vw;
-    margin-left: 2vw;
-    margin-bottom: 2vw;
+    margin-top: 5%;
 }
 .button:hover{
     background-color: black;
     color:white;
+}
+
+.fieldset {
+    border: transparent;
+    text-align: center;
+    width: 75%;
+    max-width: 75%;
 }

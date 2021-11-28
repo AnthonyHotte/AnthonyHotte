@@ -1,21 +1,20 @@
 .grid-container {
     margin: auto;
-    width: 45vw;
+    width: 55vw;
     height: width;
-    border: 3px double white;
+    border: 3px double rgb(213, 231, 213);
     padding: 1px;
     position: relative;
-    left: 2.5vw;
     top: 5px;
     overflow: hidden;
-    background-color: #d09a53;
+    background-color: rgb(213, 231, 213);
 }
 
 .canvas {
-    border: 3px double white;
+    border: 3px double rgb(213, 231, 213);
     padding: 1px;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
+    //margin-left: auto;
+    //margin-right: auto;
     background-color: white;
 }

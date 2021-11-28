@@ -1,6 +1,6 @@
 <div class="bg-container">
     <body>
-        <h1 class="header-item">Bienvenue cher joueur!</h1>
+        <h1 class="header-item">Bienvenue dans le mode {{getMode()}}!</h1>
         <p><img src="https://bit.ly/3m206ss" width="400" height="80" alt="Scrabble Logo" class="image"/></p>
         <p><button class="button" (click)="setSoloType()" routerLink="/soloInitiator"><i class="fa fa-bars"></i>Jouer en solo</button></p>
         <p><button class="button" (click)="setCreateMultiPlayerGame()" routerLink="/soloInitiator"><i class="fa fa-bars"></i>Créer une partie multijoueur</button></p>

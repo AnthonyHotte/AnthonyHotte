@@ -1,12 +1,13 @@
 <div class="container">
-    <section>
-        <app-sidebar (click)="this.clickLocation('textBox')"></app-sidebar>
+    <section class="section-25">
         <app-objectives></app-objectives>
+        <app-sidebar (click)="this.clickLocation('textBox')"></app-sidebar>
     </section> 
-    <section>
+    <section class="section-55">
         <app-play-area class="play-area" tabindex="0" (click)="this.clickLocation('gameBoard')"></app-play-area>
         <app-letters (click)="this.clickLocation('hand')"></app-letters>
     </section>
-    
-    <app-sidebar-right (click)="this.clickLocation('sidebarRight')"></app-sidebar-right>
+    <section class="section-20">
+        <app-sidebar-right (click)="this.clickLocation('sidebarRight')"></app-sidebar-right>
+    </section>
 </div>

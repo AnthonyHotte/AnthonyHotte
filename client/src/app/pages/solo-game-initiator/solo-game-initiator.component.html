@@ -38,17 +38,11 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
         <div class="image-names">
             <fieldset class="fieldset">
                 <p>
-                    <label class="label" *ngIf="this.name !== 'Essayez de nouveau...' && this.name !== 'Entrez votre nom de nouveau, vous aviez fait une erreur...' && this.name !== 'Appuyez sur la validation pour valider votre nom'">Nom du joueur pour la partie : {{ this.name }}</label>
-                    <label class="label" *ngIf="this.name === 'Appuyez sur la validation pour valider votre nom'">{{ this.name }}</label>
-                    <label class="label-red" *ngIf="this.name==='Essayez de nouveau...' || this.name=== 'Entrez votre nom de nouveau, vous aviez fait une erreur...'">{{ this.name }}</label>
-                </p>
-                <p>
-                    <label class="label" *ngIf="nameValidityInChar()==='valide'"> {{ 'Validité du nom: ' + nameValidityInChar() }}</label>
-                    <label class="label-red" *ngIf="nameValidityInChar()==='invalide'"> {{ 'Validité du nom: ' + nameValidityInChar() }}</label>
                     <input [(ngModel)]="temporaryName" type="string" class="input" />
+                    <button class="button" (click)="setName()"><i class="fa fa-check"></i>Valider l'identifiant</button>
                 </p>
                 <p>
-                    <button class="button" (click)="setName()"><i class="fa fa-check"></i>Validation de l'identifiant</button>
+                    <label class="label-red" *ngIf="nameValidityInChar()==='invalide' && this.name !== 'Appuyez sur la validation pour valider votre nom'"> {{ 'L\'identifiant choisi est invalide!' }}</label>
                 </p>
             </fieldset>
         </div>
@@ -122,8 +116,9 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
         </div>
         <div class="image-button">
             <fieldset class="fieldset">
-                <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
-                <label class="space" *ngIf="nameIsValid">space</label>
+                <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>
+                    Revenir en arrière
+                </button>
                 <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()" class="button">
                     <i class="fa fa-play"></i>
                     Démarrer la partie!
