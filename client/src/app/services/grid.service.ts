@@ -16,7 +16,8 @@ export class GridService {
     policesizeletter = Constants.LETTERDEFAULTPOLICESIZE;
     maxpolicesizeletter = Constants.LETTERMAXPOLICESIZE;
     letteroffset = 0;
-    offsettingvalue = 1 / 64; // 4 change in a row move it to 1/16 offset (4/64 = 1/16)
+    //  offsetingvalue2 = (16 * (Constants.LETTERMAXPOLICESIZE - Constants.LETTERDEFAULTPOLICESIZE)) / 2;
+    // 4 change in a row move it to 1/16 offset (4/64 = 1/16)
     gridContext: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_WIDTH };
     drawGrid() {
@@ -265,7 +266,8 @@ export class GridService {
     }
     increasePoliceSize() {
         if (this.policesizeletter >= Constants.LETTERDEFAULTPOLICESIZE && this.policesizeletter < this.maxpolicesizeletter) {
-            this.letteroffset = this.letteroffset + this.offsettingvalue;
+            const offsettingvalue = 64;
+            this.letteroffset = this.letteroffset + 1 / offsettingvalue;
         }
         if (this.policesizeletter + 2 <= this.maxpolicesizeletter) {
             this.policesizeletter = this.policesizeletter + 2;
@@ -276,7 +278,8 @@ export class GridService {
     }
     decreasePoliceSize() {
         if (this.policesizeletter > Constants.LETTERDEFAULTPOLICESIZE) {
-            this.letteroffset = this.letteroffset - this.offsettingvalue;
+            const offsettingvalue = 64;
+            this.letteroffset = this.letteroffset - 1 / offsettingvalue;
         }
         if (this.policesizeletter - 2 >= this.minpolicesizeletter) {
             this.policesizeletter = this.policesizeletter - 2;
