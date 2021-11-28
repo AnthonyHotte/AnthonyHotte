@@ -1,37 +1,53 @@
-<div *ngIf="bestScore[0].length !== 0" class="centered">
+<div *ngIf="bestScore[0].length !== 0" class="flex-container">
     <div class="table-filler">
-        <p><br /><br />Mode Classique</p>
+        <h1><br /><br />Mode Classique</h1>
         <table class="table">
-            <tr>
+            <tr class="thead">
                 <th class="th">Numéro</th>
-                <th class="th">Name</th>
+                <th class="th">Nom</th>
                 <th class="th">Score</th>
             </tr>
-            <tr>
-                <div *ngFor="let best of this.bestScore[0]; let numberBest = index"  class="for-length">
-                    <td class="td">{{ numberBest + 1 }}</td>
-                    <td class="td">{{ best.name }}</td>
-                    <td class="td">{{ best.score }}</td>
-                </div>
+            <tr *ngFor="let best of this.bestScore[0]; let numberBest = index;"  class="for-length">
+                <td class="first" *ngIf="numberBest===0">{{ numberBest + 1 }}</td>
+                <td class="first" *ngIf="numberBest===0">{{ best.name }}</td>
+                <td class="first" *ngIf="numberBest===0">{{ best.score }}</td>
+                <td class="second" *ngIf="numberBest===1">{{ numberBest + 1 }}</td>
+                <td class="second" *ngIf="numberBest===1">{{ best.name }}</td>
+                <td class="second" *ngIf="numberBest===1">{{ best.score }}</td>
+                <td class="third" *ngIf="numberBest===2">{{ numberBest + 1 }}</td>
+                <td class="third" *ngIf="numberBest===2">{{ best.name }}</td>
+                <td class="third" *ngIf="numberBest===2">{{ best.score }}</td>
+                <td class="td" *ngIf="numberBest > 2">{{ numberBest + 1 }}</td>
+                <td class="td" *ngIf="numberBest > 2">{{ best.name }}</td>
+                <td class="td" *ngIf="numberBest > 2">{{ best.score }}</td>
             </tr>
         </table>
     </div>
-    <div class="table-filler">
-        <p><br /><br />Mode LOG2990</p>
+    <div class="table-filler2">
+        <h1><br /><br />Mode LOG2990</h1>
         <table class="table">
-            <tr>
+            <tr class="thead">
                 <th class="th">Numéro</th>
-                <th class="th">Name</th>
+                <th class="th">Nom</th>
                 <th class="th">Score</th>
             </tr>
             <tr *ngFor="let best of this.bestScore[1]; let numberBest = index" class="for-length">
-                <td class="td">{{ numberBest + 1 }}</td>
-                <td class="td">{{ best.name }}</td>
-                <td class="td">{{ best.score }}</td>
+                <td class="first" *ngIf="numberBest===0">{{ numberBest + 1 }}</td>
+                <td class="first" *ngIf="numberBest===0">{{ best.name }}</td>
+                <td class="first" *ngIf="numberBest===0">{{ best.score }}</td>
+                <td class="second" *ngIf="numberBest===1">{{ numberBest + 1 }}</td>
+                <td class="second" *ngIf="numberBest===1">{{ best.name }}</td>
+                <td class="second" *ngIf="numberBest===1">{{ best.score }}</td>
+                <td class="third" *ngIf="numberBest===2">{{ numberBest + 1 }}</td>
+                <td class="third" *ngIf="numberBest===2">{{ best.name }}</td>
+                <td class="third" *ngIf="numberBest===2">{{ best.score }}</td>
+                <td class="td" *ngIf="numberBest > 2">{{ numberBest + 1 }}</td>
+                <td class="td" *ngIf="numberBest > 2">{{ best.name }}</td>
+                <td class="td" *ngIf="numberBest > 2">{{ best.score }}</td>
             </tr>
         </table>
     </div>
 </div>
 <div *ngIf="bestScore[0].length === 0">
-    <p>La connection avec la base de données est impossible pour le moment... Veuillez réessayer plus tard<br />Merci de votre compréhenssion</p>
+    <p class="warning">La connection avec la base de données est impossible pour le moment... Veuillez réessayer plus tard<br />Merci de votre compréhension</p>
 </div>
