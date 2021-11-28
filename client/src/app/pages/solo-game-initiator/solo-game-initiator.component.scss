@@ -37,9 +37,10 @@
     background-color: rgb(213, 231, 213);
     color: green;
     border-radius: 15px;
-    margin-bottom: 5px;
-    margin-left: 2%;
+    margin-bottom: 2%;
+    margin-left: 4%;
     margin-right:2%;
+    margin-top: 2%;
 }
 .label-red {
     font-size: 16px;
@@ -176,6 +177,21 @@ textarea {
     max-width: 100%;
     height: 5.5%;
     max-height: 5.5%;
+}
+.dictionary-button{
+    background-color: green;
+    color: white;
+    font-size: 16px;
+    border-radius: 0px;
+}
+.dictionary-button:hover{
+    background-color: black;
+}
+.dictionary-button:active{
+  transform: translateY(4px);
+}
+.color-dictionary{
+    background-color: black;
 }
 // radio code customization
 // source : https://thestizmedia.com/radio-buttons-as-toggle-buttons-with-css/
@@ -320,4 +336,48 @@ textarea {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: lightgreen; 
+}
+// drop-down button
+// source : https://www.w3schools.com/Css/tryit.asp?filename=trycss_dropdown_button
+.dropbtn {
+  background-color: green;
+  color: white;
+  padding: 16px;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  margin-left: 60%;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: green;
+  min-width: 144px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  margin-left: 60%;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: green}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: black;
+  color: white;
 }

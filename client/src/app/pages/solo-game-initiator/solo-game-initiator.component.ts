@@ -35,7 +35,7 @@ export class SoloGameInitiatorComponent {
     validationDictionaryMessage: string;
     startingNewGame = false;
     isDictionaryValid: boolean;
-    expertmode = false;
+    // expertmode = false; // a enlever peut-etre
     isBonusRandom = false;
     showAdvancedParameters = false;
 
@@ -58,7 +58,7 @@ export class SoloGameInitiatorComponent {
             });
         });
         this.isDictionaryValid = false;
-        this.validationDictionaryMessage = "l'index est valide!!!";
+        this.validationDictionaryMessage = 'Le dictionnaire de base est chargé.';
         this.indexDictionaryNumber = 0;
         this.temporaryName = 'Joueur';
         this.name = 'Appuyez sur la validation pour valider votre nom';
@@ -242,16 +242,21 @@ export class SoloGameInitiatorComponent {
                 this.dictionaryList.push(res);
             });
         });
-        this.validationDictionaryMessage = "validation de l'index en cours...";
+        this.validationDictionaryMessage = 'Validation du dictionnaire en cours... Veuillez patienter.';
         setTimeout(() => {
             if (this.indexDictionaryNumber < 0 || this.indexDictionaryNumber >= this.dictionaryList.length) {
-                this.validationDictionaryMessage = "l'index est invalide... il doit etre dans la liste, essayer de nouveau.";
+                this.validationDictionaryMessage = 'La vérification a échouée...';
                 this.isDictionaryValid = false;
             } else {
-                this.validationDictionaryMessage = "l'index est valide!!!";
+                this.validationDictionaryMessage =
+                    'Le dictionnaire choisi, ' + this.dictionaryList[this.indexDictionaryNumber].title + ' est valide!';
                 this.dictionaryService.indexDictionary = this.indexDictionaryNumber;
                 this.isDictionaryValid = true;
             }
         }, TIMETOWAITFORVALIDATION);
+    }
+
+    isDictionaryButtonClicked(index: number) {
+        return this.indexDictionaryNumber === index;
     }
 }
