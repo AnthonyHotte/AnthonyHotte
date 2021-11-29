@@ -155,7 +155,8 @@ export class SidebarRightComponent implements AfterViewInit {
                 role: 'Adversaire',
             };
             this.textBox.inputs.push(message);
-            this.textBox.scrollDown();
+            // this.textBox.scrollDown();
+            // INUTILE car la fonction scrollDown a ete remplace
         }
     }
     async delay(ms: number) {
