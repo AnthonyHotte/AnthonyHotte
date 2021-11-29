@@ -8,17 +8,12 @@ import * as Constants from '@app/constants';
 describe('ObjectivesService', () => {
     let service: ObjectivesService;
     let timeManagerSpy: jasmine.SpyObj<TimerTurnManagerService>;
-    let tileMapSpy: jasmine.SpyObj<TileMap>;
     beforeEach(
         waitForAsync(() => {
             timeManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
-            tileMapSpy = jasmine.createSpyObj('TileMap', ['isDoubleWordTile']);
-
+            TileMap.gridMap = new TileMap();
             TestBed.configureTestingModule({
-                providers: [
-                    { provide: TimerTurnManagerService, useValue: timeManagerSpy },
-                    { provide: TileMap, useValue: tileMapSpy },
-                ],
+                providers: [{ provide: TimerTurnManagerService, useValue: timeManagerSpy }],
             }).compileComponents();
         }),
     );
