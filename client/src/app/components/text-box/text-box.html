@@ -3,13 +3,13 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="textbox">
     <h1 class="title">Boite de communication</h1>
-    <div *ngIf="this.getLOG2990()" id="DisplayZone">
+    <div *ngIf="this.getLOG2990()" id="DisplayZone" #DisplayZone [scrollTop]="DisplayZone.scrollHeight">
         <div *ngFor="let word of this.input.inputs">
             <p [class]="word.role" *ngIf="word.message !== ''"> {{word.sender}} : {{word.message}} </p>
             <!-- <p [class]="word.role" *ngIf="word.message !== '' && word.role === 'Systeme'"> {{word.sender}} : {{word.message}} </p> -->
         </div>
     </div>
-    <div *ngIf="!this.getLOG2990()" id="DisplayZone2">
+    <div *ngIf="!this.getLOG2990()" id="DisplayZone2" #DisplayZone [scrollTop]="DisplayZone.scrollHeight">
         <div *ngFor="let word of this.input.inputs">
             <p [class]="word.role" *ngIf="word.message !== ''"> {{word.sender}} : {{word.message}} </p>
             <!-- <p [class]="word.role" *ngIf="word.message !== '' && word.role === 'Systeme'"> {{word.sender}} : {{word.message}} </p> -->
