@@ -58,6 +58,7 @@ describe('SidebarRightComponent', () => {
             routerSpy = jasmine.createSpyObj('Router', ['navigate']);
             counterSpy = jasmine.createSpyObj('CountdownComponent', ['reset', 'pause']);
             finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
+            jasmine.getEnv().allowRespy(true);
             TestBed.configureTestingModule({
                 declarations: [SidebarRightComponent],
                 providers: [
