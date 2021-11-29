@@ -16,7 +16,8 @@ import { WordValidationService } from './word-validation.service';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type CallbackSignature = (...params: any[]) => {};
+// eslint-disable-next-line @typescript-eslint/ban-types
+type CallbackSignature = (...params: unknown[]) => {};
 
 class SocketServer {
     socket = new SocketMock();
