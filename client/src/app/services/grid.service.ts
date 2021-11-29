@@ -13,9 +13,11 @@ export class GridService {
     maxpolicesizelettervalue = Constants.LETTERVALUEMAXPOLICESIZE;
 
     minpolicesizeletter = Constants.LETTERMINPOLICESIZE;
-    policesizeletter = Constants.LETTERMINPOLICESIZE;
+    policesizeletter = Constants.LETTERDEFAULTPOLICESIZE;
     maxpolicesizeletter = Constants.LETTERMAXPOLICESIZE;
-
+    letteroffset = 0;
+    //  offsetingvalue2 = (16 * (Constants.LETTERMAXPOLICESIZE - Constants.LETTERDEFAULTPOLICESIZE)) / 2;
+    // 4 change in a row move it to 1/16 offset (4/64 = 1/16)
     gridContext: CanvasRenderingContext2D;
     private canvasSize: Vec2 = { x: Constants.DEFAULT_WIDTH, y: Constants.DEFAULT_WIDTH };
     drawGrid() {
@@ -221,28 +223,38 @@ export class GridService {
     }
     drawLetterwithpositionstring(word: string, x1: number, y1: number, color: string) {
         // color must be either black or red
-        const offset = 8;
+        // const offset = 8;
         // TODO isma discussion ici;
+        // all commented style are for smaller size tile (different style)
         this.drawtilebackground(x1, y1);
         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE;
         const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE;
-        const linewidth = 6;
-        this.gridContext.strokeStyle = color;
-        if (color === 'red') {
-            this.gridContext.lineWidth = linewidth;
-            this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
-            this.gridContext.lineWidth = 1; // 1 is the default value;
-        } else {
-            this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
-        }
-        this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+        // const linewidth = 6;
+        // const letteroffset = Constants.CASESIZE / 16;
         this.gridContext.fillStyle = 'white';
-        this.gridContext.fillRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
+        this.gridContext.fillRect(x, y, Constants.CASESIZE, Constants.CASESIZE);
         this.gridContext.fillStyle = 'black';
         this.gridContext.font = String(this.policesizeletter) + 'px system-ui';
-        this.gridContext.fillText(word, x + Constants.CASESIZE / 2, y + Constants.CASESIZE / 2);
+        this.gridContext.fillText(
+            word.toUpperCase(),
+            x + Constants.CASESIZE / 2 - this.letteroffset * Constants.CASESIZE,
+            y + Constants.CASESIZE / 2 - this.letteroffset * Constants.CASESIZE,
+        );
         const lettervalue = LetterMap.letterMap.letterMap.get(word) as Letter;
         this.drawLetterValuewithposition(lettervalue, x1, y1);
+        // draw the rectangle border
+        this.gridContext.strokeStyle = color;
+        const rectanglelignewidth = 2;
+        this.gridContext.lineWidth = rectanglelignewidth;
+        this.gridContext.strokeRect(
+            x + rectanglelignewidth,
+            y + rectanglelignewidth,
+            Constants.CASESIZE - rectanglelignewidth * 2,
+            Constants.CASESIZE - rectanglelignewidth * 2,
+        );
+        this.gridContext.lineWidth = 1; // default size;
+        // }
+        //   this.gridContext.strokeRect(x + Constants.CASESIZE / offset, y + Constants.CASESIZE / offset, Constants.TILESIZE, Constants.TILESIZE);
     }
     drawLetterValuewithposition(word: Letter, x1: number, y1: number) {
         const valuePositionOffset = 1.75;
@@ -253,6 +265,10 @@ export class GridService {
         this.gridContext.fillText(String(word.point), x, y);
     }
     increasePoliceSize() {
+        if (this.policesizeletter >= Constants.LETTERDEFAULTPOLICESIZE && this.policesizeletter < this.maxpolicesizeletter) {
+            const offsettingvalue = 64;
+            this.letteroffset = this.letteroffset + 1 / offsettingvalue;
+        }
         if (this.policesizeletter + 2 <= this.maxpolicesizeletter) {
             this.policesizeletter = this.policesizeletter + 2;
         }
@@ -261,6 +277,10 @@ export class GridService {
         }
     }
     decreasePoliceSize() {
+        if (this.policesizeletter > Constants.LETTERDEFAULTPOLICESIZE) {
+            const offsettingvalue = 64;
+            this.letteroffset = this.letteroffset - 1 / offsettingvalue;
+        }
         if (this.policesizeletter - 2 >= this.minpolicesizeletter) {
             this.policesizeletter = this.policesizeletter - 2;
         }

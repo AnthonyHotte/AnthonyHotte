@@ -2,9 +2,10 @@
 https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%20let%20a%20user%20select%20only%20one,group%20can%20be%20selected%20at%20the%20same%20time.-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 <div class="preventer">
-    <h1 class="header">Bienvenue dans le mode {{ getGameStatusInString() }}!</h1>
-    <div class="fill-top"></div>
     <body class="body">
+        <div class="fill-top">
+            <h1 class="header">Bienvenue dans le mode {{ getGameStatusInString() }}!</h1>
+        </div>
         <div class="image-rules">
             <label class="header2">Entrez votre identifiant. Les règles à suivre :</label>
             <article>
@@ -28,29 +29,28 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                         ><strong>6 -</strong> Ne pas choisir le même nom que celui du créateur : {{ returnNameOfCreator() }}</label
                     >
                 </p>
+                <p>
+                    <label *ngIf="getGameStatus() === 2" class="header3"
+                        ><strong>6 -</strong> Le nom de l{{'\''}}adversaire est unique : {{ opponentName }}</label>
+                </p>
             </article>
         </div>
         <div class="image-names">
             <fieldset class="fieldset">
                 <p>
-                    <label class="label">Nom du joueur pour la partie : {{ this.name }}</label>
-                </p>
-                <p>
-                    <label class="label"> {{ 'Validité du nom: ' + nameValidityInChar() }}</label>
-                    <label style="background-color: white; color: white">spacing</label>
                     <input [(ngModel)]="temporaryName" type="string" class="input" />
+                    <button class="button" (click)="setName()"><i class="fa fa-check"></i>Valider l'identifiant</button>
                 </p>
                 <p>
-                    <button class="button" (click)="setName()"><i class="fa fa-check"></i>Validation de l'identifiant</button>
+                    <label class="label-red" *ngIf="nameValidityInChar()==='invalide' && this.name !== 'Appuyez sur la validation pour valider votre nom'"> {{ 'L\'identifiant choisi est invalide!' }}</label>
                 </p>
-                <label class="label" *ngIf="getGameStatus() === 2">{{ "Nom de l'adversaire: " + opponentName }}</label>
             </fieldset>
         </div>
         <div class="advanced-parameters-button-filler">
-            <button class="button" *ngIf="!this.showAdvancedParameters" (click)="this.showAdvancedParameters = !this.showAdvancedParameters">
+            <button class="button" *ngIf="!this.showAdvancedParameters && this.getGameStatus() !== 1" (click)="this.showAdvancedParameters = !this.showAdvancedParameters">
                 Afficher les paramètres avancés
             </button>
-            <button class="button" *ngIf="this.showAdvancedParameters" (click)="this.showAdvancedParameters = !this.showAdvancedParameters">
+            <button class="button" *ngIf="this.showAdvancedParameters && this.getGameStatus() !== 1" (click)="this.showAdvancedParameters = !this.showAdvancedParameters">
                 Masquer les paramètres avancés
             </button>
         </div>
@@ -58,11 +58,12 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             <div *ngIf="getGameStatus() === 2" class="image-bonus">
                 <fieldset class="fieldset">
                     <legend class="legend">Difficulté</legend>
-                    <div class="switch-field2">
+                    <div class="switch-field">
                         <p>
-                            <input type="radio" id="desactivated2" name="difficulty" (click)="setExpertMode()" checked />
+                            <input type="radio" id="desactivated2" name="difficulty" (click)="setExpertMode(false)" [checked]="this.easyDifficulty" />
                             <label for="desactivated2">Débutant</label>
-                            <input type="radio" id="activated2" name="difficulty" (click)="setExpertMode()" />
+                            <input type="radio" id="activated2" name="difficulty" (click)="setExpertMode(true)" [checked]="!this.easyDifficulty"/>
+
                             <label for="activated2">Expert</label>
                         </p>
                     </div>
@@ -73,9 +74,9 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <legend class="legend">Bonus aléatoire</legend>
                     <div class="switch-field">
                         <p>
-                            <input type="radio" id="desactivated" name="randomBonus" (click)="setRandomBonus(false)" checked />
+                            <input type="radio" id="desactivated" name="randomBonus" (click)="setRandomBonus(false)" [checked]="!this.isBonusRandom"/>
                             <label for="desactivated">Désactivé</label>
-                            <input type="radio" id="activated" name="randomBonus" (click)="setRandomBonus(true)" />
+                            <input type="radio" id="activated" name="randomBonus" (click)="setRandomBonus(true)" [checked]="this.isBonusRandom"/>
                             <label for="activated">Activé</label>
                         </p>
                     </div>
@@ -98,28 +99,34 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             </div>
             <div *ngIf="getGameStatus() !== 1" class="dictionnary-filler">
                 <fieldset class="fieldset">
-                    <legend class="legend">Choisissez le dictionnaire utilisé :</legend>
-                    <legend class="legend"><br />Liste des dictionnaires disponibles :</legend>
-                    <div id="listDict" *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
-                        <label class="label">
-                            Numéro du dictionnaire : {{ dictIndex }} Nom : {{ dictionary.title }} Description : {{ dictionary.description }} </label
-                        ><br /><br />
+                    <legend class="legend">Choisissez le dictionnaire utilisé</legend>
+                    <!-- <legend class="legend"><br />Liste des dictionnaires disponibles : </legend> -->
+                    <label class="label">{{ validationDictionaryMessage }}</label>
+                    <div class="dropdown">
+                        <button class="dropbtn">Liste des dictionnaires</button>
+                        <div class="dropdown-content">
+                            <div id="listDict" *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
+                                <button class="dictionary-button" (click)="validateDictionaryNumber()" (click)="this.indexDictionaryNumber = dictIndex;" [class.color-dictionary]="this.indexDictionaryNumber === dictIndex">
+                                    <!--Numéro du dictionnaire : {{ dictIndex }}--> <p> Nom : {{ dictionary.title }} </p> Description : {{ dictionary.description }}
+                                    <br /><br />
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <label class="label">Numéro du dictionnaire : </label>
-                    <label style="background-color: lightgreen; color: lightgreen">spacing</label>
+                    <!-- <label class="label">Numéro du dictionnaire : </label>
                     <input [(ngModel)]="indexDictionaryNumber" type="number" class="input" />
-                    <label style="background-color: lightgreen; color: lightgreen">spacing</label>
-                    <button (click)="validateDictionaryNumber()" class="button"><i class="fa fa-check"></i>Valider le numéro</button>
-                    <div>
+                    <button (click)="validateDictionaryNumber()" class="button"><i class="fa fa-check"></i>Valider le numéro</button> -->
+                    <!-- <div>
                         <label class="label">{{ validationDictionaryMessage }}</label>
-                    </div>
+                    </div> -->
                 </fieldset>
             </div>
         </div>
         <div class="image-button">
             <fieldset class="fieldset">
-                <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>Revenir en arrière</button>
-                <label class="space" *ngIf="nameIsValid">space</label>
+                <button class="button" routerLink="/selection"><i class="fa fa-backward"></i>
+                    Revenir en arrière
+                </button>
                 <button *ngIf="nameIsValid && getGameStatus() === 2" (click)="startNewGame()" class="button">
                     <i class="fa fa-play"></i>
                     Démarrer la partie!

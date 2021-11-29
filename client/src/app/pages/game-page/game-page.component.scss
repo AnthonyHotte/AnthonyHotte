@@ -1,14 +1,13 @@
 .container {
-    height: 100%;
+    height: 120%;
     display: flex;
-    overflow: hidden;
-    background-image: url('https://th.bing.com/th/id/OIP.O3ERQEx-ofwpqBXLu19EgwHaE8?pid=ImgDet&rs=1');
-}
-
-.play-area-container {
-    overflow: hidden;
-    flex: 1 1 auto;
-    background-image: url('https://th.bing.com/th/id/OIP.O3ERQEx-ofwpqBXLu19EgwHaE8?pid=ImgDet&rs=1');
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    width: 100%;
+    max-height: 120%;
+    max-width: 100%;
+    background-color: rgb(213, 231, 213);
+    align-items: center;
 }
 
 .play-area {
@@ -16,3 +15,56 @@
     width: min-content;
     outline: none;
 }
+.section-25{
+    max-height: 100%;
+    height: 100%;
+    min-height: 100%;
+    width: 25%;
+    max-width: 25%;
+    min-width: 25%;
+    align-items: center;
+}
+
+.section-20{
+    max-height: 100%;
+    height: 100%;
+    min-height: 100%;
+    width: 20%;
+    max-width: 20%;
+    min-width: 20%;
+    align-items: center;
+}
+
+.section-55{
+    max-height: 100%;
+    height: 100%;
+    min-height: 100%;
+    width: 55%;
+    max-width: 55%;
+    min-width: 55%;
+    display: block;
+    align-items: center;
+}
+
+// custom scrollbar : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2
+/* width */
+::-webkit-scrollbar {
+    width: 20px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: green; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: lightgreen; 
+  }

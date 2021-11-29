@@ -29,6 +29,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.gamesList.length = 0;
         this.fillGamesList();
     }
     setIndex(index: number) {
@@ -56,7 +57,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
     }
 
     fillList() {
-        this.gamesList.length = 0; // TODO talk to Artour
+        this.gamesList.length = 0;
         for (let i = 0; i < this.socketInformation.gameLists.length; i++) {
             this.gamesList.push(['name', 'bonus', 'time', 'letters']);
             this.gamesList[i][0] = this.socketInformation.gameLists[i][0]; // name
@@ -82,7 +83,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
     }
 
     changeValidity(name: string) {
-        this.isValidSelection = this.isValidSelection ? false : true;
+        this.isValidSelection = !this.isValidSelection;
         this.socketInformation.nameOfRoomCreator = name;
     }
 

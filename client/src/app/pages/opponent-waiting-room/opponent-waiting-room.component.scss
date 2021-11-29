@@ -1,7 +1,8 @@
 .body{
     width: 100%;
     height: 100%;
-    background-color: lightgreen;
+    max-height: 250%;
+    background-color: rgb(213, 231, 213);
     text-align: Center;
     overflow-x: hidden;
 }
@@ -21,24 +22,28 @@
     border-radius: 15px;
     box-shadow: 0 9px darkgreen;
     font-family: serif;
-    margin-bottom: 1.5vh; 
+    margin-bottom: 1.5%;
 }
 
 .button:hover{
     background-color: black;
 }
+.button:active {
+  box-shadow: 0 5px #666;
+  transform: translateY(4px); 
+}
 
 .header {
     justify-content: center;
-    background-color: darkgreen;
+    background-color: rgb(213, 231, 213);
     text-align: center;
     font-family: serif;
-    color: white;
+    color: green;
     font-family: serif;
-    width: 100vw;
+    width: 100%;
     font-size: 2.5vmax;
-    height: 3vmax;
-    max-height: 3vmax;
+    height: 3%;
+    max-height: 3%;
 }
 // source : https://www.w3schools.com/csS/tryit.asp?filename=trycss_buttons_animate3 
 .selection-button {
@@ -49,15 +54,16 @@
     text-align: center;
     text-decoration: none;
     outline: none;
-    color: #fff;
-    background-color: black;
-    border: none;
+    color: green;
+    background-color: rgb(213, 231, 213);
+    border: double;
     border-radius: 15px;
     font-family: serif;
 }
 
 .selection-button:hover{
-    background-color: black;
+    background-color: green;
+    color: white;
 }
 // custom scrollbar : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2
 /* width */

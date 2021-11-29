@@ -1,30 +1,86 @@
 .container {
     height: auto;
-    min-height: 97vh;
-    border: double;
+    min-height: 97%;
+    border: none;
     padding: 0 5px 0 5px;
-    width: 20vw;
-    background-color: lightgreen;
+    min-width: 90%;
+    width: 90%;
+    max-width: 90%;
+    background-color: rgb(213, 231, 213);
     text-align: center;
-    height: 97vh;
+    height: 97%;
     position: relative;
-    top: 5px;
-    max-height: 97vh;
+    margin-top: 1.5%;
+    max-height: 97%;
+    margin-left: 2%;
+    margin-bottom: 1.5%;
+    color: green;
 }
 
 .Counter {
-    font-size: 42px;
+    font-size: 40px;
     font-family: serif;
-    color: green;
+    color: black;
     padding-top: 10px;
     padding-right: 10px;
     padding-bottom: 10px;
     padding-left: 10px;
-    border:double;
-    background-color: black;
-    max-width: 20vw;
+    border: double;
+    background-color: white;
+    max-width: 88%;
+    width: 88%;
+    margin-left: 0.75%;
+    margin-right: 0.5%;
 }
-.buttonfontsize {
+.button-font-size-plus {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: green;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px darkgreen;
+    font-family: serif;
+    margin-top: 1.5%;
+}
+.button-font-size-plus:hover {
+    background-color: black;
+    color: white;
+}
+.button-font-size-plus:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); 
+}
+.button-font-size-minus {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: green;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px darkgreen;
+    font-family: serif;
+    margin-top: 1.5%;
+}
+.button-font-size-minus:hover {
+    background-color: black;
+    color: white;
+}
+.button-font-size-minus:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); 
+}
+.button-pass {
     display: inline-block;
     padding: 15px 25px;
     font-size: 20px;
@@ -40,95 +96,128 @@
     font-family: serif;
     margin-top: 1.5px;
 }
-.buttonfontsize:hover {
+.button-pass:hover {
     background-color: black;
     color: white;
 }
+.button-pass:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); 
+}
 .header {
-    color: white;
-    background-color: darkgreen;
-    font-size: 30px;
-    width: 19vw;
-    max-width: 19vw;
+    color: black;
+    background-color: transparent;
+    font-size: 32px;
+    width: 90%;
+    max-width: 90%;
+    margin-left: 5%;
 }
 .header1{
-   background-color: darkgreen;
-   color:white;
-   font-size: 26px; 
-   width: 19vw;
-   max-width: 19vw;
+   background-color: transparent;
+   color:black;
+   font-size: 20px; 
+   width: 90%;
+   max-width: 90%;
 }
 .header2{
-    background-color: darkgreen;
-    color:white;
-    font-size: 20px;
-    max-width: 20vw;
+    background-color: transparent;
+    color:black;
+    font-size: 16px;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
 }
 
 .label {
-    background-color: darkgreen;
-    color:white;
-    font-size: 20px;
-    max-width: 20vw;
+    background-color: transparent;
+    color:black;
+    font-size: 16px;
+    max-width: 90%;
+    border: double;
 }
 .label2 {
     background-color: transparent;
-    color: white;
-    font-size: 20px;
-    max-width: 20vw;
+    color: black;
+    font-size: 16px;
+    max-width: 90%;
 }
 .header3 {
     background-color: transparent;
-    color: white;
-    font-size: 18px;
-    max-width: 20vw;
+    color: black;
+    font-size: 16px;
+    max-width: 95%;
+    margin-right: 5%;
+}
+.header-score{
+    font-size: 28px;
 }
 .score-filler{
-    background-color: darkgreen;
-    max-width: 20vw;
-    color: white;
+    background-color: white;
+    width: 95%;
+    max-width: 95%;
+    color: black;
     border: double;
 }
 .table{
-    color:white;
+    color:black;
     border: double;
-    width: 19vw;
-    max-width: 19vw;
+    width: 100%;
+    max-width: 100%;
+    height: 50%;
+    max-height: 50%;
+    align-items: center;
+    vertical-align: middle;
 }
 .th, td {
-    color: white;
+    color: black;
     border: double;
-    width: 19vw;
-    max-width: 19vw;
+    width: 50%;
+    max-width: 50%;
+    vertical-align: middle;
+    text-align: center;
 }
 .fieldset{
     border:transparent;
-    max-width: 20vw;
+    max-width: 95%;
+    width: 95%;
+    text-align: center;
 }
 .filler1{
-    background-color: darkgreen;
-    max-width: 20vw;
-    height: 14.5vh;
-    max-height: 14.5vh;
-    color:white;
+    background-color: rgb(213, 231, 213);
+    max-width: 90%;
+    height: 14%;
+    max-height: 14%;
+    color:black;
     border: double;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
 }
 .filler2{
-    background-color: darkgreen;
-    max-width: 20vw;
-    color:white;
+    background-color: rgb(213, 231, 213);
+    max-width: 90%;
+    width: 90%;
+    color:black;
     border: double;
 }
 .filler3{
-    background-color: darkgreen;
-    max-width: 20vw;
-    color:white;
+    background-color: rgb(213, 231, 213);
+    max-width: 90%;
+    color:black;
     border: double;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
 }
 .filler4{
-    background-color: white;
-    height: 64px;
+    background-color: rgb(213, 231, 213);
+    color: black;
+    border: double;
+    height: 7%;
     text-align: center;
-    max-width: 20vw;
-    margin-top: 3px;
+    width: 85%;
+    margin-left: 5%;
+    margin-right: 5%;
+    max-width: 85%;
+    max-height: 7%;
 }

@@ -11,7 +11,6 @@ import { TimerTurnManagerService } from '@app/services/timer-turn-manager.servic
 import { BehaviorSubject } from 'rxjs';
 import { PlayerLetterHand } from './player-letter-hand';
 import { TextBox } from './text-box-behavior';
-
 describe('TextBox', () => {
     let textBox: TextBox;
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
@@ -45,7 +44,7 @@ describe('TextBox', () => {
         }
         timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
         timerTurnManagerServiceSpy.turn = 0;
-        finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
+        finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator', 'goToHomeAndRefresh']);
         finishGameServiceSpy.updateOfEndGameValue = new BehaviorSubject<boolean>(true);
         await TestBed.configureTestingModule({
             imports: [RouterTestingModule],
@@ -59,25 +58,17 @@ describe('TextBox', () => {
             ],
         }).compileComponents();
     });
-
     beforeEach(() => {
         TestBed.configureTestingModule({});
         textBox = TestBed.inject(TextBox);
     });
-
     it('should create an instance', () => {
         expect(textBox).toBeTruthy();
     });
-
-    // missing a stub or a mock for line 28
-
     it('should send a word correctly', () => {
-        const inputVerificationSpy = spyOn(textBox, 'inputVerification');
-        // no need for both lines since logic was changed...
         const pushSpy = spyOn(textBox.inputs, 'push');
-        const message: MessagePlayer = { message: 'test', sender: 'Systeme', role: 'Systeme' };
+        const message: MessagePlayer = { message: ' testwithastringtolongwithaspaceatbeginning', sender: 'Systeme', role: 'Systeme' };
         textBox.send(message);
-        expect(inputVerificationSpy).toHaveBeenCalledWith('test');
         expect(pushSpy).toHaveBeenCalledWith(message);
     });
     it('should validate input correctly', () => {
@@ -86,7 +77,6 @@ describe('TextBox', () => {
     });
     it('should invalidate input correctly', () => {
         const myInvalidString =
-            // we need a large string
             'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
             'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
             'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' +
@@ -94,12 +84,10 @@ describe('TextBox', () => {
         textBox.inputVerification(myInvalidString);
         expect(textBox.character).toBe(true);
     });
-
     it('should get word Hello', () => {
         textBox.inputs[0] = { message: 'test', sender: 'Systeme', role: 'Systeme' };
         expect(textBox.getArray()[0]).toEqual({ message: 'test', sender: 'Systeme', role: 'Systeme' });
     });
-
     it('should get inputs Hello, You, Man', () => {
         const arr: MessagePlayer[] = [
             { message: 'Hello', sender: '', role: 'Systeme' },
@@ -130,6 +118,16 @@ describe('TextBox', () => {
         textBox.isCommand(maChaine);
         expect(placerLetterServiceSpy.placeWord).toHaveBeenCalled();
     });
+    it('isCommand should call handleEnter', () => {
+        const spy = spyOn(textBox, 'handleEnter');
+        const maChaine = '!aide';
+        textBox.isCommand(maChaine);
+        expect(spy).toHaveBeenCalled();
+    });
+    it('isCommand should call goToHomeAndRefresh', () => {
+        textBox.isCommand('!abandonner');
+        expect(finishGameServiceSpy.goToHomeAndRefresh).toHaveBeenCalled();
+    });
     it('isCommand should call verifyCommandPasser', () => {
         const mySpy = spyOn(textBox, 'verifyCommandPasser');
 
@@ -146,7 +144,6 @@ describe('TextBox', () => {
         textBox.isCommand(maChaine);
         expect(mySpy).toHaveBeenCalled();
     });
-
     it('isCommand should call handleEnter when input is !réserve', () => {
         const mySPy = spyOn(textBox, 'handleEnter');
         timerTurnManagerServiceSpy.turn = 0;
@@ -162,7 +159,6 @@ describe('TextBox', () => {
         textBox.isCommand(maChaine);
         expect(mySpy).toHaveBeenCalled();
     });
-
     it('verifyCommandPasser should call incrementPassedTurn', () => {
         finishGameServiceSpy.isGameFinished = false;
         timerTurnManagerServiceSpy.turnsSkippedInARow = 100;
@@ -176,7 +172,6 @@ describe('TextBox', () => {
         textBox.verifyCommandPasser();
         expect(mySpy).toHaveBeenCalled();
     });
-
     it('endTurn should call endTurn of timeManager', () => {
         textBox.endTurn('place');
         expect(timerTurnManagerServiceSpy.endTurn).toHaveBeenCalled();
@@ -185,7 +180,6 @@ describe('TextBox', () => {
         const mySpy = textBox.getMessagesSoloOpponent();
         expect(mySpy).toBe(textBox.inputsSoloOpponent);
     });
-
     it('isCommand should put debug at false', () => {
         textBox.debugCommand = true;
         timerTurnManagerServiceSpy.turn = 0;
@@ -202,7 +196,6 @@ describe('TextBox', () => {
         expect(inputVerificationSpy).toHaveBeenCalledWith('Hello');
         expect(pushSpy).not.toHaveBeenCalled();
     });
-
     it('isCommand should call set false if text = mot bien placé', async () => {
         const promise1 = new Promise<string>((resolve) => {
             resolve('Mot placé avec succès.');
@@ -226,12 +219,10 @@ describe('TextBox', () => {
         letterServiceSpy.players[timerTurnManagerServiceSpy.turn].allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
         expect(textBox.verifyCommandEchanger('!échanger a')).toEqual('Échange de lettre avec succès.');
     });
-
     it("Can't exchange when there isn't enough letters in the reserve", () => {
         letterBankServiceSpy.letterBank = [];
         expect(textBox.verifyCommandEchanger('a')).toEqual('Commande impossible à réaliser! La réserve ne contient pas assez de lettres.');
     });
-
     it("placeWordOpponent should call verifyCommanPasser if place word doesn't return Mot placé avec succès.", async () => {
         const promise1 = new Promise<string>((resolve) => {
             resolve('allo');
@@ -241,7 +232,6 @@ describe('TextBox', () => {
         await textBox.placeWordOpponent('!placer h8h allo', 'abcd');
         expect(mySpy).toHaveBeenCalled();
     });
-
     it('placeWordOpponent should call endTurn if place word returns Mot placé avec succès.', async () => {
         const promise1 = new Promise<string>((resolve) => {
             resolve('Mot placé avec succès.');
@@ -251,7 +241,6 @@ describe('TextBox', () => {
         await textBox.placeWordOpponent('!placer h8h allo', 'abcd');
         expect(mySpy).toHaveBeenCalled();
     });
-
     it('exchangeLetterOpponent return the name of opponent and the amount of letters exchanged when he does successful exchange', () => {
         letterServiceSpy.players[1].name = 'Opp';
         spyOn(textBox, 'verifyCommandEchanger').and.returnValue('Échange de lettre avec succès.');
@@ -259,28 +248,24 @@ describe('TextBox', () => {
         const expectedResult = 'Opp a échangé 4 lettres';
         expect(textBox.exchangeLetterOpponent(command)).toEqual(expectedResult);
     });
-
     it('exchangeLetterOpponent return empty string if exchange is not successful', () => {
         letterServiceSpy.players[1].name = 'Opp';
         spyOn(textBox, 'verifyCommandEchanger').and.returnValue('Erreur! Les lettres sélectionnées ne font pas partie de la main courante.');
         const lettersExch = 'allo';
         expect(textBox.exchangeLetterOpponent(lettersExch)).toEqual('');
     });
-
     it('handleEnter should call push for every time there is a skip line in the string passed to it', () => {
         const input = 'pls \n give 100% \n';
         const mySpy = spyOn(textBox.inputs, 'push');
         textBox.handleEnter(input);
         expect(mySpy).toHaveBeenCalledTimes(2);
     });
-
     it('handleEnter should call push for evry time there is a skipline in the string passd and 1more time if theinput doesnt finish withskip', () => {
         const input = 'pls \n give \n 100%';
         const mySpy = spyOn(textBox.inputs, 'push');
         textBox.handleEnter(input);
         expect(mySpy).toHaveBeenCalledTimes(3);
     });
-
     it('endturn should set isgamefinished to true if player hand is empty', () => {
         letterServiceSpy.players[0].allLettersInHand = [];
         finishGameServiceSpy.isGameFinished = false;
@@ -288,26 +273,22 @@ describe('TextBox', () => {
         textBox.endTurn('place');
         expect(finishGameServiceSpy.isGameFinished).toBeTrue();
     });
-
     it('Can exchange when you have the letters in hand and there is preset letters to chose from letterbank', () => {
         timerTurnManagerServiceSpy.turn = 0;
         letterServiceSpy.players[timerTurnManagerServiceSpy.turn].allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
         expect(textBox.verifyCommandEchanger('!échanger a', 'a')).toEqual('Échange de lettre avec succès.');
     });
-
     it('scrolldown should call getElementById when the element is not null', () => {
         const dummyElement = document.createElement('div');
         const mySpy = spyOn(document, 'getElementById').and.returnValue(dummyElement);
         textBox.scrollDown();
         expect(mySpy).toHaveBeenCalled();
     });
-
     it('scrolldown should call getElementById when the element is null', () => {
         const mySpy = spyOn(document, 'getElementById').and.returnValue(null);
         textBox.scrollDown();
         expect(mySpy).toHaveBeenCalled();
     });
-
     it('handleOpponentCommand should call verifyCommandPasser when the the command is !passer', async () => {
         spyOn(textBox.inputs, 'push');
         const mySpy = spyOn(textBox, 'verifyCommandPasser');
@@ -321,13 +302,37 @@ describe('TextBox', () => {
         await textBox.handleOpponentCommand('!échanger abc');
         expect(mySpy).toHaveBeenCalled();
     });
-
+    it('handleOpponentCommand should call exchangeLetterOpponent when the the command is !échanger when tur equal 1', async () => {
+        const mySpy = spyOn(textBox.inputs, 'push');
+        timerTurnManagerServiceSpy.turn = 1;
+        letterServiceSpy.players[0].name = 'Tryphon Tournesol';
+        await textBox.handleOpponentCommand('!abandonner');
+        expect(mySpy).toHaveBeenCalled();
+    });
+    it('verifyAide should return right message', async () => {
+        const expected =
+            'Voici les commandes disponibles : \n!passer : permet de passer son tour. \n' +
+            "!échanger : permet d'échanger des lettres. \n !réserve : Permet d'afficher sa réserve. \n " +
+            '!placer : permet de placer des lettres sur le plateau. \n ' +
+            "!abandonner : permet d'abandonner la partie.";
+        const res = textBox.verifyAide();
+        expect(res).toEqual(expected);
+    });
+    it('handleOpponentCommand should call exchangeLetterOpponent when the the command is !échanger', async () => {
+        const mySpy = spyOn(textBox.inputs, 'push');
+        await textBox.handleOpponentCommand('!abandonner');
+        expect(mySpy).toHaveBeenCalled();
+    });
+    it('handleOpponentCommand should call exchangeLetterOpponent when the the command is !aide', async () => {
+        const mySpy = spyOn(textBox.inputs, 'push');
+        await textBox.handleOpponentCommand('!aide');
+        expect(mySpy).toHaveBeenCalled();
+    });
     it('handleOpponentCommand should push something in inputs when the the command is !réserve', async () => {
         const mySpy = spyOn(textBox.inputs, 'push');
         await textBox.handleOpponentCommand('!réserve');
         expect(mySpy).toHaveBeenCalled();
     });
-
     it('handleOpponentCommand should call placeWordOpponent when the the command is !placer', async () => {
         spyOn(textBox.inputs, 'push');
         const mySpy = spyOn(textBox, 'placeWordOpponent');

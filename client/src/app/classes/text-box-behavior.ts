@@ -9,7 +9,6 @@ import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SocketService } from '@app/services/socket.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { Subscription } from 'rxjs';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -101,13 +100,12 @@ export class TextBox {
     exchangeLetterOpponent(command: string) {
         const commandResult = this.verifyCommandEchanger(command, this.socket.lettersToReplace);
         let systemResponse = '';
-        if (commandResult === 'Échange de lettre avec succès.') {
-            systemResponse =
-                this.letterService.players[1].name +
-                ' a échangé ' +
-                command.substring('!échanger '.length, command.length).length.toString() +
-                ' lettres';
-        }
+        if (commandResult !== 'Échange de lettre avec succès.') return systemResponse;
+        systemResponse =
+            this.letterService.players[1].name +
+            ' a échangé ' +
+            command.substring('!échanger '.length, command.length).length.toString() +
+            ' lettres';
         return systemResponse;
     }
 
@@ -130,42 +128,35 @@ export class TextBox {
     }
     send(myWord: MessagePlayer) {
         this.inputVerification(myWord.message);
-        if (this.character === false) {
-            // largest character on board: M -> by experience past 24 M it isn't visible so we take 23.
-            const LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING = 23;
-            let keepGoing = true;
-            let currentIndex = 0;
-            // complicated way to patch the too long word problem on screen so visuals of messages are okay
-            // at this point it can be called a log(n) algorithm
-            while (keepGoing) {
-                if (currentIndex + LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING < myWord.message.length) {
-                    let valueOfSpace = -1;
-                    if (
-                        (valueOfSpace = myWord.message.substr(currentIndex, currentIndex + LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING).search(' ')) < 0
-                    ) {
-                        currentIndex += LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING;
-                        const temporaryString =
-                            myWord.message.substring(0, currentIndex) + ' ' + myWord.message.substring(currentIndex, myWord.message.length);
-                        myWord.message = temporaryString;
-                    } else {
-                        if (valueOfSpace === 0) {
-                            currentIndex++;
-                        }
-                        currentIndex += valueOfSpace;
-                    }
+        if (this.character) return;
+        // largest character on board: M -> by experience past 24 M it isn't visible so we take 23.
+        const LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING = 23;
+        let keepGoing = true;
+        let currentIndex = 0;
+        // complicated way to patch the too long word problem on screen so visuals of messages are okay
+        // at this point it can be called a log(n) algorithm
+        while (keepGoing) {
+            if (currentIndex + LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING < myWord.message.length) {
+                let valueOfSpace = -1;
+                if ((valueOfSpace = myWord.message.substr(currentIndex, currentIndex + LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING).search(' ')) < 0) {
+                    currentIndex += LONGEST_FRENCH_WORD_LENGTH_WITH_PADDING;
+                    const temporaryString =
+                        myWord.message.substring(0, currentIndex) + ' ' + myWord.message.substring(currentIndex, myWord.message.length);
+                    myWord.message = temporaryString;
                 } else {
-                    keepGoing = false;
+                    if (valueOfSpace === 0) {
+                        currentIndex++;
+                    }
+                    currentIndex += valueOfSpace;
                 }
+            } else {
+                keepGoing = false;
             }
-            this.inputs.push(myWord);
         }
+        this.inputs.push(myWord);
     }
     inputVerification(myWord: string) {
-        if (myWord.length > MAX_CHARACTERS) {
-            this.character = true;
-        } else {
-            this.character = false;
-        }
+        this.character = myWord.length > MAX_CHARACTERS;
     }
 
     getArray() {
@@ -256,24 +247,22 @@ export class TextBox {
 
     verifyCommandEchanger(word: string, lettersToReplace?: string) {
         const ALLOWED_NUMBER_OF_LETTERS = 7;
-        if (this.letterBankService.letterBank.length >= ALLOWED_NUMBER_OF_LETTERS) {
-            const letters = word.substring('!échanger '.length, word.length);
-            if (this.letterService.players[this.timeManager.turn].handContainLetters(letters)) {
-                if (lettersToReplace === undefined || this.timeManager.gameStatus === 2) {
-                    const lettersReplacedExchange = this.letterService.players[this.timeManager.turn].exchangeLetters(letters);
-                    this.socketService.sendLetterReplaced(lettersReplacedExchange, this.timeManager.gameStatus);
-                    this.socketService.configureSendMessageToServer('!échanger ' + letters, this.timeManager.gameStatus);
-                } else {
-                    this.letterService.players[this.timeManager.turn].exchangeLetters(letters, lettersToReplace);
-                }
-                this.endTurn('exchange');
-                return 'Échange de lettre avec succès.';
-            } else {
-                return 'Erreur! Les lettres sélectionnées ne font pas partie de la main courante.';
-            }
-        } else {
+        if (!(this.letterBankService.letterBank.length >= ALLOWED_NUMBER_OF_LETTERS))
             return 'Commande impossible à réaliser! La réserve ne contient pas assez de lettres.';
+
+        const letters = word.substring('!échanger '.length, word.length);
+        if (!this.letterService.players[this.timeManager.turn].handContainLetters(letters))
+            return 'Erreur! Les lettres sélectionnées ne font pas partie de la main courante.';
+
+        if (lettersToReplace === undefined || this.timeManager.gameStatus === 2) {
+            const lettersReplacedExchange = this.letterService.players[this.timeManager.turn].exchangeLetters(letters);
+            this.socketService.sendLetterReplaced(lettersReplacedExchange, this.timeManager.gameStatus);
+            this.socketService.configureSendMessageToServer('!échanger ' + letters, this.timeManager.gameStatus);
+        } else {
+            this.letterService.players[this.timeManager.turn].exchangeLetters(letters, lettersToReplace);
         }
+        this.endTurn('exchange');
+        return 'Échange de lettre avec succès.';
     }
 
     scrollDown() {

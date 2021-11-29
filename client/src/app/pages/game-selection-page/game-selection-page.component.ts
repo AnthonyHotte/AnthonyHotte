@@ -32,7 +32,10 @@ export class GameSelectionPageComponent {
         this.timeTurnManager.gameStatus = 1;
         this.socket.sendGameListNeededNotification();
     }
-    infoAboutNigelRichardsDisplay() {
-        this.readInfo = !this.readInfo;
+    getMode() {
+        if (this.socket.is2990) {
+            return 'LOG2990';
+        }
+        return 'Classique';
     }
 }

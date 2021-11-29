@@ -99,30 +99,32 @@ export class SidebarRightComponent implements AfterViewInit {
         this.placeLetterService.policeSizeChanged();
     }
     getPlayerName(player: number) {
-        const VISUAL_LIMITS_OF_LENGTH = 8;
-        if (this.letterService.players[player].name.length >= VISUAL_LIMITS_OF_LENGTH) {
-            return (
-                this.letterService.players[player].name.substring(0, VISUAL_LIMITS_OF_LENGTH) +
-                ' ' +
-                this.letterService.players[player].name.substring(VISUAL_LIMITS_OF_LENGTH, VISUAL_LIMITS_OF_LENGTH * 2) +
-                ' ' +
-                this.letterService.players[player].name.substring(VISUAL_LIMITS_OF_LENGTH * 2, this.letterService.players[player].name.length)
-            );
+        const VISUAL_LIMITS_OF_LENGTH = 6;
+        let position = 0;
+        let returnedName = '';
+        while (position < this.letterService.players[player].name.length) {
+            if (this.letterService.players[player].name.substr(position, VISUAL_LIMITS_OF_LENGTH).search(' ') < 0) {
+                returnedName += this.letterService.players[player].name.substr(position, VISUAL_LIMITS_OF_LENGTH) + ' ';
+                position += VISUAL_LIMITS_OF_LENGTH;
+            } else {
+                returnedName += this.letterService.players[player].name.charAt(position);
+                position++;
+            }
         }
-        return this.letterService.players[player].name;
+        return returnedName;
     }
 
     getPlayerNameAndVerifyTurn() {
         if (this.turn !== this.turnTimeController.turn) {
             this.changedTurns = true;
-            if (this.textBox.commandSuccessful && this.turnTimeController.gameStatus === 2) {
+            if (this.textBox.commandSuccessful) {
                 this.opponentSet = true;
                 this.textBox.commandSuccessful = false;
                 this.soloOpponentPlays();
             }
             this.turn = this.turnTimeController.turn;
         }
-        return this.letterService.players[this.turn].name;
+        return this.getPlayerName(this.turn);
     }
 
     verifyChangedTurns(counter: CountdownComponent) {
@@ -152,6 +154,9 @@ export class SidebarRightComponent implements AfterViewInit {
                 sender: this.letterService.players[1].name,
                 role: 'Adversaire',
             };
+            if (this.textBox.debugCommand) {
+                message.message = message.message + ' ' + this.soloOpponent.soloOpponent2.alternativePlay();
+            }
             this.textBox.inputs.push(message);
             this.textBox.scrollDown();
         }

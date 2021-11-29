@@ -35,7 +35,7 @@ export class SoloGameInitiatorComponent {
     validationDictionaryMessage: string;
     startingNewGame = false;
     isDictionaryValid: boolean;
-    expertmode = false;
+    // expertmode = false; // a enlever peut-etre
     isBonusRandom = false;
     showAdvancedParameters = false;
 
@@ -58,13 +58,13 @@ export class SoloGameInitiatorComponent {
             });
         });
         this.isDictionaryValid = false;
-        this.validationDictionaryMessage = "l'index est valide!!!";
+        this.validationDictionaryMessage = 'Le dictionnaire de base est chargé.';
         this.indexDictionaryNumber = 0;
         this.temporaryName = 'Joueur';
         this.name = 'Appuyez sur la validation pour valider votre nom';
         this.assignOpponentName();
         this.idNameOpponent = 0;
-        this.initiateIsNameValid();
+        this.nameIsValid = false;
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
         this.messageService.gameStartingInfoSubscribe();
@@ -78,14 +78,6 @@ export class SoloGameInitiatorComponent {
     @HostListener('contextmenu', ['$event'])
     onRightClick(event: { preventDefault: () => void }) {
         event.preventDefault();
-    }
-
-    initiateIsNameValid() {
-        if (this.getGameStatus() === 1) {
-            this.nameIsValid = false;
-        } else {
-            this.nameIsValid = false;
-        }
     }
 
     joinGame() {
@@ -193,7 +185,7 @@ export class SoloGameInitiatorComponent {
         if (this.nameIsValid) {
             this.name = this.temporaryName;
         } else {
-            this.name = 'Joueur';
+            this.name = 'Essayez de nouveau...';
             if (this.getGameStatus() === 1) {
                 this.name = 'Entrez votre nom de nouveau, vous aviez fait une erreur...';
             }
@@ -206,15 +198,15 @@ export class SoloGameInitiatorComponent {
     }
 
     nameValidityInChar() {
-        if (this.nameIsValid) {
-            return 'valide';
-        } else return 'invalide';
+        return this.nameIsValid ? 'valide' : 'invalide';
     }
     setRandomBonus(activated: boolean) {
         this.isBonusRandom = activated;
     }
-    setExpertMode() {
-        this.soloopponent2.setExpertMode();
+
+    setExpertMode(expert: boolean) {
+        this.easyDifficulty = !expert;
+        this.soloopponent2.setExpertMode(expert);
     }
     scrambleBonus() {
         if (this.isBonusRandom) {
@@ -250,13 +242,14 @@ export class SoloGameInitiatorComponent {
                 this.dictionaryList.push(res);
             });
         });
-        this.validationDictionaryMessage = "validation de l'index en cours...";
+        this.validationDictionaryMessage = 'Validation du dictionnaire en cours... Veuillez patienter.';
         setTimeout(() => {
             if (this.indexDictionaryNumber < 0 || this.indexDictionaryNumber >= this.dictionaryList.length) {
-                this.validationDictionaryMessage = "l'index est invalide... il doit etre dans la liste, essayer de nouveau.";
+                this.validationDictionaryMessage = 'La vérification a échouée...';
                 this.isDictionaryValid = false;
             } else {
-                this.validationDictionaryMessage = "l'index est valide!!!";
+                this.validationDictionaryMessage =
+                    'Le dictionnaire choisi, ' + this.dictionaryList[this.indexDictionaryNumber].title + ' est valide!';
                 this.dictionaryService.indexDictionary = this.indexDictionaryNumber;
                 this.isDictionaryValid = true;
             }
