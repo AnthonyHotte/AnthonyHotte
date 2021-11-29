@@ -68,7 +68,7 @@ class SocketMock {
     }
 }
 
-describe.only('Socket Manager', () => {
+describe('Socket Manager', () => {
     let socketManager: SocketManager;
     const socketServer = new SocketServer();
     const myLetters: Letter[] = [];
