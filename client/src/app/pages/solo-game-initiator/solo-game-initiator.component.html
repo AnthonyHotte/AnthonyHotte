@@ -58,7 +58,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             <div *ngIf="getGameStatus() === 2" class="image-bonus">
                 <fieldset class="fieldset">
                     <legend class="legend">Difficulté</legend>
-                    <div class="switch-field2">
+                    <div class="switch-field">
                         <p>
                             <input type="radio" id="desactivated2" name="difficulty" (click)="setExpertMode(false)" [checked]="this.easyDifficulty" />
                             <label for="desactivated2">Débutant</label>
@@ -100,18 +100,25 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             <div *ngIf="getGameStatus() !== 1" class="dictionnary-filler">
                 <fieldset class="fieldset">
                     <legend class="legend">Choisissez le dictionnaire utilisé</legend>
-                    <legend class="legend"><br />Liste des dictionnaires disponibles :</legend>
-                    <div id="listDict" *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
-                        <label class="label">
-                            Numéro du dictionnaire : {{ dictIndex }} Nom : {{ dictionary.title }} Description : {{ dictionary.description }} </label
-                        ><br /><br />
+                    <!-- <legend class="legend"><br />Liste des dictionnaires disponibles : </legend> -->
+                    <label class="label">{{ validationDictionaryMessage }}</label>
+                    <div class="dropdown">
+                        <button class="dropbtn">Liste des dictionnaires</button>
+                        <div class="dropdown-content">
+                            <div id="listDict" *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
+                                <button class="dictionary-button" (click)="validateDictionaryNumber()" (click)="this.indexDictionaryNumber = dictIndex;" [class.color-dictionary]="this.indexDictionaryNumber === dictIndex">
+                                    <!--Numéro du dictionnaire : {{ dictIndex }}--> <p> Nom : {{ dictionary.title }} </p> Description : {{ dictionary.description }}
+                                    <br /><br />
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <label class="label">Numéro du dictionnaire : </label>
+                    <!-- <label class="label">Numéro du dictionnaire : </label>
                     <input [(ngModel)]="indexDictionaryNumber" type="number" class="input" />
-                    <button (click)="validateDictionaryNumber()" class="button"><i class="fa fa-check"></i>Valider le numéro</button>
-                    <div>
+                    <button (click)="validateDictionaryNumber()" class="button"><i class="fa fa-check"></i>Valider le numéro</button> -->
+                    <!-- <div>
                         <label class="label">{{ validationDictionaryMessage }}</label>
-                    </div>
+                    </div> -->
                 </fieldset>
             </div>
         </div>

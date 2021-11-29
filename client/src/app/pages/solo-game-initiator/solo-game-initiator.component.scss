@@ -37,9 +37,10 @@
     background-color: rgb(213, 231, 213);
     color: green;
     border-radius: 15px;
-    margin-bottom: 5px;
-    margin-left: 2%;
+    margin-bottom: 2%;
+    margin-left: 4%;
     margin-right:2%;
+    margin-top: 2%;
 }
 .label-red {
     font-size: 16px;
@@ -166,16 +167,27 @@ textarea {
 .dictionnary-filler{
     background-color: rgb(213, 231, 213);
 }
-.spacing-control{
-    margin-top: 0%;
-    margin-bottom: 0%;
-}
 .advanced-parameters-button-filler{
     background-color: rgb(213, 231, 213);
     width: 100%;
     max-width: 100%;
     height: 5.5%;
     max-height: 5.5%;
+}
+.dictionary-button{
+    background-color: green;
+    color: white;
+    font-size: 16px;
+    border-radius: 0px;
+}
+.dictionary-button:hover{
+    background-color: gray;
+}
+.dictionary-button:active{
+  transform: translateY(4px);
+}
+.color-dictionary{
+    background-color: black;
 }
 // radio code customization
 // source : https://thestizmedia.com/radio-buttons-as-toggle-buttons-with-css/
@@ -223,49 +235,49 @@ textarea {
     border-radius: 0 4px 4px 0;
 }
 //switch-field difficulty
-.switch-field2 {
-}
+// .switch-field2 {
+// }
 
-.switch-field2 input {
-    position: absolute !important;
-    clip: rect(0, 0, 0, 0);
-    height: 1px;
-    width: 1px;
-    border: 0;
-    overflow: hidden;
-}
+// .switch-field2 input {
+//     position: absolute !important;
+//     clip: rect(0, 0, 0, 0);
+//     height: 1px;
+//     width: 1px;
+//     border: 0;
+//     overflow: hidden;
+// }
 
-.switch-field2 label {
-    background-color: #e4e4e4;
-    color: green;
-    font-size: 20px;
-    line-height: 1;
-    text-align: center;
-    padding: 6px 32px;
-    margin-right: -1px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
-    transition: all 0.1s ease-in-out;
-    border-radius: 15px;
-}
+// .switch-field2 label {
+//     background-color: #e4e4e4;
+//     color: green;
+//     font-size: 20px;
+//     line-height: 1;
+//     text-align: center;
+//     padding: 6px 32px;
+//     margin-right: -1px;
+//     border: 1px solid rgba(0, 0, 0, 0.2);
+//     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+//     transition: all 0.1s ease-in-out;
+//     border-radius: 15px;
+// }
 
-.switch-field2 label:hover {
-    cursor: pointer;
-}
+// .switch-field2 label:hover {
+//     cursor: pointer;
+// }
 
-.switch-field2 input:checked + label {
-    background-color: green;
-    color: white;
-    box-shadow: none;
-}
+// .switch-field2 input:checked + label {
+//     background-color: green;
+//     color: white;
+//     box-shadow: none;
+// }
 
-.switch-field2 label:first-of-type {
-    border-radius: 4px 0 0 4px;
-}
+// .switch-field2 label:first-of-type {
+//     border-radius: 4px 0 0 4px;
+// }
 
-.switch-field2 label:last-of-type {
-    border-radius: 0 4px 4px 0;
-}
+// .switch-field2 label:last-of-type {
+//     border-radius: 0 4px 4px 0;
+// }
 // custom slider
 // source : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_rangeslider
 .slider {
@@ -320,4 +332,48 @@ textarea {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: lightgreen; 
+}
+// drop-down button
+// source : https://www.w3schools.com/Css/tryit.asp?filename=trycss_dropdown_button
+.dropbtn {
+  background-color: green;
+  color: white;
+  padding: 16px;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  margin-left: 60%;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: green;
+  min-width: 144px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  margin-left: 60%;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: green}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: black;
+  color: white;
 }
