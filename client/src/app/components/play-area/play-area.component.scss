@@ -1,7 +1,9 @@
 .grid-container {
     margin: auto;
     width: 55vw;
+    max-width: 55vw;
     height: width;
+    max-height: max-width;
     border: 3px double rgb(213, 231, 213);
     padding: 1px;
     position: relative;
@@ -14,7 +16,8 @@
     border: 3px double rgb(213, 231, 213);
     padding: 1px;
     display: block;
-    //margin-left: auto;
-    //margin-right: auto;
+    margin-left: 9.5%;
     background-color: white;
+    align-items: center;
+    width: 77%; // by experimentation
 }
