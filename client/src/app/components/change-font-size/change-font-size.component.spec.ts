@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { ChangeFontSizeComponent } from './change-font-size.component';
 
@@ -9,6 +10,7 @@ describe('ChangeFontSizeComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [ChangeFontSizeComponent],
+            imports: [RouterTestingModule],
         }).compileComponents();
     });
 
