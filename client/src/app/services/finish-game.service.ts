@@ -71,8 +71,7 @@ export class FinishGameService {
         let congratulationMsg = 'Félicitation, ' + this.letterService.players[winners[0]].name;
         for (let i = 1; i < winners.length; i++) {
             congratulationMsg += ' et ' + this.letterService.players[winners[i]].name + ',';
-        }
-        congratulationMsg += ' vous avez gagné!!!';
+            congratulationMsg += ' vous avez gagné!!!';
         this.finalScore = [];
 
         return congratulationMsg;
