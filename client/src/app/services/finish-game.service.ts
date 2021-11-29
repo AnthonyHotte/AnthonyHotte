@@ -73,7 +73,7 @@ export class FinishGameService {
         for (let i = 1; i < winners.length; i++) {
             congratulationMsg += ' et ' + this.letterService.players[winners[i]].name + ',';
         }
-        congratulationMsg += ' vous avez gagné!!!';
+        congratulationMsg += ' vous avez gagnés!!!';
         this.finalScore = [];
 
         return congratulationMsg;
@@ -81,7 +81,7 @@ export class FinishGameService {
 
     getMessageCongratulationsAbandon(): string {
         return (
-            'Félicitation, ' + this.letterService.players[1].name + ' vous avez gagné-e. ' + this.letterService.players[0].name + ' a abandonné-e.'
+            'Félicitation, ' + this.letterService.players[1].name + ' vous avez gagné(e)s. ' + this.letterService.players[0].name + ' a abandonné(e).'
         );
     }
 

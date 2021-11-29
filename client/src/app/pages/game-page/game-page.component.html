@@ -1,4 +1,9 @@
 <div class="container">
+    <div class="pop-up" *ngIf="getFinishedGame()">
+        <div class= "background">
+            <app-finished-game></app-finished-game>
+        </div>
+    </div>
     <section class="section-25">
         <app-objectives></app-objectives>
         <app-sidebar (click)="this.clickLocation('textBox')"></app-sidebar>
