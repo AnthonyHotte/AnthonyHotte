@@ -106,9 +106,9 @@ export class DatabaseService {
         }
     }
 
-    getBestScoreClassique() {
+    async getBestScoreClassique() {
         const bestScore: BestScore[] = [];
-        this.db
+        await this.db
             .collection(BESTSCORECLASSIQUE)
             .find()
             .forEach((document) => {
@@ -116,9 +116,9 @@ export class DatabaseService {
             });
         return bestScore;
     }
-    bestScoreLog2990() {
+    async bestScoreLog2990() {
         const bestScore: BestScore[] = [];
-        this.db
+        await this.db
             .collection(BESTSCORELOG2990)
             .find()
             .forEach((document) => {
