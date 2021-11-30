@@ -191,7 +191,7 @@ export class TextBox {
             text = '';
             this.socket.configureSendMessageToServer('!abandonner', this.timeManager.gameStatus);
             this.socketService.finishedGameMessageTransmission();
-            // this.finishGameService.goToHomeAndRefresh(); // to be removed probably.
+            this.finishGameService.goToHomeAndRefresh();
         } else if (this.timeManager.turn === 0) {
             if (myWord.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
                 text = await this.placeLettersService.placeWord(myWord.substring(PLACERCOMMANDLENGTH + 1, myWord.length));

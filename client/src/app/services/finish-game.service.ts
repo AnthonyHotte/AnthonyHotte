@@ -12,7 +12,6 @@ import { RefreshServiceService } from './refresh-service.service';
 export class FinishGameService {
     finalScore: number[] = [];
     isGameFinished: boolean = false;
-    isGameResigned: boolean = false;
     currentEndGameValue: Observable<boolean>; // to be observed by finishGameService
     updateOfEndGameValue = new BehaviorSubject(false); // to be observed by finishGameService
 
@@ -77,12 +76,6 @@ export class FinishGameService {
         this.finalScore = [];
 
         return congratulationMsg;
-    }
-
-    getMessageCongratulationsAbandon(): string {
-        return (
-            'Félicitation, ' + this.letterService.players[1].name + ' vous avez gagné(e)s. ' + this.letterService.players[0].name + ' a abandonné(e).'
-        );
     }
 
     getMessageTextBox(): string {

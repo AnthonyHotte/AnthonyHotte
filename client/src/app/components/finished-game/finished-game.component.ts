@@ -21,12 +21,6 @@ export class FinishedGameComponent {
         return this.finishGameService.isGameFinished;
     }
 
-    getAbandonStatus(): boolean {
-        return this.finishGameService.isGameResigned;
-    }
-    getMessageCongratulationsAbandon(): string {
-        return this.finishGameService.getMessageCongratulationsAbandon();
-    }
     quitGame() {
         this.finishGameService.goToHomeAndRefresh();
     }
