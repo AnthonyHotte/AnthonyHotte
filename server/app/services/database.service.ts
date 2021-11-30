@@ -128,13 +128,13 @@ export class DatabaseService {
     }
     async sendScoreChanges(mode: number, bestScoreArr: BestScore[]) {
         const nameCollection = [BESTSCORECLASSIQUE, BESTSCORELOG2990];
-        this.db.collection(nameCollection[mode]).deleteMany({});
+        await this.db.collection(nameCollection[mode]).deleteMany({});
         for (const bestScore of bestScoreArr) {
             await this.addOneScore(nameCollection, mode, bestScore);
         }
     }
     async addOneScore(nameCollection: string[], mode: number, bestScore: BestScore) {
-        return this.db.collection(nameCollection[mode]).insertOne({ score: bestScore.score, name: bestScore.name });
+        return await this.db.collection(nameCollection[mode]).insertOne({ score: bestScore.score, name: bestScore.name });
     }
     async jvEasyNames() {
         const nameJv: string[] = [];
@@ -158,12 +158,12 @@ export class DatabaseService {
     }
     async sendNamesChanges(modeJV: number, jvNames: string[]) {
         const nameCollection = [DATABASE_JV_EASY_NAME, DATABASE_JV_HARD_NAME];
-        this.db.collection(nameCollection[modeJV]).deleteMany({});
+        await this.db.collection(nameCollection[modeJV]).deleteMany({});
         for (const nameJV of jvNames) {
             await this.addOneName(nameCollection, modeJV, nameJV);
         }
     }
     async addOneName(nameCollection: string[], modeJV: number, nameJV: string) {
-        return this.db.collection(nameCollection[modeJV]).insertOne({ name: nameJV, level: modeJV });
+        return await this.db.collection(nameCollection[modeJV]).insertOne({ name: nameJV, level: modeJV });
     }
 }
