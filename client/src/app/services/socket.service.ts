@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 })
 export class SocketService {
     // socket = io('http://localhost:3000');
-    socket = io(environment.serverUrl);
+    socket = io(environment.socketUrl);
     gameLists: string[][];
     roomNumber: number;
     startGame: BehaviorSubject<boolean>;
