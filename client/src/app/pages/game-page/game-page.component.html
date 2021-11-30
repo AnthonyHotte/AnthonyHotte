@@ -8,9 +8,6 @@
         <app-letters (click)="this.clickLocation('hand')"></app-letters>
     </section>
     <section class="section-20">
-        <div class= "background" *ngIf="getFinishedGame()">
-            <app-finished-game></app-finished-game>
-        </div>
         <app-sidebar-right (click)="this.clickLocation('sidebarRight')" *ngIf="!getFinishedGame()"></app-sidebar-right>
     </section>
 </div>
