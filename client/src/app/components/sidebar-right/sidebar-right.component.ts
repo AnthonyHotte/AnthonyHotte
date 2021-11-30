@@ -3,11 +3,9 @@ import { TextBox } from '@app/classes/text-box-behavior';
 import { MessagePlayer } from '@app/message';
 import { BestScoreService } from '@app/services/best-score.service';
 import { FinishGameService } from '@app/services/finish-game.service';
-import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLetterClickService } from '@app/services/place-letter-click.service';
-import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SocketService } from '@app/services/socket.service';
 import { SoloOpponentService } from '@app/services/solo-opponent.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
@@ -30,8 +28,6 @@ export class SidebarRightComponent implements AfterViewInit {
         private soloOpponent: SoloOpponentService,
         private letterService: LetterService,
         private textBox: TextBox,
-        private readonly gridService: GridService,
-        private readonly placeLetterService: PlaceLettersService,
         private letterBankService: LetterBankService,
         private placeLetterClick: PlaceLetterClickService,
         private gameFinishService: FinishGameService,
@@ -88,15 +84,6 @@ export class SidebarRightComponent implements AfterViewInit {
 
     getScorePlayer(index: number) {
         return this.letterService.players[index].score;
-    }
-
-    increaseFontSize() {
-        this.gridService.increasePoliceSize();
-        this.placeLetterService.policeSizeChanged();
-    }
-    decreaseFontSize() {
-        this.gridService.decreasePoliceSize();
-        this.placeLetterService.policeSizeChanged();
     }
     getPlayerName(player: number) {
         const VISUAL_LIMITS_OF_LENGTH = 6;
