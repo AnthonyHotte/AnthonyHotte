@@ -1,19 +1,15 @@
 <div class="container">
     <section class="section-25">
-        <div class="pop-up-25" *ngIf="getFinishedGame()"></div>
         <app-objectives></app-objectives>
         <app-sidebar (click)="this.clickLocation('textBox')"></app-sidebar>
     </section> 
     <section class="section-55">
-        <div class="pop-up-55" *ngIf="getFinishedGame()"></div>
         <app-play-area class="play-area" tabindex="0" (click)="this.clickLocation('gameBoard')"></app-play-area>
         <app-letters (click)="this.clickLocation('hand')"></app-letters>
     </section>
     <section class="section-20">
-        <div class="pop-up-20" *ngIf="getFinishedGame()">
-            <div class= "background" *ngIf="getFinishedGame()">
-                <app-finished-game></app-finished-game>
-            </div>
+        <div class= "background" *ngIf="getFinishedGame()">
+            <app-finished-game></app-finished-game>
         </div>
         <app-sidebar-right (click)="this.clickLocation('sidebarRight')" *ngIf="!getFinishedGame()"></app-sidebar-right>
     </section>
