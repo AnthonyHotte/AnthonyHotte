@@ -103,7 +103,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                     <!-- <legend class="legend"><br />Liste des dictionnaires disponibles : </legend> -->
                     <label class="label">{{ validationDictionaryMessage }}</label>
                     <div class="dropdown">
-                        <button class="dropbtn">Liste des dictionnaires</button>
+                        <button class="dropbtn">Liste des dictionnaires<i class="fa fa-arrow-down"></i></button>
                         <div class="dropdown-content">
                             <div id="listDict" *ngFor="let dictionary of this.dictionaryList; let dictIndex = index">
                                 <button class="dictionary-button" (click)="validateDictionaryNumber()" (click)="this.indexDictionaryNumber = dictIndex;" [class.color-dictionary]="this.indexDictionaryNumber === dictIndex">
@@ -113,6 +113,12 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                             </div>
                         </div>
                     </div>
+                    <!-- <label class="label">Numéro du dictionnaire : </label>
+                    <input [(ngModel)]="indexDictionaryNumber" type="number" class="input" />
+                    <button (click)="validateDictionaryNumber()" class="button"><i class="fa fa-check"></i>Valider le numéro</button> -->
+                    <!-- <div>
+                        <label class="label">{{ validationDictionaryMessage }}</label>
+                    </div> -->
                 </fieldset>
             </div>
         </div>
