@@ -49,6 +49,39 @@
     align-items: center;
 }
 
+.pop-up-25 {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    position: fixed;
+    width: 25%;
+    max-width: 25%;
+    min-width: 25%;
+    background-color: rgba(0,0,0, 0.5);
+}
+
+.pop-up-55 {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    position: fixed;
+    width: 55%;
+    max-width: 55%;
+    min-width: 55%;
+    background-color: rgba(0,0,0, 0.5);
+}
+
+.pop-up-20 {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    position: fixed;
+    width: 20%;
+    max-width: 20%;
+    min-width: 20%;
+    background-color: rgba(0,0,0, 0.5);
+}
+
 .background{
   background-color: rgb(213, 231, 213);
   width: 90%;
