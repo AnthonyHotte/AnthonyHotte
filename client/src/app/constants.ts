@@ -16,7 +16,7 @@ export const TWENTY = 20;
 export const THIRTY = 30;
 // export const SIDESPACE = 30;
 export const NUMBEROFCASE = 15;
-export const DEFAULT_WIDTH = 800; // determined by experimentation
+export const DEFAULT_WIDTH = 674; // determined by experimentation
 export const CASESIZE = DEFAULT_WIDTH / (NUMBEROFCASE + 1);
 export const SIDESPACE = CASESIZE;
 export const TILESIZE = (CASESIZE * 3) / FOUR;
@@ -58,7 +58,7 @@ export const MAXLETTERINHAND = 7;
 
 export const MAX_CHARACTERS = 512;
 export const ENTER_ASCII = 69;
-export const MAX_NUMBER_SKIPPED_TURNS = 6;
+export const MAX_NUMBER_SKIPPED_TURNS = 5;
 export const NUMBER_DOUBLE_WORD = 17;
 export const NUMBER_TRIPLE_WORD = 8;
 export const NUMBER_DOUBLE_LETTER = 24;

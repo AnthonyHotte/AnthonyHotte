@@ -1,7 +1,7 @@
-.button-font-size-plus {
+.button-font-size {
     display: inline-block;
     padding: 10px 15px;
-    font-size: 20px;
+    font-size: 16px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
@@ -13,36 +13,14 @@
     box-shadow: 0 9px darkgreen;
     font-family: serif;
     margin-top: 1.5%;
+    margin-left: 3%;
+    margin-right: 3%;
 }
-.button-font-size-plus:hover {
+.button-font-size:hover {
     background-color: black;
     color: white;
 }
-.button-font-size-plus:active {
-    box-shadow: 0 5px #666;
-    transform: translateY(4px); 
-}
-.button-font-size-minus {
-    display: inline-block;
-    padding: 10px 15px;
-    font-size: 12px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    outline: none;
-    color: #fff;
-    background-color: green;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 9px darkgreen;
-    font-family: serif;
-    margin-top: 1.5%;
-}
-.button-font-size-minus:hover {
-    background-color: black;
-    color: white;
-}
-.button-font-size-minus:active {
+.button-font-size:active {
     box-shadow: 0 5px #666;
     transform: translateY(4px); 
 }
@@ -53,7 +31,7 @@
     height: 90%;
     text-align: center;
     width: 90%;
-    margin-left: 5%;
+    margin-left: 0%;
     margin-right: 5%;
     max-width: 90%;
     max-height: 90%;

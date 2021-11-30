@@ -1,21 +1,22 @@
 .container {
-    height: 120%;
+    height: 100%;
     display: flex;
-    overflow-x: hidden;
-    overscroll-behavior: contain;
+    overflow: hidden;
     width: 100%;
-    max-height: 120%;
+    max-height: 100%;
     max-width: 100%;
     background-color: rgb(213, 231, 213);
     align-items: center;
 }
 
 .play-area {
+    overflow: hidden;
     display: grid;
     width: min-content;
     outline: none;
 }
 .section-25{
+    overflow: hidden;
     max-height: 100%;
     height: 100%;
     min-height: 100%;
@@ -26,6 +27,7 @@
 }
 
 .section-20{
+    overflow: hidden;
     max-height: 100%;
     height: 100%;
     min-height: 100%;
@@ -36,6 +38,7 @@
 }
 
 .section-55{
+    overflow: hidden;
     max-height: 100%;
     height: 100%;
     min-height: 100%;
@@ -46,25 +49,45 @@
     align-items: center;
 }
 
-// custom scrollbar : https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2
-/* width */
-::-webkit-scrollbar {
-    width: 20px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey; 
-    border-radius: 10px;
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: green; 
-    border-radius: 10px;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: lightgreen; 
-  }
+.pop-up-25 {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    position: fixed;
+    width: 25%;
+    max-width: 25%;
+    min-width: 25%;
+    background-color: rgba(0,0,0, 0.5);
+}
+
+.pop-up-55 {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    position: fixed;
+    width: 55%;
+    max-width: 55%;
+    min-width: 55%;
+    background-color: rgba(0,0,0, 0.5);
+}
+
+.pop-up-20 {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    position: fixed;
+    width: 20%;
+    max-width: 20%;
+    min-width: 20%;
+    background-color: rgba(0,0,0, 0.5);
+}
+
+.background{
+  background-color: rgb(213, 231, 213);
+  width: 90%;
+  height: 90%;
+  margin-left: 0%;
+  margin-top: 5%;
+  text-align: center;
+  align-items: center;
+}
