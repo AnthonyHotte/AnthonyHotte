@@ -119,12 +119,12 @@ describe('SidebarRightComponent', () => {
         expect(result).toEqual(expectedResult);
     });
 
-    it('increaseFontSize should call ncreasePoliceSize and policeSizeChanged method ', () => {
-        component.increaseFontSize();
-        gridServiceSpy.increasePoliceSize.and.returnValue();
-        expect(gridServiceSpy.increasePoliceSize).toHaveBeenCalled();
-        expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
-    });
+    // it('increaseFontSize should call ncreasePoliceSize and policeSizeChanged method ', () => {
+    //     component.increaseFontSize();
+    //     gridServiceSpy.increasePoliceSize.and.returnValue();
+    //     expect(gridServiceSpy.increasePoliceSize).toHaveBeenCalled();
+    //     expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
+    // });
     it('getPlayerName should return the name when there is no changes in turn ', () => {
         component.turn = 0;
         timerTurnManagerServiceSpy.turn = 0;
@@ -230,11 +230,11 @@ describe('SidebarRightComponent', () => {
         expect(mySpy).not.toHaveBeenCalled();
     });
 
-    it('decreaseFontSize should call decreasePoliceSize and policeSizeChanged', () => {
-        component.decreaseFontSize();
-        expect(gridServiceSpy.decreasePoliceSize).toHaveBeenCalled();
-        expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
-    });
+    // it('decreaseFontSize should call decreasePoliceSize and policeSizeChanged', () => {
+    //     component.decreaseFontSize();
+    //     expect(gridServiceSpy.decreasePoliceSize).toHaveBeenCalled();
+    //     expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
+    // });
 
     it('verifyChangedTurns should call pause() if game is finished', () => {
         finishGameServiceSpy.isGameFinished = true;

@@ -236,9 +236,9 @@ describe('PlaceLetterClickService', () => {
         expect(placeLetterClickService.orientation).not.toEqual('v');
     });
 
-    it('rawXYPositionToCasePosition should return 14 when 750 is entered', () => {
+    it('rawXYPositionToCasePosition should return 16 when 750 is entered', () => {
         const randomNumber = 750;
-        const lastCase = 14;
+        const lastCase = 16;
         expect(placeLetterClickService.rawXYPositionToCasePosition(randomNumber)).toEqual(lastCase);
     });
 
