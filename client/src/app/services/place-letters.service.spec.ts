@@ -5,12 +5,13 @@ import { GameStateService } from '@app/services/game-state.service';
 import { GridService } from '@app/services/grid.service';
 import { LetterBankService } from './letter-bank.service';
 import { LetterService } from './letter.service';
+import { ObjectivesService } from './objectives.service';
 import { PlaceLetterClickService } from './place-letter-click.service';
 import { PlaceLettersService } from './place-letters.service';
 import { SocketService } from './socket.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 import { WordValidationService } from './word-validation.service';
-describe('PlaceLettersService', () => {
+fdescribe('PlaceLettersService', () => {
     let service: PlaceLettersService;
     let gameStateServiceSpy: jasmine.SpyObj<GameStateService>;
     let gridServiceSpy: jasmine.SpyObj<GridService>;
@@ -20,8 +21,10 @@ describe('PlaceLettersService', () => {
     let placeLetterClickServiceSpy: jasmine.SpyObj<PlaceLetterClickService>;
     let socketSpy: jasmine.SpyObj<SocketService>;
     let wordValidationServiceSpy: jasmine.SpyObj<WordValidationService>;
+    let objectivesServiceSpy: jasmine.SpyObj<ObjectivesService>;
     beforeEach(
         waitForAsync(() => {
+            objectivesServiceSpy = jasmine.createSpyObj('ObjectivesService', ['diffLetters0']);
             wordValidationServiceSpy = jasmine.createSpyObj('WordValidationService', ['isWordValid']);
             gameStateServiceSpy = jasmine.createSpyObj('GameStateService', [
                 'placeLetter',
@@ -60,6 +63,7 @@ describe('PlaceLettersService', () => {
             letterServiceSpy.players = [player1, player2];
             TestBed.configureTestingModule({
                 providers: [
+                    { provide: ObjectivesService, useValue: objectivesServiceSpy },
                     { provide: WordValidationService, useValue: wordValidationServiceSpy },
                     { provide: GameStateService, useValue: gameStateServiceSpy },
                     { provide: LetterService, useValue: letterServiceSpy },
@@ -121,16 +125,20 @@ describe('PlaceLettersService', () => {
         service.drawWord();
         expect(gridServiceSpy.drawLetterwithpositionstring).toHaveBeenCalled();
     });
+
     it('validateWordPlaced should return false when validateWordCreatedByNewLetters is false', fakeAsync(async () => {
         gameStateServiceSpy.indexLastLetters = [1, 2, 3];
         const dumbUndefinedVariable = undefined;
-        const res = await service.validateWordPlaced(dumbUndefinedVariable);
-        expect(res).toBe(await Promise.resolve(false));
+        service.validateWordPlaced(dumbUndefinedVariable).then((res) => {
+            expect(res).toBe(false);
+        });
+
         flush();
         expect(gameStateServiceSpy.validateWordCreatedByNewLetters).toHaveBeenCalled();
         expect(gridServiceSpy.drawtilebackground).toHaveBeenCalled();
         gameStateServiceSpy.indexLastLetters = [];
     }));
+
     it('validateWordPlaced should return true when playerUsedAllLetters is true and validateWordCreatedByNewLetters is true ', fakeAsync(() => {
         // eslint-disable-next-line @typescript-eslint/no-shadow
         const promise1 = new Promise<boolean>((resolve) => {
@@ -167,7 +175,6 @@ describe('PlaceLettersService', () => {
         flush();
         gameStateServiceSpy.indexLastLetters = [];
     }));
-    // verifyavailable tests
     it('verifyAvailable should be called when the word is not out of bound', () => {
         service.orientation = 'h';
         const mySpy = spyOn(service, 'verifyAvailable');
@@ -183,11 +190,27 @@ describe('PlaceLettersService', () => {
         service.verifyAvailable();
         expect(mySpy).toHaveBeenCalled();
     });
+    it('verifyCaseAvailable should be called when verifyAvailable is called and orientation v', () => {
+        service.orientation = 'v';
+        service.wordToPlace = 'testing';
+        service.colomnNumber = 8;
+        service.row = 8;
+        const mySpy = spyOn(service, 'verifyCaseAvailable').and.returnValue(true);
+        service.verifyAvailable();
+        expect(mySpy).toHaveBeenCalled();
+    });
     // verifyCaseAvailable
     it('verifyAvailable should return false when the tile is not empty', () => {
         gameStateServiceSpy.lettersOnBoard[0][0] = 'a';
+        service.orientation = 'v';
         const returnvalue = service.verifyCaseAvailable(0, 0, 'z');
         expect(returnvalue).toBe(false);
+    });
+    it('verifyAvailable should return true when the tile is empty', () => {
+        gameStateServiceSpy.lettersOnBoard[0][0] = '';
+        service.orientation = 'v';
+        const returnvalue = service.verifyCaseAvailable(0, 0, 'z');
+        expect(returnvalue).toBe(true);
     });
     // placeword function tests
     it("placeword should return 'Le mot dépasse du plateau de jeux.' for a word that goes beyond the board", () => {
@@ -204,7 +227,7 @@ describe('PlaceLettersService', () => {
         const mySpy = spyOn(service, 'verifyCaseAvailable').and.returnValue(false);
         service.placeWord('a1v allo');
         expect(mySpy).toHaveBeenCalled();
-    });/*
+    }); /*
     it("placeword should return 'Le premier mot doit toucher à la case h8' when the first word isn't placed on h8 tile", () => {
         spyOn(service, 'checkInput').and.returnValue('ok');
         gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
@@ -216,7 +239,7 @@ describe('PlaceLettersService', () => {
             expect(res).toEqual('Le premier mot doit toucher à la case h8.');
             expect(gameStateServiceSpy.isWordCreationPossibleWithRessources).toHaveBeenCalled();
         });
-    });*//*
+    });*/ /*
     it('placeword should return Mot placé avec succès. when the word can be placed', () => {
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
@@ -288,6 +311,12 @@ describe('PlaceLettersService', () => {
         service.wordToPlace = 'Allo';
         service.wordContainsJoker();
         expect(mySpy).toHaveBeenCalled();
+    });
+    // reste 154 a 158
+    it('handleObjective should call removeUpperCaseFromString when there is atleast one uppercase letter', () => {
+        socketSpy.is2990 = true;
+        service.handleObjective();
+        expect(objectivesServiceSpy.lastLettersAdded).toEqual(gameStateServiceSpy.lastLettersAdded);
     });
     // removeUpperCaseFromString
     it('removeUpperCaseFromString should remove uppercase and replace them with * ', () => {
