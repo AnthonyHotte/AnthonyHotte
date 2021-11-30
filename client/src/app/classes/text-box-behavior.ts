@@ -9,7 +9,6 @@ import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SocketService } from '@app/services/socket.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { Subscription } from 'rxjs';
-
 @Injectable({
     providedIn: 'root',
 })

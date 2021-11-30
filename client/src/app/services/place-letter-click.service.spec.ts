@@ -29,10 +29,11 @@ describe('PlaceLetterClickService', () => {
                 gameStateServiceSpy.lettersOnBoard[i][j] = '';
             }
         }
-        gridServiceSpy = jasmine.createSpyObj('GridService', ['drawGrid', 'drawtilebackground']);
+        gridServiceSpy = jasmine.createSpyObj('GridService', ['drawGrid', 'drawtilebackground', 'drawLetterwithpositionstring', 'drawarrow']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['reset']);
         timeManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
         letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
+        jasmine.getEnv().allowRespy(true);
         letterServiceSpy.players[0].allLettersInHand = [
             { letter: 'a', quantity: 9, point: 1 },
             { letter: '*', quantity: 2, point: 0 },
@@ -116,22 +117,19 @@ describe('PlaceLetterClickService', () => {
 
     it('addLetterOnBoard should not call anything if letter is at edge', () => {
         placeLetterClickService.isLetterAtEdge = true;
-        const mySpy = spyOn(gridServiceSpy, 'drawLetterwithpositionstring');
         placeLetterClickService.addLetterOnBoard('A', true);
-        expect(mySpy).not.toHaveBeenCalled();
+        expect(gridServiceSpy.drawLetterwithpositionstring).not.toHaveBeenCalled();
     });
 
     it("addLetterOnBoard should call remove letter from hand if letter isn't caps", () => {
         placeLetterClickService.isLetterAtEdge = false;
         const mySpy = spyOn(letterServiceSpy.players[0], 'removeLettersWithoutReplacingThem');
         const mySpy2 = spyOn(placeLetterClickService, 'handleRowAndColumnAfterLetter');
-        const mySpy3 = spyOn(gridServiceSpy, 'drawLetterwithpositionstring');
-        const mySpy4 = spyOn(gridServiceSpy, 'drawarrow');
         placeLetterClickService.addLetterOnBoard('a', false);
         expect(mySpy).toHaveBeenCalled();
         expect(mySpy2).toHaveBeenCalled();
-        expect(mySpy3).toHaveBeenCalled();
-        expect(mySpy4).toHaveBeenCalled();
+        expect(gridServiceSpy.drawLetterwithpositionstring).toHaveBeenCalled();
+        expect(gridServiceSpy.drawarrow).toHaveBeenCalled();
     });
 
     it('addLetterOnBoard should call remove letter from hand if letter is caps', () => {
@@ -238,8 +236,8 @@ describe('PlaceLetterClickService', () => {
         expect(placeLetterClickService.orientation).not.toEqual('v');
     });
 
-    it('rawXYPositionToCasePosition should return 14 when 746 is entered', () => {
-        const randomNumber = 634;
+    it('rawXYPositionToCasePosition should return 14 when 750 is entered', () => {
+        const randomNumber = 750;
         const lastCase = 14;
         expect(placeLetterClickService.rawXYPositionToCasePosition(randomNumber)).toEqual(lastCase);
     });

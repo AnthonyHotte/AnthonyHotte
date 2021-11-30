@@ -134,10 +134,6 @@ export class SocketManager {
                 }
                 socket.emit('sendGamesInformation', { games: this.games, boards: this.boards });
             });
-            socket.on('endTurn', (endTurn) => {
-                this.roomsService.rooms[endTurn.roomNumber].turnsSkippedInARow = endTurn.numberSkipTurn;
-                this.sio.to(this.roomsService.rooms[endTurn.roomNumber].socketsId[endTurn.playerTurnStatus]).emit('yourTurn');
-            });
             socket.on('validateWordOnServer', (wordCreated, ackCallback) => {
                 socket.emit('wordValidation', this.wordValidationService.isWordValid(wordCreated));
                 ackCallback(this.wordValidationService.isWordValid(wordCreated));

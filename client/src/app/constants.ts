@@ -28,10 +28,10 @@ export const SIDELETTERS: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I
 export const SIDELETTERS_TO_ASCII = 97;
 export const LETTERVALUEMINPOLICESIZE = 10;
 export const LETTERVALUEDEFAULTPOLICESIZE = 15;
-export const LETTERVALUEMAXPOLICESIZE = 20;
+export const LETTERVALUEMAXPOLICESIZE = 19;
 
 export const LETTERMINPOLICESIZE = 20;
-export const LETTERDEFAULTPOLICESIZE = 28;
+export const LETTERDEFAULTPOLICESIZE = 26;
 export const LETTERMAXPOLICESIZE = 34;
 // to write on the Tiles
 export const TEXTONTILES = ['mot', 'mot ', 'lettre', 'lettre'];

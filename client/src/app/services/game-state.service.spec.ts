@@ -89,7 +89,6 @@ describe('GameStateService', () => {
             expect(res).toBe(false);
         });
     });
-
     it('validateWordCreatedByNewLetters should return false when vertical invalid word', () => {
         service.orientationOfLastWord = 'h';
         wordValidationServiceSpy.isPartOfWord.and.returnValue(true);

@@ -7,28 +7,17 @@ import { NUMBEROFROOMS } from '@app/constants';
 import { Letter } from '@app/letter';
 import { assert } from 'console';
 import * as http from 'http';
-import { createStubInstance, spy } from 'sinon';
+import { spy, stub } from 'sinon';
 import * as io from 'socket.io';
+import { DictionaryService } from './dictionary.service';
 import { RoomsService } from './rooms.service';
 import { SocketManager } from './socket-manager-initiate-game.service';
 import { WordValidationService } from './word-validation.service';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/ban-types
 type CallbackSignature = (...params: unknown[]) => {};
-
-// class RoomsServiceMock {
-//     rooms: Room[];
-//     listRoomWaiting: Room[];
-//     indexNextRoom: number;
-//     constructor() {
-//         this.indexNextRoom = 0;
-//         this.rooms = [];
-//         this.listRoomWaiting = [];
-//         for (let i = 0; i < NUMBEROFROOMS; i++) {
-//             this.rooms.push(new Room('room number' + i, i));
-//         }
-//     }
-// }
 
 class SocketServer {
     socket = new SocketMock();
@@ -42,35 +31,41 @@ class SocketServer {
         const tuple = this.callbacks.get(event) as [SocketMock, CallbackSignature];
         tuple[1](tuple[0]);
     }
+    // eslint-disable-next-line no-unused-vars
+    to(...args: unknown[]): SocketServer {
+        return new SocketServer();
+    }
 }
 
 class SocketMock {
-    private callbacks = new Map<string, CallbackSignature[]>();
-    on(event: string, callback: CallbackSignature): void {
-        if (!this.callbacks.has(event)) {
-            this.callbacks.set(event, []);
-        }
-
-        this.callbacks.get(event)?.push(callback);
-    }
-
+    id: string = 'Socket mock';
+    events: Map<string, CallableFunction> = new Map();
     // eslint-disable-next-line no-unused-vars
     emit(event: string, ...params: unknown[]): void {
         return;
     }
 
-    peerSideEmit(event: string, ...params: unknown[]) {
-        if (!this.callbacks.has(event)) {
-            return;
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        for (const callback of this.callbacks.get(event)!) {
-            callback(params);
-        }
+    on(eventName: string, cb: CallableFunction) {
+        this.events.set(eventName, cb);
     }
-    join(): boolean {
-        return true;
+
+    peerSideEmit(eventName: string, ...args: unknown[]) {
+        const arrowFunction = this.events.get(eventName) as CallableFunction;
+        arrowFunction(...args);
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    join(...args: unknown[]) {
+        return;
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    leave(...args: unknown[]) {
+        return;
+    }
+
+    disconnect() {
+        return;
     }
 }
 
@@ -80,10 +75,12 @@ describe('Socket Manager', () => {
     const myLetters: Letter[] = [];
     const myLetters1: Letter[] = [];
     let roomSpy: RoomsService;
+    let dico: DictionaryService;
     const TEN = 10;
 
-    beforeEach(async () => {
-        roomSpy = createStubInstance(RoomsService);
+    beforeEach(() => {
+        dico = new DictionaryService();
+        roomSpy = new RoomsService();
         roomSpy.indexNextRoom = 0;
         roomSpy.rooms = [];
         roomSpy.listRoomWaiting = [];
@@ -91,26 +88,32 @@ describe('Socket Manager', () => {
             roomSpy.rooms.push(new Room('room number' + i, i));
         }
         const ioSPy = new http.Server();
-        const wordValidation = createStubInstance(WordValidationService);
+        const wordValidation = new WordValidationService(dico);
         socketManager = new SocketManager(
             ioSPy as unknown as http.Server,
             roomSpy as unknown as RoomsService,
             wordValidation as unknown as WordValidationService,
         );
 
-        socketManager.sio = socketServer as unknown as io.Server;
-    });
-
-    it('should call cleanroom function in startingNewGameInfo', (done: Mocha.Done) => {
-        roomSpy.indexNextRoom = 0;
-        const spyy = spy(roomSpy.listRoomWaiting, 'push');
+        socketManager.roomsService.rooms[0] = new Room('room number', 0);
+        socketManager.roomsService.rooms[0].playerNames = ['', ''];
+        socketManager.roomsService.rooms[0].socketsId = ['', ''];
         for (let i = 0; i < TEN; i++) {
             const l: Letter = { letter: '', quantity: 0, point: 0 };
             myLetters.push(l);
             myLetters1.push(l);
         }
-        // const mySpy = spy(roomSpy.rooms[roomSpy.indexNextRoom], 'cleanRoom');
-        // const mySpy1 = spy(roomSpy.rooms[roomSpy.indexNextRoom], 'setStartingInfo');
+        socketManager.roomsService.listRoomWaiting = [];
+        for (let i = 0; i < NUMBEROFROOMS; i++) {
+            stub(socketManager.roomsService.rooms[i], 'setStartingInfo');
+        }
+        socketManager.sio = socketServer as unknown as io.Server;
+        socketManager.roomsService.rooms[0].playerNames[0] = 'ed';
+    });
+
+    it('should call cleanroom function in startingNewGameInfo', () => {
+        socketManager.roomsService.indexNextRoom = 0;
+        const spyy = spy(roomSpy.listRoomWaiting, 'push');
         socketManager.handleSockets();
         socketServer.emit('connection');
         socketServer.socket.peerSideEmit('startingNewGameInfo', {
@@ -123,34 +126,24 @@ describe('Socket Manager', () => {
             lettersOpponent: myLetters1,
         });
         assert(spyy.called);
-        // assert(mySpy.called);
-        // assert(mySpy1.called);
-
-        done();
     });
-    // it('should emit startGame', () => {
-    //     const mySpy = spy(socketServer.socket, 'emit');
-    //     socketManager.handleSockets();
-    //     socketServer.emit('connection');
-    //     socketServer.socket.peerSideEmit('startingNewGameInfo', {
-    //         time: 0,
-    //         bonusOn: false,
-    //         namePlayer: '',
-    //         mode: 2,
-    //         nameOpponent: '',
-    //         myLetters,
-    //         myLetters1,
-    //     });
-    //     assert(mySpy.called);
-    // });
-    it('should enter in the else', (done: Mocha.Done) => {
-        // const mySpy = spy(roomSpy.listRoomWaiting, 'push');
-        // const mySpy1 = spy(roomSpy.rooms[roomSpy.indexNextRoom], 'setStartingInfo');
-        for (let i = 0; i < 2; i++) {
-            const l: Letter = { letter: '', quantity: 0, point: 0 };
-            myLetters.push(l);
-            myLetters1.push(l);
-        }
+
+    it('should emit startGame', () => {
+        const mySpy = spy(socketServer.socket, 'emit');
+        socketManager.handleSockets();
+        socketServer.emit('connection');
+        socketServer.socket.peerSideEmit('startingNewGameInfo', {
+            time: 0,
+            bonusOn: false,
+            namePlayer: '',
+            mode: 2,
+            nameOpponent: '',
+            myLetters,
+            myLetters1,
+        });
+        assert(mySpy.called);
+    });
+    it('should enter in the else of statingNewInfo', () => {
         socketManager.handleSockets();
         socketServer.emit('connection');
         socketServer.socket.peerSideEmit('startingNewGameInfo', {
@@ -159,112 +152,111 @@ describe('Socket Manager', () => {
             namePlayer: '',
             mode: 0,
             nameOpponent: '',
-            lettersCreator: myLetters,
-            lettersOpponent: myLetters1,
+            myLetters,
+            myLetters1,
         });
-        // assert(mySpy.called);
-        // assert(mySpy1.called);
-
-        done();
     });
-    it('should enter in the else of joinGame', (done: Mocha.Done) => {
-        // const roomNumber = roomSpy.listRoomWaiting[0].index;
-        socketManager.handleSockets();
-        socketServer.emit('connection');
-        socketServer.socket.peerSideEmit('joinGame', {
-            playerJoinName: '',
-            indexInWaitingRoom: 0,
-        });
-        // const mySpy = spy(roomSpy.listRoomWaiting, 'push');
-        done();
-    });
-    it('should enter in the if of joinGame', (done: Mocha.Done) => {
+    it('should enter in the else of joinGame', () => {
+        socketManager.roomsService.listRoomWaiting = [];
+        socketManager.roomsService.rooms[0].roomIsAvailable = false;
         for (let i = 0; i < TEN; i++) {
-            roomSpy.listRoomWaiting.push(new Room('room number', 0));
+            socketManager.roomsService.listRoomWaiting.push(new Room('room number', 0));
         }
-        // console.log(socketManager.roomsService);
-        roomSpy.listRoomWaiting[0].index = 0;
-        roomSpy.rooms[0].roomIsAvailable = true;
-        socketManager.roomsService = roomSpy;
+        socketManager.roomsService.listRoomWaiting[0].index = 0;
         socketManager.handleSockets();
         socketServer.emit('connection');
         socketServer.socket.peerSideEmit('joinGame', {
             playerJoinName: '',
             indexInWaitingRoom: 0,
         });
-        // const mySpy = spy(roomSpy.listRoomWaiting, 'push');
-        done();
     });
-    it('should enter in returnListOfGames', (done: Mocha.Done) => {
-        roomSpy.rooms[0].roomIsAvailable = true;
+    it('should enter in the 3rd if of joinGame', () => {
+        socketManager.roomsService.listRoomWaiting = [];
+        socketManager.roomsService.rooms[0].roomIsAvailable = false;
+        for (let i = 0; i < TEN; i++) {
+            socketManager.roomsService.listRoomWaiting.push(new Room('room number', 0));
+        }
+        socketManager.roomsService.listRoomWaiting[0].index = 0;
+        socketManager.roomsService.rooms[0].playerNames[0] = 'ed';
+        socketManager.handleSockets();
+        socketServer.emit('connection');
+        socketServer.socket.peerSideEmit('joinGame', {
+            playerJoinName: '',
+            indexInWaitingRoom: 0,
+        });
+    });
+    it('should enter in the 3rd else of joinGame', () => {
+        socketManager.roomsService.listRoomWaiting = [];
+        socketManager.roomsService.rooms[0].roomIsAvailable = false;
+        for (let i = 0; i < TEN; i++) {
+            socketManager.roomsService.listRoomWaiting.push(new Room('room number', 0));
+        }
+        socketManager.roomsService.listRoomWaiting[0].index = 0;
+        socketManager.roomsService.rooms[0].playerNames[0] = '';
+        socketManager.handleSockets();
+        socketServer.emit('connection');
+        socketServer.socket.peerSideEmit('joinGame', {
+            playerJoinName: 'sadas',
+            indexInWaitingRoom: 0,
+        });
+    });
+    it('should enter in the if of joinGame', () => {
+        for (let i = 0; i < TEN; i++) {
+            socketManager.roomsService.listRoomWaiting.push(new Room('room number', 0));
+        }
+        socketManager.roomsService.listRoomWaiting[0].index = 0;
+        socketManager.roomsService.rooms[0].roomIsAvailable = true;
+        socketManager.roomsService.rooms[0].playerNames = ['', ''];
+        socketManager.roomsService.rooms[0].socketsId = ['', ''];
+        socketManager.handleSockets();
+        socketServer.emit('connection');
+        socketServer.socket.peerSideEmit('joinGame', {
+            playerJoinName: '',
+            indexInWaitingRoom: 0,
+        });
+    });
+    it('should enter in returnListOfGames', () => {
+        for (let i = 0; i < TEN; i++) {
+            socketManager.roomsService.listRoomWaiting.push(new Room('room number', 0));
+        }
+        socketManager.roomsService.listRoomWaiting[0].index = 0;
+        socketManager.roomsService.rooms[0].roomIsAvailable = false;
         socketManager.handleSockets();
         socketServer.emit('connection');
         socketServer.socket.peerSideEmit('returnListOfGames');
-        // const mySpy = spy(roomSpy.listRoomWaiting, 'push');
-        done();
     });
-    it('should enter in endTurn', (done: Mocha.Done) => {
-        roomSpy.rooms[0].roomIsAvailable = true;
+    it('should enter in the else of returnListOfGames', () => {
+        for (let i = 0; i < TEN; i++) {
+            socketManager.roomsService.listRoomWaiting.push(new Room('room number', 0));
+        }
+        socketManager.roomsService.listRoomWaiting[0].index = 0;
+        socketManager.roomsService.listRoomWaiting[0].roomIsAvailable = false;
         socketManager.handleSockets();
         socketServer.emit('connection');
-        const mySpy = spy(socketServer, 'emit');
-
-        socketServer.socket.peerSideEmit('endTurn', {
-            roomNumber: 0,
-            turnSkipped: 0,
-            playerTurnStatus: 0,
-        });
-        assert(mySpy.called);
-        done();
+        socketServer.socket.peerSideEmit('returnListOfGames');
     });
-    it('should enter in cancelWaitingGame', (done: Mocha.Done) => {
+
+    it('should enter in cancelWaitingGame', () => {
         roomSpy.rooms[0].roomIsAvailable = true;
         socketManager.handleSockets();
         socketServer.emit('connection');
         socketServer.socket.peerSideEmit('cancelWaitingGame', [0]);
-        // assert(mySpy.called);
-        done();
     });
-    it('should enter in toOpponent', (done: Mocha.Done) => {
-        for (let i = 0; i < TEN; i++) {
-            roomSpy.listRoomWaiting.push(new Room('room number', 0));
-        }
-        roomSpy.rooms[0].roomIsAvailable = true;
-        socketManager.handleSockets();
-        socketServer.emit('connection');
-        socketServer.socket.peerSideEmit('toOpponent', '', 0, 0);
-        // assert(mySpy.called);
-        done();
+    it('should enter in validateWordOnServer', () => {
+        socketServer.socket.peerSideEmit('cancelWaitingGame', [0]);
     });
-    it('should enter in gameFinished', (done: Mocha.Done) => {
+    it('should enter in gameFinished', () => {
         for (let i = 0; i < TEN; i++) {
-            roomSpy.rooms.push(new Room('room number', 0));
+            socketManager.roomsService.listRoomWaiting.push(new Room('room number', 0));
         }
+        socketManager.roomsService.listRoomWaiting[0].roomIsAvailable = false;
         socketManager.handleSockets();
         socketServer.emit('connection');
         socketServer.socket.peerSideEmit('gameFinished', 0);
-        // assert(mySpy.called);
-        done();
     });
-    it('should enter in disconnect', (done: Mocha.Done) => {
-        for (let i = 0; i < TEN; i++) {
-            roomSpy.rooms.push(new Room('room number', 0));
-        }
+    it('should enter in disconnect', () => {
         socketManager.handleSockets();
         socketServer.emit('connection');
         socketServer.socket.peerSideEmit('disconnect');
-        // assert(mySpy.called);
-        done();
-    });
-    it('should enter in sendLettersReplaced', (done: Mocha.Done) => {
-        for (let i = 0; i < TEN; i++) {
-            roomSpy.rooms.push(new Room('room number', 0));
-        }
-        roomSpy.rooms[0].socketsId[0] = '';
-        socketManager.handleSockets();
-        socketServer.emit('connection');
-        socketServer.socket.peerSideEmit('sendLettersReplaced');
-        // assert(mySpy.called);
-        done();
     });
 });
