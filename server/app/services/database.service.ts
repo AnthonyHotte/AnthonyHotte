@@ -34,6 +34,7 @@ export class DatabaseService {
         if ((await this.db.collection(DATABASE_JV_EASY_NAME).countDocuments()) === 0) {
             await this.populateJVEasyNameDB();
         }
+
         if ((await this.db.collection(DATABASE_JV_HARD_NAME).countDocuments()) === 0) {
             await this.populateJVHardNameDB();
         }
@@ -54,9 +55,9 @@ export class DatabaseService {
 
     async populateJVHardNameDB(): Promise<void> {
         const jVNames = [
-            { name: 'JVHard1', level: 1 },
-            { name: 'JVHard2', level: 1 },
-            { name: 'JVHard3', level: 1 },
+            { name: 'Tryphon Tournesol', level: 1 },
+            { name: 'Pacome de Champignac', level: 1 },
+            { name: 'Panoramix', level: 1 },
         ];
         // eslint-disable-next-line no-console
         console.log('THIS ADDS DATA TO THE DATABASE, DO NOT USE OTHERWISE');
@@ -67,9 +68,9 @@ export class DatabaseService {
 
     async populateJVEasyNameDB(): Promise<void> {
         const jVNames = [
-            { name: 'JV1', level: 0 },
-            { name: 'JV2', level: 0 },
-            { name: 'JV3', level: 0 },
+            { name: 'Daphne du Maurier', level: 0 },
+            { name: 'Jane Austen', level: 0 },
+            { name: 'Haruki Murakami', level: 0 },
         ];
         // eslint-disable-next-line no-console
         console.log('THIS ADDS DATA TO THE DATABASE, DO NOT USE OTHERWISE');

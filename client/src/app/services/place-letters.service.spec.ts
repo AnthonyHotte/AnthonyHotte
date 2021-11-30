@@ -204,7 +204,7 @@ describe('PlaceLettersService', () => {
         const mySpy = spyOn(service, 'verifyCaseAvailable').and.returnValue(false);
         service.placeWord('a1v allo');
         expect(mySpy).toHaveBeenCalled();
-    });/*
+    }); /*
     it("placeword should return 'Le premier mot doit toucher à la case h8' when the first word isn't placed on h8 tile", () => {
         spyOn(service, 'checkInput').and.returnValue('ok');
         gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
@@ -216,7 +216,7 @@ describe('PlaceLettersService', () => {
             expect(res).toEqual('Le premier mot doit toucher à la case h8.');
             expect(gameStateServiceSpy.isWordCreationPossibleWithRessources).toHaveBeenCalled();
         });
-    });*//*
+    });*/ /*
     it('placeword should return Mot placé avec succès. when the word can be placed', () => {
         const promise1 = new Promise<boolean>((resolve) => {
             resolve(true);
