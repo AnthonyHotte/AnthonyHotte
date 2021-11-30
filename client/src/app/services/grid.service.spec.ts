@@ -129,6 +129,22 @@ describe('GridService', () => {
         expect(service.policesizeletter).toEqual(expectedPoliceSizeLetter);
         expect(service.policesizelettervalue).toEqual(expectedPoliceSizeLetterValue);
     });
+
+    it(' decreasePoliceSize should decresse size of letteroffset', () => {
+        service.policesizeletter = 29;
+        service.maxpolicesizeletter = 50;
+        service.letteroffset = 2;
+        service.decreasePoliceSize();
+        expect(service.letteroffset).toBeLessThan(2);
+    });
+
+    it(' increasePoliceSize should increment size of letteroffset', () => {
+        service.policesizeletter = 29;
+        service.maxpolicesizeletter = 50;
+        service.letteroffset = 2;
+        service.increasePoliceSize();
+        expect(service.letteroffset).toBeGreaterThan(2);
+    });
     it(' increasePoliceSize should not increment size of a letter', () => {
         service.policesizeletter = 55;
         service.policesizelettervalue = 52;
