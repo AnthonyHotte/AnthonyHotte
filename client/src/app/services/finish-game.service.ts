@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { LetterService } from '@app/services/letter.service';
 import { Router } from '@angular/router';
 import { SocketService } from './socket.service';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { RefreshServiceService } from './refresh-service.service';
 // import { TimerTurnManagerService } from './timer-turn-manager.service';
 
@@ -12,17 +11,13 @@ import { RefreshServiceService } from './refresh-service.service';
 export class FinishGameService {
     finalScore: number[] = [];
     isGameFinished: boolean = false;
-    currentEndGameValue: Observable<boolean>; // to be observed by finishGameService
-    updateOfEndGameValue = new BehaviorSubject(false); // to be observed by finishGameService
 
     constructor(
         private letterService: LetterService,
         private link: Router,
         private socketService: SocketService, // private timerTurnManager: TimerTurnManagerService,
         private refreshService: RefreshServiceService,
-    ) {
-        this.currentEndGameValue = this.updateOfEndGameValue.asObservable();
-    }
+    ) {}
 
     scoreCalculator() {
         for (const player of this.letterService.players) {
