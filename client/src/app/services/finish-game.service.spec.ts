@@ -125,7 +125,7 @@ describe('FinishGameService', () => {
 
     it('Congratulation message has both player when both player have the same score', () => {
         const spy = spyOn(service, 'getWinner').and.returnValue([0, 1]);
-        expect(service.getCongratulation()).toEqual('Félicitation, allo et bonjour, vous avez gagnés!!!');
+        expect(service.getCongratulation()).toEqual('Félicitation, allo et bonjour! Vous avez fini à égalité.');
         expect(spy).toHaveBeenCalled();
     });
 

@@ -51,13 +51,13 @@ describe('SidebarRightComponent', () => {
             letterServiceSpy.players = [new PlayerLetterHand(letterBankServiceSpy), new PlayerLetterHand(letterBankServiceSpy)];
             letterServiceSpy.players[0].score = 10;
 
-            textBoxSpy = jasmine.createSpyObj('TextBox', ['send', 'isCommand', 'scrollDown']);
+            textBoxSpy = jasmine.createSpyObj('TextBox', ['send', 'isCommand', 'scrollDown', 'handleEnter']);
             textBoxSpy.inputs = [];
             gridServiceSpy = jasmine.createSpyObj('GridService', ['increasePoliceSize', 'decreasePoliceSize']);
             placeLettersServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['policeSizeChanged']);
             routerSpy = jasmine.createSpyObj('Router', ['navigate']);
             counterSpy = jasmine.createSpyObj('CountdownComponent', ['reset', 'pause']);
-            finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator']);
+            finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator', 'getMessageTextBox']);
             jasmine.getEnv().allowRespy(true);
             TestBed.configureTestingModule({
                 declarations: [SidebarRightComponent],

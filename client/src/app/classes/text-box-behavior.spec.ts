@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -45,7 +46,7 @@ describe('TextBox', () => {
         timerTurnManagerServiceSpy.turn = 0;
         finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator', 'goToHomeAndRefresh']);
         await TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, HttpClientTestingModule],
             providers: [
                 { provide: PlaceLettersService, useValue: placerLetterServiceSpy },
                 { provide: LetterService, useValue: letterServiceSpy },
