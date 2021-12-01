@@ -83,7 +83,7 @@ export class GridService {
             this.gridContext.fillStyle = 'black';
             const textpositionoffset = 3;
             const textpositionoffset2 = 0.75;
-            this.gridContext.font = '19px system-ui';
+            this.gridContext.font = '38 px system-ui'; // 19 * 2
             this.gridContext.fillText(
                 Constants.TEXTONTILES[textChoice],
                 Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
@@ -113,7 +113,7 @@ export class GridService {
             this.gridContext.stroke();
             this.gridContext.globalAlpha = 1;
             this.gridContext.textAlign = 'center';
-            this.gridContext.font = '15px serif';
+            this.gridContext.font = '30px serif'; // 15 *2
 
             this.gridContext.fillText(
                 (i + 1).toString(),
@@ -133,7 +133,7 @@ export class GridService {
 
             this.gridContext.globalAlpha = 1;
             this.gridContext.textBaseline = 'middle';
-            this.gridContext.font = '15px serif';
+            this.gridContext.font = '30px serif'; // 15 *2;
 
             this.gridContext.fillText(
                 Constants.SIDELETTERS[i].toString(),
@@ -177,7 +177,7 @@ export class GridService {
     // code pulled from https://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
 
     drawarrow(orientation: string, row: number, column: number) {
-        const arrowOffset = 0.125;
+        const arrowOffset = 0.25;
         const tileSizeArrowLength = 3;
         const arrowlength = Constants.CASESIZE / tileSizeArrowLength;
         // TODO discuter ISMA
@@ -197,9 +197,11 @@ export class GridService {
             arrowtailXpos = arrowHeadXpos; // since the arrow is horizontal x doesn't change
         }
         this.gridContext.strokeStyle = 'black';
+        this.gridContext.lineWidth = 2;
         this.gridContext.beginPath();
         this.canvasArrow(arrowtailXpos, arrowtailYpos, arrowHeadXpos, arrowHeadYpos);
         this.gridContext.stroke();
+        this.gridContext.lineWidth = 1; // back to default value
     }
 
     canvasArrow(fromx: number, fromy: number, tox: number, toy: number) {
