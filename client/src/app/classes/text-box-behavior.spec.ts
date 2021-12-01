@@ -278,17 +278,7 @@ describe('TextBox', () => {
         letterServiceSpy.players[timerTurnManagerServiceSpy.turn].allLettersInHand = [{ letter: 'a', quantity: 1, point: 1 }];
         expect(textBox.verifyCommandEchanger('!échanger a', 'a')).toEqual('Échange de lettre avec succès.');
     });
-    it('scrolldown should call getElementById when the element is not null', () => {
-        const dummyElement = document.createElement('div');
-        const mySpy = spyOn(document, 'getElementById').and.returnValue(dummyElement);
-        textBox.scrollDown();
-        expect(mySpy).toHaveBeenCalled();
-    });
-    it('scrolldown should call getElementById when the element is null', () => {
-        const mySpy = spyOn(document, 'getElementById').and.returnValue(null);
-        textBox.scrollDown();
-        expect(mySpy).toHaveBeenCalled();
-    });
+
     it('handleOpponentCommand should call verifyCommandPasser when the the command is !passer', async () => {
         spyOn(textBox.inputs, 'push');
         const mySpy = spyOn(textBox, 'verifyCommandPasser');
