@@ -5,6 +5,7 @@ import { FinishGameService } from '@app/services/finish-game.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { ObjectivesService } from '@app/services/objectives.service';
+import { OpponentNameService } from '@app/services/opponent-name.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { SocketService } from '@app/services/socket.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
@@ -30,6 +31,7 @@ export class TextBox {
         private letterBankService: LetterBankService,
         private socket: SocketService,
         private objectiveService: ObjectivesService,
+        private opponentNameService: OpponentNameService,
     ) {
         this.inputs = [];
         this.character = false;
@@ -61,11 +63,10 @@ export class TextBox {
             if (this.timeManager.turn === 1) {
                 this.endTurn('skip');
             }
-            if (this.letterService.players[0].name !== 'Tryphon Tournesol') {
-                this.letterService.players[1].name = 'Tryphon Tournesol';
-            } else {
-                this.letterService.players[1].name = 'Pacôme de Champignac';
-            }
+            this.letterService.players[0].name = this.opponentNameService.getOpponentName(
+                this.letterService.players[0].name.split(' ').join('').toLocaleLowerCase(),
+                false,
+            );
             this.timeManager.gameStatus = 2;
             this.commandSuccessful = true;
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!aide') {

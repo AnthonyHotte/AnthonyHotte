@@ -11,6 +11,7 @@ import { DictionaryService } from '@app/services/dictionary.service';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { LetterService } from '@app/services/letter.service';
 import { MessageService } from '@app/services/message.service';
+import { OpponentNameService } from '@app/services/opponent-name.service';
 import { SocketService } from '@app/services/socket.service';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { TileScramblerService } from '@app/services/tile-scrambler.service';
@@ -50,6 +51,7 @@ export class SoloGameInitiatorComponent {
         private communicationService: CommunicationService,
         private dictionaryService: DictionaryService,
         private soloopponent2: SoloOpponent2Service,
+        private opponentNameService: OpponentNameService,
     ) {
         this.dictionaryList = [];
         this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
@@ -62,7 +64,6 @@ export class SoloGameInitiatorComponent {
         this.indexDictionaryNumber = 0;
         this.temporaryName = 'Joueur';
         this.name = 'Appuyez sur la validation pour valider votre nom';
-        this.assignOpponentName();
         this.idNameOpponent = 0;
         this.nameIsValid = false;
         this.playTime = VALEUR_TEMPS_DEFAULT;
@@ -130,18 +131,8 @@ export class SoloGameInitiatorComponent {
         );
     }
 
-    assignOpponentName() {
-        const NUMBER_OF_NAMES = 3;
-        switch ((this.idNameOpponent = Math.floor(Math.random() * NUMBER_OF_NAMES) + 1)) {
-            case 1:
-                this.opponentName = 'Haruki Murakami';
-                break;
-            case 2:
-                this.opponentName = 'Daphne du Maurier';
-                break;
-            default:
-                this.opponentName = 'Jane Austen';
-        }
+    assignOpponentName(nameEntered: string) {
+        this.opponentName = this.opponentNameService.getOpponentName(nameEntered, this.soloopponent2.expertmode);
         this.letterService.players[1].name = this.opponentName;
     }
 
@@ -149,8 +140,7 @@ export class SoloGameInitiatorComponent {
         const EXPRESSION = /^[A-Za-z]+$/;
         const temp: string = this.temporaryName.split(' ').join('').toLocaleLowerCase();
         if (!this.startingNewGame) {
-            this.assignOpponentName();
-            this.switchOpponentName(temp);
+            this.assignOpponentName(temp);
         }
         if (temp.length > LONGUEURNOMMAX || temp === '') {
             this.nameIsValid = false;
@@ -161,23 +151,6 @@ export class SoloGameInitiatorComponent {
         }
         if (!this.verifyNameIsNotSameAsRoomCreator() && this.getGameStatus() === 1) {
             this.nameIsValid = false;
-        }
-    }
-    switchOpponentName(temp: string) {
-        if (temp === this.opponentName.split(' ').join('').toLocaleLowerCase()) {
-            switch (this.idNameOpponent) {
-                case 1:
-                    this.opponentName = 'Daphne du Maurier';
-
-                    break;
-                case 2:
-                    this.opponentName = 'Jane Austen';
-
-                    break;
-                default:
-                    this.opponentName = 'Haruki Murakami';
-            }
-            this.letterService.players[1].name = this.opponentName;
         }
     }
     setName() {
@@ -207,6 +180,7 @@ export class SoloGameInitiatorComponent {
     setExpertMode(expert: boolean) {
         this.easyDifficulty = !expert;
         this.soloopponent2.setExpertMode(expert);
+        this.assignOpponentName(this.letterService.players[0].name);
     }
     scrambleBonus() {
         if (this.isBonusRandom) {
