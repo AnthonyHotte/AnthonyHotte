@@ -82,8 +82,12 @@ export class PlayAreaComponent implements AfterViewInit {
 
     mouseHitDetect(event: MouseEvent) {
         if (event.button === MouseButton.Left) {
+            const rect = this.gridCanvas.nativeElement.getBoundingClientRect();
+            const scaleX = this.gridCanvas.nativeElement.width / rect.width;
+            const scaleY = this.gridCanvas.nativeElement.height / rect.height;
             this.mousePosition = { x: event.offsetX, y: event.offsetY };
-            this.placeLetterClickService.caseSelected(this.mousePosition.x, this.mousePosition.y);
+            // this.mousePosition = { x: event.clientX, y: event.clientY };
+            this.placeLetterClickService.caseSelected(this.mousePosition.x * scaleX, this.mousePosition.y * scaleY);
         }
     }
 }
