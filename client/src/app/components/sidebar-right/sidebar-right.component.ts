@@ -141,10 +141,16 @@ export class SidebarRightComponent implements AfterViewInit {
                 sender: this.letterService.players[1].name,
                 role: 'Adversaire',
             };
+            const messageSystem: MessagePlayer = {
+                message: this.soloOpponent.lastMessageSystem,
+                sender: 'Systeme',
+                role: 'Systeme',
+            };
             if (this.textBox.debugCommand) {
                 message.message = message.message + ' ' + this.soloOpponent.soloOpponent2.alternativePlay();
             }
             this.textBox.inputs.push(message);
+            this.textBox.inputs.push(messageSystem);
             // this.textBox.scrollDown();
             // INUTILE car la fonction scrollDown a ete remplace
         }

@@ -14,6 +14,7 @@ import { TimerTurnManagerService } from './timer-turn-manager.service';
 })
 export class SoloOpponentService {
     lastCommandEntered: string = 'Bonjour joueur!';
+    lastMessageSystem: string;
     constructor(
         public letters: LetterService,
         public timeManager: TimerTurnManagerService,
@@ -34,6 +35,7 @@ export class SoloOpponentService {
                 this.exchangeLettersExpert();
                 this.endTurn('exchange'); // TODO DEBUG HERE, not working for some reasons
             } else {
+                this.lastMessageSystem = 'Mot placé avec succès.';
                 this.endTurn('place');
             }
         } else {
@@ -47,6 +49,7 @@ export class SoloOpponentService {
                 if (this.lastCommandEntered === '!placer undefined') {
                     this.skipTurn();
                 } else {
+                    this.lastMessageSystem = 'Mot placé avec succès.';
                     this.endTurn('place');
                 }
             } else if (PROBABILITY_OF_ACTION <= TEN) {
@@ -75,6 +78,7 @@ export class SoloOpponentService {
         if (this.timeManager.turn !== 1) return;
         this.endTurn('skip');
         this.lastCommandEntered = '!passer';
+        this.lastMessageSystem = this.letters.players[1].name + ' a passé son tour';
     }
     exchangeLetters(numberOfLettersToTrade: number) {
         let i = 0;
@@ -96,8 +100,10 @@ export class SoloOpponentService {
     exchangeLettersExpert() {
         if (this.getNumberRemainingLetters() >= MAXLETTERINHAND) {
             this.exchangeLetters(MAXLETTERINHAND);
+            this.lastMessageSystem = this.letters.players[1].name + ' a échangé ' + MAXLETTERINHAND + ' lettres';
         } else {
             this.exchangeLetters(this.getNumberRemainingLetters());
+            this.lastMessageSystem = this.letters.players[1].name + ' a échangé ' + this.getNumberRemainingLetters() + ' lettres';
         }
     }
     getNumberRemainingLetters() {
