@@ -117,6 +117,7 @@ export class SidebarRightComponent implements AfterViewInit {
     verifyChangedTurns(counter: CountdownComponent) {
         if (this.gameFinishService.isGameFinished) {
             counter.pause();
+            this.textBox.handleEnter(this.gameFinishService.getMessageTextBox());
             const mode = this.socketService.is2990 ? 1 : 0;
             this.bestScoreService.updateBestScore();
             if (this.bestScoreService.verifyIfBestScore(this.letterService.players[0].score, mode)) {
