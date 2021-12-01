@@ -58,7 +58,7 @@ export const MAXLETTERINHAND = 7;
 
 export const MAX_CHARACTERS = 512;
 export const ENTER_ASCII = 69;
-export const MAX_NUMBER_SKIPPED_TURNS = 5;
+export const MAX_NUMBER_SKIPPED_TURNS = 6;
 export const NUMBER_DOUBLE_WORD = 17;
 export const NUMBER_TRIPLE_WORD = 8;
 export const NUMBER_DOUBLE_LETTER = 24;
