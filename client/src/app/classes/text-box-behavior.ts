@@ -63,7 +63,7 @@ export class TextBox {
             if (this.timeManager.turn === 1) {
                 this.endTurn('skip');
             }
-            this.letterService.players[0].name = this.opponentNameService.getOpponentName(
+            this.letterService.players[1].name = this.opponentNameService.getOpponentName(
                 this.letterService.players[0].name.split(' ').join('').toLocaleLowerCase(),
                 false,
             );
