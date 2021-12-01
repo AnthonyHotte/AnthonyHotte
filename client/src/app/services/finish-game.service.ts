@@ -63,12 +63,21 @@ export class FinishGameService {
     getCongratulation(): string {
         this.scoreCalculator();
         const winners = this.getWinner();
-        let congratulationMsg = 'Félicitation, ' + this.letterService.players[winners[0]].name;
-        for (let i = 1; i < winners.length; i++) {
-            congratulationMsg += ' et ' + this.letterService.players[winners[i]].name + ',';
+        let congratulationMsg: string;
+        const finalScoreString = 'Le score final est ' + this.finalScore[0] + '-' + this.finalScore[1] + '.';
+        if (winners.length === 2) {
+            congratulationMsg =
+                'Félicitation, ' +
+                this.letterService.players[winners[0]].name +
+                ' et ' +
+                this.letterService.players[winners[1]].name +
+                '! Vous avez fini à égalité. ' +
+                finalScoreString;
+        } else if (winners[0] === 0) {
+            congratulationMsg = 'Félicitation, ' + this.letterService.players[winners[0]].name + '! Vous avez gagné! ' + finalScoreString;
+        } else {
+            congratulationMsg = 'Dommage! Vous avez perdu. ' + finalScoreString;
         }
-        congratulationMsg += ' vous avez gagnés!!!';
-        this.finalScore = [];
 
         return congratulationMsg;
     }
