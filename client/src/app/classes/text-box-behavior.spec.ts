@@ -8,7 +8,6 @@ import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
-import { BehaviorSubject } from 'rxjs';
 import { PlayerLetterHand } from './player-letter-hand';
 import { TextBox } from './text-box-behavior';
 describe('TextBox', () => {
@@ -45,7 +44,6 @@ describe('TextBox', () => {
         timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
         timerTurnManagerServiceSpy.turn = 0;
         finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator', 'goToHomeAndRefresh']);
-        finishGameServiceSpy.updateOfEndGameValue = new BehaviorSubject<boolean>(true);
         await TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             providers: [

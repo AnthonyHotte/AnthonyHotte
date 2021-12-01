@@ -82,7 +82,6 @@ describe('SoloGameInitiatorComponent', () => {
         component = fixture.componentInstance;
         component.nameIsValid = true;
         component.opponentName = 'Tony';
-        component.idNameOpponent = 0;
         fixture.detectChanges();
     });
     it('should create', () => {
@@ -139,10 +138,8 @@ describe('SoloGameInitiatorComponent', () => {
 
     it('verifyName should call assignOpponentName', () => {
         const mySpy2 = spyOn(component, 'assignOpponentName');
-        const mySpy3 = spyOn(component, 'switchOpponentName');
         component.verifyNames();
         expect(mySpy2).toHaveBeenCalled();
-        expect(mySpy3).toHaveBeenCalled();
     });
     it('verifyName should set nameIsValid at false', () => {
         component.temporaryName = 'sdfsdfsdfsdfsdfsdfsdfsdfsdsfsdfsdfsdfdsfdsfsdfsdfsdfsdfsdfsdf';
@@ -189,29 +186,12 @@ describe('SoloGameInitiatorComponent', () => {
         const val = 'invalide';
         expect(retour).toBe(val);
     });
-    it('switchOpponentName should enter in case 1', () => {
-        component.opponentName = 'abcd';
-        const temp = 'abcd';
-        component.idNameOpponent = 1;
-        const retour = 'Daphne du Maurier';
-        component.switchOpponentName(temp);
-        expect(component.opponentName).toBe(retour);
-    });
-    it('switchOpponentName should enter in case 2', () => {
-        component.opponentName = 'abcd';
-        const temp = 'abcd';
-        component.idNameOpponent = 2;
-        const retour = 'Jane Austen';
-        component.switchOpponentName(temp);
-        expect(component.opponentName).toBe(retour);
-    });
+
     it('switchOpponentName should enter in default', () => {
         component.opponentName = 'abcd';
         const temp = 'abcd';
-        component.idNameOpponent = 3;
-        const retour = 'Haruki Murakami';
-        component.switchOpponentName(temp);
-        expect(component.opponentName).toBe(retour);
+        component.assignOpponentName(temp);
+        expect(component.opponentName).not.toEqual(temp);
     });
     it('setExpertMode should enter in default', () => {
         component.setExpertMode(true);

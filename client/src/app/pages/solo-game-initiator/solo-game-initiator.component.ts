@@ -27,7 +27,6 @@ export class SoloGameInitiatorComponent {
     temporaryName: string;
     name: string;
     opponentName: string;
-    idNameOpponent: number;
     nameIsValid: boolean;
     playTime: number;
     easyDifficulty: boolean;
@@ -64,7 +63,6 @@ export class SoloGameInitiatorComponent {
         this.indexDictionaryNumber = 0;
         this.temporaryName = 'Joueur';
         this.name = 'Appuyez sur la validation pour valider votre nom';
-        this.idNameOpponent = 0;
         this.nameIsValid = false;
         this.playTime = VALEUR_TEMPS_DEFAULT;
         this.easyDifficulty = true;
