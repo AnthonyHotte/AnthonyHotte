@@ -30,10 +30,11 @@ export class SoloOpponentService {
         if (this.timeManager.turn !== 1) return;
         if (this.soloOpponent2.expertmode) {
             this.lastCommandEntered = await this.soloOpponent2.play();
-            this.endTurn('place');
             if (this.lastCommandEntered === '!placer undefined') {
                 this.exchangeLettersExpert();
                 this.endTurn('exchange'); // TODO DEBUG HERE, not working for some reasons
+            } else {
+                this.endTurn('place');
             }
         } else {
             const HUNDRED = 100;
@@ -43,7 +44,11 @@ export class SoloOpponentService {
             const PROBABILITY_OF_ACTION = this.calculateProbability(HUNDRED);
             if (PROBABILITY_OF_ACTION > TWENTY) {
                 this.lastCommandEntered = await this.soloOpponent2.play();
-                this.endTurn('place');
+                if (this.lastCommandEntered === '!placer undefined') {
+                    this.skipTurn();
+                } else {
+                    this.endTurn('place');
+                }
             } else if (PROBABILITY_OF_ACTION <= TEN) {
                 this.skipTurn();
             } else {
