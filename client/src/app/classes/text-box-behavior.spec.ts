@@ -7,6 +7,7 @@ import { MessagePlayer } from '@app/message';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
+import { OpponentNameService } from '@app/services/opponent-name.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
 import { PlayerLetterHand } from './player-letter-hand';
@@ -18,10 +19,12 @@ describe('TextBox', () => {
     let timerTurnManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let finishGameServiceSpy: jasmine.SpyObj<FinishGameService>;
     let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
+    let opponentNameServiceSpy: jasmine.SpyObj<OpponentNameService>;
     let routerSpy: jasmine.SpyObj<Router>;
     beforeEach(async () => {
         routerSpy = jasmine.createSpyObj('Router', ['navigate']);
         letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+        opponentNameServiceSpy = jasmine.createSpyObj('OpponentNameService', ['getOpponentName']);
         letterBankServiceSpy.letterBank = [];
         const numberLetterInBank = 13;
         for (let i = 0; i < numberLetterInBank; i++) {
@@ -53,6 +56,7 @@ describe('TextBox', () => {
                 { provide: LetterBankService, useValue: letterBankServiceSpy },
                 { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
                 { provide: FinishGameService, useValue: finishGameServiceSpy },
+                { provide: OpponentNameService, useValue: opponentNameServiceSpy },
                 { provide: Router, useValue: routerSpy },
             ],
         }).compileComponents();
