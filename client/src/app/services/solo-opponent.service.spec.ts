@@ -36,11 +36,13 @@ describe('SoloOpponentService', () => {
             for (let i = 0; i < MAXLETTERINHAND; i++) {
                 player1.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
             }
+            player1.name = 'Tony';
             const player2 = new PlayerLetterHand(letterBankServiceSpy);
             player2.allLettersInHand = [];
             for (let i = 0; i < MAXLETTERINHAND; i++) {
                 player2.allLettersInHand.push({ letter: 'a', quantity: 1, point: 1 });
             }
+            player2.name = 'Tony';
             letterServiceSpy.players = [player1, player2];
             timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['reset', 'endTurn']);
             timerTurnManagerServiceSpy.gameStatus = GameStatus.SoloPlayer;
@@ -78,6 +80,57 @@ describe('SoloOpponentService', () => {
         const spy = spyOn(service, 'calculateProbability');
         service.play();
         expect(spy).not.toHaveBeenCalled();
+    });
+    it('play should have timeturnManager turn equal 1', () => {
+        const promise = new Promise<string>((resolve) => {
+            resolve('!placer undefined');
+        });
+        timerTurnManagerServiceSpy.turn = 1;
+        timerTurnManagerServiceSpy.gameStatus = GameStatus.SoloPlayer;
+        soloOpponent2ServiceSpy.expertmode = false;
+        const calculateProbabilityReturn = 60;
+        soloOpponent2ServiceSpy.play.and.returnValue(promise);
+        service.lastCommandEntered = '!placer undefined';
+        spyOn(service, 'calculateProbability').and.returnValue(calculateProbabilityReturn);
+        spyOn(service, 'skipTurn');
+        service.play().then(() => {
+            expect(timerTurnManagerServiceSpy.gameStatus).toEqual(GameStatus.SoloPlayer);
+            expect(timerTurnManagerServiceSpy.turn).toEqual(1);
+        });
+    });
+    it('play should have timeturnManager turn equal 1 when expertmode to true and is !placer undefined', () => {
+        const promise = new Promise<string>((resolve) => {
+            resolve('!placer undefined');
+        });
+        timerTurnManagerServiceSpy.turn = 1;
+        timerTurnManagerServiceSpy.gameStatus = GameStatus.SoloPlayer;
+        soloOpponent2ServiceSpy.expertmode = true;
+        const calculateProbabilityReturn = 60;
+        soloOpponent2ServiceSpy.play.and.returnValue(promise);
+        service.lastCommandEntered = '!placer undefined';
+        spyOn(service, 'calculateProbability').and.returnValue(calculateProbabilityReturn);
+        spyOn(service, 'skipTurn');
+        service.play().then(() => {
+            expect(timerTurnManagerServiceSpy.gameStatus).toEqual(GameStatus.SoloPlayer);
+            expect(timerTurnManagerServiceSpy.turn).toEqual(1);
+        });
+    });
+    it('play should have timeturnManager turn equal 1 when expertmode to true and is not !placer undefined', () => {
+        const promise = new Promise<string>((resolve) => {
+            resolve('!placer');
+        });
+        timerTurnManagerServiceSpy.turn = 1;
+        timerTurnManagerServiceSpy.gameStatus = GameStatus.SoloPlayer;
+        soloOpponent2ServiceSpy.expertmode = true;
+        const calculateProbabilityReturn = 60;
+        soloOpponent2ServiceSpy.play.and.returnValue(promise);
+        service.lastCommandEntered = '!place';
+        spyOn(service, 'calculateProbability').and.returnValue(calculateProbabilityReturn);
+        spyOn(service, 'skipTurn');
+        service.play().then(() => {
+            expect(timerTurnManagerServiceSpy.gameStatus).toEqual(GameStatus.SoloPlayer);
+            expect(timerTurnManagerServiceSpy.turn).toEqual(1);
+        });
     });
 
     it('play should call calculate probability and call skipTurn', () => {
@@ -171,7 +224,7 @@ describe('SoloOpponentService', () => {
 
     it('endTurn should call endTurn and not finish game when opponent hand is not empty', () => {
         timerTurnManagerServiceSpy.turn = 1;
-        service.endTurn('place');
+        service.endTurn('pl');
         timerTurnManagerServiceSpy.turn = 0;
         expect(timerTurnManagerServiceSpy.endTurn).toHaveBeenCalled();
         expect(finishGameServiceSpy.isGameFinished).toBeFalse();
@@ -195,5 +248,29 @@ describe('SoloOpponentService', () => {
         const spy = spyOn(service, 'calculateProbability');
         service.play();
         expect(spy).not.toHaveBeenCalled();
+    });
+    it('getNumberRemainingLetters should retun letterBankService.letterBank.lenght', () => {
+        letterBankServiceSpy.letterBank = [];
+        for (let i = 0; i < 3; i++) {
+            letterBankServiceSpy.letterBank.push({ letter: 'A', quantity: 9, point: 1 });
+        }
+        const expectedLetterInBank = 3;
+        expect(service.getNumberRemainingLetters()).toEqual(expectedLetterInBank);
+    });
+    it('exchangeLettersExpert should set lastMessageSystem Tony a échangé 7 lettres', () => {
+        letterServiceSpy.players[1].name = 'Tony';
+        const returnGetNumberRemainingLetters = 8;
+        spyOn(service, 'getNumberRemainingLetters').and.returnValue(returnGetNumberRemainingLetters);
+        spyOn(service, 'exchangeLetters');
+        service.exchangeLettersExpert();
+        expect(service.lastMessageSystem).toEqual('Tony a échangé 7 lettres');
+    });
+    it('exchangeLettersExpert should set lastMessageSystem Tony a échangé 7 lettres', () => {
+        letterServiceSpy.players[1].name = 'Tony';
+        const returnGetNumberRemainingLetters = 2;
+        spyOn(service, 'getNumberRemainingLetters').and.returnValue(returnGetNumberRemainingLetters);
+        spyOn(service, 'exchangeLetters');
+        service.exchangeLettersExpert();
+        expect(service.lastMessageSystem).toEqual('Tony a échangé 2 lettres');
     });
 });
