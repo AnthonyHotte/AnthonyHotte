@@ -5,7 +5,7 @@ import { CommunicationService } from './communication.service';
 
 import { OpponentNameService } from './opponent-name.service';
 
-fdescribe('OpponentNameService', () => {
+describe('OpponentNameService', () => {
     let service: OpponentNameService;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
     beforeEach(
