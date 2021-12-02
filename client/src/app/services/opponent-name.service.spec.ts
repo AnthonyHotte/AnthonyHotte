@@ -5,7 +5,7 @@ import { CommunicationService } from './communication.service';
 
 import { OpponentNameService } from './opponent-name.service';
 
-describe('OpponentNameService', () => {
+fdescribe('OpponentNameService', () => {
     let service: OpponentNameService;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
     beforeEach(
@@ -22,9 +22,18 @@ describe('OpponentNameService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(OpponentNameService);
+        service.beginnerName = ['Haruki', 'Daphne'];
+        service.expertName = ['Tryphon', 'Archibald'];
     });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
+    });
+
+    it('getOpponentName should return a name taht is different from the name it has in parameter in beginner mode', () => {
+        expect(service.getOpponentName('haruki', false)).not.toEqual('Haruki');
+    });
+    it('getOpponentName should return a name taht is different from the name it has in parameter in expert mode', () => {
+        expect(service.getOpponentName('tryphon', true)).not.toEqual('Tryphon');
     });
 });
