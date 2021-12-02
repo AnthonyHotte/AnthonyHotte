@@ -86,19 +86,7 @@ export class SidebarRightComponent implements AfterViewInit {
         return this.letterService.players[index].score;
     }
     getPlayerName(player: number) {
-        const VISUAL_LIMITS_OF_LENGTH = 6;
-        let position = 0;
-        let returnedName = '';
-        while (position < this.letterService.players[player].name.length) {
-            if (this.letterService.players[player].name.substr(position, VISUAL_LIMITS_OF_LENGTH).search(' ') < 0) {
-                returnedName += this.letterService.players[player].name.substr(position, VISUAL_LIMITS_OF_LENGTH) + ' ';
-                position += VISUAL_LIMITS_OF_LENGTH;
-            } else {
-                returnedName += this.letterService.players[player].name.charAt(position);
-                position++;
-            }
-        }
-        return returnedName;
+        return this.letterService.players[player].name;
     }
 
     getPlayerNameAndVerifyTurn() {
