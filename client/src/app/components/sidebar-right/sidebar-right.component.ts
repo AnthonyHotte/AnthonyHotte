@@ -135,15 +135,13 @@ export class SidebarRightComponent implements AfterViewInit {
                 sender: 'Systeme',
                 role: 'Systeme',
             };
-            if (this.textBox.debugCommand) {
-                message.message = message.message + ' ' + this.soloOpponent.soloOpponent2.alternativePlay();
-            }
             this.textBox.inputs.push(message);
             if (messageSystem.message !== '') {
                 this.textBox.inputs.push(messageSystem);
             }
-            // this.textBox.scrollDown();
-            // INUTILE car la fonction scrollDown a ete remplace
+            if (this.textBox.debugCommand && this.soloOpponent.lastCommandEntered.substring(0, '!placer'.length) === '!placer') {
+                this.textBox.handleEnter(this.soloOpponent.soloOpponent2.alternativePlay());
+            }
         }
     }
     async delay(ms: number) {
