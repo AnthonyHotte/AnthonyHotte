@@ -16,11 +16,11 @@ export class SoloOpponent2Service {
     tempword: string;
     score = 0;
     expertmode = false;
-    private bestWordsToPlayExpert: BestWordToPlay[] = [];
-    private wordToPlayLessThan6Points: string[] = [];
-    private wordToPlay7to12points: string[] = [];
-    private wordToPlaymore13to18points: string[] = [];
-    private alternativeplays: string;
+    bestWordsToPlayExpert: BestWordToPlay[] = [];
+    alternativeplays: string;
+    wordToPlayLessThan6Points: string[] = [];
+    wordToPlay7to12points: string[] = [];
+    wordToPlaymore13to18points: string[] = [];
     constructor(
         public letterService: LetterService,
         public timeManagerService: TimerTurnManagerService,
@@ -275,7 +275,7 @@ export class SoloOpponent2Service {
             }
         }
     }
-    private fillAlternativePlay(listfOfWordToPlay: string[]) {
+    fillAlternativePlay(listfOfWordToPlay: string[]) {
         this.alternativeplays = '   placements alternatifs:';
         for (let i = 0; i < listfOfWordToPlay.length && i < 3; i++) {
             this.alternativeplays = this.alternativeplays + listfOfWordToPlay[i];

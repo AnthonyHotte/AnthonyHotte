@@ -139,7 +139,9 @@ export class SidebarRightComponent implements AfterViewInit {
                 message.message = message.message + ' ' + this.soloOpponent.soloOpponent2.alternativePlay();
             }
             this.textBox.inputs.push(message);
-            this.textBox.inputs.push(messageSystem);
+            if (messageSystem.message !== '') {
+                this.textBox.inputs.push(messageSystem);
+            }
             // this.textBox.scrollDown();
             // INUTILE car la fonction scrollDown a ete remplace
         }
@@ -155,5 +157,9 @@ export class SidebarRightComponent implements AfterViewInit {
             return true;
         }
         return false;
+    }
+
+    isGameFinished() {
+        return this.gameFinishService.isGameFinished;
     }
 }
