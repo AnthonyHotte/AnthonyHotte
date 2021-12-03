@@ -23,11 +23,7 @@ export class FinishGameService {
         for (const player of this.letterService.players) {
             let tempScore = player.score;
             for (const letter of player.allLettersInHand) {
-                if (!(tempScore - letter.point < 0)) {
-                    tempScore -= letter.point;
-                } else {
-                    tempScore = 0;
-                }
+                tempScore = !(tempScore - letter.point < 0) ? (tempScore -= letter.point) : 0;
             }
             this.finalScore.push(tempScore);
         }
