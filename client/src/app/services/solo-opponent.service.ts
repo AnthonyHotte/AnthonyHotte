@@ -55,7 +55,7 @@ export class SoloOpponentService {
             } else if (PROBABILITY_OF_ACTION <= TEN) {
                 this.skipTurn();
             } else {
-                const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length) - 1;
+                const NUMBER_OF_LETTERS_TO_TRADE = this.calculateProbability(this.letters.players[1].allLettersInHand.length - 1);
                 if (NUMBER_OF_LETTERS_TO_TRADE <= SIX) {
                     this.exchangeLetters(NUMBER_OF_LETTERS_TO_TRADE + 1);
                     this.endTurn('exchange');
