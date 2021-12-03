@@ -26,7 +26,7 @@ export class LettersComponent implements OnInit {
             this.letterService.reset();
         }
         this.maxLettersInHand = Constants.MAXLETTERINHAND;
-        this.letterSize = Constants.CASESIZE;
+        this.letterSize = Constants.CASESIZE / 2;
         this.getNewLetters();
     }
 
