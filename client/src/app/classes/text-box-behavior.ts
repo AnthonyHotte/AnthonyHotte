@@ -190,7 +190,7 @@ export class TextBox {
             text = '';
             this.handleEnter(this.verifyAide());
             this.socketService.configureSendMessageToServer('!aide', this.timeManager.gameStatus);
-        } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
+        } else if (myWord.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve' && this.debugCommand) {
             text = '';
             this.handleEnter(this.activateReserve());
             this.socketService.configureSendMessageToServer('!réserve', this.timeManager.gameStatus);
