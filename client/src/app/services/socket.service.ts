@@ -32,6 +32,7 @@ export class SocketService {
     boards: Position[][][];
     iswordvalid2: boolean;
     is2990: boolean;
+    gameWasMultiplayer = false;
 
     constructor() {
         this.gameLists = [[]];
@@ -203,7 +204,9 @@ export class SocketService {
     }
 
     finishedGameMessageTransmission() {
-        this.socket.emit('gameFinished', this.roomNumber);
+        if (!this.gameWasMultiplayer) {
+            this.socket.emit('gameFinished', this.roomNumber);
+        }
     }
 
     handleDisconnect() {
