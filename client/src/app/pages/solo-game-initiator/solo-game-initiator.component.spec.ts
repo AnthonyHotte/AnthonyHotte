@@ -13,10 +13,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { CommunicationService } from '@app/services/communication.service';
 import { DictionaryService } from '@app/services/dictionary.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OpponentNameService } from '@app/services/opponent-name.service';
+import { Dictionary } from '@app/classes/dictionary';
 
 describe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
@@ -91,6 +92,11 @@ describe('SoloGameInitiatorComponent', () => {
     });
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+    it('initiateSubscription should create', () => {
+        communicationServiceSpy.getDictionaryList.and.returnValue(of([new Dictionary('t1', 'd1')]));
+        component.initiateSubscription();
+        expect(communicationServiceSpy.getDictionaryList).toHaveBeenCalled();
     });
     it('join game should call set name', () => {
         const spy = spyOn(component, 'setName');
@@ -201,5 +207,11 @@ describe('SoloGameInitiatorComponent', () => {
     it('setExpertMode should enter in default', () => {
         component.setExpertMode(true);
         expect(soloopponent2Spy.setExpertMode).toHaveBeenCalledWith(true);
+    });
+    it('validateDictionaryNumber should enter in default', () => {
+        communicationServiceSpy.getDictionaryList.and.returnValue(of([new Dictionary('t1', 'd1')]));
+        component.validateDictionaryNumber().then(() => {
+            expect(communicationServiceSpy.getDictionaryList).toHaveBeenCalled();
+        });
     });
 });
