@@ -12,7 +12,7 @@ describe('WaitingRoomComponent', () => {
 
     beforeEach(async () => {
         timeTurnManagerSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
-        socketServiceSpy = jasmine.createSpyObj('SocketService', ['cancelGame']);
+        socketServiceSpy = jasmine.createSpyObj('SocketService', ['cancelGame', 'handleDisconnect']);
         await TestBed.configureTestingModule({
             declarations: [WaitingRoomComponent],
             providers: [
@@ -40,5 +40,9 @@ describe('WaitingRoomComponent', () => {
     it('cancelGame should call socket service cancel game', () => {
         component.cancelGame();
         expect(socketServiceSpy.cancelGame).toHaveBeenCalled();
+    });
+    it('should call handleDisconnect', () => {
+        component.beforeUnloadHandler();
+        expect(socketServiceSpy.handleDisconnect).toHaveBeenCalled();
     });
 });

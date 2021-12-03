@@ -56,4 +56,13 @@ describe('Dictionary service', () => {
         const dict = dictionaryService.getFullDictionary(0);
         expect(dict.title).to.equals('t1');
     });
+    it('should call addDictionary', () => {
+        const dico = new Dictionary('t1', 'd1');
+        dictionaryService.addDictionary(dico);
+    });
+    it('should call modifyDictionary', () => {
+        const dico = new Dictionary('t1', 'd1');
+        dictionaryService.addDictionary(dico);
+        dictionaryService.modifyDictionary(0, dico);
+    });
 });

@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { RefreshServiceService } from './refresh-service.service';
 
 describe('RefreshServiceService', () => {
