@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Dictionary } from '@app/classes/dictionary';
 import { CommunicationService } from '@app/services/communication.service';
 import { DictionaryService } from '@app/services/dictionary.service';
-
 import { FileUploadComponent } from './file-upload.component';
 
 describe('FileUploadComponent', () => {
@@ -41,11 +40,5 @@ describe('FileUploadComponent', () => {
         dictionaryServiceSpy.isTitlePresent.and.returnValue(true);
         const res = component.isValidDictionary('t1', 'd1');
         expect(res).toBe(false);
-    });
-    it('onFileSelected should do nothing when no file', () => {
-        const event = new Event('event');
-        component.dictionary = new Dictionary('', '');
-        component.onFileSelected(event);
-        expect(component.dictionary.title).toEqual('');
     });
 });

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
@@ -213,7 +214,22 @@ describe('PlaceLetterClickService', () => {
         placeLetterClickService.handleRowAndColumnAfterLetter();
         expect(placeLetterClickService.colomnNumber).toEqual(numberOfCases);
     });
-
+    it('handlerowandcolumn should augment the column by 1 after placing letter if board is empty and orientation is h', () => {
+        placeLetterClickService.orientation = 'j';
+        const numberOfCases = 14;
+        placeLetterClickService.row = 14;
+        placeLetterClickService.colomnNumber = 14;
+        placeLetterClickService.handleRowAndColumnAfterLetter();
+        expect(placeLetterClickService.colomnNumber).toEqual(numberOfCases);
+    });
+    it('handlerowandcolumn should augment the column by 1 after placing letter if board is empty and orientation is h', () => {
+        placeLetterClickService.orientation = 'h';
+        const numberOfCases = 13;
+        placeLetterClickService.row = 14;
+        placeLetterClickService.colomnNumber = 12;
+        placeLetterClickService.handleRowAndColumnAfterLetter();
+        expect(placeLetterClickService.colomnNumber).toEqual(numberOfCases);
+    });
     it('handlerowandcolumn should augment the row by 2 after placing letter if board has a letter on the next case and orientation is v', () => {
         placeLetterClickService.orientation = 'v';
         const numberOfCases = 15;
@@ -224,6 +240,15 @@ describe('PlaceLetterClickService', () => {
         expect(placeLetterClickService.row).toEqual(numberOfCases);
     });
 
+    it('handlerowandcolumn should augment the row by 2 after placing letter if board has a letter on the next case and orientation is v', () => {
+        placeLetterClickService.orientation = 'v';
+        const numberOfCases = 14;
+        placeLetterClickService.row = 13;
+        placeLetterClickService.colomnNumber = 12;
+        gameStateServiceSpy.lettersOnBoard[14][13] = 'a';
+        placeLetterClickService.handleRowAndColumnAfterLetter();
+        expect(placeLetterClickService.row).toEqual(numberOfCases);
+    });
     it('transform into command should call reset', () => {
         const myspy = spyOn(placeLetterClickService, 'reset');
         placeLetterClickService.transformIntoCommand();
@@ -238,8 +263,9 @@ describe('PlaceLetterClickService', () => {
 
     it('rawXYPositionToCasePosition should return 16 when 750 is entered', () => {
         const randomNumber = 750;
-        const lastCase = 16;
-        expect(placeLetterClickService.rawXYPositionToCasePosition(randomNumber)).toEqual(lastCase);
+        const spy = spyOn(Math, 'floor');
+        placeLetterClickService.rawXYPositionToCasePosition(randomNumber);
+        expect(spy).toHaveBeenCalled();
     });
 
     it('removeLetterWithBackspace should call handleColumnAndRowAfterRemove when orientation is h letteronedge', () => {
@@ -252,10 +278,20 @@ describe('PlaceLetterClickService', () => {
         placeLetterClickService.removeLetterWithBackspace();
         expect(mySpy).toHaveBeenCalled();
     });
-
-    it('removeLetterWithBackspace should call handleColumnAndRowAfterRemove when orientation is v letteronedge', () => {
+    it('removeLetterWithBackspace should call handleColumnAndRowAfterRemove when orientation is h letteronedge', () => {
         placeLetterClickService.isLetterAtEdge = true;
-        placeLetterClickService.orientation = 'v';
+        placeLetterClickService.orientation = 'h';
+        placeLetterClickService.lettersFromHand = 'hello';
+        const mySpy = spyOn(placeLetterClickService, 'handleColumnAndRowAfterRemove');
+        spyOn(gridServiceSpy, 'drawtilebackground');
+        spyOn(gridServiceSpy, 'drawarrow');
+        placeLetterClickService.removeLetterWithBackspace();
+        expect(mySpy).toHaveBeenCalled();
+    });
+
+    it('removeLetterWithBackspace should not call handleColumnAndRowAfterRemove when orientation is v letteronedge', () => {
+        placeLetterClickService.isLetterAtEdge = true;
+        placeLetterClickService.orientation = 'a';
         placeLetterClickService.lettersFromHand = 'hellO';
         const mySpy = spyOn(placeLetterClickService, 'handleColumnAndRowAfterRemove');
         spyOn(gridServiceSpy, 'drawtilebackground');
@@ -309,12 +345,32 @@ describe('PlaceLetterClickService', () => {
         placeLetterClickService.removeLetterWithBackspace();
         expect(mySpy).toHaveBeenCalled();
     });
+    it('removeLetterWithBackspace should call handleColumnAndRowAfterRemove when orientation is v and previouscase is occupied !letteronedge', () => {
+        placeLetterClickService.isLetterAtEdge = false;
+        placeLetterClickService.orientation = 'j';
+        placeLetterClickService.lettersFromHand = 'hellO';
+        const mySpy = spyOn(placeLetterClickService, 'handleColumnAndRowAfterRemove');
+        spyOn(gridServiceSpy, 'drawtilebackground');
+        spyOn(gridServiceSpy, 'drawarrow');
+        placeLetterClickService.removeLetterWithBackspace();
+        expect(mySpy).toHaveBeenCalled();
+    });
     it('handlerowcolumn after remove should reduce by 1 column number when orientation is h', () => {
         placeLetterClickService.wordPlacedWithClick = 'hello';
         gameStateServiceSpy.lettersOnBoard[2][2] = 'a';
         placeLetterClickService.orientation = 'h';
         placeLetterClickService.handleColumnAndRowAfterRemove();
         expect(placeLetterClickService.colomnNumber).toEqual(1);
+    });
+    it('handlerowcolumn after remove should reduce by 1 column number when orientation is h', () => {
+        placeLetterClickService.wordPlacedWithClick = 'hello';
+        gameStateServiceSpy.lettersOnBoard[2][2] = 'a';
+        placeLetterClickService.orientation = 'h';
+        placeLetterClickService.colomnNumber = 9;
+        const num = 9;
+        placeLetterClickService.handleColumnAndRowAfterRemove();
+        expect(placeLetterClickService.colomnNumber).toEqual(num);
+        // eslint-disable-next-line max-lines
     });
     it('handlerowcolumn after remove should reduce by 1 row when orientation is v', () => {
         placeLetterClickService.wordPlacedWithClick = 'hello';
@@ -329,8 +385,20 @@ describe('PlaceLetterClickService', () => {
         placeLetterClickService.removeArrowIfNeeded(2, 2);
         expect(gridServiceSpy.drawtilebackground).toHaveBeenCalled();
     });
+    it('removearrow if needed should call drawtilebackground if last letter entered is Backspace', () => {
+        placeLetterClickService.wordPlacedWithClick = 'hello';
+        placeLetterClickService.lastKeyPressed = 'kjas';
+        placeLetterClickService.removeArrowIfNeeded(2, 2);
+    });
     it('remove whole word should call remove arrow if needed', () => {
         placeLetterClickService.lettersFromHand = 'hello';
+        spyOn(placeLetterClickService, 'removeLetterWithBackspace');
+        const mySpy = spyOn(placeLetterClickService, 'removeArrowIfNeeded');
+        placeLetterClickService.removeWholeWord();
+        expect(mySpy).toHaveBeenCalled();
+    });
+    it('remove whole word should not call remove arrow if needed', () => {
+        placeLetterClickService.lettersFromHand = '';
         spyOn(placeLetterClickService, 'removeLetterWithBackspace');
         const mySpy = spyOn(placeLetterClickService, 'removeArrowIfNeeded');
         placeLetterClickService.removeWholeWord();
@@ -341,5 +409,14 @@ describe('PlaceLetterClickService', () => {
         const mySpy = spyOn(placeLetterClickService, 'removeWholeWord');
         placeLetterClickService.reset();
         expect(mySpy).toHaveBeenCalled();
+    });
+    it('reset should call changeOrientation', () => {
+        placeLetterClickService.orientation = 'h';
+        placeLetterClickService.changeOrientation();
+        expect(placeLetterClickService.orientation).toEqual('v');
+    });
+    it('reset should not enter in the if', () => {
+        placeLetterClickService.isTileSelected = false;
+        placeLetterClickService.reset();
     });
 });

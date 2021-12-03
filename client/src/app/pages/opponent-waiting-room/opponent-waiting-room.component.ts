@@ -19,7 +19,6 @@ export class OpponentWaitingRoomComponent implements OnInit {
         private indexWaitingRoomService: IndexWaitingRoomService,
         private letterService: LetterService,
     ) {}
-
     @HostListener('window:beforeunload', ['$event'])
     beforeUnloadHandler() {
         this.socketInformation.handleDisconnect();
