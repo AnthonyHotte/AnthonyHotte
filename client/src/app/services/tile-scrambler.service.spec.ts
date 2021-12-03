@@ -26,7 +26,6 @@ describe('TileScramblerService', () => {
     });
 
     it('getBonusTiles should call forEach once', () => {
-        // const spyforEach = spyOn(TileMap.gridMap.tileMap, 'forEach');
         const expectedRes = 61;
         service.getBonusTiles();
         expect(service.allBonusTiles.length).toEqual(expectedRes);
