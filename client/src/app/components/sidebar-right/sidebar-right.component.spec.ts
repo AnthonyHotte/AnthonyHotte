@@ -245,6 +245,7 @@ describe('SidebarRightComponent', () => {
     it('soloOpponentPlayse should call delay if game status is 2', () => {
         timerTurnManagerServiceSpy.gameStatus = 2;
         const mySpy = spyOn(component, 'delay');
+        soloOpponentServiceSpy.lastCommandEntered = '!placer';
         component.soloOpponentPlays();
         expect(mySpy).toHaveBeenCalled();
     });
