@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MainPageComponent } from '@app/pages/main-page/main-page.component';
 import { BestScoreService } from '@app/services/best-score.service';
 import { CommunicationService } from '@app/services/communication.service';
+import { RefreshServiceService } from '@app/services/refresh-service.service';
 import { SocketService } from '@app/services/socket.service';
 import { of } from 'rxjs';
 import SpyObj = jasmine.SpyObj;
@@ -14,9 +15,11 @@ describe('MainPageComponent', () => {
     let communicationServiceSpy: SpyObj<CommunicationService>;
     let bestScoreServiceSpy: SpyObj<BestScoreService>;
     let socketServiceSpy: SpyObj<SocketService>;
+    let refresh: SpyObj<RefreshServiceService>;
 
     beforeEach(async () => {
-        socketServiceSpy = jasmine.createSpyObj('SocketService', ['getMessageObservable']);
+        refresh = jasmine.createSpyObj('RefreshServiceService', ['refresh']);
+        socketServiceSpy = jasmine.createSpyObj('SocketService', ['getMessageObservable', 'handleDisconnect']);
         socketServiceSpy.is2990 = false;
         bestScoreServiceSpy = jasmine.createSpyObj('BestScoreService', ['updateBestScore']);
         communicationServiceSpy = jasmine.createSpyObj('CommunicationService', ['basicGet', 'basicPost', 'getBestScoreClassique']);
@@ -30,6 +33,7 @@ describe('MainPageComponent', () => {
                 { provide: SocketService, useValue: socketServiceSpy },
                 { provide: CommunicationService, useValue: communicationServiceSpy },
                 { provide: BestScoreService, useValue: bestScoreServiceSpy },
+                { provide: RefreshServiceService, useValue: refresh },
             ],
         }).compileComponents();
     });
@@ -65,5 +69,14 @@ describe('MainPageComponent', () => {
         socketServiceSpy.is2990 = false;
         component.setMode2990(true);
         expect(socketServiceSpy.is2990).toBe(true);
+    });
+    it('should call handleDisconnect', () => {
+        component.beforeUnloadHandler();
+        expect(socketServiceSpy.handleDisconnect).toHaveBeenCalled();
+    });
+    it('should call ngAfterViewInit', () => {
+        refresh.needRefresh = true;
+        component.ngAfterViewInit();
+        expect(refresh.refresh).toHaveBeenCalled();
     });
 });

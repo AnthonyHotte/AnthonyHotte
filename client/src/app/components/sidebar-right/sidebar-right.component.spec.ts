@@ -118,13 +118,6 @@ describe('SidebarRightComponent', () => {
         const result = component.getScorePlayer(0);
         expect(result).toEqual(expectedResult);
     });
-
-    // it('increaseFontSize should call ncreasePoliceSize and policeSizeChanged method ', () => {
-    //     component.increaseFontSize();
-    //     gridServiceSpy.increasePoliceSize.and.returnValue();
-    //     expect(gridServiceSpy.increasePoliceSize).toHaveBeenCalled();
-    //     expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
-    // });
     it('getPlayerName should return the name when there is no changes in turn ', () => {
         component.turn = 0;
         timerTurnManagerServiceSpy.turn = 0;
@@ -206,6 +199,14 @@ describe('SidebarRightComponent', () => {
         component.ngAfterViewInit();
         expect(mySpy).not.toHaveBeenCalled();
     });
+    it('soloOpponentPlays should enter in debug', () => {
+        timerTurnManagerServiceSpy.turn = 1;
+        timerTurnManagerServiceSpy.gameStatus = 2;
+        textBoxSpy.debugCommand = true;
+        const mySpy = spyOn(component, 'soloOpponentPlays');
+        component.ngAfterViewInit();
+        expect(mySpy).toHaveBeenCalled();
+    });
 
     it('setAttribute should call reset when game status 2', () => {
         timerTurnManagerServiceSpy.turn = 1;
@@ -229,13 +230,6 @@ describe('SidebarRightComponent', () => {
         component.skipTurn();
         expect(mySpy).not.toHaveBeenCalled();
     });
-
-    // it('decreaseFontSize should call decreasePoliceSize and policeSizeChanged', () => {
-    //     component.decreaseFontSize();
-    //     expect(gridServiceSpy.decreasePoliceSize).toHaveBeenCalled();
-    //     expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
-    // });
-
     it('verifyChangedTurns should call pause() if game is finished', () => {
         finishGameServiceSpy.isGameFinished = true;
         component.verifyChangedTurns(counterSpy);
