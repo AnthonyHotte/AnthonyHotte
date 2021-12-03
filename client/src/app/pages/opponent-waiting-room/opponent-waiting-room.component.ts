@@ -12,6 +12,7 @@ import { SocketService } from '@app/services/socket.service';
 export class OpponentWaitingRoomComponent implements OnInit {
     isValidSelection = false;
     gamesList: string[][] = [[]];
+    isGameModePresent = false;
 
     constructor(
         private socketInformation: SocketService,
@@ -52,6 +53,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
     }
 
     fillGamesList() {
+        this.isGameModePresent = false;
         const TIME_FOR_DATA_SHARING = 500;
         setTimeout(() => this.fillList(), TIME_FOR_DATA_SHARING);
     }
@@ -64,6 +66,9 @@ export class OpponentWaitingRoomComponent implements OnInit {
             this.gamesList[i][1] = this.socketInformation.gameLists[i][1]; // bonus
             this.gamesList[i][2] = this.socketInformation.gameLists[i][2]; // time per turn
             this.gamesList[i][3] = this.socketInformation.gameLists[i][7]; // is2990
+            if (this.socketInformation.gameLists[i][7] === this.socketInformation.is2990.toString()) {
+                this.isGameModePresent = true;
+            }
         }
     }
 
@@ -95,9 +100,11 @@ export class OpponentWaitingRoomComponent implements OnInit {
                 gameIndex.push(i);
             }
         }
+        if (gameIndex.length === 0) return;
         const index = Math.floor(Math.random() * gameIndex.length);
         this.setIndex(gameIndex[index]);
         this.changeValidity(this.socketInformation.gameLists[gameIndex[index]][0]);
+        this.isGameModePresent = false;
     }
 
     refresh() {
