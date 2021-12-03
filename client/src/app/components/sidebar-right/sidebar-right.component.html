@@ -26,9 +26,9 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
             </table>
         </div>
         <fieldset class="fieldset">
-            <div class="filler2">
-                <h1 class="header2" *ngIf="this.turnTimeController.turn === 0">C'est votre tour,<br> {{ getPlayerNameAndVerifyTurn() }}</h1>
-                <h2 class="header2" *ngIf="this.turnTimeController.turn === 1">Temps restant à <br> {{ getPlayerNameAndVerifyTurn() }}</h2>
+            <div class="filler2" [ngStyle]="{'color': this.turnTimeController.turn === 0 ? 'green' : 'black', 'border': this.turnTimeController.turn === 0 ? '4px double': '4px double'}">
+                <h1 class="header2" *ngIf="this.turnTimeController.turn === 0">C'est votre tour,<br><p class="green"> {{ getPlayerNameAndVerifyTurn() }}</p></h1>
+                <h2 class="header2" *ngIf="this.turnTimeController.turn === 1">Temps restant à <br><p class="red">{{ getPlayerNameAndVerifyTurn() }}</p></h2>
                 <div class="Counter">
                     <ngx-countdown
                         #counter

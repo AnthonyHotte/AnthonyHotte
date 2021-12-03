@@ -80,6 +80,15 @@
     width: 90%;
     word-break: break-all;
 }
+.header2{
+    background-color: transparent;
+    color:black;
+    font-size: 16px;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    word-break: break-all;
+}
 
 .label {
     background-color: transparent;
@@ -92,7 +101,6 @@
     background-color: transparent;
     color: black;
     font-size: 16px;
-    max-width: 90%;
 }
 .header3 {
     background-color: transparent;
@@ -102,7 +110,7 @@
     margin-right: 5%;
 }
 .header-score{
-    font-size: 28px;
+    font-size: 24px;
     word-break: break-all;
 }
 .score-filler{
@@ -152,7 +160,7 @@
     max-width: 90%;
     width: 90%;
     color:black;
-    border: double;
+    border: none;
 }
 .filler3{
     background-color: rgb(213, 231, 213);
@@ -165,4 +173,12 @@
 }
 .centered{
     margin-right: 7%;
+}
+.green{
+    color: green;
+    font-size: 20px;
+}
+.red{
+    color: red;
+    font-size: 20px;
 }

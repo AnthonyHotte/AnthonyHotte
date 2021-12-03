@@ -10,7 +10,7 @@ import { PlaceLettersService } from './place-letters.service';
 import { SoloOpponent2Service } from './solo-opponent2.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
-fdescribe('SoloOpponent2Service', () => {
+describe('SoloOpponent2Service', () => {
     let service: SoloOpponent2Service;
     let placeLettersServiceSpy: jasmine.SpyObj<PlaceLettersService>;
     let gameStateServiceSpy: jasmine.SpyObj<GameStateService>;

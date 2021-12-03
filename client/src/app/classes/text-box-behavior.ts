@@ -101,7 +101,9 @@ export class TextBox {
             "!échanger : permet d'échanger des lettres. \n " +
             "!réserve : Permet d'afficher sa réserve. \n " +
             '!placer : permet de placer des lettres sur le plateau. \n ' +
-            "!abandonner : permet d'abandonner la partie."
+            "!abandonner : permet d'abandonner la partie. \n " +
+            "!debug : permet d'afficher le debugger. \n" +
+            "!aide : permet d'afficher toutes les commandes disponibles. \n"
         );
     }
 
@@ -270,12 +272,4 @@ export class TextBox {
         this.endTurn('exchange');
         return 'Échange de lettre avec succès.';
     }
-
-    // TO DO : ENLEVER LA FONCTION CAR CELA FONCTIONNE SANS LE GETELEMENTBYID; C'EST UNE FONCTION INUTILE
-    // scrollDown() {
-    // const mondiv = document.getElementById('DisplayZone');
-    // if (mondiv !== null) {
-    //     mondiv.scrollTo(0, mondiv.scrollHeight + 1);
-    // }
-    // }
 }
