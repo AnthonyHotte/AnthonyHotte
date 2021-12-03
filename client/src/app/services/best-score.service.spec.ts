@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { BestScoreService } from './best-score.service';
 import { CommunicationService } from './communication.service';
 
-fdescribe('BestScoreService', () => {
+describe('BestScoreService', () => {
     let service: BestScoreService;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
     beforeEach(async () => {
