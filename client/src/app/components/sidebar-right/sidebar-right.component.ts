@@ -43,8 +43,18 @@ export class SidebarRightComponent implements AfterViewInit {
             this.soloOpponentPlays();
         }
         this.textBox.isCommand('!aide');
-        const myMessage: MessagePlayer = { message: 'Entrez !aide pour montrer ce message de nouveau.', sender: 'Systeme', role: 'Systeme' };
-        this.textBox.inputs.push(myMessage);
+        const messageRightClick: MessagePlayer = {
+            message: 'Vous pouvez effectuer un clic droit sur les lettres du chevalet pour les échanger.',
+            sender: 'Systeme',
+            role: 'Systeme',
+        };
+        this.textBox.inputs.push(messageRightClick);
+        const messageBoardClick: MessagePlayer = {
+            message: "Vous pouvez cliquer sur le plateau de jeu, puis appuyer sur les touches correspondantes, afin d'effectuer un placement.",
+            sender: 'Systeme',
+            role: 'Systeme',
+        };
+        this.textBox.inputs.push(messageBoardClick);
     }
     showPassButton() {
         return this.turnTimeController.turn === 0 && !this.verifyLettersPlaced();
@@ -120,7 +130,6 @@ export class SidebarRightComponent implements AfterViewInit {
     }
 
     async soloOpponentPlays() {
-        // this.wait3SecondsBeginningOfTurn();
         if (this.turnTimeController.gameStatus === 2) {
             const fourseconds = 4000;
             await this.delay(fourseconds);
@@ -135,12 +144,12 @@ export class SidebarRightComponent implements AfterViewInit {
                 sender: 'Systeme',
                 role: 'Systeme',
             };
-            if (this.textBox.debugCommand) {
-                message.message = message.message + ' ' + this.soloOpponent.soloOpponent2.alternativePlay();
-            }
             this.textBox.inputs.push(message);
             if (messageSystem.message !== '') {
                 this.textBox.inputs.push(messageSystem);
+            }
+            if (this.textBox.debugCommand && this.soloOpponent.lastCommandEntered.substring(0, '!placer'.length) === '!placer') {
+                this.textBox.handleEnter(this.soloOpponent.soloOpponent2.alternativePlay());
             }
         }
     }

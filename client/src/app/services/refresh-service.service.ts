@@ -7,7 +7,11 @@ export class RefreshServiceService {
     needRefresh = false;
 
     refresh() {
-        window.location.reload(); // refresh
+        this.windowRefresh();
         this.needRefresh = false;
+    }
+
+    windowRefresh() {
+        window.location.reload();
     }
 }
