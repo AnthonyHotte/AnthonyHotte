@@ -43,8 +43,18 @@ export class SidebarRightComponent implements AfterViewInit {
             this.soloOpponentPlays();
         }
         this.textBox.isCommand('!aide');
-        const myMessage: MessagePlayer = { message: 'Entrez !aide pour montrer ce message de nouveau.', sender: 'Systeme', role: 'Systeme' };
-        this.textBox.inputs.push(myMessage);
+        const messageRightClick: MessagePlayer = {
+            message: 'Vous pouvez effectuer un clic droit sur les lettres du chevalet pour les échanger.',
+            sender: 'Systeme',
+            role: 'Systeme',
+        };
+        this.textBox.inputs.push(messageRightClick);
+        const messageBoardClick: MessagePlayer = {
+            message: "Vous pouvez cliquer sur le plateau de jeu, puis appuyer sur les touches correspondantes, afin d'effectuer un placement.",
+            sender: 'Systeme',
+            role: 'Systeme',
+        };
+        this.textBox.inputs.push(messageBoardClick);
     }
     showPassButton() {
         return this.turnTimeController.turn === 0 && !this.verifyLettersPlaced();
