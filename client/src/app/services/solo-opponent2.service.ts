@@ -147,6 +147,9 @@ export class SoloOpponent2Service {
                 } else if (!(await this.gameStateService.validateWordCreatedByNewLetters(false))) {
                     isPlayable = false;
                 }
+                if (this.gameStateService.playerUsedAllLetters) {
+                    this.wordValidatorService.pointsForLastWord += 50;
+                }
             } else {
                 isPlayable = false;
             }
