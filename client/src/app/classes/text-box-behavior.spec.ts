@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -6,9 +7,9 @@ import { MessagePlayer } from '@app/message';
 import { FinishGameService } from '@app/services/finish-game.service';
 import { LetterBankService } from '@app/services/letter-bank.service';
 import { LetterService } from '@app/services/letter.service';
+import { OpponentNameService } from '@app/services/opponent-name.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
-import { BehaviorSubject } from 'rxjs';
 import { PlayerLetterHand } from './player-letter-hand';
 import { TextBox } from './text-box-behavior';
 describe('TextBox', () => {
@@ -18,10 +19,12 @@ describe('TextBox', () => {
     let timerTurnManagerServiceSpy: jasmine.SpyObj<TimerTurnManagerService>;
     let finishGameServiceSpy: jasmine.SpyObj<FinishGameService>;
     let letterBankServiceSpy: jasmine.SpyObj<LetterBankService>;
+    let opponentNameServiceSpy: jasmine.SpyObj<OpponentNameService>;
     let routerSpy: jasmine.SpyObj<Router>;
     beforeEach(async () => {
         routerSpy = jasmine.createSpyObj('Router', ['navigate']);
         letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
+        opponentNameServiceSpy = jasmine.createSpyObj('OpponentNameService', ['getOpponentName']);
         letterBankServiceSpy.letterBank = [];
         const numberLetterInBank = 13;
         for (let i = 0; i < numberLetterInBank; i++) {
@@ -45,15 +48,15 @@ describe('TextBox', () => {
         timerTurnManagerServiceSpy = jasmine.createSpyObj('TimerTurnManagerService', ['endTurn']);
         timerTurnManagerServiceSpy.turn = 0;
         finishGameServiceSpy = jasmine.createSpyObj('FinishGameService', ['scoreCalculator', 'goToHomeAndRefresh']);
-        finishGameServiceSpy.updateOfEndGameValue = new BehaviorSubject<boolean>(true);
         await TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, HttpClientTestingModule],
             providers: [
                 { provide: PlaceLettersService, useValue: placerLetterServiceSpy },
                 { provide: LetterService, useValue: letterServiceSpy },
                 { provide: LetterBankService, useValue: letterBankServiceSpy },
                 { provide: TimerTurnManagerService, useValue: timerTurnManagerServiceSpy },
                 { provide: FinishGameService, useValue: finishGameServiceSpy },
+                { provide: OpponentNameService, useValue: opponentNameServiceSpy },
                 { provide: Router, useValue: routerSpy },
             ],
         }).compileComponents();

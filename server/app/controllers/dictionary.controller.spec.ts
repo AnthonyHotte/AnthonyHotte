@@ -45,14 +45,6 @@ describe('DictionaryController', () => {
             .then((response) => {
                 expect(response.body).to.deep.equal(new Dictionary('t1', 'd1'));
             });
-
-        // const params: HttpParams = new HttpParams().append('indexNumber', 0);
-        // return supertest(expressApp)
-        //     .get('/api/dictionary/fulldictionary', params)
-        //     .expect(HTTP_STATUS_OK)
-        //     .then((response) => {
-        //         expect(response.body).to.deep.equal([]);
-        //     });
     });
 
     it('should change dictionary in dictionary service on valid post request to /sendnamechange', async () => {
@@ -62,7 +54,7 @@ describe('DictionaryController', () => {
     it('should store delete a dictionary in dictionary service on valid post request to /senddeletedictionary', async () => {
         const message = { indexNumber: 0 };
         return supertest(expressApp)
-            .post('/api/dictionary/senddeletedictionary')
+            .delete('/api/dictionary/senddeletedictionary')
             .send(message)
             .set('Accept', 'application/json')
             .expect(HTTP_STATUS_OK);

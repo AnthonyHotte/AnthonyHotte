@@ -3,6 +3,7 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="container">
     <body>
+        <span *ngIf = "!isGameFinished()">
         <div class="score-filler">
             <h1 class="header">Score</h1>
             <table class="table">
@@ -26,8 +27,8 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
         </div>
         <fieldset class="fieldset">
             <div class="filler2">
-                <h1 class="header2" *ngIf="this.turnTimeController.turn === 0">C'est votre tour, {{ getPlayerNameAndVerifyTurn() }}</h1>
-                <h2 class="header2" *ngIf="this.turnTimeController.turn === 1">Temps restant à {{ getPlayerNameAndVerifyTurn() }}</h2>
+                <h1 class="header2" *ngIf="this.turnTimeController.turn === 0">C'est votre tour,<br> {{ getPlayerNameAndVerifyTurn() }}</h1>
+                <h2 class="header2" *ngIf="this.turnTimeController.turn === 1">Temps restant à <br> {{ getPlayerNameAndVerifyTurn() }}</h2>
                 <div class="Counter">
                     <ngx-countdown
                         #counter
@@ -56,13 +57,16 @@ https://www.w3schools.com/tags/att_input_type_radio.asp#:~:text=Radio%20buttons%
                 </div>
             </div>
         </fieldset>
+    </span>
         <fieldset class="fieldset">
-            <div class="centered">
-                <p><button *ngIf="showPassButton() && !this.getLettersSelected()" class="button-pass" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button></p>
-                <p><app-exchange-letters-gui></app-exchange-letters-gui></p>
-                <p><app-place-word-with-click-gui></app-place-word-with-click-gui></p>
-            </div>
-            <p><app-abandon-game *ngIf="(!this.verifyLettersPlaced() && !this.getLettersSelected() && this.turn === 0) || this.turn === 1"></app-abandon-game></p>
+            <span *ngIf = "!isGameFinished()">
+                <div class="centered">
+                    <p><button *ngIf="showPassButton() && !this.getLettersSelected()" class="button-pass" (click)="counter.reset()" (click)="skipTurn()">Passer son tour</button></p>
+                    <p><app-exchange-letters-gui></app-exchange-letters-gui></p>
+                    <p><app-place-word-with-click-gui></app-place-word-with-click-gui></p>
+                </div>
+                <p><app-abandon-game *ngIf="(!this.verifyLettersPlaced() && !this.getLettersSelected() && this.turn === 0) || this.turn === 1"></app-abandon-game></p>
+            </span>
             <p><app-finished-game></app-finished-game></p>
         </fieldset>
     </body>

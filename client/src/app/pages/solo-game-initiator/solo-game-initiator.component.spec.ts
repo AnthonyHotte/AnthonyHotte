@@ -15,6 +15,8 @@ import { CommunicationService } from '@app/services/communication.service';
 import { DictionaryService } from '@app/services/dictionary.service';
 import { Observable } from 'rxjs';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { OpponentNameService } from '@app/services/opponent-name.service';
 
 describe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
@@ -30,6 +32,7 @@ describe('SoloGameInitiatorComponent', () => {
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
     let dictionaryServiceSpy: jasmine.SpyObj<DictionaryService>;
     let soloopponent2Spy: jasmine.SpyObj<SoloOpponent2Service>;
+    let soloOpponentNameServiceSpy: jasmine.SpyObj<OpponentNameService>;
     beforeEach(async () => {
         soloopponent2Spy = jasmine.createSpyObj('SoloOpponent2Service', ['play', 'setExpertMode']);
         dictionaryServiceSpy = jasmine.createSpyObj('DictionaryService', ['getDictionary']);
@@ -40,6 +43,7 @@ describe('SoloGameInitiatorComponent', () => {
         messageServiceSpy = jasmine.createSpyObj('MessageService', ['gameStartingInfoSubscribe']);
         letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
         socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendJoinGameInfo', 'setGameMode', 'sendInitiateNewGameInformation']);
+        soloOpponentNameServiceSpy = jasmine.createSpyObj('OpponentNameService', ['getJVEasyNames', 'getJVExpertNames', 'getOpponentName']);
         socketServiceSpy.nameOfRoomCreator = 'Tony';
         socketServiceSpy.gameLists = [];
         socketServiceSpy.gameLists.push(['name', 'false', '30', 'abc', 'def']);
@@ -72,8 +76,9 @@ describe('SoloGameInitiatorComponent', () => {
                 { provide: IndexWaitingRoomService, useValue: indexWaintingRoomService },
                 { provide: CommunicationService, useValue: communicationServiceSpy },
                 { provide: DictionaryService, useValue: dictionaryServiceSpy },
+                { provide: OpponentNameService, useValue: soloOpponentNameServiceSpy },
             ],
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, HttpClientTestingModule],
         }).compileComponents();
     });
 
@@ -82,7 +87,6 @@ describe('SoloGameInitiatorComponent', () => {
         component = fixture.componentInstance;
         component.nameIsValid = true;
         component.opponentName = 'Tony';
-        component.idNameOpponent = 0;
         fixture.detectChanges();
     });
     it('should create', () => {
@@ -139,10 +143,8 @@ describe('SoloGameInitiatorComponent', () => {
 
     it('verifyName should call assignOpponentName', () => {
         const mySpy2 = spyOn(component, 'assignOpponentName');
-        const mySpy3 = spyOn(component, 'switchOpponentName');
         component.verifyNames();
         expect(mySpy2).toHaveBeenCalled();
-        expect(mySpy3).toHaveBeenCalled();
     });
     it('verifyName should set nameIsValid at false', () => {
         component.temporaryName = 'sdfsdfsdfsdfsdfsdfsdfsdfsdsfsdfsdfsdfdsfdsfsdfsdfsdfsdfsdfsdf';
@@ -189,29 +191,12 @@ describe('SoloGameInitiatorComponent', () => {
         const val = 'invalide';
         expect(retour).toBe(val);
     });
-    it('switchOpponentName should enter in case 1', () => {
-        component.opponentName = 'abcd';
-        const temp = 'abcd';
-        component.idNameOpponent = 1;
-        const retour = 'Daphne du Maurier';
-        component.switchOpponentName(temp);
-        expect(component.opponentName).toBe(retour);
-    });
-    it('switchOpponentName should enter in case 2', () => {
-        component.opponentName = 'abcd';
-        const temp = 'abcd';
-        component.idNameOpponent = 2;
-        const retour = 'Jane Austen';
-        component.switchOpponentName(temp);
-        expect(component.opponentName).toBe(retour);
-    });
+
     it('switchOpponentName should enter in default', () => {
         component.opponentName = 'abcd';
         const temp = 'abcd';
-        component.idNameOpponent = 3;
-        const retour = 'Haruki Murakami';
-        component.switchOpponentName(temp);
-        expect(component.opponentName).toBe(retour);
+        component.assignOpponentName(temp);
+        expect(component.opponentName).not.toEqual(temp);
     });
     it('setExpertMode should enter in default', () => {
         component.setExpertMode(true);
