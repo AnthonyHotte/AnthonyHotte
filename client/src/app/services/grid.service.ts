@@ -83,7 +83,7 @@ export class GridService {
             this.gridContext.fillStyle = 'black';
             const textpositionoffset = 3;
             const textpositionoffset2 = 0.75;
-            this.gridContext.font = '38 px system-ui'; // 19 * 2
+            this.gridContext.font = '42 px system-ui'; // 19 * 2
             this.gridContext.fillText(
                 Constants.TEXTONTILES[textChoice],
                 Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
@@ -113,7 +113,7 @@ export class GridService {
             this.gridContext.stroke();
             this.gridContext.globalAlpha = 1;
             this.gridContext.textAlign = 'center';
-            this.gridContext.font = '30px serif'; // 15 *2
+            this.gridContext.font = '38px serif'; // 15 *2
 
             this.gridContext.fillText(
                 (i + 1).toString(),
@@ -133,7 +133,7 @@ export class GridService {
 
             this.gridContext.globalAlpha = 1;
             this.gridContext.textBaseline = 'middle';
-            this.gridContext.font = '30px serif'; // 15 *2;
+            this.gridContext.font = '38px serif'; // 15 *2;
 
             this.gridContext.fillText(
                 Constants.SIDELETTERS[i].toString(),
@@ -177,7 +177,8 @@ export class GridService {
     // code pulled from https://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
 
     drawarrow(orientation: string, row: number, column: number) {
-        const arrowOffset = 0.25;
+        const arrowOffsetPerpendicularToDirection = 0.3;
+        const arrowOffsetParalleleToDirection = 0.9;
         const tileSizeArrowLength = 3;
         const arrowlength = Constants.CASESIZE / tileSizeArrowLength;
         // TODO discuter ISMA
@@ -186,13 +187,13 @@ export class GridService {
         let arrowtailYpos = 0;
         let arrowtailXpos = 0;
         if (orientation === 'h') {
-            arrowHeadYpos = Constants.CASESIZE * (row + arrowOffset) + Constants.CASESIZE;
-            arrowHeadXpos = Constants.CASESIZE * (column + 1) + Constants.CASESIZE;
+            arrowHeadYpos = Constants.CASESIZE * (row + arrowOffsetPerpendicularToDirection) + Constants.CASESIZE;
+            arrowHeadXpos = Constants.CASESIZE * (column + arrowOffsetParalleleToDirection) + Constants.CASESIZE;
             arrowtailYpos = arrowHeadYpos; // since the arrow is horizontal y doesn't change
             arrowtailXpos = arrowHeadXpos - arrowlength;
         } else {
-            arrowHeadYpos = Constants.CASESIZE * (row + 1) + Constants.CASESIZE;
-            arrowHeadXpos = Constants.CASESIZE * (column + arrowOffset) + Constants.CASESIZE;
+            arrowHeadYpos = Constants.CASESIZE * (row + arrowOffsetParalleleToDirection) + Constants.CASESIZE;
+            arrowHeadXpos = Constants.CASESIZE * (column + arrowOffsetPerpendicularToDirection) + Constants.CASESIZE;
             arrowtailYpos = arrowHeadYpos - arrowlength;
             arrowtailXpos = arrowHeadXpos; // since the arrow is horizontal x doesn't change
         }
