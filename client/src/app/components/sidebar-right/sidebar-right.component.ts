@@ -142,8 +142,6 @@ export class SidebarRightComponent implements AfterViewInit {
             if (messageSystem.message !== '') {
                 this.textBox.inputs.push(messageSystem);
             }
-            // this.textBox.scrollDown();
-            // INUTILE car la fonction scrollDown a ete remplace
         }
     }
     async delay(ms: number) {

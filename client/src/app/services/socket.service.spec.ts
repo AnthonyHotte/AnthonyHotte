@@ -32,7 +32,7 @@ class SocketMock {
         return;
     }
 }
-fdescribe('SocketService', () => {
+describe('SocketService', () => {
     let service: SocketService;
     const socketMock = new SocketMock();
     beforeEach(async () => {
