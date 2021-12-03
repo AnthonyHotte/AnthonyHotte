@@ -43,7 +43,7 @@ export class SoloOpponent2Service {
         for (const letter of this.letterService.players[this.timeManagerService.turn].allLettersInHand) {
             arrayHand.push(letter.letter.toLowerCase());
         }
-        this.bestWordsToPlayExpert[0] = { word: '', score: 0 };
+        this.bestWordsToPlayExpert[0] = { word: '', score: 0, bingo: false };
         if (this.gameStateService.isBoardEmpty) {
             await this.playfirstword();
         } else {
@@ -213,9 +213,13 @@ export class SoloOpponent2Service {
         const smallerthan = -1;
         if (score2 > this.bestWordsToPlayExpert[this.bestWordsToPlayExpert.length - 1].score) {
             if (this.bestWordsToPlayExpert.length < Constants.NUMBERWORDSTOSAVE) {
-                this.bestWordsToPlayExpert.push({ word: wordtoplace, score: score2 });
+                this.bestWordsToPlayExpert.push({ word: wordtoplace, score: score2, bingo: this.gameStateService.playerUsedAllLetters });
             } else if (!this.bestWordsToPlayExpert.find((i) => i.word === wordtoplace)) {
-                this.bestWordsToPlayExpert[this.bestWordsToPlayExpert.length - 1] = { word: wordtoplace, score: score2 };
+                this.bestWordsToPlayExpert[this.bestWordsToPlayExpert.length - 1] = {
+                    word: wordtoplace,
+                    score: score2,
+                    bingo: this.gameStateService.playerUsedAllLetters,
+                };
             }
             this.bestWordsToPlayExpert.sort((a, b) => (a.score > b.score ? smallerthan : 1));
         }
@@ -223,11 +227,11 @@ export class SoloOpponent2Service {
         const middlebound = 12;
         const upperbound = 18;
         if (score2 <= lowerboundd) {
-            this.wordToPlayLessThan6Points.push({ word: wordtoplace, score: score2 });
+            this.wordToPlayLessThan6Points.push({ word: wordtoplace, score: score2, bingo: this.gameStateService.playerUsedAllLetters });
         } else if (score2 <= middlebound) {
-            this.wordToPlay7to12points.push({ word: wordtoplace, score: score2 });
+            this.wordToPlay7to12points.push({ word: wordtoplace, score: score2, bingo: this.gameStateService.playerUsedAllLetters });
         } else if (score2 <= upperbound) {
-            this.wordToPlaymore13to18points.push({ word: wordtoplace, score: score2 });
+            this.wordToPlaymore13to18points.push({ word: wordtoplace, score: score2, bingo: this.gameStateService.playerUsedAllLetters });
         }
         return;
     }
@@ -259,7 +263,9 @@ export class SoloOpponent2Service {
             let alternativePlay = 'placements alternatifs:\n';
             for (let i = 0; i < this.bestWordsToPlayExpert.length - 1 && i < 3; i++) {
                 alternativePlay +=
-                    this.changeCommandToAltPlace(this.bestWordsToPlayExpert[i + 1].word) + ' (' + this.bestWordsToPlayExpert[i + 1].score + ')\n\n';
+                    this.changeCommandToAltPlace(this.bestWordsToPlayExpert[i + 1].word) + ' (' + this.bestWordsToPlayExpert[i + 1].score + ')';
+                if (this.bestWordsToPlayExpert[i + 1].bingo) alternativePlay += ' BINGO!';
+                alternativePlay += '\n\n';
             }
             return alternativePlay;
         } else {
@@ -270,11 +276,10 @@ export class SoloOpponent2Service {
     private fillAlternativePlay(listfOfWordToPlay: BestWordToPlay[]) {
         let alternativePlay = 'placements alternatifs: \n';
         for (let i = 0; i < listfOfWordToPlay.length && i < 3; i++) {
-            alternativePlay +=
-                this.changeCommandToAltPlace(listfOfWordToPlay[Math.floor(Math.random() * listfOfWordToPlay.length)].word) +
-                ' (' +
-                listfOfWordToPlay[i + 1].score +
-                ')\n\n';
+            const indexWord = Math.floor(Math.random() * listfOfWordToPlay.length);
+            alternativePlay += this.changeCommandToAltPlace(listfOfWordToPlay[indexWord].word) + ' (' + listfOfWordToPlay[indexWord].score + ')';
+            if (listfOfWordToPlay[indexWord].bingo) alternativePlay += ' BINGO!';
+            alternativePlay += '\n\n';
         }
         this.alternativeplays = alternativePlay;
     }
