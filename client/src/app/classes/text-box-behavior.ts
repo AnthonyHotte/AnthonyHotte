@@ -46,6 +46,7 @@ export class TextBox {
     async handleOpponentCommand(messageString: string) {
         const myMessage = { message: messageString, sender: this.letterService.players[1].name, role: 'Adversaire' };
         let text = '';
+        let showMessage = true;
         if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!passer') {
             this.verifyCommandPasser();
             text = this.letterService.players[1].name + ' a passé son tour';
@@ -53,13 +54,17 @@ export class TextBox {
             myMessage.message = '!échanger ' + myMessage.message.substring('!échanger '.length, myMessage.message.length).length.toString();
             text = this.exchangeLetterOpponent(messageString);
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!réserve') {
-            this.inputs.push(myMessage);
-            text = this.letterService.players[1].name + ' a affiché la reserve';
+            showMessage = false;
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH) === '!placer') {
             text = await this.placeWordOpponent(myMessage.message, this.socket.lettersToReplace);
         } else if (myMessage.message === '!abandonner') {
-            this.inputs.push(myMessage);
-            text = this.letterService.players[1].name + ' a abandonné la partie';
+            showMessage = false;
+            const messageSystem: MessagePlayer = {
+                message: this.letterService.players[1].name + ' a abandonné la partie',
+                sender: 'Systeme',
+                role: 'Systeme',
+            };
+            this.inputs.push(messageSystem);
             if (this.timeManager.turn === 1) {
                 this.endTurn('skip');
             }
@@ -70,11 +75,13 @@ export class TextBox {
             this.timeManager.gameStatus = 2;
             this.commandSuccessful = true;
         } else if (myMessage.message.substring(0, PLACERCOMMANDLENGTH + 1) === '!aide') {
-            text = this.letterService.players[1].name + ' a affiché la liste de ses commandes';
+            showMessage = false;
         }
-        this.inputs.push(myMessage);
-        const messageSystem: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
-        this.inputs.push(messageSystem);
+        if (showMessage) {
+            this.inputs.push(myMessage);
+            const messageSystem: MessagePlayer = { message: text, sender: 'Systeme', role: 'Systeme' };
+            this.inputs.push(messageSystem);
+        }
     }
 
     async placeWordOpponent(command: string, lettersToReplace: string) {
