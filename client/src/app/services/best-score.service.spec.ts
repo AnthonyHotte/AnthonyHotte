@@ -1,11 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { BestScoreService } from './best-score.service';
 import { CommunicationService } from './communication.service';
 
-describe('BestScoreService', () => {
+fdescribe('BestScoreService', () => {
     let service: BestScoreService;
     let communicationServiceSpy: jasmine.SpyObj<CommunicationService>;
     beforeEach(async () => {
@@ -37,6 +37,8 @@ describe('BestScoreService', () => {
         expect(service).toBeTruthy();
     });
     it('updateBestScore should call getBestScoreClassique and getBestScoreLog2990', () => {
+        communicationServiceSpy.getBestScoreClassique.and.returnValue(of([{ score: 20, name: ['tony'] }]));
+        communicationServiceSpy.getBestScoreLog2990.and.returnValue(of([{ score: 20, name: ['tony'] }]));
         service.updateBestScore();
         expect(communicationServiceSpy.getBestScoreClassique).toHaveBeenCalled();
         expect(communicationServiceSpy.getBestScoreLog2990).toHaveBeenCalled();
