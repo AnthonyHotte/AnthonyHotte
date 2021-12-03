@@ -330,17 +330,17 @@ describe('SoloOpponent2Service', () => {
         expect(service.wordToPlaymore13to18points[0]).toEqual({ word: 'admf', score: 2, bingo: false });
     });
     it('handleWordPlacingOption should set wordToPlay7to12points to admf', async () => {
-        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2, bingo: false }];
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 11, bingo: false }];
         const scoreMot = 11;
         service.wordToPlay7to12points = [];
         service.handleWordPlacingOption('admf', scoreMot);
-        expect(service.wordToPlay7to12points[0]).toEqual({ word: 'admf', score: 2, bingo: false });
+        expect(service.wordToPlay7to12points[0]).toEqual({ word: 'admf', score: 11, bingo: false });
     });
     it('handleWordPlacingOption should set wordToPlayLessThan6Points to admf', async () => {
-        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2, bingo: false }];
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 5, bingo: false }];
         const scoreMot = 5;
         service.wordToPlayLessThan6Points = [];
         service.handleWordPlacingOption('admf', scoreMot);
-        expect(service.wordToPlayLessThan6Points[0]).toEqual({ word: 'admf', score: 2, bingo: false });
+        expect(service.wordToPlayLessThan6Points[0]).toEqual({ word: 'admf', score: 5, bingo: false });
     });
 });
