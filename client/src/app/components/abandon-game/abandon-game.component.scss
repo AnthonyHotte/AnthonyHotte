@@ -12,6 +12,7 @@
     border-radius: 15px;
     box-shadow: 0 9px black;
     font-family: serif;
+    margin-right: 5%;
 }
 .button-surrender:hover {
     background-color: black;
@@ -87,4 +88,19 @@
 
 .fieldset{
     border:transparent;
+    text-align: center;
+}
+
+.fieldset2{
+    border:transparent;
+    text-align: center;
+    width: 80%;
+    max-width: 80%;
+    margin-right: 11%;
+    margin-left: 3%;
+}
+
+.fieldset3{
+    border:transparent;
+    text-align: center;
 }

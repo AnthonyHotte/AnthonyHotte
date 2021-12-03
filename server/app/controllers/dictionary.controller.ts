@@ -101,8 +101,9 @@ export class DictionaryController {
          *       201:
          *         description: Created
          */
-        this.router.post('/senddeletedictionary', (req: Request, res: Response) => {
-            this.dictionaryService.deleteDictionary(req.body.indexNumber);
+        this.router.delete('/senddeletedictionary', (req: Request, res: Response) => {
+            const index = parseInt(req.query.indexNumber as string, 10);
+            this.dictionaryService.deleteDictionary(index);
             res.sendStatus(HTTP_STATUS_OK);
         });
 

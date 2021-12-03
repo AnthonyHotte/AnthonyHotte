@@ -21,6 +21,7 @@ export class SoloOpponent2Service {
     private wordToPlay7to12points: BestWordToPlay[] = [];
     private wordToPlaymore13to18points: BestWordToPlay[] = [];
     private alternativeplays: string;
+
     constructor(
         public letterService: LetterService,
         public timeManagerService: TimerTurnManagerService,
@@ -140,6 +141,9 @@ export class SoloOpponent2Service {
                     isPlayable = false;
                 } else if (!(await this.gameStateService.validateWordCreatedByNewLetters(false))) {
                     isPlayable = false;
+                }
+                if (this.gameStateService.playerUsedAllLetters) {
+                    this.wordValidatorService.pointsForLastWord += 50;
                 }
             } else {
                 isPlayable = false;
@@ -275,6 +279,7 @@ export class SoloOpponent2Service {
     }
     private fillAlternativePlay(listfOfWordToPlay: BestWordToPlay[]) {
         let alternativePlay = 'placements alternatifs: \n';
+
         for (let i = 0; i < listfOfWordToPlay.length && i < 3; i++) {
             const indexWord = Math.floor(Math.random() * listfOfWordToPlay.length);
             alternativePlay += this.changeCommandToAltPlace(listfOfWordToPlay[indexWord].word) + ' (' + listfOfWordToPlay[indexWord].score + ')';

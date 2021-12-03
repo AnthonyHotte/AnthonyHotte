@@ -1,4 +1,5 @@
 import { Application } from '@app/app';
+import { BestScore } from '@app/classes/best-score-interface';
 import { DatabaseService } from '@app/services/database.service';
 import { expect } from 'chai';
 import { StatusCodes } from 'http-status-codes';
@@ -21,8 +22,12 @@ describe('DatabaseController', () => {
         const promise2 = new Promise<string[]>((resolve) => {
             resolve([]);
         });
-        databaseService.getBestScoreClassique.returns([]);
-        databaseService.bestScoreLog2990.returns([]);
+        const promise3 = new Promise<BestScore[]>((resolve) => {
+            resolve([]);
+        });
+
+        databaseService.getBestScoreClassique.returns(promise3);
+        databaseService.bestScoreLog2990.returns(promise3);
         databaseService.sendScoreChanges.returns(promise1);
         databaseService.sendNamesChanges.returns(promise1);
         databaseService.jvEasyNames.returns(promise2);

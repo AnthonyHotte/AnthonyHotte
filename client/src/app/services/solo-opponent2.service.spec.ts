@@ -132,12 +132,6 @@ describe('SoloOpponent2Service', () => {
         const returnedvalue = service.findValidWords(dictionnary, letters);
         expect(returnedvalue[0]).toBe('allo');
     });
-    /*
-    it('should find place word for first word', () => {
-        gameStateServiceSpy.isBoardEmpty = true;
-        service.play();
-        expect(placeLettersServiceSpy.placeWord).toHaveBeenCalled();
-    });*/
     it('play should call is word playable once', () => {
         gameStateServiceSpy.isBoardEmpty = false;
         const spy = spyOn(service, 'findValidWords').and.returnValue(['allo', 'la', 'le', 'ok']);
@@ -157,9 +151,27 @@ describe('SoloOpponent2Service', () => {
         expect(spy).toHaveBeenCalled();
         expect(spy2).toHaveBeenCalled();
     });
+    it('play should call isWordPlayable twice', () => {
+        gameStateServiceSpy.isBoardEmpty = false;
+        service.expertmode = true;
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        const spy = spyOn(service, 'findValidWords').and.returnValue(['allo', 'la', 'le', 'ok']);
+        const spy2 = spyOn(service, 'isWordPlayable').withArgs('allo', 0, 0, 'h').and.returnValue(Promise.resolve(false));
+        spy2.withArgs('allo', 0, 0, 'v').and.returnValue(Promise.resolve(true));
+        gameStateServiceSpy.lettersOnBoard[0][0] = 'a';
+        service.play().then(() => {
+            expect(spy).toHaveBeenCalled();
+            expect(spy2).toHaveBeenCalled();
+        });
+    });
     it("should verify word isn't valid", () => {
         const result = service.findValidWords(['allo', 'okay'], ['l', 'e']);
         expect(result.length).toEqual(0);
+    });
+    it('setExpertMode set expert mode', () => {
+        service.expertmode = false;
+        service.setExpertMode(true);
+        expect(service.expertmode).toEqual(true);
     });
     it('isWordPlayable should return false', async () => {
         const result = await service.isWordPlayable('allo', 1, 1, 'h');
@@ -220,7 +232,7 @@ describe('SoloOpponent2Service', () => {
         const result = await service.isWordPlayable('allo', 1, 1, 'h');
         expect(result).toBe(false);
     });
-    /* it('isWordPlayable should return false when word not validated', async () => {
+    it('isWordPlayable should return false when word not validated', async () => {
         placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
         placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
         gameStateServiceSpy.isWordCreationPossibleWithRessources.and.returnValue(true);
@@ -228,9 +240,10 @@ describe('SoloOpponent2Service', () => {
         gameStateServiceSpy.isBoardEmpty = false;
         gameStateServiceSpy.isWordTouchingLetterOnBoard.and.returnValue(true);
         gameStateServiceSpy.validateWordCreatedByNewLetters.and.returnValue(Promise.resolve(false));
-        const result = service.isWordPlayable('allo', 1, 1, 'h');
-        expect(result).toBe(false);
-    });*/
+        service.isWordPlayable('allo', 1, 1, 'h').then((result) => {
+            expect(result).toBe(false);
+        });
+    });
     it('isWordPlayable should return true when word validated', async () => {
         placeLettersServiceSpy.verifyTileNotOutOfBound.and.returnValue(true);
         placeLettersServiceSpy.verifyAvailable.and.returnValue(true);
@@ -238,7 +251,6 @@ describe('SoloOpponent2Service', () => {
         gameStateServiceSpy.lastLettersAdded = 'adr';
         gameStateServiceSpy.isBoardEmpty = false;
         gameStateServiceSpy.isWordTouchingLetterOnBoard.and.returnValue(true);
-        // const mySpy = spyOn(gameStateServiceSpy, 'validateWordCreatedByNewLetters').and.returnValue(Promise.resolve(true));
         gameStateServiceSpy.validateWordCreatedByNewLetters.and.returnValue(Promise.resolve(true));
         const result = await service.isWordPlayable('allo', 1, 1, 'h');
         expect(result).toBe(true);
@@ -258,29 +270,7 @@ describe('SoloOpponent2Service', () => {
         const spy = spyOn(service, 'findValidWords').and.returnValue([]);
         await service.play();
         expect(spy).toHaveBeenCalled();
-    }); /*
-    it('play should when board not empty', async () => {
-        gameStateServiceSpy.isBoardEmpty = false;
-        const spy = spyOn(service, 'findValidWords').and.returnValue([]);
-        for (let i = 0; i < NUMBEROFCASE; i++) {
-            for (let j = 0; j < NUMBEROFCASE; j++) {
-                gameStateServiceSpy.lettersOnBoard[i][j] = 'a';
-            }
-        }
-        await service.play();
-        expect(spy).toHaveBeenCalled();
-    });*/ /*
-    it('play should call findValidWords with no letter on board match', async () => {
-        gameStateServiceSpy.isBoardEmpty = false;
-        const spy = spyOn(service, 'findValidWords').and.returnValue(['low']);
-        for (let i = 0; i < NUMBEROFCASE; i++) {
-            for (let j = 0; j < NUMBEROFCASE; j++) {
-                gameStateServiceSpy.lettersOnBoard[i][j] = 'a';
-            }
-        }
-        await service.play();
-        expect(spy).toHaveBeenCalled();
-    });*/
+    });
     it('play should call is word playable', async () => {
         const promise = new Promise<string>((resolve) => {
             resolve('allo');
@@ -295,5 +285,62 @@ describe('SoloOpponent2Service', () => {
         await service.play().then(() => {
             expect(spy).toHaveBeenCalled();
         });
+    });
+    it('playfirstword should call pushLetterToHand', async () => {
+        const promise = new Promise<boolean>((resolve) => {
+            resolve(true);
+        });
+        const spy = spyOn(service, 'pushLetterToHand');
+        spyOn(service, 'findValidWords').and.returnValue(['aa', 'ee']);
+        spyOn(service, 'isWordPlayable').and.returnValue(promise);
+        spyOn(service, 'handleWordPlacingOption');
+        await service.playfirstword().then(() => {
+            expect(spy).toHaveBeenCalled();
+        });
+    });
+    it('alternativePlay should return    placements alternatifs: aa ', async () => {
+        service.expertmode = true;
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        const res = service.alternativePlay();
+        expect(res).toEqual('   placements alternatifs: aa');
+    });
+    it('alternativePlay should return  aucune alternative', async () => {
+        service.expertmode = false;
+        service.alternativeplays = '   placements alternatifs:';
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        const res = service.alternativePlay();
+        expect(res).toEqual('aucune alternative');
+    });
+    it('alternativePlay should return  aucune    placements alternatifs: aa', async () => {
+        service.expertmode = false;
+        service.alternativeplays = '   placements alternatifs: aa';
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        const res = service.alternativePlay();
+        expect(res).toEqual('   placements alternatifs: aa');
+    });
+    it('handleWordPlacingOption should set wordToPlaymore13to18points to admf', async () => {
+        service.bestWordsToPlayExpert = [
+            { word: 'aa', score: 2 },
+            { word: 'ee', score: 2 },
+            { word: 'ae', score: 2 },
+        ];
+        const scoreMot = 18;
+        service.wordToPlaymore13to18points = [];
+        service.handleWordPlacingOption('admf', scoreMot);
+        expect(service.wordToPlaymore13to18points[0]).toEqual('admf');
+    });
+    it('handleWordPlacingOption should set wordToPlay7to12points to admf', async () => {
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        const scoreMot = 11;
+        service.wordToPlay7to12points = [];
+        service.handleWordPlacingOption('admf', scoreMot);
+        expect(service.wordToPlay7to12points[0]).toEqual('admf');
+    });
+    it('handleWordPlacingOption should set wordToPlayLessThan6Points to admf', async () => {
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        const scoreMot = 5;
+        service.wordToPlayLessThan6Points = [];
+        service.handleWordPlacingOption('admf', scoreMot);
+        expect(service.wordToPlayLessThan6Points[0]).toEqual('admf');
     });
 });

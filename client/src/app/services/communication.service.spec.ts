@@ -160,8 +160,8 @@ describe('CommunicationService', () => {
                 truthful = false;
             }
         }, fail);
-        const req = httpMock.expectOne(`${baseUrl}/dictionary/senddeletedictionary`);
-        expect(req.request.method).toBe('POST');
+        const req = httpMock.expectOne(`${baseUrl}/dictionary/senddeletedictionary?indexNumber=0`);
+        expect(req.request.method).toBe('DELETE');
     });
     it('reinitialiseDictionary should call a post request (HttpClient called once)', () => {
         // subscribe to the mocked call
