@@ -156,4 +156,8 @@ export class SidebarRightComponent implements AfterViewInit {
         }
         return false;
     }
+
+    isGameFinished() {
+        return this.gameFinishService.isGameFinished;
+    }
 }
