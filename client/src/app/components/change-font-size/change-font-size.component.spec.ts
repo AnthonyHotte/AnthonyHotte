@@ -6,7 +6,7 @@ import { PlaceLettersService } from '@app/services/place-letters.service';
 
 import { ChangeFontSizeComponent } from './change-font-size.component';
 
-fdescribe('ChangeFontSizeComponent', () => {
+describe('ChangeFontSizeComponent', () => {
     let component: ChangeFontSizeComponent;
     let fixture: ComponentFixture<ChangeFontSizeComponent>;
     let gridServiceSpy: jasmine.SpyObj<GridService>;

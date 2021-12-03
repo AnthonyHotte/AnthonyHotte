@@ -54,25 +54,7 @@ export class AdminPageComponent {
     ) {
         this.dictionaryService.dictionaryList = [];
         this.nameJV = [[], []];
-        this.communicationService.getJVEasyNames().subscribe((value) => {
-            value.forEach((res) => {
-                this.nameJV[0].push(res);
-            });
-        });
-        this.communicationService.getJVHardNames().subscribe((value) => {
-            value.forEach((res) => {
-                this.nameJV[1].push(res);
-            });
-        });
-        this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
-            result.forEach((res) => {
-                this.dictionaryService.dictionaryList.push(res);
-            });
-        });
-        this.showDictionarySubscription = this.dictionaryService.showButton.subscribe((res) => {
-            this.showOrHideDictionaryButton(res[0]);
-            this.showUpload = res[1];
-        });
+        this.initiateSubscriptions();
         this.newNameJV = '';
         this.newNameInput = '';
         this.isToDeleteJV = false;
@@ -92,6 +74,27 @@ export class AdminPageComponent {
         this.showUpload = false;
         this.showOrHideDictionaryButton(true);
         this.showOrHideJVButton(true);
+    }
+    initiateSubscriptions() {
+        this.communicationService.getJVEasyNames().subscribe((value) => {
+            value.forEach((res) => {
+                this.nameJV[0].push(res);
+            });
+        });
+        this.communicationService.getJVHardNames().subscribe((value) => {
+            value.forEach((res) => {
+                this.nameJV[1].push(res);
+            });
+        });
+        this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
+            result.forEach((res) => {
+                this.dictionaryService.dictionaryList.push(res);
+            });
+        });
+        this.showDictionarySubscription = this.dictionaryService.showButton.subscribe((res) => {
+            this.showOrHideDictionaryButton(res[0]);
+            this.showUpload = res[1];
+        });
     }
     showOrHideDictionaryButton(show: boolean) {
         this.showModifyButton = show;

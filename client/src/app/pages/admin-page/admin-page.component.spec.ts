@@ -3,7 +3,7 @@ import { Dictionary } from '@app/classes/dictionary';
 import { BestScoreService } from '@app/services/best-score.service';
 import { CommunicationService } from '@app/services/communication.service';
 import { DictionaryService } from '@app/services/dictionary.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 import { AdminPageComponent } from './admin-page.component';
 
@@ -137,10 +137,9 @@ describe('AdminPageComponent', () => {
     it('validateNewName should show error message when name existe', () => {
         dictionaryServiceSpy.dictionaryList = [];
         dictionaryServiceSpy.dictionaryList.push(new Dictionary('t1', 'd1'));
-        dictionaryServiceSpy.dictionaryList[0].title = 't1';
-        dictionaryServiceSpy.dictionaryList[0].description = 'd1';
+        dictionaryServiceSpy.dictionaryList.push(new Dictionary('t2', 'd2'));
         component.showAddJVnameButton = true;
-        component.newNameInput = 't1';
+        component.newNameInput = 't2';
         component.showNewNameMessageError = false;
         component.validateNewName();
         expect(component.showNewNameMessageError).toBe(true);
@@ -283,7 +282,7 @@ describe('AdminPageComponent', () => {
         expect(communicationServiceSpy.sendDictionaryNameChanged).toHaveBeenCalled();
     });
     it('getFullDictionary should call getFullDictionary', () => {
-        communicationServiceSpy.getFullDictionary.and.returnValue(new Observable());
+        communicationServiceSpy.getFullDictionary.and.returnValue(of(new Dictionary('t1', 'd1')));
         component.getFullDictionary();
         expect(communicationServiceSpy.getFullDictionary).toHaveBeenCalled();
     });
@@ -291,5 +290,13 @@ describe('AdminPageComponent', () => {
         communicationServiceSpy.sendDeleteDictionary.and.returnValue(new Observable());
         component.sendDeleteDictionaryServer();
         expect(communicationServiceSpy.sendDeleteDictionary).toHaveBeenCalled();
+    });
+    it('initiateSubscriptions should call getJVEasyNames', () => {
+        dictionaryServiceSpy.showButton.next([true, false]);
+        communicationServiceSpy.getJVEasyNames.and.returnValue(of(['antho', 'hotte']));
+        communicationServiceSpy.getJVHardNames.and.returnValue(of(['antho', 'hotte']));
+        communicationServiceSpy.getDictionaryList.and.returnValue(of([new Dictionary('t1', 'd1'), new Dictionary('t2', 'd2')]));
+        component.initiateSubscriptions();
+        expect(communicationServiceSpy.getJVEasyNames).toHaveBeenCalled();
     });
 });
