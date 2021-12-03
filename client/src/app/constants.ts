@@ -27,12 +27,12 @@ export const SIDELETTERS: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I
 // value t0 removes from each letter ascii code to transform it into the line number,these should always be tranform into lowercase before use in code
 export const SIDELETTERS_TO_ASCII = 97;
 export const LETTERVALUEMINPOLICESIZE = 20; // 10 * 2
-export const LETTERVALUEDEFAULTPOLICESIZE = 30; // 15 * 2
-export const LETTERVALUEMAXPOLICESIZE = 38; // 19 * 2
+export const LETTERVALUEDEFAULTPOLICESIZE = 28; // 15 * 2
+export const LETTERVALUEMAXPOLICESIZE = 34; // 19 * 2
 
 export const LETTERMINPOLICESIZE = 40; // 20 * 2
 export const LETTERDEFAULTPOLICESIZE = 52; // 26 * 2
-export const LETTERMAXPOLICESIZE = 68; // 34 * 2
+export const LETTERMAXPOLICESIZE = 64; // 34 * 2
 // to write on the Tiles
 export const TEXTONTILES = ['mot', 'mot ', 'lettre', 'lettre'];
 export const TEXTONTILESVALUE = ['X2', 'X3', 'X3', 'X2'];

@@ -232,6 +232,7 @@ export class GridService {
         // const offset = 8;
         // TODO isma discussion ici;
         // all commented style are for smaller size tile (different style)
+        const permanentXOffset = 0.08;
         this.drawtilebackground(x1, y1);
         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE;
         const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE;
@@ -243,7 +244,7 @@ export class GridService {
         this.gridContext.font = String(this.policesizeletter) + 'px system-ui';
         this.gridContext.fillText(
             word.toUpperCase(),
-            x + Constants.CASESIZE / 2 - this.letteroffset * Constants.CASESIZE,
+            x + Constants.CASESIZE / 2 - (this.letteroffset + permanentXOffset) * Constants.CASESIZE,
             y + Constants.CASESIZE / 2 - this.letteroffset * Constants.CASESIZE,
         );
         const lettervalue = LetterMap.letterMap.letterMap.get(word) as Letter;
