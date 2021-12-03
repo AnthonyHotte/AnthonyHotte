@@ -33,7 +33,7 @@ export class SoloOpponentService {
             this.lastCommandEntered = await this.soloOpponent2.play();
             if (this.lastCommandEntered === '!placer undefined') {
                 this.exchangeLettersExpert();
-                this.endTurn('exchange'); // TODO DEBUG HERE, not working for some reasons
+                this.endTurn('exchange');
             } else {
                 this.lastMessageSystem = 'Mot placé avec succès.';
                 this.endTurn('place');

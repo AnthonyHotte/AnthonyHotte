@@ -8,8 +8,8 @@
     </div>
     <p><button class="button" *ngIf="isValidSelection" routerLink="/soloInitiator"> Allez à la sélection du nom </button></p>
     <p>
-        <button div *ngIf="this.gamesList.length === 1" (click) = "this.joinRandom()" routerLink="/soloInitiator" class="button">Joindre aléatoirement une partie</button>
-        <button div *ngIf="this.gamesList.length > 1" (click) = "this.joinRandom()" routerLink="/soloInitiator" class="button">Joindre aléatoirement une partie</button>
+        <button div *ngIf="this.gamesList.length === 1 && this.isGameModePresent" (click) = "this.joinRandom()" routerLink="/soloInitiator" class="button">Joindre aléatoirement une partie</button>
+        <button div *ngIf="this.gamesList.length > 1 && this.isGameModePresent" (click) = "this.joinRandom()" routerLink="/soloInitiator" class="button">Joindre aléatoirement une partie</button>
     </p>
     <button class = "button" routerLink = "/selection"> Revenir en arrière </button>
 </body>    
