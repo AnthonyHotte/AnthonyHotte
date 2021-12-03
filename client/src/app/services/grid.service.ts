@@ -72,18 +72,21 @@ export class GridService {
             Constants.CASESIZE,
         );
         this.gridContext.strokeStyle = 'white';
+        this.gridContext.lineWidth = 2;
         this.gridContext.strokeRect(
             Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
             Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
             Constants.CASESIZE,
             Constants.CASESIZE,
         );
+        this.gridContext.lineWidth = 1; // default value
         // to write the text
         if (textChoice !== Constants.NOTEXT) {
             this.gridContext.fillStyle = 'black';
             const textpositionoffset = 3;
             const textpositionoffset2 = 0.75;
-            this.gridContext.font = '19px system-ui';
+            // this.gridContext.font = '42 px system-ui'; // 19 * 2
+            this.gridContext.font = '38px serif';
             this.gridContext.fillText(
                 Constants.TEXTONTILES[textChoice],
                 Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
@@ -113,7 +116,7 @@ export class GridService {
             this.gridContext.stroke();
             this.gridContext.globalAlpha = 1;
             this.gridContext.textAlign = 'center';
-            this.gridContext.font = '15px serif';
+            this.gridContext.font = '38px serif'; // 15 *2
 
             this.gridContext.fillText(
                 (i + 1).toString(),
@@ -133,7 +136,7 @@ export class GridService {
 
             this.gridContext.globalAlpha = 1;
             this.gridContext.textBaseline = 'middle';
-            this.gridContext.font = '15px serif';
+            this.gridContext.font = '38px serif'; // 15 *2;
 
             this.gridContext.fillText(
                 Constants.SIDELETTERS[i].toString(),
@@ -177,7 +180,8 @@ export class GridService {
     // code pulled from https://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
 
     drawarrow(orientation: string, row: number, column: number) {
-        const arrowOffset = 0.125;
+        const arrowOffsetPerpendicularToDirection = 0.15;
+        const arrowOffsetParalleleToDirection = 0.9;
         const tileSizeArrowLength = 3;
         const arrowlength = Constants.CASESIZE / tileSizeArrowLength;
         // TODO discuter ISMA
@@ -186,20 +190,22 @@ export class GridService {
         let arrowtailYpos = 0;
         let arrowtailXpos = 0;
         if (orientation === 'h') {
-            arrowHeadYpos = Constants.CASESIZE * (row + arrowOffset) + Constants.CASESIZE;
-            arrowHeadXpos = Constants.CASESIZE * (column + 1) + Constants.CASESIZE;
+            arrowHeadYpos = Constants.CASESIZE * (row + arrowOffsetPerpendicularToDirection) + Constants.CASESIZE;
+            arrowHeadXpos = Constants.CASESIZE * (column + arrowOffsetParalleleToDirection) + Constants.CASESIZE;
             arrowtailYpos = arrowHeadYpos; // since the arrow is horizontal y doesn't change
             arrowtailXpos = arrowHeadXpos - arrowlength;
         } else {
-            arrowHeadYpos = Constants.CASESIZE * (row + 1) + Constants.CASESIZE;
-            arrowHeadXpos = Constants.CASESIZE * (column + arrowOffset) + Constants.CASESIZE;
+            arrowHeadYpos = Constants.CASESIZE * (row + arrowOffsetParalleleToDirection) + Constants.CASESIZE;
+            arrowHeadXpos = Constants.CASESIZE * (column + arrowOffsetPerpendicularToDirection) + Constants.CASESIZE;
             arrowtailYpos = arrowHeadYpos - arrowlength;
             arrowtailXpos = arrowHeadXpos; // since the arrow is horizontal x doesn't change
         }
         this.gridContext.strokeStyle = 'black';
+        this.gridContext.lineWidth = 4;
         this.gridContext.beginPath();
         this.canvasArrow(arrowtailXpos, arrowtailYpos, arrowHeadXpos, arrowHeadYpos);
         this.gridContext.stroke();
+        this.gridContext.lineWidth = 1; // back to default value
     }
 
     canvasArrow(fromx: number, fromy: number, tox: number, toy: number) {
@@ -226,6 +232,7 @@ export class GridService {
         // const offset = 8;
         // TODO isma discussion ici;
         // all commented style are for smaller size tile (different style)
+        const permanentXOffset = 0.08;
         this.drawtilebackground(x1, y1);
         const x: number = x1 * Constants.CASESIZE + Constants.CASESIZE;
         const y: number = y1 * Constants.CASESIZE + Constants.CASESIZE;
@@ -237,7 +244,7 @@ export class GridService {
         this.gridContext.font = String(this.policesizeletter) + 'px system-ui';
         this.gridContext.fillText(
             word.toUpperCase(),
-            x + Constants.CASESIZE / 2 - this.letteroffset * Constants.CASESIZE,
+            x + Constants.CASESIZE / 2 - (this.letteroffset + permanentXOffset) * Constants.CASESIZE,
             y + Constants.CASESIZE / 2 - this.letteroffset * Constants.CASESIZE,
         );
         const lettervalue = LetterMap.letterMap.letterMap.get(word) as Letter;

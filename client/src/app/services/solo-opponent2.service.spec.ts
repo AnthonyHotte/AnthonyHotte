@@ -154,7 +154,7 @@ describe('SoloOpponent2Service', () => {
     it('play should call isWordPlayable twice', () => {
         gameStateServiceSpy.isBoardEmpty = false;
         service.expertmode = true;
-        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2, bingo: false }];
         const spy = spyOn(service, 'findValidWords').and.returnValue(['allo', 'la', 'le', 'ok']);
         const spy2 = spyOn(service, 'isWordPlayable').withArgs('allo', 0, 0, 'h').and.returnValue(Promise.resolve(false));
         spy2.withArgs('allo', 0, 0, 'v').and.returnValue(Promise.resolve(true));
@@ -300,47 +300,47 @@ describe('SoloOpponent2Service', () => {
     });
     it('alternativePlay should return    placements alternatifs: aa ', async () => {
         service.expertmode = true;
-        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2, bingo: false }];
         const res = service.alternativePlay();
         expect(res).toEqual('   placements alternatifs: aa');
     });
     it('alternativePlay should return  aucune alternative', async () => {
         service.expertmode = false;
         service.alternativeplays = '   placements alternatifs:';
-        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2, bingo: false }];
         const res = service.alternativePlay();
         expect(res).toEqual('aucune alternative');
     });
     it('alternativePlay should return  aucune    placements alternatifs: aa', async () => {
         service.expertmode = false;
         service.alternativeplays = '   placements alternatifs: aa';
-        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2, bingo: false }];
         const res = service.alternativePlay();
         expect(res).toEqual('   placements alternatifs: aa');
     });
     it('handleWordPlacingOption should set wordToPlaymore13to18points to admf', async () => {
         service.bestWordsToPlayExpert = [
-            { word: 'aa', score: 2 },
-            { word: 'ee', score: 2 },
-            { word: 'ae', score: 2 },
+            { word: 'aa', score: 2, bingo: false },
+            { word: 'ee', score: 2, bingo: false },
+            { word: 'ae', score: 2, bingo: false },
         ];
         const scoreMot = 18;
         service.wordToPlaymore13to18points = [];
         service.handleWordPlacingOption('admf', scoreMot);
-        expect(service.wordToPlaymore13to18points[0]).toEqual('admf');
+        expect(service.wordToPlaymore13to18points[0]).toEqual({ word: 'admf', score: 2, bingo: false });
     });
     it('handleWordPlacingOption should set wordToPlay7to12points to admf', async () => {
-        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 11, bingo: false }];
         const scoreMot = 11;
         service.wordToPlay7to12points = [];
         service.handleWordPlacingOption('admf', scoreMot);
-        expect(service.wordToPlay7to12points[0]).toEqual('admf');
+        expect(service.wordToPlay7to12points[0]).toEqual({ word: 'admf', score: 11, bingo: false });
     });
     it('handleWordPlacingOption should set wordToPlayLessThan6Points to admf', async () => {
-        service.bestWordsToPlayExpert = [{ word: 'aa', score: 2 }];
+        service.bestWordsToPlayExpert = [{ word: 'aa', score: 5, bingo: false }];
         const scoreMot = 5;
         service.wordToPlayLessThan6Points = [];
         service.handleWordPlacingOption('admf', scoreMot);
-        expect(service.wordToPlayLessThan6Points[0]).toEqual('admf');
+        expect(service.wordToPlayLessThan6Points[0]).toEqual({ word: 'admf', score: 5, bingo: false });
     });
 });
