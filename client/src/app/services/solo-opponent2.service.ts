@@ -16,11 +16,11 @@ export class SoloOpponent2Service {
     tempword: string;
     score = 0;
     expertmode = false;
-    private bestWordsToPlayExpert: BestWordToPlay[] = [];
-    private wordToPlayLessThan6Points: BestWordToPlay[] = [];
-    private wordToPlay7to12points: BestWordToPlay[] = [];
-    private wordToPlaymore13to18points: BestWordToPlay[] = [];
-    private alternativeplays: string;
+    bestWordsToPlayExpert: BestWordToPlay[] = [];
+    wordToPlayLessThan6Points: BestWordToPlay[] = [];
+    wordToPlay7to12points: BestWordToPlay[] = [];
+    wordToPlaymore13to18points: BestWordToPlay[] = [];
+    alternativeplays: string;
 
     constructor(
         public letterService: LetterService,
