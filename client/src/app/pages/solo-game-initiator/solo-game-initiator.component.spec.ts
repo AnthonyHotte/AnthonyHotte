@@ -1,23 +1,24 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
 import { PlayerLetterHand } from '@app/classes/player-letter-hand';
 import { MAXLETTERINHAND } from '@app/constants';
-import { LetterBankService } from '@app/services/letter-bank.service';
-import { LetterService } from '@app/services/letter.service';
-import { SocketService } from '@app/services/socket.service';
-import { TileScramblerService } from '@app/services/tile-scrambler.service';
-import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
-import { SoloGameInitiatorComponent } from './solo-game-initiator.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { MessageService } from '@app/services/message.service';
-import { MatDialog } from '@angular/material/dialog';
-import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { CommunicationService } from '@app/services/communication.service';
 import { DictionaryService } from '@app/services/dictionary.service';
-import { Observable, of } from 'rxjs';
-import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
+import { LetterBankService } from '@app/services/letter-bank.service';
+import { LetterService } from '@app/services/letter.service';
+import { MessageService } from '@app/services/message.service';
 import { OpponentNameService } from '@app/services/opponent-name.service';
+import { SocketService } from '@app/services/socket.service';
+import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
+import { TileScramblerService } from '@app/services/tile-scrambler.service';
+import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
+import { Observable, of } from 'rxjs';
 import { Dictionary } from '@app/classes/dictionary';
+
+import { SoloGameInitiatorComponent } from './solo-game-initiator.component';
 
 describe('SoloGameInitiatorComponent', () => {
     let component: SoloGameInitiatorComponent;
@@ -43,7 +44,12 @@ describe('SoloGameInitiatorComponent', () => {
         indexWaintingRoomService.getIndex.and.returnValue(0);
         messageServiceSpy = jasmine.createSpyObj('MessageService', ['gameStartingInfoSubscribe']);
         letterBankServiceSpy = jasmine.createSpyObj('LetterBankService', ['getLettersInBank']);
-        socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendJoinGameInfo', 'setGameMode', 'sendInitiateNewGameInformation']);
+        socketServiceSpy = jasmine.createSpyObj('SocketService', [
+            'sendJoinGameInfo',
+            'setGameMode',
+            'handleDisconnect',
+            'sendInitiateNewGameInformation',
+        ]);
         soloOpponentNameServiceSpy = jasmine.createSpyObj('OpponentNameService', ['getJVEasyNames', 'getJVExpertNames', 'getOpponentName']);
         socketServiceSpy.nameOfRoomCreator = 'Tony';
         socketServiceSpy.gameLists = [];
@@ -213,5 +219,24 @@ describe('SoloGameInitiatorComponent', () => {
         component.validateDictionaryNumber().then(() => {
             expect(communicationServiceSpy.getDictionaryList).toHaveBeenCalled();
         });
+    });
+    it('should call handleDisconnect', () => {
+        component.beforeUnloadHandler();
+        expect(socketServiceSpy.handleDisconnect).toHaveBeenCalled();
+    });
+    it('should call handleDisconnect', () => {
+        component.beforeUnloadHandler();
+        expect(socketServiceSpy.handleDisconnect).toHaveBeenCalled();
+    });
+    it('dictionnaryValidation should set invalid if invalid', () => {
+        component.indexDictionaryNumber = -1;
+        component.dictionnaryValidation();
+        expect(component.isDictionaryValid).toBeFalse();
+    });
+    it('dictionnaryValidation should set valid if valid', () => {
+        component.indexDictionaryNumber = 0;
+        component.dictionaryList = [{ title: 'allo', description: 'allo', words: [] }];
+        component.dictionnaryValidation();
+        expect(component.isDictionaryValid).toBeTrue();
     });
 });

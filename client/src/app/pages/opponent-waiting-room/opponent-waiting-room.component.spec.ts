@@ -5,8 +5,8 @@ import { Position } from '@app/position-tile-interface';
 import { IndexWaitingRoomService } from '@app/services/index-waiting-room.service';
 import { LetterService } from '@app/services/letter.service';
 import { SocketService } from '@app/services/socket.service';
-
 import { OpponentWaitingRoomComponent } from './opponent-waiting-room.component';
+
 
 describe('OpponentWaitingRoomComponent', () => {
     let component: OpponentWaitingRoomComponent;
@@ -16,7 +16,7 @@ describe('OpponentWaitingRoomComponent', () => {
     let letterServiceSpy: jasmine.SpyObj<LetterService>;
     let gridMapServiceSpy: jasmine.SpyObj<TileMap>;
     beforeEach(async () => {
-        socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendGameListNeededNotification']);
+        socketServiceSpy = jasmine.createSpyObj('SocketService', ['sendGameListNeededNotification', 'handleDisconnect']);
         indexWaitingRoomServiceSpy = jasmine.createSpyObj('IndexWaitingRoomService', ['setIndex']);
         letterServiceSpy = jasmine.createSpyObj('LetterService', ['synchInformation']);
         gridMapServiceSpy = jasmine.createSpyObj('TileMap', ['isDoubleWordTile']);
@@ -105,5 +105,9 @@ describe('OpponentWaitingRoomComponent', () => {
         const spy = spyOn(component, 'setIndex');
         component.joinRandom();
         expect(spy).toHaveBeenCalledWith(0);
+    });
+    it('should call handleDisconnect', () => {
+        component.beforeUnloadHandler();
+        expect(socketServiceSpy.handleDisconnect).toHaveBeenCalled();
     });
 });

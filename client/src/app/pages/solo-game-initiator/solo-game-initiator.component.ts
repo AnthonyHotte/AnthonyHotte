@@ -218,15 +218,17 @@ export class SoloGameInitiatorComponent {
         });
         this.validationDictionaryMessage = 'Validation du dictionnaire en cours... Veuillez patienter.';
         setTimeout(() => {
-            if (this.indexDictionaryNumber < 0 || this.indexDictionaryNumber >= this.dictionaryList.length) {
-                this.validationDictionaryMessage = 'La vérification a échouée...';
-                this.isDictionaryValid = false;
-            } else {
-                this.validationDictionaryMessage =
-                    'Le dictionnaire choisi, ' + this.dictionaryList[this.indexDictionaryNumber].title + ' est valide!';
-                this.dictionaryService.indexDictionary = this.indexDictionaryNumber;
-                this.isDictionaryValid = true;
-            }
+            this.dictionnaryValidation();
         }, TIMETOWAITFORVALIDATION);
+    }
+    dictionnaryValidation() {
+        if (this.indexDictionaryNumber < 0 || this.indexDictionaryNumber >= this.dictionaryList.length) {
+            this.validationDictionaryMessage = 'La vérification a échouée...';
+            this.isDictionaryValid = false;
+        } else {
+            this.validationDictionaryMessage = 'Le dictionnaire choisi, ' + this.dictionaryList[this.indexDictionaryNumber].title + ' est valide!';
+            this.dictionaryService.indexDictionary = this.indexDictionaryNumber;
+            this.isDictionaryValid = true;
+        }
     }
 }

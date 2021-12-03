@@ -147,14 +147,23 @@ describe('TextBox', () => {
         textBox.isCommand(maChaine);
         expect(mySpy).toHaveBeenCalled();
     });
-    it('isCommand should call handleEnter when input is !réserve', () => {
+    it('isCommand should call handleEnter when input is !réserve and debug is active', () => {
         const mySPy = spyOn(textBox, 'handleEnter');
         textBox.debugCommand = true;
         timerTurnManagerServiceSpy.turn = 0;
+        textBox.debugCommand = true;
         const maChaine = '!réserve';
         textBox.isCommand(maChaine).then(() => {
             expect(mySPy).toHaveBeenCalled();
         });
+    });
+    it('isCommand should not call handleEnter when input is !réserve and debug is not active', () => {
+        const mySPy = spyOn(textBox, 'handleEnter');
+        timerTurnManagerServiceSpy.turn = 0;
+        textBox.debugCommand = false;
+        const maChaine = '!réserve';
+        textBox.isCommand(maChaine);
+        expect(mySPy).not.toHaveBeenCalled();
     });
     it('isCommand should call push', () => {
         const mySpy = spyOn(textBox.inputs, 'push');
@@ -314,13 +323,13 @@ describe('TextBox', () => {
         await textBox.handleOpponentCommand('!abandonner');
         expect(mySpy).toHaveBeenCalled();
     });
-    it('handleOpponentCommand should call exchangeLetterOpponent when the the command is !aide', async () => {
+    it('handleOpponentCommand should not call push when the the command is !aide', async () => {
         const mySpy = spyOn(textBox.inputs, 'push');
         textBox.handleOpponentCommand('!aide').then(() => {
             expect(mySpy).toHaveBeenCalledTimes(0);
         });
     });
-    it('handleOpponentCommand should push something in inputs when the the command is !réserve', async () => {
+    it('handleOpponentCommand should not push something in inputs when the the command is !réserve', async () => {
         const mySpy = spyOn(textBox.inputs, 'push');
         await textBox.handleOpponentCommand('!réserve');
         expect(mySpy).toHaveBeenCalledTimes(0);

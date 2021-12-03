@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { GridService } from '@app/services/grid.service';
 import { PlaceLettersService } from '@app/services/place-letters.service';
-
 import { ChangeFontSizeComponent } from './change-font-size.component';
 
 describe('ChangeFontSizeComponent', () => {
@@ -39,6 +38,14 @@ describe('ChangeFontSizeComponent', () => {
         expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
     });
     it('decreaseFontSize should call policeSizeChanged', () => {
+        component.decreaseFontSize();
+        expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
+    });
+    it('should call increasePoliceSize and policeSizeChanged', () => {
+        component.increaseFontSize();
+        expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
+    });
+    it('should call decreasePoliceSize and policeSizeChanged', () => {
         component.decreaseFontSize();
         expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
     });

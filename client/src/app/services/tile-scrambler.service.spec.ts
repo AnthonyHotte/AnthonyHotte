@@ -9,6 +9,7 @@ describe('TileScramblerService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(TileScramblerService);
+        TileMap.gridMap = new TileMap();
     });
 
     it('should be created', () => {
