@@ -211,4 +211,19 @@ describe('SoloGameInitiatorComponent', () => {
         component.beforeUnloadHandler();
         expect(socketServiceSpy.handleDisconnect).toHaveBeenCalled();
     });
+    it('should call handleDisconnect', () => {
+        component.beforeUnloadHandler();
+        expect(socketServiceSpy.handleDisconnect).toHaveBeenCalled();
+    });
+    it('dictionnaryValidation should set invalid if invalid', () => {
+        component.indexDictionaryNumber = -1;
+        component.dictionnaryValidation();
+        expect(component.isDictionaryValid).toBeFalse();
+    });
+    it('dictionnaryValidation should set valid if valid', () => {
+        component.indexDictionaryNumber = 0;
+        component.dictionaryList = [{ title: 'allo', description: 'allo', words: [] }];
+        component.dictionnaryValidation();
+        expect(component.isDictionaryValid).toBeTrue();
+    });
 });
