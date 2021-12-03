@@ -238,7 +238,7 @@ describe('PlaceLetterClickService', () => {
 
     it('rawXYPositionToCasePosition should return 16 when 750 is entered', () => {
         const randomNumber = 750;
-        const lastCase = 16;
+        const lastCase = 7;
         expect(placeLetterClickService.rawXYPositionToCasePosition(randomNumber)).toEqual(lastCase);
     });
 
