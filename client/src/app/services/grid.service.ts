@@ -72,18 +72,21 @@ export class GridService {
             Constants.CASESIZE,
         );
         this.gridContext.strokeStyle = 'white';
+        this.gridContext.lineWidth = 2;
         this.gridContext.strokeRect(
             Constants.CASESIZE * (i - 1) + Constants.SIDESPACE,
             Constants.CASESIZE * (j - 1) + Constants.SIDESPACE,
             Constants.CASESIZE,
             Constants.CASESIZE,
         );
+        this.gridContext.lineWidth = 1; // default value
         // to write the text
         if (textChoice !== Constants.NOTEXT) {
             this.gridContext.fillStyle = 'black';
             const textpositionoffset = 3;
             const textpositionoffset2 = 0.75;
-            this.gridContext.font = '42 px system-ui'; // 19 * 2
+            // this.gridContext.font = '42 px system-ui'; // 19 * 2
+            this.gridContext.font = '38px serif';
             this.gridContext.fillText(
                 Constants.TEXTONTILES[textChoice],
                 Constants.CASESIZE * (i - 1) + Constants.CASESIZE / 2 + Constants.SIDESPACE,
@@ -177,7 +180,7 @@ export class GridService {
     // code pulled from https://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
 
     drawarrow(orientation: string, row: number, column: number) {
-        const arrowOffsetPerpendicularToDirection = 0.3;
+        const arrowOffsetPerpendicularToDirection = 0.15;
         const arrowOffsetParalleleToDirection = 0.9;
         const tileSizeArrowLength = 3;
         const arrowlength = Constants.CASESIZE / tileSizeArrowLength;
@@ -198,7 +201,7 @@ export class GridService {
             arrowtailXpos = arrowHeadXpos; // since the arrow is horizontal x doesn't change
         }
         this.gridContext.strokeStyle = 'black';
-        this.gridContext.lineWidth = 2;
+        this.gridContext.lineWidth = 4;
         this.gridContext.beginPath();
         this.canvasArrow(arrowtailXpos, arrowtailYpos, arrowHeadXpos, arrowHeadYpos);
         this.gridContext.stroke();
