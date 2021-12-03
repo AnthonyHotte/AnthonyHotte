@@ -1,36 +1,35 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ISocketService } from './socket-wrapper.service';
 import { SocketService } from './socket.service';
-type CallbackSignature = (...params: unknown[]) => void;
-class SocketMock implements ISocketService {
-    private callbacks = new Map<string, CallbackSignature[]>();
-    on(event: string, listener: CallbackSignature): void {
-        if (!this.callbacks.has(event)) {
-            this.callbacks.set(event, []);
-        }
-
-        this.callbacks.get(event)?.push(listener);
-    }
-
+class SocketMock {
+    id: string = 'Socket mock';
+    events: Map<string, CallableFunction> = new Map();
     // eslint-disable-next-line no-unused-vars
-    emit(_event: string, ..._params: unknown[]): void {
+    emit(event: string, ...params: unknown[]): void {
         return;
     }
 
-    peerSideEmit(event: string, ...params: unknown[]) {
-        if (!this.callbacks.has(event)) {
-            return;
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        for (const callback of this.callbacks.get(event)!) {
-            callback(params);
-        }
+    on(eventName: string, cb: CallableFunction) {
+        this.events.set(eventName, cb);
     }
 
-    disconnect(): void {
-        throw new Error('Method not implemented.');
+    peerSideEmit(eventName: string, ...args: unknown[]) {
+        const arrowFunction = this.events.get(eventName) as CallableFunction;
+        arrowFunction(...args);
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    join(...args: unknown[]) {
+        return;
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    leave(...args: unknown[]) {
+        return;
+    }
+
+    disconnect() {
+        return;
     }
 }
 describe('SocketService', () => {
@@ -159,15 +158,11 @@ describe('SocketService', () => {
         expect(spys).toHaveBeenCalled();
         done();
     });
-    // it('sendGamesInformation in configureBaseRequest set gameIndex', (done) => {
-    //     service.gameLists = [];
-    //     // const game = [['1', '2', '3', '4', '5', '6', '7', '8']];
-    //     // const board = [[[]]];
-    //     const info = { games: [['1', '2', '3', '4', '5', '6', '7', '8']], boards: [[[]]] };
-    //     socketMock.peerSideEmit('sendGamesInformation', info);
-    //     // expect(service.gameLists.length).toEqual(1);
-    //     done();
-    // });
+    it('sendGamesInformation in configureBaseRequest set gameIndex', () => {
+        service.gameLists = [];
+        const info = { games: [['1', '2', '3', '4', '5', '6', '7', '8']], boards: [[[]]] };
+        socketMock.peerSideEmit('sendGamesInformation', info);
+    });
 
     it('cancellation indexes should change cancellation indexes', (done) => {
         service.cancellationIndexes = [2, 2];

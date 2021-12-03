@@ -33,7 +33,12 @@ export class FileUploadComponent {
     }
 
     onFileSelected(event: Event) {
+        // const e = new Event("", {} as any);
+        // e.target = {} as HTMLI
         const target = event.target as HTMLInputElement;
+        if (target === null) {
+            return;
+        }
         if (target !== null && target.files !== null) {
             const file: File | null = target.files[0];
 
