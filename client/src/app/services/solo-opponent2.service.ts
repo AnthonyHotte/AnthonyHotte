@@ -16,11 +16,12 @@ export class SoloOpponent2Service {
     tempword: string;
     score = 0;
     expertmode = false;
-    bestWordsToPlayExpert: BestWordToPlay[] = [];
-    alternativeplays: string;
-    wordToPlayLessThan6Points: string[] = [];
-    wordToPlay7to12points: string[] = [];
-    wordToPlaymore13to18points: string[] = [];
+    private bestWordsToPlayExpert: BestWordToPlay[] = [];
+    private wordToPlayLessThan6Points: BestWordToPlay[] = [];
+    private wordToPlay7to12points: BestWordToPlay[] = [];
+    private wordToPlaymore13to18points: BestWordToPlay[] = [];
+    private alternativeplays: string;
+
     constructor(
         public letterService: LetterService,
         public timeManagerService: TimerTurnManagerService,
@@ -43,7 +44,7 @@ export class SoloOpponent2Service {
         for (const letter of this.letterService.players[this.timeManagerService.turn].allLettersInHand) {
             arrayHand.push(letter.letter.toLowerCase());
         }
-        this.bestWordsToPlayExpert[0] = { word: '', score: 0 };
+        this.bestWordsToPlayExpert[0] = { word: '', score: 0, bingo: false };
         if (this.gameStateService.isBoardEmpty) {
             await this.playfirstword();
         } else {
@@ -55,29 +56,23 @@ export class SoloOpponent2Service {
             const chancelessthan6 = 40;
             const chancemorethan6 = 30;
             const PROBABILITY_OF_ACTION = this.calculateProbability(hundredpercant);
-            if (PROBABILITY_OF_ACTION < chancelessthan6) {
-                tempword = this.wordToPlayLessThan6Points[Math.floor(Math.random() * this.wordToPlayLessThan6Points.length)];
-                this.fillAlternativePlay(this.wordToPlayLessThan6Points);
-            } else if (PROBABILITY_OF_ACTION < chancemorethan6 + chancelessthan6) {
-                tempword = this.wordToPlay7to12points[Math.floor(Math.random() * this.wordToPlay7to12points.length)];
-                this.fillAlternativePlay(this.wordToPlay7to12points);
+            if (PROBABILITY_OF_ACTION < chancelessthan6 && this.wordToPlayLessThan6Points.length !== 0) {
+                tempword = this.wordToPlayLessThan6Points[Math.floor(Math.random() * this.wordToPlayLessThan6Points.length)].word;
+            } else if (PROBABILITY_OF_ACTION < chancemorethan6 + chancelessthan6 && this.wordToPlay7to12points.length !== 0) {
+                tempword = this.wordToPlay7to12points[Math.floor(Math.random() * this.wordToPlay7to12points.length)].word;
             } else {
-                tempword = this.wordToPlaymore13to18points[Math.floor(Math.random() * this.wordToPlaymore13to18points.length)];
-                this.fillAlternativePlay(this.wordToPlaymore13to18points);
+                tempword = this.wordToPlaymore13to18points[Math.floor(Math.random() * this.wordToPlaymore13to18points.length)].word;
             }
+            this.fillAlternativePlay(this.wordToPlayLessThan6Points.concat(this.wordToPlay7to12points).concat(this.wordToPlaymore13to18points));
         } else {
             if (this.bestWordsToPlayExpert[0] !== undefined) {
                 tempword = this.bestWordsToPlayExpert[0].word;
             }
         }
-        if (tempword !== '') {
-            this.tempword = tempword;
-            await this.placeLetterService.placeWord(this.tempword);
-
-            return '!placer ' + tempword;
-        } else {
-            return '!placer undefined';
-        }
+        if (tempword === '') return '!placer undefined';
+        this.tempword = tempword;
+        await this.placeLetterService.placeWord(this.tempword);
+        return '!placer ' + tempword;
     }
 
     setExpertMode(expert: boolean) {
@@ -220,12 +215,15 @@ export class SoloOpponent2Service {
     }
     handleWordPlacingOption(wordtoplace: string, score2: number) {
         const smallerthan = -1;
-        const numberOfBestWordToPlayMax = 3;
         if (score2 > this.bestWordsToPlayExpert[this.bestWordsToPlayExpert.length - 1].score) {
-            if (this.bestWordsToPlayExpert.length < numberOfBestWordToPlayMax) {
-                this.bestWordsToPlayExpert.push({ word: wordtoplace, score: score2 });
+            if (this.bestWordsToPlayExpert.length < Constants.NUMBERWORDSTOSAVE) {
+                this.bestWordsToPlayExpert.push({ word: wordtoplace, score: score2, bingo: this.gameStateService.playerUsedAllLetters });
             } else if (!this.bestWordsToPlayExpert.find((i) => i.word === wordtoplace)) {
-                this.bestWordsToPlayExpert[this.bestWordsToPlayExpert.length - 1] = { word: wordtoplace, score: score2 };
+                this.bestWordsToPlayExpert[this.bestWordsToPlayExpert.length - 1] = {
+                    word: wordtoplace,
+                    score: score2,
+                    bingo: this.gameStateService.playerUsedAllLetters,
+                };
             }
             this.bestWordsToPlayExpert.sort((a, b) => (a.score > b.score ? smallerthan : 1));
         }
@@ -233,11 +231,11 @@ export class SoloOpponent2Service {
         const middlebound = 12;
         const upperbound = 18;
         if (score2 <= lowerboundd) {
-            this.wordToPlayLessThan6Points.push(wordtoplace);
+            this.wordToPlayLessThan6Points.push({ word: wordtoplace, score: score2, bingo: this.gameStateService.playerUsedAllLetters });
         } else if (score2 <= middlebound) {
-            this.wordToPlay7to12points.push(wordtoplace);
+            this.wordToPlay7to12points.push({ word: wordtoplace, score: score2, bingo: this.gameStateService.playerUsedAllLetters });
         } else if (score2 <= upperbound) {
-            this.wordToPlaymore13to18points.push(wordtoplace);
+            this.wordToPlaymore13to18points.push({ word: wordtoplace, score: score2, bingo: this.gameStateService.playerUsedAllLetters });
         }
         return;
     }
@@ -265,24 +263,41 @@ export class SoloOpponent2Service {
     }
     alternativePlay() {
         if (this.expertmode) {
-            let alternativeplay = '   placements alternatifs:';
-            for (let i = 0; i < this.bestWordsToPlayExpert.length && i < 3; i++) {
-                alternativeplay = alternativeplay + ' ' + this.bestWordsToPlayExpert[i].word;
+            if (this.bestWordsToPlayExpert.length < 2) return "Il n'y a pas de placement alternatif";
+            let alternativePlay = 'placements alternatifs:\n';
+            for (let i = 0; i < this.bestWordsToPlayExpert.length - 1 && i < 3; i++) {
+                alternativePlay +=
+                    this.changeCommandToAltPlace(this.bestWordsToPlayExpert[i + 1].word) + ' (' + this.bestWordsToPlayExpert[i + 1].score + ')';
+                if (this.bestWordsToPlayExpert[i + 1].bingo) alternativePlay += ' BINGO!';
+                alternativePlay += '\n\n';
             }
-            return alternativeplay;
+            return alternativePlay;
         } else {
-            if (this.alternativeplays === '   placements alternatifs:') {
-                return 'aucune alternative';
-            } else {
-                return this.alternativeplays;
-            }
+            if (this.alternativeplays === 'placements alternatifs: \n') return "Il n'y a pas de placement alternatif";
+            return this.alternativeplays;
         }
     }
-    fillAlternativePlay(listfOfWordToPlay: string[]) {
-        this.alternativeplays = '   placements alternatifs:';
+    private fillAlternativePlay(listfOfWordToPlay: BestWordToPlay[]) {
+        let alternativePlay = 'placements alternatifs: \n';
+
         for (let i = 0; i < listfOfWordToPlay.length && i < 3; i++) {
-            this.alternativeplays = this.alternativeplays + listfOfWordToPlay[i];
+            const indexWord = Math.floor(Math.random() * listfOfWordToPlay.length);
+            alternativePlay += this.changeCommandToAltPlace(listfOfWordToPlay[indexWord].word) + ' (' + listfOfWordToPlay[indexWord].score + ')';
+            if (listfOfWordToPlay[indexWord].bingo) alternativePlay += ' BINGO!';
+            alternativePlay += '\n\n';
         }
-        return;
+        this.alternativeplays = alternativePlay;
+    }
+
+    private changeCommandToAltPlace(command: string) {
+        let altPlace = '';
+        for (let i = 'h8h '.length; i < command.length; i++) {
+            altPlace +=
+                command[2] === 'h'
+                    ? command.charAt(0) + (Number(command.charAt(1)) + i - 'h8h '.length) + ':' + command.charAt(i) + '  '
+                    : String.fromCharCode(command.charCodeAt(0) + i - 'h8h '.length) + command[1] + ':' + command.charAt(i) + '  ';
+        }
+        altPlace += '\n' + command.substring('h8h '.length, command.length);
+        return altPlace;
     }
 }
