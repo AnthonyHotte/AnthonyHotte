@@ -270,12 +270,4 @@ export class TextBox {
         this.endTurn('exchange');
         return 'Échange de lettre avec succès.';
     }
-
-    // TO DO : ENLEVER LA FONCTION CAR CELA FONCTIONNE SANS LE GETELEMENTBYID; C'EST UNE FONCTION INUTILE
-    // scrollDown() {
-    // const mondiv = document.getElementById('DisplayZone');
-    // if (mondiv !== null) {
-    //     mondiv.scrollTo(0, mondiv.scrollHeight + 1);
-    // }
-    // }
 }
