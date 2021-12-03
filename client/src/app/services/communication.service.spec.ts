@@ -4,7 +4,7 @@ import { Dictionary } from '@app/classes/dictionary';
 import { Message } from '@app/classes/message';
 import { CommunicationService } from '@app/services/communication.service';
 
-describe('CommunicationService', () => {
+fdescribe('CommunicationService', () => {
     let httpMock: HttpTestingController;
     let service: CommunicationService;
     let baseUrl: string;
@@ -160,8 +160,8 @@ describe('CommunicationService', () => {
                 truthful = false;
             }
         }, fail);
-        const req = httpMock.expectOne(`${baseUrl}/dictionary/senddeletedictionary`);
-        expect(req.request.method).toBe('POST');
+        const req = httpMock.expectOne(`${baseUrl}/dictionary/senddeletedictionary?indexNumber=0`);
+        expect(req.request.method).toBe('DELETE');
     });
     it('reinitialiseDictionary should call a post request (HttpClient called once)', () => {
         // subscribe to the mocked call

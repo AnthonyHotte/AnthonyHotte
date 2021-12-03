@@ -48,15 +48,17 @@ describe('Database service', () => {
         // Reconnect to local server
         const mongoUri = await mongoServer.getUri();
         await databaseService.start(mongoUri);
-        const best = databaseService.getBestScoreClassique();
-        expect(best.length).to.be.equal(0);
+        databaseService.getBestScoreClassique().then((res) => {
+            expect(res.length).to.be.equal(0);
+        });
     });
     it('bestScoreLog2990 should get best score log2990', async () => {
         // Reconnect to local server
         const mongoUri = await mongoServer.getUri();
         await databaseService.start(mongoUri);
-        const best = databaseService.bestScoreLog2990();
-        expect(best.length).to.be.equal(0);
+        databaseService.bestScoreLog2990().then((res) => {
+            expect(res.length).to.be.equal(0);
+        });
     });
     it('sendScoreChanges should send score changes', async () => {
         // Reconnect to local server
