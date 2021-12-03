@@ -57,10 +57,10 @@ export class CommunicationService {
             .pipe(catchError(this.handleError<void>('sendDictionaryNameChanged')));
     }
     sendDeleteDictionary(index: number): Observable<void> {
-        const objNumber = { indexNumber: index };
+        const params = new HttpParams().append('indexNumber', index);
         return this.http
-            .post<void>(`${this.baseUrl}/dictionary/senddeletedictionary`, objNumber)
-            .pipe(catchError(this.handleError<void>('sendDeleteDictionary')));
+            .delete(`${this.baseUrl}/dictionary/senddeletedictionary`, { params })
+            .pipe(catchError(this.handleError<void>('sendDeleteDictionary'))) as Observable<void>;
     }
     reinitialiseDictionary(): Observable<void> {
         return this.http
