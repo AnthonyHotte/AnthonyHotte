@@ -89,6 +89,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
 
     joinRandom() {
         const gameIndex = [];
+
         for (let i = 0; i < this.socketInformation.gameLists.length; ++i) {
             if (this.socketInformation.gameLists[i][7] === this.socketInformation.is2990.toString()) {
                 gameIndex.push(i);
@@ -96,6 +97,7 @@ export class OpponentWaitingRoomComponent implements OnInit {
         }
         const index = Math.floor(Math.random() * gameIndex.length);
         this.setIndex(gameIndex[index]);
+        this.changeValidity(this.socketInformation.gameLists[gameIndex[index]][0]);
     }
 
     refresh() {
