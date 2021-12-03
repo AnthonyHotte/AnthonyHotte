@@ -235,6 +235,11 @@ describe('PlaceLetterClickService', () => {
         placeLetterClickService.changeOrientation();
         expect(placeLetterClickService.orientation).not.toEqual('v');
     });
+    it('change orientation should change orientation', () => {
+        placeLetterClickService.orientation = 'h';
+        placeLetterClickService.changeOrientation();
+        expect(placeLetterClickService.orientation).not.toEqual('h');
+    });
 
     it('rawXYPositionToCasePosition should return 16 when 750 is entered', () => {
         const randomNumber = 750;
