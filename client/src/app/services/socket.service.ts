@@ -79,6 +79,7 @@ export class SocketService {
             this.startGame.next(true);
         });
         this.socket.on('sendGamesInformation', (info) => {
+            // console.log(info);
             this.gameLists.length = 0;
             for (let i = 0; i < info.games.length; i++) {
                 this.gameLists.push(['name', 'bonus', 'time', 'lettersCreator', 'lettersJoiner', 'objectivesCreator', 'objectivesJoiner', 'is2990']);
