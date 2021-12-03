@@ -22,14 +22,17 @@ export class DictionaryService {
     }
     getDictionary() {
         this.communicationService.getFullDictionary(this.indexDictionary).subscribe((res) => {
-            const dict = new Dictionary('', '');
-            dict.title = res.title;
-            dict.description = res.description;
-            for (const word of res.words) {
-                dict.words.push(word);
-            }
-            this.dictionaryList.push(dict);
+            this.populateDictionary(res);
         });
+    }
+    populateDictionary(res: Dictionary) {
+        const dict = new Dictionary('', '');
+        dict.title = res.title;
+        dict.description = res.description;
+        for (const word of res.words) {
+            dict.words.push(word);
+        }
+        this.dictionaryList.push(dict);
     }
     isTitlePresent(title: string) {
         for (const dictionary of this.dictionaryList) {
