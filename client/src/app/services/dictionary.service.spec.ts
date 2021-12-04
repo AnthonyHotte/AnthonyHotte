@@ -45,10 +45,4 @@ describe('DictionaryService', () => {
         const res = service.isTitlePresent('t2');
         expect(res).toBe(false);
     });
-    it('should call populate ', () => {
-        const res = new Dictionary('t1', 'd1');
-        const spy = spyOn(service.dictionaryList, 'push');
-        service.populateDictionary(res);
-        expect(spy).toHaveBeenCalled();
-    });
 });

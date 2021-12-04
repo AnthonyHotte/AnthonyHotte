@@ -277,7 +277,7 @@ export class SoloOpponent2Service {
             return this.alternativeplays;
         }
     }
-    private fillAlternativePlay(listfOfWordToPlay: BestWordToPlay[]) {
+    fillAlternativePlay(listfOfWordToPlay: BestWordToPlay[]) {
         let alternativePlay = 'placements alternatifs: \n';
 
         for (let i = 0; i < listfOfWordToPlay.length && i < 3; i++) {

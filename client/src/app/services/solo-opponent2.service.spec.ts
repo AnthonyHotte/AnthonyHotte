@@ -11,7 +11,7 @@ import { PlaceLettersService } from './place-letters.service';
 import { SoloOpponent2Service } from './solo-opponent2.service';
 import { TimerTurnManagerService } from './timer-turn-manager.service';
 
-fdescribe('SoloOpponent2Service', () => {
+describe('SoloOpponent2Service', () => {
     let service: SoloOpponent2Service;
     let placeLettersServiceSpy: jasmine.SpyObj<PlaceLettersService>;
     let gameStateServiceSpy: jasmine.SpyObj<GameStateService>;
@@ -133,14 +133,15 @@ fdescribe('SoloOpponent2Service', () => {
         const returnedvalue = service.findValidWords(dictionnary, letters);
         expect(returnedvalue[0]).toBe('allo');
     });
-    it('play should call is word playable once', () => {
+    it('play should call is word playable once', async () => {
         gameStateServiceSpy.isBoardEmpty = false;
         const spy = spyOn(service, 'findValidWords').and.returnValue(['allo', 'la', 'le', 'ok']);
         const spy2 = spyOn(service, 'isWordPlayable').and.returnValue(Promise.resolve(true));
         gameStateServiceSpy.lettersOnBoard[0][0] = 'a';
-        service.play();
-        expect(spy).toHaveBeenCalled();
-        expect(spy2).toHaveBeenCalled();
+        service.play().then(() => {
+            expect(spy).toHaveBeenCalled();
+            expect(spy2).toHaveBeenCalled();
+        });
     });
     it('play should call isWordPlayable twice', () => {
         gameStateServiceSpy.isBoardEmpty = false;
@@ -372,5 +373,11 @@ fdescribe('SoloOpponent2Service', () => {
         gameStateServiceSpy.playerUsedAllLetters = false;
         service.handleWordPlacingOption('admf', scoreMot);
         expect(service.wordToPlayLessThan6Points[0]).toEqual({ word: 'admf', score: 5, bingo: false });
+    });
+    it('fillalternativeplay should return placements non du test', () => {
+        service.bestWordsToPlayExpert = [{ word: 'allo', score: 5, bingo: true }];
+        const expected = 39;
+        service.fillAlternativePlay(service.bestWordsToPlayExpert);
+        expect(service.alternativeplays.length).toEqual(expected);
     });
 });
