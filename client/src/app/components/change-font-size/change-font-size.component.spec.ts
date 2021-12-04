@@ -8,19 +8,19 @@ import { ChangeFontSizeComponent } from './change-font-size.component';
 describe('ChangeFontSizeComponent', () => {
     let component: ChangeFontSizeComponent;
     let fixture: ComponentFixture<ChangeFontSizeComponent>;
-    let grid: jasmine.SpyObj<GridService>;
-    let placeLetter: jasmine.SpyObj<PlaceLettersService>;
+    let gridServiceSpy: jasmine.SpyObj<GridService>;
+    let placeLettersServiceSpy: jasmine.SpyObj<PlaceLettersService>;
 
     beforeEach(async () => {
-        grid = jasmine.createSpyObj('GridService', ['increasePoliceSize', 'decreasePoliceSize']);
-        placeLetter = jasmine.createSpyObj('PlaceLettersService', ['policeSizeChanged']);
+        placeLettersServiceSpy = jasmine.createSpyObj('PlaceLettersService', ['policeSizeChanged']);
+        gridServiceSpy = jasmine.createSpyObj('GridService', ['increasePoliceSize', 'decreasePoliceSize']);
         await TestBed.configureTestingModule({
             declarations: [ChangeFontSizeComponent],
-            imports: [RouterTestingModule, HttpClientTestingModule],
             providers: [
-                { provide: ChangeFontSizeComponent, useValue: grid },
-                { provide: PlaceLettersService, useValue: placeLetter },
+                { provide: GridService, useValue: gridServiceSpy },
+                { provide: PlaceLettersService, useValue: placeLettersServiceSpy },
             ],
+            imports: [RouterTestingModule, HttpClientTestingModule],
         }).compileComponents();
     });
 
@@ -33,12 +33,20 @@ describe('ChangeFontSizeComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+    it('increaseFontSize should call policeSizeChanged', () => {
+        component.increaseFontSize();
+        expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
+    });
+    it('decreaseFontSize should call policeSizeChanged', () => {
+        component.decreaseFontSize();
+        expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
+    });
     it('should call increasePoliceSize and policeSizeChanged', () => {
         component.increaseFontSize();
-        expect(placeLetter.policeSizeChanged).toHaveBeenCalled();
+        expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
     });
     it('should call decreasePoliceSize and policeSizeChanged', () => {
         component.decreaseFontSize();
-        expect(placeLetter.policeSizeChanged).toHaveBeenCalled();
+        expect(placeLettersServiceSpy.policeSizeChanged).toHaveBeenCalled();
     });
 });

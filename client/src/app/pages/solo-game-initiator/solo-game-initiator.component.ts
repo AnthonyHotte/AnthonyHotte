@@ -53,11 +53,7 @@ export class SoloGameInitiatorComponent {
         private opponentNameService: OpponentNameService,
     ) {
         this.dictionaryList = [];
-        this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
-            result.forEach((res) => {
-                this.dictionaryList.push(res);
-            });
-        });
+        this.initiateSubscription();
         this.isDictionaryValid = false;
         this.validationDictionaryMessage = 'Le dictionnaire de base est chargé.';
         this.indexDictionaryNumber = 0;
@@ -78,7 +74,13 @@ export class SoloGameInitiatorComponent {
     onRightClick(event: { preventDefault: () => void }) {
         event.preventDefault();
     }
-
+    initiateSubscription() {
+        this.communicationService.getDictionaryList().subscribe((result: Dictionary[]) => {
+            result.forEach((res) => {
+                this.dictionaryList.push(res);
+            });
+        });
+    }
     joinGame() {
         this.setName();
         this.timeManager.timePerTurn = parseInt(this.socketService.gameLists[this.indexWaitingRoomService.getIndex()][2], 10); // timePerTurn

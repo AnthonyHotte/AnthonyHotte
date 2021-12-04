@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CommunicationService } from './communication.service';
 
 import { OpponentNameService } from './opponent-name.service';
@@ -30,6 +30,13 @@ describe('OpponentNameService', () => {
         expect(service).toBeTruthy();
     });
 
+    it('initiateSubscription should be created', () => {
+        communicationServiceSpy.getJVEasyNames.and.returnValue(of(['tony']));
+        communicationServiceSpy.getJVHardNames.and.returnValue(of(['tony']));
+        service.initiateSubscription();
+        expect(communicationServiceSpy.getJVHardNames).toHaveBeenCalled();
+        expect(communicationServiceSpy.getJVEasyNames).toHaveBeenCalled();
+    });
     it('getOpponentName should return a name taht is different from the name it has in parameter in beginner mode', () => {
         expect(service.getOpponentName('haruki', false)).not.toEqual('Haruki');
     });

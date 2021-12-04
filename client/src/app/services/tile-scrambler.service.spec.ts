@@ -27,9 +27,9 @@ describe('TileScramblerService', () => {
     });
 
     it('getBonusTiles should call forEach once', () => {
-        const spyforEach = spyOn(TileMap.gridMap.tileMap, 'forEach');
+        const expectedRes = 61;
         service.getBonusTiles();
-        expect(spyforEach).toHaveBeenCalled();
+        expect(service.allBonusTiles.length).toEqual(expectedRes);
     });
 
     it('reassignNewPosition should call push at least 4 times', () => {

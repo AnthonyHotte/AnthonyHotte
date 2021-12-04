@@ -10,6 +10,9 @@ export class OpponentNameService {
     constructor(private communicationService: CommunicationService) {
         this.beginnerName = [];
         this.expertName = [];
+        this.initiateSubscription();
+    }
+    initiateSubscription() {
         this.communicationService.getJVEasyNames().subscribe((result: string[]) => {
             result.forEach((res) => {
                 this.beginnerName.push(res);

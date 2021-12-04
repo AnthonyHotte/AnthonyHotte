@@ -15,7 +15,9 @@ import { SocketService } from '@app/services/socket.service';
 import { SoloOpponent2Service } from '@app/services/solo-opponent2.service';
 import { TileScramblerService } from '@app/services/tile-scrambler.service';
 import { TimerTurnManagerService } from '@app/services/timer-turn-manager.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { Dictionary } from '@app/classes/dictionary';
+
 import { SoloGameInitiatorComponent } from './solo-game-initiator.component';
 
 describe('SoloGameInitiatorComponent', () => {
@@ -96,6 +98,11 @@ describe('SoloGameInitiatorComponent', () => {
     });
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+    it('initiateSubscription should create', () => {
+        communicationServiceSpy.getDictionaryList.and.returnValue(of([new Dictionary('t1', 'd1')]));
+        component.initiateSubscription();
+        expect(communicationServiceSpy.getDictionaryList).toHaveBeenCalled();
     });
     it('join game should call set name', () => {
         const spy = spyOn(component, 'setName');
@@ -206,6 +213,12 @@ describe('SoloGameInitiatorComponent', () => {
     it('setExpertMode should enter in default', () => {
         component.setExpertMode(true);
         expect(soloopponent2Spy.setExpertMode).toHaveBeenCalledWith(true);
+    });
+    it('validateDictionaryNumber should enter in default', () => {
+        communicationServiceSpy.getDictionaryList.and.returnValue(of([new Dictionary('t1', 'd1')]));
+        component.validateDictionaryNumber().then(() => {
+            expect(communicationServiceSpy.getDictionaryList).toHaveBeenCalled();
+        });
     });
     it('should call handleDisconnect', () => {
         component.beforeUnloadHandler();

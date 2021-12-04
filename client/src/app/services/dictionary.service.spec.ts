@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Dictionary } from '@app/classes/dictionary';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CommunicationService } from './communication.service';
 import { DictionaryService } from './dictionary.service';
 
@@ -25,6 +25,13 @@ describe('DictionaryService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
+    });
+    it('getDictionary should call get full dictionary', () => {
+        const dict = new Dictionary('t1', 'd1');
+        dict.words = ['aa'];
+        communicationServiceSpy.getFullDictionary.and.returnValue(of(dict));
+        service.getDictionary();
+        expect(communicationServiceSpy.getFullDictionary).toHaveBeenCalled();
     });
     it('isTitlePresent should return false', () => {
         const res = service.isTitlePresent('t2');
