@@ -376,7 +376,8 @@ describe('SoloOpponent2Service', () => {
     });
     it('fillalternativeplay should return placements non du test', () => {
         service.bestWordsToPlayExpert = [{ word: 'allo', score: 5, bingo: true }];
+        const expected = 39;
         service.fillAlternativePlay(service.bestWordsToPlayExpert);
-        expect(service.alternativeplays).toEqual('placements alternatifs: \n (5) BINGO!');
+        expect(service.alternativeplays.length).toEqual(expected);
     });
 });
