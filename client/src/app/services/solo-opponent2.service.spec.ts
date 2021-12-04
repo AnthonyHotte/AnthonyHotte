@@ -264,8 +264,9 @@ fdescribe('SoloOpponent2Service', () => {
                 gameStateServiceSpy.lettersOnBoard[i][j] = '';
             }
         }
-        const result = await service.play();
-        expect(result).toEqual('!placer undefined');
+        service.play().then((result) => {
+            expect(result).toEqual('!placer undefined');
+        });
     });
     it('play should call findValide word', async () => {
         gameStateServiceSpy.isBoardEmpty = false;
@@ -352,13 +353,15 @@ fdescribe('SoloOpponent2Service', () => {
         ];
         const scoreMot = 18;
         service.wordToPlaymore13to18points = [];
+        gameStateServiceSpy.playerUsedAllLetters = false;
         service.handleWordPlacingOption('admf', scoreMot);
-        expect(service.wordToPlaymore13to18points[0]).toEqual({ word: 'admf', score: 2, bingo: false });
+        expect(service.wordToPlaymore13to18points[0]).toEqual({ word: 'admf', score: 18, bingo: false });
     });
     it('handleWordPlacingOption should set wordToPlay7to12points to admf', async () => {
         service.bestWordsToPlayExpert = [{ word: 'aa', score: 11, bingo: false }];
         const scoreMot = 11;
         service.wordToPlay7to12points = [];
+        gameStateServiceSpy.playerUsedAllLetters = false;
         service.handleWordPlacingOption('admf', scoreMot);
         expect(service.wordToPlay7to12points[0]).toEqual({ word: 'admf', score: 11, bingo: false });
     });
@@ -366,6 +369,7 @@ fdescribe('SoloOpponent2Service', () => {
         service.bestWordsToPlayExpert = [{ word: 'aa', score: 5, bingo: false }];
         const scoreMot = 5;
         service.wordToPlayLessThan6Points = [];
+        gameStateServiceSpy.playerUsedAllLetters = false;
         service.handleWordPlacingOption('admf', scoreMot);
         expect(service.wordToPlayLessThan6Points[0]).toEqual({ word: 'admf', score: 5, bingo: false });
     });

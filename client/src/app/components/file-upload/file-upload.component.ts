@@ -33,39 +33,31 @@ export class FileUploadComponent {
     }
 
     onFileSelected(event: Event) {
-        // const e = new Event("", {} as any);
-        // e.target = {} as HTMLI
         const target = event.target as HTMLInputElement;
-        if (target === null) {
-            return;
-        }
-        if (target !== null && target.files !== null) {
-            const file: File | null = target.files[0];
-
-            if (file) {
-                this.fileName = file.name;
-                const fileReader = new FileReader();
-                fileReader.readAsText(file, 'utf8');
-                fileReader.onload = () => {
-                    const dictionaryJson = JSON.parse(fileReader.result as string);
-                    if (this.isValidDictionary(dictionaryJson.title, dictionaryJson.description) && dictionaryJson.words.length > 0) {
-                        this.dictionary.title = dictionaryJson.title;
-                        this.dictionary.description = dictionaryJson.description;
-                        this.dictionary.words = [];
-                        for (const word of dictionaryJson.words) {
-                            this.dictionary.words.push(word);
-                        }
-                        // succeded
-                        this.communicationService.sendNewDictionary(this.dictionary).subscribe();
-                        this.dictionaryService.dictionaryList.push(this.dictionary);
-                        this.dictionaryService.isUploadComplete = true;
-                        this.dictionaryService.showUploadedInfo = true;
-                    } else {
-                        this.showDownloadMessage = true;
-                        this.dictionaryService.showUploadedInfo = false;
-                    }
-                };
+        if (target === null || target.files === null) return;
+        const file: File | null = target.files[0];
+        if (!file) return;
+        this.fileName = file.name;
+        const fileReader = new FileReader();
+        fileReader.readAsText(file, 'utf8');
+        fileReader.onload = () => {
+            const dictionaryJson = JSON.parse(fileReader.result as string);
+            if (this.isValidDictionary(dictionaryJson.title, dictionaryJson.description) && dictionaryJson.words.length > 0) {
+                this.dictionary.title = dictionaryJson.title;
+                this.dictionary.description = dictionaryJson.description;
+                this.dictionary.words = [];
+                for (const word of dictionaryJson.words) {
+                    this.dictionary.words.push(word);
+                }
+                // succeded
+                this.communicationService.sendNewDictionary(this.dictionary).subscribe();
+                this.dictionaryService.dictionaryList.push(this.dictionary);
+                this.dictionaryService.isUploadComplete = true;
+                this.dictionaryService.showUploadedInfo = true;
+            } else {
+                this.showDownloadMessage = true;
+                this.dictionaryService.showUploadedInfo = false;
             }
-        }
+        };
     }
 }
