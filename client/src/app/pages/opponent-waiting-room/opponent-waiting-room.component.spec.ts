@@ -58,7 +58,8 @@ describe('OpponentWaitingRoomComponent', () => {
     });
 
     it('fillList should call push ', () => {
-        socketServiceSpy.gameLists.push(['1', '2', '3', '4', '5', '6', '7', 'letters']);
+        socketServiceSpy.gameLists.push(['1', '2', '3', 'Four', 'Five', 'Six', 'Seven', 'letters']);
+        socketServiceSpy.is2990 = true;
         component.fillList();
         expect(component.gamesList[1]).toEqual(['1', '2', '3', 'letters']);
     });
