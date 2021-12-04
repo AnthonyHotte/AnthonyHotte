@@ -7,7 +7,6 @@ import { LetterService } from '@app/services/letter.service';
 import { SocketService } from '@app/services/socket.service';
 import { OpponentWaitingRoomComponent } from './opponent-waiting-room.component';
 
-
 describe('OpponentWaitingRoomComponent', () => {
     let component: OpponentWaitingRoomComponent;
     let fixture: ComponentFixture<OpponentWaitingRoomComponent>;
